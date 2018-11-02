@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1-beta1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -55,6 +58,58 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="RPC.cs" />
+    <Compile Include="RPC\Configuration.cs" />
+    <Compile Include="RPC\Converters\EnumSnakeCaseConverter.cs" />
+    <Compile Include="RPC\Converters\EnumValueAttribute.cs" />
+    <Compile Include="RPC\DiscordRpcClient.cs" />
+    <Compile Include="RPC\Events.cs" />
+    <Compile Include="RPC\EventType.cs" />
+    <Compile Include="RPC\Exceptions\BadPresenceException.cs" />
+    <Compile Include="RPC\Exceptions\InvalidConfigurationException.cs" />
+    <Compile Include="RPC\Exceptions\StringOutOfRangeException.cs" />
+    <Compile Include="RPC\Helper\BackoffDelay.cs" />
+    <Compile Include="RPC\Helper\StringTools.cs" />
+    <Compile Include="RPC\IO\Handshake.cs" />
+    <Compile Include="RPC\IO\INamedPipeClient.cs" />
+    <Compile Include="RPC\IO\InvalidPipeException.cs" />
+    <Compile Include="RPC\IO\ManagedNamedPipeClient.cs" />
+    <Compile Include="RPC\IO\NativeNamedPipeClient.cs" />
+    <Compile Include="RPC\IO\Opcode.cs" />
+    <Compile Include="RPC\IO\PipeFrame.cs" />
+    <Compile Include="RPC\Logging\ConsoleLogger.cs" />
+    <Compile Include="RPC\Logging\FileLogger.cs" />
+    <Compile Include="RPC\Logging\ILogger.cs" />
+    <Compile Include="RPC\Logging\LogLevel.cs" />
+    <Compile Include="RPC\Logging\NullLogger.cs" />
+    <Compile Include="RPC\Message\CloseMessage.cs" />
+    <Compile Include="RPC\Message\ConnectionEstablishedMessage.cs" />
+    <Compile Include="RPC\Message\ConnectionFailedMessage.cs" />
+    <Compile Include="RPC\Message\ErrorMessage.cs" />
+    <Compile Include="RPC\Message\IMessage.cs" />
+    <Compile Include="RPC\Message\JoinMessage.cs" />
+    <Compile Include="RPC\Message\JoinRequestMessage.cs" />
+    <Compile Include="RPC\Message\MessageType.cs" />
+    <Compile Include="RPC\Message\PresenceMessage.cs" />
+    <Compile Include="RPC\Message\ReadyMessage.cs" />
+    <Compile Include="RPC\Message\SpectateMessage.cs" />
+    <Compile Include="RPC\Message\SubscribeMessage.cs" />
+    <Compile Include="RPC\Message\UnsubscribeMsesage.cs" />
+    <Compile Include="RPC\Registry\UriScheme.cs" />
+    <Compile Include="RPC\RichPresence.cs" />
+    <Compile Include="RPC\RPC\Commands\CloseCommand.cs" />
+    <Compile Include="RPC\RPC\Commands\ICommand.cs" />
+    <Compile Include="RPC\RPC\Commands\PresenceCommand.cs" />
+    <Compile Include="RPC\RPC\Commands\RespondCommand.cs" />
+    <Compile Include="RPC\RPC\Commands\SubscribeCommand.cs" />
+    <Compile Include="RPC\RPC\Payload\ClosePayload.cs" />
+    <Compile Include="RPC\RPC\Payload\Command.cs" />
+    <Compile Include="RPC\RPC\Payload\IPayload.cs" />
+    <Compile Include="RPC\RPC\Payload\PayloadArgument.cs" />
+    <Compile Include="RPC\RPC\Payload\PayloadEvent.cs" />
+    <Compile Include="RPC\RPC\Payload\ServerEvent.cs" />
+    <Compile Include="RPC\RPC\RpcConnection.cs" />
+    <Compile Include="RPC\User.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -86,6 +141,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
