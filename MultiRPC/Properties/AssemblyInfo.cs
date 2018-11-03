@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("MultiRPC")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Discord Universe")]
 [assembly: AssemblyProduct("MultiRPC")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCopyright("Copyright ©  2018 xXBuilderBXx")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
