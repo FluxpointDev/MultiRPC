@@ -18,7 +18,7 @@ Hit start and enjoy your custom RPC
 
 ![Image](https://i.imgur.com/RWZYw0L.png)
 
-![Image](https://i.imgur.com/TIdCDBj.png)
+![Image](https://i.imgur.com/0sq4UW9.png)
 
 # Advanced
 
