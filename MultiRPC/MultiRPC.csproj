@@ -32,7 +32,7 @@
     <WebPage>publish.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <ApplicationVersion>1.2.0.0</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -114,7 +114,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Animated.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="ProgramSettings.xaml.cs">
@@ -236,14 +236,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\ExitIcon.png">
+    <Content Include="Resources\ExitIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\HelpIcon.png">
+    <Content Include="Resources\HelpIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Loading.gif">
@@ -265,6 +265,26 @@
   </ItemGroup>
   <ItemGroup>
     <PublishFile Include="Loading.gif">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="Resources\ExitIcon.png">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="Resources\HelpIcon.png">
       <Visible>False</Visible>
       <Group>
       </Group>

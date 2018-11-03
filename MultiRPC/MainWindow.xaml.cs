@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
@@ -50,10 +52,32 @@ namespace MultiRPC
                 Title = "MultiRPC - Discord Canary";
             else
                 Title = "MultiRPC - Discord";
+            if (File.Exists(RPC.ConfigFile))
+            {
+                using (StreamReader reader = new StreamReader(RPC.ConfigFile))
+                {
+                    JsonSerializer serializer = new JsonSerializer
+                    {
+                        Formatting = Formatting.Indented
+                    };
+                    RPC.Config = (Config)serializer.Deserialize(reader, typeof(Config));
+                }
+                if (RPC.Config.Custom != null)
+                {
+                    Text_CustomClientID.Text = RPC.Config.Custom.ID.ToString();
+                    Text_CustomText1.Text = RPC.Config.Custom.Text1;
+                    Text_CustomText2.Text = RPC.Config.Custom.Text2;
+                    Text_CustomLargeKey.Text = RPC.Config.Custom.LargeKey;
+                    Text_CustomLargeText.Text = RPC.Config.Custom.LargeText;
+                    Text_CustomSmallKey.Text = RPC.Config.Custom.SmallKey;
+                    Text_CustomSmallText.Text = RPC.Config.Custom.SmallText;
+                }
+            }
             WD = this;
             Tab_Theme.Visibility = Visibility.Hidden;
             View_LiveRPC.Content = new ViewRPC("MultiRPC", "Thanks for using", "this program", "https://cdn.discordapp.com/app-assets/450894077165043722/450897709013008385.png", "https://cdn.discordapp.com/app-assets/450894077165043722/450897709013008385.png", "Lol", "Hi");
             View_CustomRPC.Content = new ViewRPC("App name", "Text1", "Text2", "", "", "", "");
+            
             Data.Load();
             foreach (IProgram P in Data.Programs.Values.OrderBy(x => x.Data.Priority).Reverse())
             {
@@ -86,27 +110,38 @@ namespace MultiRPC
 
         public void Run_RpcStart(object sender, RoutedEventArgs e)
         {
-            EnableRun();
-              if (!ulong.TryParse(Text_CustomClientID.Text, out ulong ID))
-               {
-                  DisableRun();
-                  Error("Client ID is invalid");
-                  return;
-              }
-               Dictionary<string, string> dict = new Dictionary<string, string>
+            try
+            {
+                EnableRun();
+                if (!ulong.TryParse(Text_CustomClientID.Text, out ulong ID))
+                {
+                    DisableRun();
+                    Error("Client ID is invalid");
+                    return;
+                }
+                Dictionary<string, string> dict = new Dictionary<string, string>
                {
                     { "client_id", ID.ToString() }
                };
-            HttpResponseMessage T = RPC.HttpClient.PostAsync("https://discordapp.com/api/oauth2/token/rpc", new FormUrlEncodedContent(dict)).GetAwaiter().GetResult();
-            if (T.StatusCode.ToString() != "InternalServerError")
+                HttpResponseMessage T = RPC.HttpClient.PostAsync("https://discordapp.com/api/oauth2/token/rpc", new FormUrlEncodedContent(dict)).GetAwaiter().GetResult();
+                if (T.StatusCode.ToString() != "InternalServerError")
+                {
+                    DisableRun();
+                    Error("Client ID is invalid");
+                    return;
+                }
+                SetLiveView("loadthispls");
+                RPC.SetPresence(this);
+                RPC.Start(ID);
+                RPC.Config.Save(this);
+            }
+            catch(Exception ex)
             {
                 DisableRun();
-                Error("Client ID is invalid");
-                return;
+                Error($"Could not start RPC, {ex.Message}");
+                Log.App($"ERROR {ex}");
+                RPC.Shutdown();
             }
-            SetLiveView("loadthispls");
-            RPC.SetPresence(this);
-            RPC.Start(ID);
         }
 
         public void EnableRun()
@@ -133,11 +168,23 @@ namespace MultiRPC
 
         private void Run_RpcUpdate(object sender, RoutedEventArgs e)
         {
-            SetLiveView("loadthispls");
-            RPC.SetPresence(this);
-            RPC.Update();
-            //Log.App(RPC.CheckPort().ToString());
-            //RPC.upda();
+            if (Text_CustomClientID.IsEnabled)
+            {
+                Error("You cannot update the RPC if its not running");
+                return;
+            }
+            try
+            {
+                SetLiveView("loadthispls");
+                RPC.SetPresence(this);
+                RPC.Update();
+                RPC.Config.Save(this);
+            }
+            catch(Exception ex)
+            {
+                Error($"Could not update RPC, {ex.Message}");
+                Log.App($"ERROR {ex}");
+            }
         }
 
         private void Run_RpcShutdown(object sender, RoutedEventArgs e)

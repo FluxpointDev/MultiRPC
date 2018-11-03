@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MultiRPC"
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Width="225" Height="85" BorderBrush="Black" BorderThickness="1">
+             d:DesignHeight="450" d:DesignWidth="225" Width="225" Height="85" BorderBrush="Black" BorderThickness="1">
     <Grid x:Name="Background" Width="225" Height="85" MinWidth="2" Background="{DynamicResource Brush_RPCBack}">
         <Image x:Name="LargeImage" HorizontalAlignment="Left" Height="82" VerticalAlignment="Top" Width="85"/>
         <Label x:Name="Title" Content="Title" HorizontalAlignment="Left" Height="18" Margin="90,5,0,0" VerticalAlignment="Top" Width="129" Padding="5,0" FontWeight="Bold" Foreground="White"/>

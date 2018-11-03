@@ -8,6 +8,8 @@ namespace MultiRPC
 {
     public static class RPC
     {
+        public static Config Config = new Config();
+        public static string ConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC.json";
         public static HttpClient HttpClient = new HttpClient();
         public static Logger Log = new Logger();
         //public string Type;
