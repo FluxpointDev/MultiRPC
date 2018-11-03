@@ -16,12 +16,12 @@ namespace MultiRPC
         private static System.Timers.Timer ClientTimer;
         public static DiscordRPC.RichPresence Presence = new RichPresence();
 
-        public static void Start()
+        public static void Start(ulong id)
         {
             //UpdateTimer.Elapsed += UpdateRPC;
             Log.App("Starting MultiRPC");
             //Create a new client
-            Client = new DiscordRpcClient("497409863157022731");
+            Client = new DiscordRpcClient(id.ToString());
 
             Client.OnClose += Client_OnClose;
             Client.OnConnectionEstablished += Client_OnConnectionEstablished;
@@ -39,21 +39,26 @@ namespace MultiRPC
 
             //Connect
             Client.Initialize();
-            Presence = new RichPresence()
-            {
-                Details = "Hello",
-                State = "World",
-                Assets = new Assets
-                {
-                    LargeImageKey = "mel",
-                    LargeImageText = "Hello normie",
-                    SmallImageKey = "angry",
-                    SmallImageText = "Circuit you meme"
-                },
-                Timestamps = Timestamps.FromTimeSpan(new TimeSpan(1, 0, 0))
-            };
 
             //Send a presence. Do this as many times as you want
+            Client.SetPresence(Presence);
+        }
+
+        public static void SetPresence(MainWindow window)
+        {
+            Presence.Details = window.Text_CustomText1.Text;
+            Presence.State = window.Text_CustomText2.Text;
+            Presence.Assets = new DiscordRPC.Assets
+            {
+                LargeImageKey = window.Text_CustomLargeKey.Text,
+                LargeImageText = window.Text_CustomLargeText.Text,
+                SmallImageKey = window.Text_CustomSmallKey.Text,
+                SmallImageText = window.Text_CustomSmallText.Text
+            };
+        }
+
+        public static void Update()
+        {
             Client.SetPresence(Presence);
         }
 
@@ -74,7 +79,7 @@ namespace MultiRPC
 
         private static void Client_OnPresenceUpdate(object sender, DiscordRPC.Message.PresenceMessage args)
         {
-            MainWindow.SetLiveView(args.Presence);
+            MainWindow.SetLiveView(args);
             Log.Discord($"Updated presence");
         }
 

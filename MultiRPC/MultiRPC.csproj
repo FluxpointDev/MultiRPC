@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -49,15 +50,33 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="UIAutomationClient" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfAnimatedGif, Version=1.4.17.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfAnimatedGif.1.4.17\lib\net\WpfAnimatedGif.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Animated.cs" />
+    <Compile Include="Data.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="ProgramSettings.xaml.cs">
+      <DependentUpon>ProgramSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Programs\Afk.cs" />
+    <Compile Include="Programs\Anime.cs" />
+    <Compile Include="Programs\Chrome.cs" />
+    <Compile Include="Programs\Custom.cs" />
+    <Compile Include="Programs\Firefox.cs" />
+    <Compile Include="Programs\Minecraft.cs" />
+    <Compile Include="Programs\Windows.cs" />
+    <Compile Include="Programs\WindowsMediaPlayer.cs" />
     <Compile Include="RPC.cs" />
     <Compile Include="RPC\Configuration.cs" />
     <Compile Include="RPC\Converters\EnumSnakeCaseConverter.cs" />
@@ -110,6 +129,11 @@
     <Compile Include="RPC\RPC\Payload\ServerEvent.cs" />
     <Compile Include="RPC\RPC\RpcConnection.cs" />
     <Compile Include="RPC\User.cs" />
+    <Compile Include="ViewRPC.xaml.cs">
+      <DependentUpon>ViewRPC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="_Program.cs" />
+    <Compile Include="_Settings.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -122,6 +146,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ProgramSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ViewRPC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -149,6 +181,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ExitIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HelpIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Loading.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,6 +4,11 @@
              xmlns:local="clr-namespace:MultiRPC"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <SolidColorBrush x:Key="Brush_RPCBack" Color="#FF6C82CF"/>
+        <SolidColorBrush x:Key="Brush_Button" Color="#FF7289DA"/>
+        <SolidColorBrush x:Key="Brush_Ok" Color="#FF43B581"/>
+        <SolidColorBrush x:Key="Brush_MainBackground" Color="#FF36393E"/>
+        <SolidColorBrush x:Key="Brush_TabBackground" Color="#FF3C3C3C"/>
+        <SolidColorBrush x:Key="Brush_No" Color="#FFE44141"/>
     </Application.Resources>
 </Application>
