@@ -74,10 +74,8 @@ namespace MultiRPC
                 }
             }
             WD = this;
-            Tab_Theme.Visibility = Visibility.Hidden;
             View_LiveRPC.Content = new ViewRPC("MultiRPC", "Thanks for using", "this program", "https://cdn.discordapp.com/app-assets/450894077165043722/450897709013008385.png", "https://cdn.discordapp.com/app-assets/450894077165043722/450897709013008385.png", "Lol", "Hi");
             View_CustomRPC.Content = new ViewRPC("App name", "Text1", "Text2", "", "", "", "");
-            
             Data.Load();
             foreach (IProgram P in Data.Programs.Values.OrderBy(x => x.Data.Priority).Reverse())
             {
