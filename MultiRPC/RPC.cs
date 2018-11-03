@@ -17,9 +17,10 @@ namespace MultiRPC
         public static DiscordRpcClient Client = null;
         private static System.Timers.Timer ClientTimer;
         public static DiscordRPC.RichPresence Presence = new RichPresence();
-
+        public static int Fails = 0;
         public static void Start(ulong id)
         {
+            Fails = 0;
             //UpdateTimer.Elapsed += UpdateRPC;
             Log.App("Starting MultiRPC");
             //Create a new client
@@ -76,7 +77,12 @@ namespace MultiRPC
 
         private static void Client_OnReady(object sender, DiscordRPC.Message.ReadyMessage args)
         {
-            Log.Discord($"RPC ready, found user {args.User.Username}#{args.User.Discriminator} | {args.Version}");
+            MainWindow.SetRPCUser($"{args.User}");
+            Log.Discord($"RPC ready, found user {args.User.Username}#{args.User.Discriminator}");
+            MainWindow.WD.Label_RPCStatus.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                MainWindow.WD.EnableRun(true);
+            });
         }
 
         private static void Client_OnPresenceUpdate(object sender, DiscordRPC.Message.PresenceMessage args)
@@ -92,7 +98,25 @@ namespace MultiRPC
 
         private static void Client_OnConnectionFailed(object sender, DiscordRPC.Message.ConnectionFailedMessage args)
         {
-            Log.Discord($"Failed connection {args.FailedPipe} {args.Type}");
+            Fails++;
+            if (Fails == 4)
+            {
+                Log.Discord("Failed to connect shutting down RPC");
+                MainWindow.SetLiveView("error", "Discord client invalid");
+                Fails = 0;
+                
+                try
+                {
+                    Shutdown();
+                }
+                catch { }
+                MainWindow.WD.Label_RPCStatus.Dispatcher.BeginInvoke((Action)delegate ()
+                {
+                    MainWindow.WD.DisableRun(true);
+                });
+            }
+            else
+                Log.Discord($"Failed connection {args.FailedPipe} {args.Type} | Attempt {Fails}");
         }
 
         private static void Client_OnConnectionEstablished(object sender, DiscordRPC.Message.ConnectionEstablishedMessage args)

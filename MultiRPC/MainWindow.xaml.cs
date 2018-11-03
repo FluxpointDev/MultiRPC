@@ -25,27 +25,43 @@ namespace MultiRPC
             });
         }
 
-        public static void SetLiveView(string test)
+        public static void SetRPCUser(string user)
+        {
+            WD.Label_RPCUser.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                WD.Label_RPCUser.Content = user;
+            });
+        }
+
+        public static void SetLiveView(string type, string message = "")
         {
             WD.View_LiveRPC.Dispatcher.BeginInvoke((Action)delegate ()
             {
-                WD.View_LiveRPC.Content = new ViewRPC(test, "", "", "", "","", "");
+                WD.View_LiveRPC.Content = new ViewRPC(type, message, "", "", "","", "");
             });
         }
 
         private bool Canary = false;
         public MainWindow()
         {
-            Process[] Discord = Process.GetProcessesByName("Discord");
-            if (Discord.Count() == 0)
+            try
             {
-                Canary = true;
-                Process[] DiscordCanary = Process.GetProcessesByName("DiscordCanary");
-                if (DiscordCanary.Count() == 0)
+                Process[] Discord = Process.GetProcessesByName("Discord");
+                if (Discord.Count() == 0)
                 {
-                    Error("Discord client not found");
-                    Environment.Exit(0);
+                    Canary = true;
+                    Process[] DiscordCanary = Process.GetProcessesByName("DiscordCanary");
+                    if (DiscordCanary.Count() == 0)
+                    {
+                        Error("Discord client not found");
+                        Environment.Exit(0);
+                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                Error("Could not find Discord");
+                Log.App($"ERROR! {ex}");
             }
             InitializeComponent();
             if (Canary)
@@ -75,7 +91,7 @@ namespace MultiRPC
             }
             WD = this;
             View_LiveRPC.Content = new ViewRPC("MultiRPC", "Thanks for using", "this program", "https://cdn.discordapp.com/app-assets/450894077165043722/450897709013008385.png", "https://cdn.discordapp.com/app-assets/450894077165043722/450897709013008385.png", "Lol", "Hi");
-            View_CustomRPC.Content = new ViewRPC("App name", "Text1", "Text2", "", "", "", "");
+            
             Data.Load();
             foreach (IProgram P in Data.Programs.Values.OrderBy(x => x.Data.Priority).Reverse())
             {
@@ -98,8 +114,8 @@ namespace MultiRPC
             Log.App("Menu Click: " + (sender as Button).Content);
         }
 
-        [DllImport("User32.dll")]
-        private static extern IntPtr FindWindow(string strClassName, string strWindowName);
+        //[DllImport("User32.dll")]
+        //private static extern IntPtr FindWindow(string strClassName, string strWindowName);
 
         internal void Error(string message)
         {
@@ -108,42 +124,53 @@ namespace MultiRPC
 
         public void Run_RpcStart(object sender, RoutedEventArgs e)
         {
-            try
+
+            EnableRun(false);
+            if (!ulong.TryParse(Text_CustomClientID.Text, out ulong ID))
             {
-                EnableRun();
-                if (!ulong.TryParse(Text_CustomClientID.Text, out ulong ID))
-                {
-                    DisableRun();
-                    Error("Client ID is invalid");
-                    return;
-                }
-                Dictionary<string, string> dict = new Dictionary<string, string>
+                DisableRun();
+                Error("Client ID is invalid");
+                return;
+            }
+            Dictionary<string, string> dict = new Dictionary<string, string>
                {
                     { "client_id", ID.ToString() }
                };
-                HttpResponseMessage T = RPC.HttpClient.PostAsync("https://discordapp.com/api/oauth2/token/rpc", new FormUrlEncodedContent(dict)).GetAwaiter().GetResult();
-                if (T.StatusCode.ToString() != "InternalServerError")
-                {
-                    DisableRun();
-                    Error("Client ID is invalid");
-                    return;
-                }
-                SetLiveView("loadthispls");
+            HttpResponseMessage T = RPC.HttpClient.PostAsync("https://discordapp.com/api/oauth2/token/rpc", new FormUrlEncodedContent(dict)).GetAwaiter().GetResult();
+            if (T.StatusCode.ToString() != "InternalServerError")
+            {
+                DisableRun();
+                Error("Client ID is invalid");
+                return;
+            }
+            try
+            {
+                SetLiveView("load");
+            }
+            catch { }
+            try
+            {
                 RPC.SetPresence(this);
                 RPC.Start(ID);
                 RPC.Config.Save(this);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                DisableRun();
+                DisableRun(true);
                 Error($"Could not start RPC, {ex.Message}");
                 Log.App($"ERROR {ex}");
                 RPC.Shutdown();
             }
         }
 
-        public void EnableRun()
+        public void EnableRun(bool Ready)
         {
+           
+            if (Ready)
+                Label_RPCStatus.Content = "Connected";
+            else
+                Label_RPCStatus.Content = "Loading";
+
             Text_CustomClientID.IsEnabled = false;
             Help_Error.Visibility = Visibility.Visible;
             Help_Error.ToolTip = new Button().Content = "RPC is running you cannot change the ID";
@@ -153,8 +180,12 @@ namespace MultiRPC
             Btn_ShutdownRPC.Background = (Brush)Application.Current.Resources["Brush_TabBackground"];
         }
 
-        public void DisableRun()
+        public void DisableRun(bool Failed = false)
         {
+            if (Failed)
+                Label_RPCStatus.Content = "Failed";
+            else
+                 Label_RPCStatus.Content = "Disconnected";
             Text_CustomClientID.IsEnabled = true;
             Help_Error.Visibility = Visibility.Hidden;
             Help_Error.ToolTip = new Button().Content = "Invalid client ID";
@@ -173,7 +204,12 @@ namespace MultiRPC
             }
             try
             {
-                SetLiveView("loadthispls");
+                SetLiveView("load");
+            }
+            catch { }
+            try
+            {
+                
                 RPC.SetPresence(this);
                 RPC.Update();
                 RPC.Config.Save(this);
@@ -187,8 +223,14 @@ namespace MultiRPC
 
         private void Run_RpcShutdown(object sender, RoutedEventArgs e)
         {
+            View_LiveRPC.Content = new ViewRPC("MultiRPC", "Thanks for using", "this program", "https://cdn.discordapp.com/app-assets/450894077165043722/450897709013008385.png", "https://cdn.discordapp.com/app-assets/450894077165043722/450897709013008385.png", "Lol", "Hi");
+
             DisableRun();
-            RPC.Shutdown();
+            try
+            {
+                RPC.Shutdown();
+            }
+            catch { }
         }
 
         private void UpdateMenu(string Type)
@@ -204,12 +246,6 @@ namespace MultiRPC
         private void MenuClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             Log.App("Menu Click: " + sender.ToString());
-        }
-
-        private void Run_ShowCustomRpc(object sender, RoutedEventArgs e)
-        {
-            Log.App("Loading custom RPC");
-            View_CustomRPC.Content = new ViewRPC("", Text_CustomText1.Text, Text_CustomText2.Text, "https://cdn.discordapp.com/app-assets/450894077165043722/450894466358968331.png", "https://cdn.discordapp.com/app-assets/450894077165043722/450894923743363073.png", Text_CustomLargeText.Text, Text_CustomSmallText.Text);
         }
 
         private void HelpButton_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)

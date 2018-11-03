@@ -166,38 +166,57 @@ namespace MultiRPC
         {
             InitializeComponent();
             Loading.Visibility = Visibility.Hidden;
-            if (title == "loadthispls")
+            switch(title)
             {
-                Title.Content = "Loading RPC";
-                Text1.Content = "";
-                Text2.Content = "";
-                Background.Background = SystemColors.ActiveBorderBrush;
-                Loading.Visibility = Visibility.Visible;
-                BitmapImage image = new BitmapImage();
-                image.BeginInit();
-                image.UriSource = new Uri(Directory.GetCurrentDirectory() + "/Loading.gif", UriKind.Absolute);
-                image.EndInit();
-                ImageBehavior.SetAnimatedSource(Loading, image);
-                ImageBehavior.SetRepeatBehavior(Loading, System.Windows.Media.Animation.RepeatBehavior.Forever);
-                SmallBackground.Visibility = Visibility.Hidden;
-            }
-            else
-            {
-                Title.Content = title;
-                Text1.Content = text1;
-                Text2.Content = text2;
-                if (!string.IsNullOrEmpty(largeImage))
-                {
-                    ImageSource LargeSource = new BitmapImage(new Uri(largeImage));
-                    LargeImage.Source = LargeSource;
-                    LargeImage.ToolTip = new Button().Content = largeText;
-                }
-                if (!string.IsNullOrEmpty(smallImage))
-                {
-                    ImageSource SmallSource = new BitmapImage(new Uri(smallImage));
-                    SmallImage.Source = SmallSource;
-                    SmallImage.ToolTip = new Button().Content = smallText;
-                }
+                case "load":
+                    {
+                        Title.Content = "Loading RPC";
+                        Text1.Content = "";
+                        Text2.Content = "";
+                        SmallBackground.Visibility = Visibility.Hidden;
+                        Background.Background = SystemColors.ActiveBorderBrush;
+                        Loading.Visibility = Visibility.Visible;
+                        BitmapImage image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = new Uri(Directory.GetCurrentDirectory() + "/Loading.gif", UriKind.Absolute);
+                        image.EndInit();
+                        ImageBehavior.SetAnimatedSource(Loading, image);
+                        ImageBehavior.SetRepeatBehavior(Loading, System.Windows.Media.Animation.RepeatBehavior.Forever);
+                    }
+                    break;
+                case "error":
+                    {
+                        Title.Content = "RPC Error!";
+                        Text1.Content = text1;
+                        Text2.Content = "";
+                        SmallBackground.Visibility = Visibility.Hidden;
+                        Background.Background = SystemColors.ActiveBorderBrush;
+                        BitmapImage image = new BitmapImage();
+                        image.BeginInit();
+                        image.UriSource = new Uri(Directory.GetCurrentDirectory() + "/Resources/ExitIcon.png", UriKind.Absolute);
+                        image.EndInit();
+                        LargeImage.Source = image;
+                    }
+                    break;
+                default:
+                    {
+                        Title.Content = title;
+                        Text1.Content = text1;
+                        Text2.Content = text2;
+                        if (!string.IsNullOrEmpty(largeImage))
+                        {
+                            ImageSource LargeSource = new BitmapImage(new Uri(largeImage));
+                            LargeImage.Source = LargeSource;
+                            LargeImage.ToolTip = new Button().Content = largeText;
+                        }
+                        if (!string.IsNullOrEmpty(smallImage))
+                        {
+                            ImageSource SmallSource = new BitmapImage(new Uri(smallImage));
+                            SmallImage.Source = SmallSource;
+                            SmallImage.ToolTip = new Button().Content = smallText;
+                        }
+                    }
+                    break;
             }
         }
 

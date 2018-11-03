@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MultiRPC"
         mc:Ignorable="d"
-        Title="Multi RPC" Height="500" Width="640" MinHeight="413" MinWidth="390" Background="{DynamicResource Brush_MainBackground}">
+        Title="Multi RPC" Height="500" Width="640" MinHeight="500" MinWidth="640" Background="{DynamicResource Brush_MainBackground}" MaxWidth="640" MaxHeight="500" ResizeMode="CanMinimize" Icon="MultiRPC Icon.ico">
     <Window.Resources>
         <Style x:Key="MyFocusVisual">
             <Setter Property="Control.Template">
@@ -58,7 +58,7 @@
                 <Grid x:Name="Back_Programs" Background="{DynamicResource TabBackground}">
                     <Grid.ColumnDefinitions>
                     </Grid.ColumnDefinitions>
-                    <ListBox x:Name="List_Programs" Height="328" Margin="10,10,0,0" VerticalAlignment="Top" Width="103" IsTextSearchEnabled="False" BorderThickness="1" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False" Background="{DynamicResource TextBackground}" HorizontalAlignment="Left" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="{DynamicResource Program_Enabled}" IsSynchronizedWithCurrentItem="True" IsHitTestVisible="True" UseLayoutRounding="False"/>
+                    <ListBox x:Name="List_Programs" Height="328" Margin="10,10,0,0" VerticalAlignment="Top" Width="103" IsTextSearchEnabled="False" BorderThickness="1" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.CanContentScroll="False" Background="{DynamicResource TextBackground}" HorizontalAlignment="Left" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Foreground="{DynamicResource Program_Enabled}" IsSynchronizedWithCurrentItem="True" IsHitTestVisible="True" UseLayoutRounding="False" Visibility="Hidden"/>
                     <Frame x:Name="View_ProgramSettings" Height="234" Margin="118,38,10,0" VerticalAlignment="Top" NavigationUIVisibility="Hidden"/>
                     <Label x:Name="Title_CustomName_Copy2" Content="This feature is not available atm sorry :/" HorizontalAlignment="Left" Margin="118,10,0,0" VerticalAlignment="Top" Width="247" Height="23" Foreground="#FF8F97A0" FontSize="11" FontWeight="Bold"/>
                 </Grid>
@@ -79,8 +79,6 @@
                     <Label x:Name="Title_CustomSmallText" Content="Small Text:" HorizontalAlignment="Left" Margin="10,198,0,0" VerticalAlignment="Top" Width="96" Height="23" Foreground="#FF8F97A0" FontWeight="Bold" FontSize="11"/>
                     <TextBox x:Name="Text_CustomClientID" Height="43" TextWrapping="Wrap" Text="497409863157022731" VerticalAlignment="Top" MaxLines="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18" Background="{DynamicResource TextBackground}" BorderBrush="{x:Null}" Foreground="#FFD1D1D1" HorizontalAlignment="Right" Width="242" Margin="0,10,378,0" TextChanged="Custom_ClientID_Changed"/>
                     <TextBox x:Name="Text_CustomInfo" HorizontalAlignment="Left" Height="39" Margin="10,226,0,0" TextWrapping="Wrap" Text="Use your own discord dev app for a custom rich presence" VerticalAlignment="Top" Width="265" IsReadOnly="True" Background="{DynamicResource TabBackground}" Foreground="#FFE4E4E4"/>
-                    <Button x:Name="Btn_ViewCustomRPC" Content="Show Custom" HorizontalAlignment="Left" Height="45" Margin="240,254,0,0" VerticalAlignment="Top" Width="100" Click="Run_ShowCustomRpc" Background="{DynamicResource Brush_Button}" Foreground="White" Visibility="Hidden"/>
-                    <Frame x:Name="View_CustomRPC" Content="" HorizontalAlignment="Left" Height="85" Margin="10,254,0,0" VerticalAlignment="Top" Width="225" NavigationUIVisibility="Hidden" Background="{DynamicResource Brush_RPCBack}" BorderBrush="Black" BorderThickness="1" Visibility="Hidden"/>
                     <Image x:Name="Help_ClientID" HorizontalAlignment="Left" Height="23" Margin="252,19,0,0" VerticalAlignment="Top" Width="23" Source="Resources/HelpIcon.png" MouseLeftButtonDown="HelpButton_Click" Opacity="0.7"/>
                     <Image x:Name="Help_Text1" HorizontalAlignment="Left" Height="23" Margin="252,58,0,0" VerticalAlignment="Top" Width="23" Source="Resources/HelpIcon.png" MouseLeftButtonDown="HelpButton_Click" Opacity="0.7"/>
                     <Image x:Name="Help_Text2" HorizontalAlignment="Left" Height="23" Margin="252,86,0,0" VerticalAlignment="Top" Width="23" Source="Resources/HelpIcon.png" MouseLeftButtonDown="HelpButton_Click" Opacity="0.7"/>
@@ -90,7 +88,6 @@
                     <Image x:Name="Help_SmallKey" HorizontalAlignment="Left" Height="23" Margin="252,170,0,0" VerticalAlignment="Top" Width="23" Source="Resources/HelpIcon.png" MouseLeftButtonDown="HelpButton_Click" Opacity="0.7"/>
                     <Image x:Name="Image_Help" HorizontalAlignment="Left" Height="255" Margin="280,10,0,0" VerticalAlignment="Top" Width="340"/>
                     <Image x:Name="Help_Error" HorizontalAlignment="Left" Height="23" Margin="229,10,0,0" VerticalAlignment="Top" Width="23" Source="Resources/ExitIcon.png" MouseLeftButtonDown="HelpButton_Click" Opacity="0.7" ToolTip="Invalid client ID" Visibility="Hidden"/>
-                    <Button x:Name="Btn_ViewCustomRPC_Copy" Content="Show Custom" HorizontalAlignment="Left" Height="45" Margin="395,254,0,0" VerticalAlignment="Top" Width="150" Click="Run_ShowCustomRpc" Background="{DynamicResource Brush_Button}" Foreground="White" Visibility="Hidden"/>
                     <Button x:Name="Btn_UpdateRPC" Content="Update RPC" Margin="240,296,218,0" Click="Run_RpcUpdate" Background="{DynamicResource Brush_Button}" Foreground="White" BorderBrush="{x:Null}" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsEnabled="True" Height="42" VerticalAlignment="Top" Style="{DynamicResource ButtonStyleUpdateRPC}"/>
                 </Grid>
             </TabItem>
@@ -110,5 +107,9 @@
         </TabControl>
         <Button x:Name="Btn_ShutdownRPC" Content="Shutdown" Margin="0,55,486,0" RenderTransformOrigin="0.511,-1.601" Click="Run_RpcShutdown" HorizontalAlignment="Right" Width="136" Background="{DynamicResource Brush_No}" Foreground="White" BorderBrush="Red" FontSize="14" Height="40" VerticalAlignment="Top" Style="{DynamicResource ButtonStyleShutdown}"/>
         <Frame x:Name="View_LiveRPC" HorizontalAlignment="Left" Height="85" Margin="397,10,0,0" VerticalAlignment="Top" Width="225" NavigationUIVisibility="Hidden" Background="{DynamicResource Brush_RPCBack}" BorderThickness="1"/>
+        <Label x:Name="Title_RPCStatus" Content="Status:" HorizontalAlignment="Left" Margin="153,10,0,0" VerticalAlignment="Top" Width="40" Height="23" Foreground="#FF8F97A0" FontSize="11"/>
+        <Label x:Name="Label_RPCStatus" Content="Disconnected" HorizontalAlignment="Left" Margin="198,10,0,0" VerticalAlignment="Top" Width="120" Height="23" Foreground="#FF8F97A0" FontSize="11" FontWeight="Bold"/>
+        <Label x:Name="Title_RPCUser" Content="User:" HorizontalAlignment="Left" Margin="153,38,0,0" VerticalAlignment="Top" Width="40" Height="23" Foreground="#FF8F97A0" FontSize="11"/>
+        <Label x:Name="Label_RPCUser" Content="" HorizontalAlignment="Left" Margin="198,38,0,0" VerticalAlignment="Top" Width="120" Height="23" Foreground="#FF8F97A0" FontSize="11" FontWeight="Bold"/>
     </Grid>
 </Window>
