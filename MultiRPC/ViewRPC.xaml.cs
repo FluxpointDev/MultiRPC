@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -165,17 +166,15 @@ namespace MultiRPC
         public ViewRPC(string title, string text1, string text2, string largeImage, string smallImage, string largeText, string smallText)
         {
             InitializeComponent();
-            Loading.Visibility = Visibility.Hidden;
             switch(title)
             {
                 case "load":
                     {
                         Title.Content = "Loading RPC";
-                        Text1.Content = "";
-                        Text2.Content = "";
-                        SmallBackground.Visibility = Visibility.Hidden;
                         Background.Background = SystemColors.ActiveBorderBrush;
                         Loading.Visibility = Visibility.Visible;
+                        Text1.Content = "";
+                        Text2.Content = "";
                         BitmapImage image = new BitmapImage();
                         image.BeginInit();
                         image.UriSource = new Uri(Directory.GetCurrentDirectory() + "/Loading.gif", UriKind.Absolute);
@@ -189,13 +188,23 @@ namespace MultiRPC
                         Title.Content = "RPC Error!";
                         Text1.Content = text1;
                         Text2.Content = "";
-                        SmallBackground.Visibility = Visibility.Hidden;
                         Background.Background = SystemColors.ActiveBorderBrush;
-                        BitmapImage image = new BitmapImage();
-                        image.BeginInit();
-                        image.UriSource = new Uri(Directory.GetCurrentDirectory() + "/Resources/ExitIcon.png", UriKind.Absolute);
-                        image.EndInit();
-                        LargeImage.Source = image;
+                        LargeImage.Visibility = Visibility.Visible;
+                        LargeImage.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/Resources/ExitIcon.png", UriKind.Absolute));
+                    }
+                    break;
+                case "default":
+                    {
+                        Title.Content = "MultiRPC";
+                        Text1.Content = "Thanks for using";
+                        Text2.Content = "this program";
+                        LargeImage.Visibility = Visibility.Visible;
+                        LargeImage.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/Resources/DiscordIcon.png", UriKind.Absolute));
+                        LargeImage.ToolTip = new Button().Content = "Hello nerd";
+                        SmallImage.Visibility = Visibility.Visible;
+                        SmallBackground.Visibility = Visibility.Visible;
+                        SmallImage.Fill = new ImageBrush(new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/Resources/DiscordIcon.png", UriKind.Absolute)));
+                        SmallImage.ToolTip = new Button().Content = "Dont look at me :3";
                     }
                     break;
                 default:
@@ -205,19 +214,29 @@ namespace MultiRPC
                         Text2.Content = text2;
                         if (!string.IsNullOrEmpty(largeImage))
                         {
-                            ImageSource LargeSource = new BitmapImage(new Uri(largeImage));
-                            LargeImage.Source = LargeSource;
+                            LargeImage.Visibility = Visibility.Visible;
+                            BitmapImage Large = new BitmapImage(new Uri(largeImage));
+                            Large.DownloadFailed += Image_FailedLoading;
+                            LargeImage.Source = Large;
                             LargeImage.ToolTip = new Button().Content = largeText;
                         }
                         if (!string.IsNullOrEmpty(smallImage))
                         {
-                            ImageSource SmallSource = new BitmapImage(new Uri(smallImage));
-                            SmallImage.Source = SmallSource;
+                            SmallImage.Visibility = Visibility.Visible;
+                            SmallBackground.Visibility = Visibility.Visible;
+                            BitmapImage Small = new BitmapImage(new Uri(smallImage));
+                            Small.DownloadFailed += Image_FailedLoading;
+                            SmallImage.Fill = new ImageBrush(Small);
                             SmallImage.ToolTip = new Button().Content = smallText;
                         }
                     }
                     break;
             }
+        }
+
+        public static void Image_FailedLoading(object sender, ExceptionEventArgs e)
+        {
+            RPC.Log.Error($"Failed to load image, [{(sender as BitmapImage).UriSource.AbsoluteUri}] {e.ErrorException.Message}");
         }
 
         public ViewRPC(DiscordRPC.Message.PresenceMessage msg)
@@ -230,23 +249,22 @@ namespace MultiRPC
             {
                 if (!string.IsNullOrEmpty(msg.Presence.Assets.SmallImageKey))
                 {
-                    SmallImage.Source = new BitmapImage(new Uri("https://cdn.discordapp.com/app-assets/" + msg.ApplicationID + "/" + msg.Presence.Assets.SmallImageID + ".png"));
+                    SmallImage.Visibility = Visibility.Visible;
+                    SmallBackground.Visibility = Visibility.Visible;
+                    BitmapImage Small = new BitmapImage(new Uri("https://cdn.discordapp.com/app-assets/" + msg.ApplicationID + "/" + msg.Presence.Assets.SmallImageID + ".png"));
+                    Small.DownloadFailed += Image_FailedLoading;
+                    SmallImage.Fill = new ImageBrush(Small);
                     SmallImage.ToolTip = new Button().Content = msg.Presence.Assets.SmallImageText;
-                }
-                else
-                {
-                    SmallBackground.Visibility = Visibility.Hidden;
-                    SmallImage.Visibility = Visibility.Hidden;
                 }
                 if (!string.IsNullOrEmpty(msg.Presence.Assets.LargeImageKey))
                 {
-                    LargeImage.Source = new BitmapImage(new Uri("https://cdn.discordapp.com/app-assets/" + msg.ApplicationID + "/" + msg.Presence.Assets.LargeImageID + ".png"));
+                    LargeImage.Visibility = Visibility.Visible;
+                    BitmapImage Large = new BitmapImage(new Uri("https://cdn.discordapp.com/app-assets/" + msg.ApplicationID + "/" + msg.Presence.Assets.LargeImageID + ".png"));
+                    Large.DownloadFailed += Image_FailedLoading;
+                    LargeImage.Source = Large;
                     LargeImage.ToolTip = new Button().Content = msg.Presence.Assets.LargeImageText;
                 }
-                else
-                    LargeImage.Visibility = Visibility.Hidden;
             }
-            
         }
     }
 }

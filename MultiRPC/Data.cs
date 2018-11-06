@@ -1,5 +1,8 @@
 ﻿using MultiRPC.Programs;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace MultiRPC
 {
@@ -13,6 +16,24 @@ namespace MultiRPC
         public static Dictionary<string, IProgram> Programs = new Dictionary<string, IProgram>();
         public static void Load()
         {
+            foreach(string s in MultiRPC_Images.Keys)
+            {
+                ComboBoxItem Box = new ComboBoxItem
+                {
+                    Content = s,
+                    Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0)),
+                    Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(182, 182, 182))
+            };
+                ComboBoxItem Box2 = new ComboBoxItem
+                {
+                    Content = s,
+                    Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0)),
+                    Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(182, 182, 182))
+                };
+                MainWindow.WD.Items_DefaultLarge.Items.Add(Box);
+                MainWindow.WD.Items_DefaultSmall.Items.Add(Box2);
+            }
+
             Programs.Add("afk", new Afk("AFK", "469643793851744257", ""));
             Programs.Add("windows", new Windows("Windows", "469675182802599936", ""));
             Programs.Add("anime", new Anime("Anime", "451178426439565312", ""));
@@ -22,5 +43,19 @@ namespace MultiRPC
             Programs.Add("winmedia", new WindowsMediaPlayer("Win Media Player", "450910667331993601", ""));
             Programs.Add("custom", new Custom("Custom", "", ""));
         }
+
+        public static Dictionary<string, string> MultiRPC_Images = new Dictionary<string, string>()
+        {
+            { "Discord", "https://i.imgur.com/QN5WA4W.png" },
+            { "Firefox", "https://i.imgur.com/oTuovMT.png" },
+            { "FirefoxNightly", "https://i.imgur.com/JBjTLUs.png" },
+            { "Google", "https://i.imgur.com/DJjs5Yc.png" },
+            { "Mel", "https://i.imgur.com/SUm8SwK.png" },
+            { "MultiRPC", "https://i.imgur.com/sYBuOC2.png" },
+            { "Youtube", "https://i.imgur.com/Hc9DirJ.png" },
+            { "Kappa", "https://i.imgur.com/kdUCRrj.png" },
+            { "Mmlol", "https://i.imgur.com/StXRONi.png" },
+            { "Nyancat", "https://i.imgur.com/YoiJGh5.png" }
+        };
     }
 }

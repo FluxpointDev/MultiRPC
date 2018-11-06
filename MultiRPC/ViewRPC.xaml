@@ -8,12 +8,16 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="225" Width="225" Height="85" BorderBrush="Black" BorderThickness="1">
     <Grid x:Name="Background" Width="225" Height="85" MinWidth="2" Background="{DynamicResource Brush_RPCBack}">
-        <Image x:Name="LargeImage" HorizontalAlignment="Left" Height="73" VerticalAlignment="Top" Width="80" Margin="5,5,0,0"/>
-        <Label x:Name="Title" Content="Title" HorizontalAlignment="Left" Height="18" Margin="90,5,0,0" VerticalAlignment="Top" Width="129" Padding="5,0" FontWeight="Bold" Foreground="White"/>
-        <Label x:Name="Text1" Content="Text 1" HorizontalAlignment="Left" Height="18" Margin="90,23,0,0" VerticalAlignment="Top" Width="129" Padding="5,0" Foreground="White"/>
-        <Label x:Name="Text2" Content="Text 2" HorizontalAlignment="Left" Height="18" Margin="90,41,0,0" VerticalAlignment="Top" Width="129" Padding="5,0" Foreground="White"/>
-        <Ellipse x:Name="SmallBackground" Fill="{DynamicResource Brush_RPCBack}" HorizontalAlignment="Left" Height="30" Margin="55,48,0,0" VerticalAlignment="Top" Width="30"/>
-        <Image x:Name="SmallImage" HorizontalAlignment="Left" Height="30" Margin="55,48,0,0" VerticalAlignment="Top" Width="30"/>
-        <Image x:Name="Loading" gif:ImageBehavior.RepeatBehavior="3x"  HorizontalAlignment="Left" Height="82" VerticalAlignment="Top" Width="85" Visibility="Hidden" />
+        <Image x:Name="LargeImage" HorizontalAlignment="Left" Height="73" VerticalAlignment="Top" Width="73" Margin="5,5,0,0" Visibility="Hidden"/>
+        <Label x:Name="Title" Content="Title" Height="18" Margin="83,5,13,0" VerticalAlignment="Top" Padding="5,0" FontWeight="Bold" Foreground="White"/>
+        <Label x:Name="Text1" Content="" HorizontalAlignment="Left" Height="18" Margin="83,23,0,0" VerticalAlignment="Top" Width="129" Padding="5,0" Foreground="White"/>
+        <Label x:Name="Text2" Content="Text 2" HorizontalAlignment="Left" Height="18" Margin="83,41,0,0" VerticalAlignment="Top" Width="129" Padding="5,0" Foreground="White"/>
+        <Ellipse x:Name="SmallBackground" Fill="{DynamicResource Brush_RPCBack}" HorizontalAlignment="Left" Height="30" Margin="55,52,0,0" VerticalAlignment="Top" Width="30" Visibility="Hidden"/>
+        <Image x:Name="Loading" gif:ImageBehavior.RepeatBehavior="3x"  HorizontalAlignment="Left" Height="82" VerticalAlignment="Top" Width="85" />
+        <Ellipse x:Name="SmallImage" HorizontalAlignment="Left" Height="30" Margin="55,52,0,0" VerticalAlignment="Top" Width="30" Visibility="Hidden">
+            <Ellipse.Fill>
+                <ImageBrush/>
+            </Ellipse.Fill>
+        </Ellipse>
     </Grid>
 </UserControl>

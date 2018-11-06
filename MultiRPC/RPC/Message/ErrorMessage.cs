@@ -57,20 +57,5 @@ namespace DiscordRPC.Message
 		
 		/// <summary>Invalid event was sent </summary>
 		InvalidEvent = 4004,
-
-		/*
-		InvalidGuild = 4003,
-		InvalidChannel = 4005,
-		InvalidPermissions = 4006,
-		InvalidClientID = 4007,
-		InvalidOrigin = 4008,
-		InvalidToken = 4009,
-		InvalidUser = 4010,
-		OAuth2Error = 5000,
-		SelectChannelTimeout = 5001,
-		GetGuildTimeout = 5002,
-		SelectVoiceForceRequired = 5003,
-		CaptureShortcutAlreadyListening = 5004
-		*/
 	}
 }

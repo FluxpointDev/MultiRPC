@@ -32,7 +32,7 @@
     <WebPage>publish.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.3.0.0</ApplicationVersion>
+    <ApplicationVersion>1.5.0.0</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -85,10 +85,14 @@
   <PropertyGroup>
     <ApplicationIcon>MultiRPC Icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>MultiRPC.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1-beta1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -134,7 +138,6 @@
     <Compile Include="RPC\Converters\EnumValueAttribute.cs" />
     <Compile Include="RPC\DiscordRpcClient.cs" />
     <Compile Include="RPC\Events.cs" />
-    <Compile Include="RPC\EventType.cs" />
     <Compile Include="RPC\Exceptions\BadPresenceException.cs" />
     <Compile Include="RPC\Exceptions\InvalidConfigurationException.cs" />
     <Compile Include="RPC\Exceptions\StringOutOfRangeException.cs" />
@@ -148,7 +151,6 @@
     <Compile Include="RPC\IO\Opcode.cs" />
     <Compile Include="RPC\IO\PipeFrame.cs" />
     <Compile Include="RPC\Logging\ConsoleLogger.cs" />
-    <Compile Include="RPC\Logging\FileLogger.cs" />
     <Compile Include="RPC\Logging\ILogger.cs" />
     <Compile Include="RPC\Logging\LogLevel.cs" />
     <Compile Include="RPC\Logging\NullLogger.cs" />
@@ -157,21 +159,15 @@
     <Compile Include="RPC\Message\ConnectionFailedMessage.cs" />
     <Compile Include="RPC\Message\ErrorMessage.cs" />
     <Compile Include="RPC\Message\IMessage.cs" />
-    <Compile Include="RPC\Message\JoinMessage.cs" />
-    <Compile Include="RPC\Message\JoinRequestMessage.cs" />
     <Compile Include="RPC\Message\MessageType.cs" />
     <Compile Include="RPC\Message\PresenceMessage.cs" />
     <Compile Include="RPC\Message\ReadyMessage.cs" />
-    <Compile Include="RPC\Message\SpectateMessage.cs" />
-    <Compile Include="RPC\Message\SubscribeMessage.cs" />
-    <Compile Include="RPC\Message\UnsubscribeMsesage.cs" />
     <Compile Include="RPC\Registry\UriScheme.cs" />
     <Compile Include="RPC\RichPresence.cs" />
     <Compile Include="RPC\RPC\Commands\CloseCommand.cs" />
     <Compile Include="RPC\RPC\Commands\ICommand.cs" />
     <Compile Include="RPC\RPC\Commands\PresenceCommand.cs" />
     <Compile Include="RPC\RPC\Commands\RespondCommand.cs" />
-    <Compile Include="RPC\RPC\Commands\SubscribeCommand.cs" />
     <Compile Include="RPC\RPC\Payload\ClosePayload.cs" />
     <Compile Include="RPC\RPC\Payload\Command.cs" />
     <Compile Include="RPC\RPC\Payload\IPayload.cs" />
@@ -236,6 +232,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\DiscordIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\ExitIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -265,6 +264,16 @@
   </ItemGroup>
   <ItemGroup>
     <PublishFile Include="Loading.gif">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="Resources\DiscordIcon.png">
       <Visible>False</Visible>
       <Group>
       </Group>

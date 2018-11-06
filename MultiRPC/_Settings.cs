@@ -12,7 +12,7 @@ namespace MultiRPC
         public WinType WinType = WinType.Auto;
         public bool ForceCustom = false;
         public string CustomClient;
-
+        
         public void Save()
         {
             using (StreamWriter file = File.CreateText("Settings.json"))

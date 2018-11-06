@@ -427,11 +427,6 @@ namespace DiscordRPC.RPC
 			{
 				switch(response.Command)
 				{
-					//We were sent a dispatch, better process it
-					case Command.Dispatch:
-						ProcessDispatch(response);
-						break;
-
 					//We were sent a Activity Update, better enqueue it
 					case Command.SetActivity:
 						if (response.Data == null)
@@ -444,33 +439,7 @@ namespace DiscordRPC.RPC
 							EnqueueMessage(new PresenceMessage(rp));
 						}
 						break;
-
-					case Command.Unsubscribe:
-					case Command.Subscribe:
-
-						//Prepare a serializer that can account for snake_case enums.
-						JsonSerializer serializer = new JsonSerializer();
-						serializer.Converters.Add(new Converters.EnumSnakeCaseConverter());
-
-                        //Go through the data, looking for the evt property, casting it to a server event
-                        ServerEvent evt = response.GetObject<EventPayload>().Event.Value;
-
-						//Enqueue the appropriate message.
-						if (response.Command == Command.Subscribe)
-							EnqueueMessage(new SubscribeMessage(evt));
-						else
-							EnqueueMessage(new UnsubscribeMessage(evt));
-
-						break;
 						
-					
-					case Command.SendActivityJoinInvite:
-						Logger.Info("Got invite response ack.");
-						break;
-
-					case Command.CloseActivityJoinRequest:
-						Logger.Info("Got invite response reject ack.");
-						break;
 						
 					//we have no idea what we were sent
 					default:
@@ -481,36 +450,6 @@ namespace DiscordRPC.RPC
 			}
 
 			Logger.Info("Received a frame while we are disconnected. Ignoring. Cmd: {0}, Event: {1}", response.Command, response.Event);			
-		}
-
-		private void ProcessDispatch(EventPayload response)
-		{
-			if (response.Command != Command.Dispatch) return;
-			if (!response.Event.HasValue) return;
-
-			switch(response.Event.Value)
-			{
-				//We are to join the server
-				case ServerEvent.ActivitySpectate:
-                    SpectateMessage spectate = response.GetObject<SpectateMessage>();
-					EnqueueMessage(spectate);
-					break;
-
-				case ServerEvent.ActivityJoin:
-                    JoinMessage join = response.GetObject<JoinMessage>();
-					EnqueueMessage(join);
-					break;
-
-				case ServerEvent.ActivityJoinRequest:
-                    JoinRequestMessage request = response.GetObject<JoinRequestMessage>();
-					EnqueueMessage(request);
-					break;
-
-				//Unkown dispatch event received. We should just ignore it.
-				default:
-					Logger.Warning("Ignoring {0}", response.Event.Value);
-					break;
-			}
 		}
 		
 		#endregion

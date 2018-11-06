@@ -53,6 +53,11 @@ namespace MultiRPC
             bc.Add(new LogEvent("Discord", message));
         }
 
+        public void Error(string message)
+        {
+            bc.Add(new LogEvent("Error", message));
+        }
+
         /// <summary>
         /// Log message
         /// </summary>

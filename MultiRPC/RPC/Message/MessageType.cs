@@ -27,31 +27,6 @@ namespace DiscordRPC.Message
 		PresenceUpdate,
 
 		/// <summary>
-		/// The Discord Client has subscribed to an event.
-		/// </summary>
-		Subscribe,
-
-		/// <summary>
-		/// The Discord Client has unsubscribed from an event.
-		/// </summary>
-		Unsubscribe,
-		
-		/// <summary>
-		/// The Discord Client wishes for this process to join a game.
-		/// </summary>
-		Join,
-
-		/// <summary>
-		/// The Discord Client wishes for this process to spectate a game. 
-		/// </summary>
-		Spectate,
-
-		/// <summary>
-		/// Another discord user requests permission to join this game.
-		/// </summary>
-		JoinRequest,
-
-		/// <summary>
 		/// The connection to the discord client was succesfull. This is called before <see cref="Ready"/>.
 		/// </summary>
 		ConnectionEstablished,

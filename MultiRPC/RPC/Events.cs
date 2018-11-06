@@ -33,43 +33,7 @@ namespace DiscordRPC.Events
 	/// <param name="sender">The Discord client handler that sent this event</param>
 	/// <param name="args">The arguments supplied with the event</param>
 	public delegate void OnPresenceUpdateEvent(object sender, PresenceMessage args);
-
-	/// <summary>
-	/// Called when the Discord Client has subscribed to an event.
-	/// </summary>
-	/// <param name="sender">The Discord client handler that sent this event</param>
-	/// <param name="args">The arguments supplied with the event</param>
-	public delegate void OnSubscribeEvent(object sender, SubscribeMessage args);
-
-	/// <summary>
-	/// Called when the Discord Client has unsubscribed from an event.
-	/// </summary>
-	/// <param name="sender">The Discord client handler that sent this event</param>
-	/// <param name="args">The arguments supplied with the event</param>
-	public delegate void OnUnsubscribeEvent(object sender, UnsubscribeMessage args);
-
-	/// <summary>
-	/// Called when the Discord Client wishes for this process to join a game.
-	/// </summary>
-	/// <param name="sender">The Discord client handler that sent this event</param>
-	/// <param name="args">The arguments supplied with the event</param>
-	public delegate void OnJoinEvent(object sender, JoinMessage args);
-
-	/// <summary>
-	/// Called when the Discord Client wishes for this process to spectate a game.
-	/// </summary>
-	/// <param name="sender">The Discord client handler that sent this event</param>
-	/// <param name="args">The arguments supplied with the event</param>
-	public delegate void OnSpectateEvent(object sender, SpectateMessage args);
-
-	/// <summary>
-	/// Called when another discord user requests permission to join this game.
-	/// </summary>
-	/// <param name="sender">The Discord client handler that sent this event</param>
-	/// <param name="args">The arguments supplied with the event</param>
-	public delegate void OnJoinRequestedEvent(object sender, JoinRequestMessage args);
-
-
+    
 	/// <summary>
 	/// The connection to the discord client was succesfull. This is called before <see cref="OnReadyEvent"/>.
 	/// </summary>

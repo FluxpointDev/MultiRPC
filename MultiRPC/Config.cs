@@ -11,7 +11,8 @@ namespace MultiRPC
     public class Config
     {
         public CustomConfig Custom;
-
+        public bool InviteWarn = false;
+        public bool AFKTime = false;
         public void Save(MainWindow window = null)
         {
             if (window != null)
