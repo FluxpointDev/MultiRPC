@@ -1,4 +1,5 @@
 ﻿using DiscordRPC;
+using MultiRPC.GUI;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -69,7 +70,7 @@ namespace MultiRPC
             Client.SetPresence(Presence);
         }
 
-        public static void SetPresence(MainWindow window)
+        public static void SetPresence(MainWindow2 window)
         {
             Presence.Details = window.Text_CustomText1.Text;
             Presence.State = window.Text_CustomText2.Text;
@@ -102,11 +103,11 @@ namespace MultiRPC
 
         private static void Client_OnReady(object sender, DiscordRPC.Message.ReadyMessage args)
         {
-            MainWindow.SetRPCUser($"{args.User}");
+            MainWindow2.SetRPCUser($"{args.User}");
             Log.Discord($"RPC ready, found user {args.User.Username}#{args.User.Discriminator}");
-            MainWindow.WD.Label_RPCStatus.Dispatcher.BeginInvoke((Action)delegate ()
+            MainWindow2.WD.Label_RPCStatus.Dispatcher.BeginInvoke((Action)delegate ()
             {
-                MainWindow.WD.EnableRun(true);
+                MainWindow2.WD.EnableRun(true);
             });
         }
 
@@ -115,7 +116,7 @@ namespace MultiRPC
         {
             if (FirstUpdate)
             {
-                MainWindow.SetLiveView(args);
+                MainWindow2.SetLiveView(args);
                 Log.Discord($"Updated presence");
             }
                 FirstUpdate = true;
@@ -132,7 +133,7 @@ namespace MultiRPC
             if (Fails == 4)
             {
                 Log.Discord("Failed to connect shutting down RPC");
-                MainWindow.SetLiveView("error", "Discord client invalid");
+                MainWindow.SetLiveView(GUI.ViewType.Error, "Discord client invalid");
                 Fails = 0;
                 
                 try
@@ -140,9 +141,9 @@ namespace MultiRPC
                     Shutdown();
                 }
                 catch { }
-                MainWindow.WD.Label_RPCStatus.Dispatcher.BeginInvoke((Action)delegate ()
+                MainWindow2.WD.Label_RPCStatus.Dispatcher.BeginInvoke((Action)delegate ()
                 {
-                    MainWindow.WD.DisableRun(true);
+                    MainWindow2.WD.DisableRun(true);
                 });
             }
             else

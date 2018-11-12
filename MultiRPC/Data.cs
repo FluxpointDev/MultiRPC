@@ -30,8 +30,8 @@ namespace MultiRPC
                     Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0)),
                     Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(182, 182, 182))
                 };
-                MainWindow.WD.Items_DefaultLarge.Items.Add(Box);
-                MainWindow.WD.Items_DefaultSmall.Items.Add(Box2);
+                MainWindow2.WD.Items_DefaultLarge.Items.Add(Box);
+                MainWindow2.WD.Items_DefaultSmall.Items.Add(Box2);
             }
 
             Programs.Add("afk", new Afk("AFK", "469643793851744257", ""));

@@ -16,9 +16,9 @@ namespace MultiRPC
             {
                 foreach (LogEvent p in bc.GetConsumingEnumerable())
                 {
-                    MainWindow.WD.View_Logs.Dispatcher.Invoke(() =>
+                    MainWindow2.WD.View_Logs.Dispatcher.Invoke(() =>
                     {
-                        MainWindow.WD.View_Logs.AppendText($"\n[{p.Title}] {p.Message}");
+                        MainWindow2.WD.View_Logs.AppendText($"\n[{p.Title}] {p.Message}");
                     });
                 }
             });

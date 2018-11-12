@@ -120,6 +120,12 @@
     </ApplicationDefinition>
     <Compile Include="Config.cs" />
     <Compile Include="Data.cs" />
+    <Compile Include="GUI\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\ViewRPCControl.xaml.cs">
+      <DependentUpon>ViewRPCControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Logger.cs" />
     <Compile Include="ProgramSettings.xaml.cs">
       <DependentUpon>ProgramSettings.xaml</DependentUpon>
@@ -176,12 +182,17 @@
     <Compile Include="RPC\RPC\Payload\ServerEvent.cs" />
     <Compile Include="RPC\RPC\RpcConnection.cs" />
     <Compile Include="RPC\User.cs" />
-    <Compile Include="ViewRPC.xaml.cs">
-      <DependentUpon>ViewRPC.xaml</DependentUpon>
-    </Compile>
     <Compile Include="_Program.cs" />
     <Compile Include="_Settings.cs" />
-    <Page Include="MainWindow.xaml">
+    <Page Include="GUI\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\ViewRPCControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -189,15 +200,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="MainWindow2.xaml.cs">
+      <DependentUpon>MainWindow2.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ProgramSettings.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ViewRPC.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -304,5 +311,6 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

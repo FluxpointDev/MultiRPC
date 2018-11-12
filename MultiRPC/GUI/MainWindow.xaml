@@ -1,0 +1,23 @@
+﻿<Window x:Name="Window" x:Class="MultiRPC.GUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MultiRPC.GUI"
+        mc:Ignorable="d"
+        Title="MultiRPC" Height="500" Width="640" Background="{DynamicResource Brush_MainBackground}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Icon="/MultiRPC;component/MultiRPC Icon.ico" Left="Auto">
+    <Grid x:Name="Back_Window" Margin="0,0,0,0" Height="460" Width="625">
+        <Button x:Name="BtnStartRPC" Content="Start MultiRPC" HorizontalAlignment="Left" Height="40" Margin="10,10,0,0" VerticalAlignment="Top" Width="130" BorderBrush="{DynamicResource Brush_Ok}" Foreground="{DynamicResource Brush_Ok}" Background="{DynamicResource Brush_TabBackground}" Style="{DynamicResource ButtonHover}"/>
+        <Button x:Name="BtnShutdownRPC" Content="Shutdown" HorizontalAlignment="Left" Height="40" Margin="10,55,0,0" VerticalAlignment="Top" Width="130" BorderBrush="{DynamicResource Brush_No}" Foreground="White" Background="{DynamicResource Brush_No}" Style="{DynamicResource ButtonHover}"/>
+        <Label x:Name="StatusLabel" Content="Stat:" HorizontalAlignment="Left" Margin="145,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush_LabelText}" Width="35" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+        <Label x:Name="UserLabel" Content="User:" HorizontalAlignment="Left" Margin="145,40,0,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush_LabelText}" Width="35" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+        <Label x:Name="AFKLabel" Content="AFK:" HorizontalAlignment="Left" Margin="145,70,0,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush_LabelText}" Width="35" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+        <Frame x:Name="LiveRPC" HorizontalAlignment="Left" Height="85" Margin="390,10,0,0" VerticalAlignment="Top" Width="225" Background="{DynamicResource Brush_RPCBack}" Foreground="{x:Null}"/>
+        <Label x:Name="StatusText" Content="Disconnected" HorizontalAlignment="Left" Margin="185,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Width="143" Height="25" VerticalContentAlignment="Center"/>
+        <Label x:Name="UserText" Content="" HorizontalAlignment="Left" Margin="185,40,0,0" VerticalAlignment="Top" Foreground="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Width="143" Height="25" VerticalContentAlignment="Center"/>
+        <Button x:Name="BtnAuto" Content="Auto" HorizontalAlignment="Left" Height="40" Margin="333,10,0,0" VerticalAlignment="Top" Width="50" BorderBrush="{DynamicResource Brush_No}" Foreground="{DynamicResource Brush_No}" Background="{DynamicResource Brush_TabBackground}" Style="{DynamicResource ButtonHover}"/>
+        <Button x:Name="BtnAFK" Content="AFK" HorizontalAlignment="Left" Height="40" Margin="333,55,0,0" VerticalAlignment="Top" Width="50" BorderBrush="{DynamicResource Brush_Button}" Foreground="{DynamicResource Brush_Button}" Background="#FF3C3C3C" FocusVisualStyle="{DynamicResource ButtonFocus}" Style="{DynamicResource ButtonHover}"/>
+        <TextBox x:Name="AFKText" HorizontalAlignment="Left" Height="25" Margin="185,70,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="143" Foreground="#FFD1D1D1" Background="#FF484B51" VerticalContentAlignment="Center" BorderBrush="{x:Null}" />
+
+    </Grid>
+</Window>

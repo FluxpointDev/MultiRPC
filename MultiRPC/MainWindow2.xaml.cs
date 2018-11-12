@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MultiRPC.GUI;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,15 +14,23 @@ using System.Windows.Media.Imaging;
 
 namespace MultiRPC
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow2 : Window
     {
         private Logger Log = new Logger();
-        public static MainWindow WD;
+        public static MainWindow2 WD;
         public static void SetLiveView(DiscordRPC.Message.PresenceMessage msg)
         {
             WD.View_LiveRPC.Dispatcher.BeginInvoke((Action)delegate ()
             {
-                WD.View_LiveRPC.Content = new ViewRPC(msg);
+                WD.View_LiveRPC.Content = new ViewRPCControl(msg);
+            });
+        }
+
+        public static void SetLiveView(ViewType view)
+        {
+            WD.View_LiveRPC.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                WD.View_LiveRPC.Content = new ViewRPCControl(view);
             });
         }
 
@@ -32,16 +41,8 @@ namespace MultiRPC
                 WD.Label_RPCUser.Content = user;
             });
         }
-
-        public static void SetLiveView(string type, string message = "")
-        {
-            WD.View_LiveRPC.Dispatcher.BeginInvoke((Action)delegate ()
-            {
-                WD.View_LiveRPC.Content = new ViewRPC(type, message, "", "", "","", "");
-            });
-        }
         
-        public MainWindow()
+        public MainWindow2()
         {
             InitializeComponent();
             try
@@ -92,8 +93,8 @@ namespace MultiRPC
             }
             RPC.LoadingSettings = false;
             WD = this;
-            View_DefaultRPC.Content = new ViewRPC("MultiRPC", "Hello", "World", "", "", "", "");
-            View_LiveRPC.Content = new ViewRPC("default", "", "", "", "", "", "");
+            View_DefaultRPC.Content = new ViewRPCControl(ViewType.Default);
+            View_LiveRPC.Content = new ViewRPCControl(ViewType.Default);
             Data.Load();
          //   foreach (IProgram P in Data.Programs.Values.OrderBy(x => x.Data.Priority).Reverse())
           //  {
@@ -181,7 +182,7 @@ namespace MultiRPC
 
             try
             {
-                View_LiveRPC.Content = new ViewRPC("load", "", "", "", "", "", "");
+                View_LiveRPC.Content = new ViewRPCControl(ViewType.Loading);
             }
             catch { }
             try
@@ -192,7 +193,7 @@ namespace MultiRPC
             }
             catch (Exception ex)
             {
-                View_LiveRPC.Content = new ViewRPC("error", ex.Message, "", "", "", "", "");
+                View_LiveRPC.Content = new ViewRPCControl(ViewType.Error, ex.Message);
                 DisableRun(true);
                 Error($"Could not start RPC, {ex.Message}");
                 Log.App($"ERROR {ex}");
@@ -245,7 +246,7 @@ namespace MultiRPC
             }
             try
             {
-                SetLiveView("load");
+                View_LiveRPC.Content = new ViewRPCControl(ViewType.Loading);
             }
             catch { }
             try
@@ -266,7 +267,7 @@ namespace MultiRPC
             if (!IsRPCOn())
                 return;
             RPC.AFK = false;
-            View_LiveRPC.Content = new ViewRPC("default", "", "", "", "", "", "");
+            View_LiveRPC.Content = new ViewRPCControl(ViewType.Default);
             DisableRun();
             try
             {
@@ -368,7 +369,7 @@ namespace MultiRPC
                 if (string.IsNullOrEmpty(Text_AFK.Text))
                 {
                     RPC.AFK = false;
-                    View_LiveRPC.Content = new ViewRPC("default", "", "", "", "", "", "");
+                    View_LiveRPC.Content = new ViewRPCControl(ViewType.Default);
                     DisableRun();
                     try
                     {
@@ -389,7 +390,7 @@ namespace MultiRPC
                 else
                 {
                     RPC.AFK = true;
-                    View_LiveRPC.Content = new ViewRPC("load", "", "", "", "", "", "");
+                    View_LiveRPC.Content = new ViewRPCControl(ViewType.Loading);
                     if (IsRPCOn())
                         RPC.Shutdown();
                     EnableRun(false);
@@ -411,22 +412,22 @@ namespace MultiRPC
                 switch (Box.Tag.ToString())
                 {
                     case "text1":
-                        (View_DefaultRPC.Content as ViewRPC).Text1.Content = Box.Text;
+                        (View_DefaultRPC.Content as ViewRPCControl).Text1.Content = Box.Text;
                         break;
                     case "text2":
-                        (View_DefaultRPC.Content as ViewRPC).Text2.Content = Box.Text;
+                        (View_DefaultRPC.Content as ViewRPCControl).Text2.Content = Box.Text;
                         break;
                     case "large":
                         if (string.IsNullOrEmpty(Box.Text))
-                            (View_DefaultRPC.Content as ViewRPC).LargeImage.ToolTip = null;
+                            (View_DefaultRPC.Content as ViewRPCControl).LargeImage.ToolTip = null;
                         else
-                            (View_DefaultRPC.Content as ViewRPC).LargeImage.ToolTip = new Button().Content = Box.Text;
+                            (View_DefaultRPC.Content as ViewRPCControl).LargeImage.ToolTip = new Button().Content = Box.Text;
                         break;
                     case "small":
                         if (string.IsNullOrEmpty(Box.Text))
-                            (View_DefaultRPC.Content as ViewRPC).SmallImage.ToolTip = null;
+                            (View_DefaultRPC.Content as ViewRPCControl).SmallImage.ToolTip = null;
                         else
-                            (View_DefaultRPC.Content as ViewRPC).SmallImage.ToolTip = new Button().Content = Box.Text;
+                            (View_DefaultRPC.Content as ViewRPCControl).SmallImage.ToolTip = new Button().Content = Box.Text;
                         break;
                 }
             }
@@ -462,7 +463,7 @@ namespace MultiRPC
             ComboBox Box = sender as ComboBox;
             if (Box.SelectedIndex != -1)
             {
-                ViewRPC View = View_DefaultRPC.Content as ViewRPC;
+                ViewRPCControl View = View_DefaultRPC.Content as ViewRPCControl;
                 if (Box.Tag.ToString() == "large")
                 {
                     if (Box.SelectedIndex == 0)
@@ -470,7 +471,7 @@ namespace MultiRPC
                     else
                     {
                         BitmapImage Large = new BitmapImage(new Uri(Data.MultiRPC_Images[(Box.SelectedItem as ComboBoxItem).Content.ToString()]));
-                        Large.DownloadFailed += ViewRPC.Image_FailedLoading;
+                        Large.DownloadFailed += ViewRPCControl.Image_FailedLoading;
                         View.LargeImage.Visibility = Visibility.Visible;
                         View.LargeImage.Source = Large;
                     }
@@ -479,14 +480,14 @@ namespace MultiRPC
                 {
                     if (Box.SelectedIndex == 0)
                     {
-                        View.SmallBackground.Visibility = Visibility.Hidden;
+                        View.SmallBack.Visibility = Visibility.Hidden;
                         View.SmallImage.Visibility = Visibility.Hidden;
                     }
                     else
                     {
                         BitmapImage Small = new BitmapImage(new Uri(Data.MultiRPC_Images[(Box.SelectedItem as ComboBoxItem).Content.ToString()]));
-                        Small.DownloadFailed += ViewRPC.Image_FailedLoading;
-                        View.SmallBackground.Visibility = Visibility.Visible;
+                        Small.DownloadFailed += ViewRPCControl.Image_FailedLoading;
+                        View.SmallBack.Visibility = Visibility.Visible;
                         View.SmallImage.Visibility = Visibility.Visible;
                         View.SmallImage.Fill = new ImageBrush(Small);
                     }
