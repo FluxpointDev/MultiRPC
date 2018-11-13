@@ -14,10 +14,10 @@ namespace MultiRPC
         public static string ConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC.json";
         public static HttpClient HttpClient = new HttpClient();
         public static Logger Log = new Logger();
-        private static System.Timers.Timer UpdateTimer = new System.Timers.Timer(new TimeSpan(0, 1, 0).TotalMilliseconds);
+        private readonly static System.Timers.Timer UpdateTimer = new System.Timers.Timer(new TimeSpan(0, 1, 0).TotalMilliseconds);
         public static DiscordRpcClient Client = null;
         private static System.Timers.Timer ClientTimer;
-        public static DiscordRPC.RichPresence Presence = new RichPresence();
+        public static RichPresence Presence = new RichPresence();
         /// <summary>
         /// Number of failed connection attempts
         /// </summary>
@@ -70,16 +70,16 @@ namespace MultiRPC
             Client.SetPresence(Presence);
         }
 
-        public static void SetPresence(MainWindow2 window)
+        public static void SetPresence(MainWindow window)
         {
-            Presence.Details = window.Text_CustomText1.Text;
-            Presence.State = window.Text_CustomText2.Text;
+            Presence.Details = window.TextCustomText1.Text;
+            Presence.State = window.TextCustomText2.Text;
             Presence.Assets = new Assets
             {
-                LargeImageKey = window.Text_CustomLargeKey.Text,
-                LargeImageText = window.Text_CustomLargeText.Text,
-                SmallImageKey = window.Text_CustomSmallKey.Text,
-                SmallImageText = window.Text_CustomSmallText.Text
+                LargeImageKey = window.TextCustomLargeKey.Text,
+                LargeImageText = window.TextCustomLargeText.Text,
+                SmallImageKey = window.TextCustomSmallKey.Text,
+                SmallImageText = window.TextCustomSmallText.Text
             };
         }
 
@@ -103,11 +103,15 @@ namespace MultiRPC
 
         private static void Client_OnReady(object sender, DiscordRPC.Message.ReadyMessage args)
         {
-            MainWindow2.SetRPCUser($"{args.User}");
-            Log.Discord($"RPC ready, found user {args.User.Username}#{args.User.Discriminator}");
-            MainWindow2.WD.Label_RPCStatus.Dispatcher.BeginInvoke((Action)delegate ()
+            MainWindow.WD.TextUser.Dispatcher.BeginInvoke((Action)delegate ()
             {
-                MainWindow2.WD.EnableRun(true);
+                MainWindow.WD.TextUser.Content = args.User.ToString();
+                MainWindow.DisableElements(true);
+            });
+            Log.Discord($"RPC ready, found user {args.User.Username}#{args.User.Discriminator}");
+            MainWindow.WD.TextStatus.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                MainWindow.DisableElements(true);
             });
         }
 
@@ -116,7 +120,7 @@ namespace MultiRPC
         {
             if (FirstUpdate)
             {
-                MainWindow2.SetLiveView(args);
+                MainWindow.SetLiveView(args);
                 Log.Discord($"Updated presence");
             }
                 FirstUpdate = true;
@@ -133,7 +137,7 @@ namespace MultiRPC
             if (Fails == 4)
             {
                 Log.Discord("Failed to connect shutting down RPC");
-                MainWindow.SetLiveView(GUI.ViewType.Error, "Discord client invalid");
+                MainWindow.SetLiveView(ViewType.Error, "Discord client invalid");
                 Fails = 0;
                 
                 try
@@ -141,9 +145,9 @@ namespace MultiRPC
                     Shutdown();
                 }
                 catch { }
-                MainWindow2.WD.Label_RPCStatus.Dispatcher.BeginInvoke((Action)delegate ()
+                MainWindow.WD.LabelStatus.Dispatcher.BeginInvoke((Action)delegate ()
                 {
-                    MainWindow2.WD.DisableRun(true);
+                    MainWindow.EnableElements(true);
                 });
             }
             else

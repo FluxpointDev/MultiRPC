@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MultiRPC.GUI;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,22 +11,33 @@ namespace MultiRPC
 {
     public class Config
     {
+        public DefaultConfig MultiRPC;
         public CustomConfig Custom;
         public bool InviteWarn = false;
         public bool AFKTime = false;
-        public void Save(MainWindow2 window = null)
+        public void Save(MainWindow window = null)
         {
             if (window != null)
             {
                 Custom = new CustomConfig
                 {
-                    ID = ulong.Parse(window.Text_CustomClientID.Text),
-                    Text1 = window.Text_CustomText1.Text,
-                    Text2 = window.Text_CustomText2.Text,
-                    LargeKey = window.Text_CustomLargeKey.Text,
-                    LargeText = window.Text_CustomLargeText.Text,
-                    SmallKey = window.Text_CustomSmallKey.Text,
-                    SmallText = window.Text_CustomSmallText.Text
+                    Text1 = window.TextCustomText1.Text,
+                    Text2 = window.TextCustomText2.Text,
+                    LargeKey = window.TextCustomLargeKey.Text,
+                    LargeText = window.TextCustomLargeText.Text,
+                    SmallKey = window.TextCustomSmallKey.Text,
+                    SmallText = window.TextCustomSmallText.Text
+                };
+                if (ulong.TryParse(window.TextCustomClientID.Text, out ulong id))
+                    Custom.ID = id;
+                MultiRPC = new DefaultConfig
+                {
+                    Text1 = window.TextDefaultText1.Text,
+                    Text2 = window.TextDefaultText2.Text,
+                    LargeKey = window.ItemsDefaultLarge.SelectedIndex,
+                    LargeText = window.TextDefaultLarge.Text,
+                    SmallKey = window.ItemsDefaultSmall.SelectedIndex,
+                    SmallText = window.TextDefaultSmall.Text
                 };
             }
             using (StreamWriter file = File.CreateText(RPC.ConfigFile))
@@ -38,6 +50,15 @@ namespace MultiRPC
                 serializer.Serialize(file, this);
             }
         }
+    }
+    public class DefaultConfig
+    {
+        public string Text1;
+        public string Text2;
+        public int LargeKey;
+        public string LargeText;
+        public int SmallKey;
+        public string SmallText;
     }
     public class CustomConfig
     {

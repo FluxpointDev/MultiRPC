@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using MultiRPC.GUI;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
 namespace MultiRPC
@@ -16,9 +17,9 @@ namespace MultiRPC
             {
                 foreach (LogEvent p in bc.GetConsumingEnumerable())
                 {
-                    MainWindow2.WD.View_Logs.Dispatcher.Invoke(() =>
+                    MainWindow.WD.Logs.Dispatcher.Invoke(() =>
                     {
-                        MainWindow2.WD.View_Logs.AppendText($"\n[{p.Title}] {p.Message}");
+                        MainWindow.WD.Logs.AppendText($"\n[{p.Title}] {p.Message}");
                     });
                 }
             });

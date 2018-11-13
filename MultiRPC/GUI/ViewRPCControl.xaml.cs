@@ -21,7 +21,7 @@ namespace MultiRPC.GUI
 {
     public enum ViewType
     {
-        Default, Custom, Loading, Error
+        Default, Default2, Custom, Loading, Error
     }
     public class GifImage : Image
     {
@@ -187,6 +187,15 @@ namespace MultiRPC.GUI
                         ViewRPC.Background = SystemColors.ControlDarkDarkBrush;
                         SmallBack.Fill = SystemColors.ControlDarkDarkBrush;
 
+                    }
+                    break;
+                case ViewType.Default2:
+                    {
+                        Title.Content = "MultiRPC";
+                        Text1.Content = "Hello";
+                        Text2.Content = "World";
+                        SmallBack.Visibility = Visibility.Hidden;
+                        SmallImage.Fill = null;
                     }
                     break;
                 case ViewType.Loading:
