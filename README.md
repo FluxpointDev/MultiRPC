@@ -10,15 +10,7 @@ Click more info and run anyway
 
 ![Image](https://i.imgur.com/jV9jIte.png)
 
-Edit the text anyway you like (Not the top one)
-
-![Image](https://i.imgur.com/PLrYtwq.png)
-
-Hit start and enjoy your custom RPC
-
-![Image](https://i.imgur.com/RWZYw0L.png)
-
-![Image](https://i.imgur.com/0sq4UW9.png)
+![Image](https://i.imgur.com/6f09tyT.png)
 
 # Advanced
 
