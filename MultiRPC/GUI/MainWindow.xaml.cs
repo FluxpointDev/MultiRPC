@@ -93,6 +93,12 @@ namespace MultiRPC.GUI
                     Process[] DiscordCanary = Process.GetProcessesByName("DiscordCanary");
                     if (DiscordCanary.Count() != 0)
                         Title = "MultiRPC - Discord Canary";
+                    else
+                    {
+                        Process[] DiscordPTB = Process.GetProcessesByName("DiscordPTB");
+                        if (DiscordPTB.Count() != 0)
+                            Title = "MultiRPC - Discord PTB";
+                    }
                 }
             }
             catch { }
@@ -162,9 +168,15 @@ namespace MultiRPC.GUI
                             Title = "MultiRPC - Discord Canary";
                         else
                         {
-                            Log.Error("No Discord client found");
-                            ViewLiveRPC.Content = new ViewRPCControl(ViewType.Error, "No Discord client");
-                            return;
+                            Process[] DiscordPTB = Process.GetProcessesByName("DiscordPTB");
+                            if (DiscordPTB.Count() != 0)
+                                Title = "MultiRPC - Discord PTB";
+                            else
+                            {
+                                Log.Error("No Discord client found");
+                                ViewLiveRPC.Content = new ViewRPCControl(ViewType.Error, "No Discord client");
+                                return;
+                            }
                         }
 
                     }
