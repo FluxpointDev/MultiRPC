@@ -1,6 +1,8 @@
 ﻿using DiscordRPC;
 using MultiRPC.GUI;
 using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
@@ -13,15 +15,15 @@ namespace MultiRPC
         public static Config Config = new Config();
         public static string ConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC.json";
         public static HttpClient HttpClient = new HttpClient();
-        public static Logger Log = new Logger();
+        public static Logger Log = new Logger("Rpc");
         private readonly static System.Timers.Timer UpdateTimer = new System.Timers.Timer(new TimeSpan(0, 1, 0).TotalMilliseconds);
         public static DiscordRpcClient Client = null;
         private static System.Timers.Timer ClientTimer;
         public static RichPresence Presence = new RichPresence();
         /// <summary>
-        /// Number of failed connection attempts
+        /// Has rpc failed
         /// </summary>
-        public static int Fails = 0;
+        public static bool Failed = false;
         /// <summary>
         /// Is afk rpc status on
         /// </summary>
@@ -32,7 +34,7 @@ namespace MultiRPC
         public static string AFKResume = "";
         public static string Type = "default";
 
-        public static bool LoadingSettings = true;
+        //public static bool LoadingSettings = true;
         public static void CheckField(string text)
         {
             if (!Config.InviteWarn && text.ToLower().Contains("discord.gg/"))
@@ -46,19 +48,17 @@ namespace MultiRPC
         public static void Start(ulong id)
         {
             FirstUpdate = false;
-            Fails = 0;
+            Failed = true;
             //UpdateTimer.Elapsed += UpdateRPC;
-            Log.App("Starting MultiRPC");
+            Log.Write("Starting MultiRPC");
             //Create a new client
-            Client = new DiscordRpcClient(id.ToString());
-
+            Client = new DiscordRpcClient(id.ToString(),false, int.Parse(MainWindow.WD.ItemsPipe.Text) - 2);
             Client.OnClose += Client_OnClose;
             Client.OnConnectionEstablished += Client_OnConnectionEstablished;
             Client.OnConnectionFailed += Client_OnConnectionFailed;
             Client.OnError += Client_OnError;
             Client.OnPresenceUpdate += Client_OnPresenceUpdate;
             Client.OnReady += Client_OnReady;
-
             //Create a timer that will regularly call invoke
             ClientTimer = new System.Timers.Timer(150);
             ClientTimer.Elapsed += (sender, evt) => { Client.Invoke(); };
@@ -103,12 +103,13 @@ namespace MultiRPC
 
         private static void Client_OnReady(object sender, DiscordRPC.Message.ReadyMessage args)
         {
+            Log.Write($"Ready, hi {args.User.Username}#{args.User.Discriminator} 👋");
             MainWindow.WD.TextUser.Dispatcher.BeginInvoke((Action)delegate ()
             {
                 MainWindow.WD.TextUser.Content = args.User.ToString();
                 MainWindow.DisableElements(true);
             });
-            Log.Discord($"RPC ready, found user {args.User.Username}#{args.User.Discriminator}");
+            
             MainWindow.WD.TextStatus.Dispatcher.BeginInvoke((Action)delegate ()
             {
                 MainWindow.DisableElements(true);
@@ -120,53 +121,41 @@ namespace MultiRPC
         {
             if (FirstUpdate)
             {
+                Log.Write($"Updated presence for {args.Name}");
                 MainWindow.SetLiveView(args);
-                Log.Discord($"Updated presence");
             }
-                FirstUpdate = true;
+            FirstUpdate = true;
         }
 
         private static void Client_OnError(object sender, DiscordRPC.Message.ErrorMessage args)
         {
-            Log.Discord($"Error ({args.Code}) {args.Message}");
+            Log.Error($"({args.Code}) {args.Message}");
         }
 
         private static void Client_OnConnectionFailed(object sender, DiscordRPC.Message.ConnectionFailedMessage args)
         {
-            Fails++;
-            if (Fails == 4)
+            if (!Failed)
             {
-                Log.Discord("Failed to connect shutting down RPC");
-                MainWindow.SetLiveView(ViewType.Error, "Discord client invalid");
-                Fails = 0;
-                
-                try
-                {
-                    Shutdown();
-                }
-                catch { }
-                MainWindow.WD.LabelStatus.Dispatcher.BeginInvoke((Action)delegate ()
-                {
-                    MainWindow.EnableElements(true);
-                });
+                Failed = true;
+                Log.Error($"Discord client invalid, {args.Type}");
+                MainWindow.SetLiveView(ViewType.Error, "Attempting to reconnect");
             }
-            else
-                Log.Discord($"Failed connection {args.FailedPipe} {args.Type} | Attempt {Fails}");
         }
 
         private static void Client_OnConnectionEstablished(object sender, DiscordRPC.Message.ConnectionEstablishedMessage args)
         {
-            Log.Discord($"Connected {args.ConnectedPipe} {args.Type}");
+            Failed = false;
+            Log.Write($"Connected");
         }
 
         private static void Client_OnClose(object sender, DiscordRPC.Message.CloseMessage args)
         {
-            Log.Discord($"Closed ({args.Code}) {args.Reason}");
+            Log.Write($"Closed ({args.Code}) {args.Reason}");
         }
 
         public static void Shutdown()
         {
-            Log.App("Shutting down RPC");
+            Log.Write("Shutting down");
             ClientTimer.Dispose();
             Client.Dispose();
         }
@@ -181,7 +170,6 @@ namespace MultiRPC
             {
                 if (endpoint.Address.ToString() == "127.0.0.1" && endpoint.Port > 6462 && endpoint.Port < 6473)
                 {
-                    Log.App(endpoint.Port.ToString());
                     isAvailable = false;
                     break;
                 }

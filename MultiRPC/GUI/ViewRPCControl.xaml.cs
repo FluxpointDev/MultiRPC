@@ -263,7 +263,7 @@ namespace MultiRPC.GUI
 
         public static void Image_FailedLoading(object sender, ExceptionEventArgs e)
         {
-            RPC.Log.Error($"Failed to load image, [{(sender as BitmapImage).UriSource.AbsoluteUri}] {e.ErrorException.Message}");
+            RPC.Log.ImageError(sender as BitmapImage, e);
         }
     }
 }

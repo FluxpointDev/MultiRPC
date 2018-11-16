@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Deployment.Application;
 
 namespace MultiRPC.GUI
 {
@@ -37,8 +38,6 @@ namespace MultiRPC.GUI
                     };
                     RPC.Config = (Config)serializer.Deserialize(reader, typeof(Config));
                 }
-                if (RPC.Config.AFKTime)
-                    ToggleAfkTime.IsChecked = true;
                 ViewDefaultRPC.Content = new ViewRPCControl(ViewType.Default2);
                 if (RPC.Config.MultiRPC != null)
                 {
@@ -58,9 +57,7 @@ namespace MultiRPC.GUI
                     TextCustomSmallText.Text = RPC.Config.Custom.SmallText;
                 }
             }
-            RPC.LoadingSettings = false;
             ViewLiveRPC.Content = new ViewRPCControl(ViewType.Default);
-           
             Data.Load();
             //   foreach (IProgram P in Data.Programs.Values.OrderBy(x => x.Data.Priority).Reverse())
             //  {
@@ -76,6 +73,16 @@ namespace MultiRPC.GUI
             //    List_Programs.Items.Add(B);
             //    Log.Program($"Loaded {P.Name}: {P.Data.Enabled} ({P.Data.Priority})");
             // }
+            if (RPC.Config.Once)
+            {
+                try
+                {
+                    Process[] Discord = Process.GetProcessesByName("MultiRPC");
+                    if (Discord.Length == 2)
+                        Application.Current.Shutdown();
+                }
+                catch { }
+            }
             try
             {
                 Process[] Discord = Process.GetProcessesByName("Discord");
@@ -89,10 +96,40 @@ namespace MultiRPC.GUI
                 }
             }
             catch { }
+            if (ApplicationDeployment.IsNetworkDeployed)
+            {
+                Version Version = ApplicationDeployment.CurrentDeployment.CurrentVersion;
+                TextVersion.Content = $"{Version.Major}.{Version.Minor}.{Version.Build}";
+                try
+                {
+                    UpdateCheckInfo CheckInfo = ApplicationDeployment.CurrentDeployment.CheckForDetailedUpdate();
+                    if (CheckInfo.UpdateAvailable)
+                    {
+                        IsEnabled = false;
+                        Info = CheckInfo;
+                    }
+                }
+                catch
+                {
+                    Log.Error("Failed to check for updates");
+                }
+            }
+            if (RPC.Config.AFKTime)
+                ToggleAfkTime.IsChecked = true;
+            if (RPC.Config.Disable.HelpIcons)
+                ToggleHelpIcons.IsChecked = true;
+            if (RPC.Config.Disable.ProgramsTab)
+                ToggleProgramsTab.IsChecked = true;
+            if (RPC.Config.AutoStart == "MultiRPC")
+                ItemsAutoStart.SelectedIndex = 1;
+            else if (RPC.Config.AutoStart == "Custom")
+                ItemsAutoStart.SelectedIndex = 2;
         }
+        UpdateCheckInfo Info = null;
 
-        private Logger Log = new Logger();
+        private Logger Log = new Logger("App");
         public static MainWindow WD;
+        private bool FormReady = false;
         public static void SetLiveView(DiscordRPC.Message.PresenceMessage msg)
         {
             WD.ViewLiveRPC.Dispatcher.BeginInvoke((Action)delegate ()
@@ -125,7 +162,8 @@ namespace MultiRPC.GUI
                             Title = "MultiRPC - Discord Canary";
                         else
                         {
-                            Error($"Could not find Discord client");
+                            Log.Error("No Discord client found");
+                            ViewLiveRPC.Content = new ViewRPCControl(ViewType.Error, "No Discord client");
                             return;
                         }
 
@@ -133,7 +171,8 @@ namespace MultiRPC.GUI
                 }
                 catch (Exception ex)
                 {
-                    Error($"Could not find Discord client");
+                    Log.Error($"No Discord client found, {ex.Message}");
+                    ViewLiveRPC.Content = new ViewRPCControl(ViewType.Error, "No Discord client");
                     return;
                 }
                 RPC.Type = BtnToggleRPC.Tag.ToString();
@@ -158,7 +197,8 @@ namespace MultiRPC.GUI
                     }
                     catch (Exception ex)
                     {
-                        Log.App($"{ex}");
+                        Log.Error($"Failed to load default fields {ex.Message}");
+                        ViewLiveRPC.Content = new ViewRPCControl(ViewType.Error, "Invalid default fields");
                     }
                 }
                 else if (RPC.Type == "custom")
@@ -168,25 +208,32 @@ namespace MultiRPC.GUI
                     if (!ulong.TryParse(TextCustomClientID.Text, out ID))
                     {
                         EnableElements();
-                        Error("Client ID is invalid");
+                        ViewLiveRPC.Content = new ViewRPCControl(ViewType.Error, "Client ID is invalid");
                         return;
                     }
-                    Dictionary<string, string> dict = new Dictionary<string, string>
-               {
-                    { "client_id", ID.ToString() }
-               };
-                    HttpResponseMessage T = RPC.HttpClient.PostAsync("https://discordapp.com/api/oauth2/token/rpc", new FormUrlEncodedContent(dict)).GetAwaiter().GetResult();
-                    if (T.StatusCode.ToString() != "InternalServerError")
+                    if (!ToggleTokenCheck.IsChecked.Value)
                     {
-                        EnableElements();
-                        Error("Client ID is invalid");
-                        return;
+                        Dictionary<string, string> dict = new Dictionary<string, string>
+                        {
+                            { "client_id", ID.ToString() }
+                        };
+                        HttpResponseMessage T = RPC.HttpClient.PostAsync("https://discordapp.com/api/oauth2/token/rpc", new FormUrlEncodedContent(dict)).GetAwaiter().GetResult();
+                        if (T.StatusCode.ToString() != "InternalServerError")
+                        {
+                            EnableElements();
+                            ViewLiveRPC.Content = new ViewRPCControl(ViewType.Error, "(API) Client ID is invalid");
+                            return;
+                        }
                     }
                     RPC.SetPresence(this);
                     if (ToggleCustomTime.IsChecked.Value)
                         RPC.Presence.Timestamps = new DiscordRPC.Timestamps(DateTime.UtcNow);
                 }
-
+                if (ID == 0)
+                {
+                    EnableElements();
+                    return;
+                }
                 try
                 {
                     ViewLiveRPC.Content = new ViewRPCControl(ViewType.Loading);
@@ -200,11 +247,14 @@ namespace MultiRPC.GUI
                 }
                 catch (Exception ex)
                 {
-                    ViewLiveRPC.Content = new ViewRPCControl(ViewType.Error, ex.Message);
+                    Log.Error($"Could not start RPC, {ex.Message}");
+                    ViewLiveRPC.Content = new ViewRPCControl(ViewType.Error, "Could not start RPC");
+                    try
+                    {
+                        RPC.Shutdown();
+                    }
+                    catch { }
                     EnableElements(true);
-                    Error($"Could not start RPC, {ex.Message}");
-                    Log.App($"ERROR {ex}");
-                    RPC.Shutdown();
                 }
             }
             else
@@ -263,12 +313,7 @@ namespace MultiRPC.GUI
             WD.Help_Error.Visibility = Visibility.Visible;
             WD.Help_Error.ToolTip = new Button().Content = "RPC is running";
         }
-
-        internal void Error(string message)
-        {
-            MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-
+        
         private void BtnUpdatePresence_Click(object sender, RoutedEventArgs e)
         {
             if (BtnToggleRPC.Tag.ToString() == "default")
@@ -288,6 +333,7 @@ namespace MultiRPC.GUI
                     RPC.Presence.Timestamps = null;
                 RPC.SetPresence(TextDefaultText1.Text, TextDefaultText2.Text, Large, TextDefaultLarge.Text, Small, TextDefaultSmall.Text);
                 RPC.Update();
+                RPC.Config.Save(this);
             }
             else
             {
@@ -344,7 +390,7 @@ namespace MultiRPC.GUI
                         RPC.Shutdown();
                     DisableElements();
                     BtnUpdatePresence.IsEnabled = false;
-                    RPC.SetPresence("Away from keyboard", TextAfk.Text, "cat", "Sleepy cat zzzz", "", "");
+                    RPC.SetPresence(TextAfk.Text, "", "cat", "Sleepy cat zzzz", "", "");
                     if (ToggleAfkTime.IsChecked.Value)
                         RPC.Presence.Timestamps = new DiscordRPC.Timestamps(DateTime.UtcNow);
                     else
@@ -361,6 +407,8 @@ namespace MultiRPC.GUI
 
         private void Items_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (!FormReady)
+                return;
             ComboBox Box = sender as ComboBox;
             if (Box.SelectedIndex != -1)
             {
@@ -394,15 +442,15 @@ namespace MultiRPC.GUI
                     }
                 }
             }
+
         }
 
         private void ToggleAfkTime_Checked(object sender, RoutedEventArgs e)
         {
-            if (!RPC.LoadingSettings)
-            {
-                RPC.Config.AFKTime = !RPC.Config.AFKTime;
+            if (!FormReady)
+                return;
+            RPC.Config.AFKTime = !RPC.Config.AFKTime;
                 RPC.Config.Save();
-            }
         }
 
         private void TextField_CheckLimit(object sender, TextChangedEventArgs e)
@@ -440,31 +488,47 @@ namespace MultiRPC.GUI
 
         private void Menu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!IsRPCOn())
+            if (!FormReady)
+                return;
+            string Text = (Menu.SelectedItem as TabItem).Header.ToString();
+            switch (Text.ToLower())
             {
-                string Text = (Menu.SelectedItem as TabItem).Header.ToString();
-                if (Text == "MultiRPC")
-                {
-                    BtnToggleRPC.Content = "Start MultiRPC";
-                    BtnToggleRPC.Tag = "default";
-                }
-                else if (Text == "Custom")
-                {
-                    BtnToggleRPC.Content = "Start Custom";
-                    BtnToggleRPC.Tag = "custom";
-                }
+                case "multirpc":
+                    {
+                        if (!IsRPCOn())
+                        {
+                            BtnToggleRPC.Content = "Start MultiRPC";
+                            BtnToggleRPC.Tag = "default";
+                        }
+                    }
+                    break;
+                case "custom":
+                    {
+                        if (!IsRPCOn())
+                        {
+                            BtnToggleRPC.Content = "Start Custom";
+                            BtnToggleRPC.Tag = "custom";
+                        }
+                    }
+                    break;
+                case "settings":
+                    {
+                       
+                    }
+                    break;
             }
+
         }
 
         private void TextCustomClientID_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!RPC.LoadingSettings)
-            {
-                if (TextCustomClientID.Text.Length < 15 || !ulong.TryParse(TextCustomClientID.Text, out ulong ID))
-                    Help_Error.Visibility = Visibility.Visible;
-                else
-                    Help_Error.Visibility = Visibility.Hidden;
-            }
+            if (!FormReady)
+                return;
+            if (TextCustomClientID.Text.Length < 15 || !ulong.TryParse(TextCustomClientID.Text, out ulong ID))
+                Help_Error.Visibility = Visibility.Visible;
+            else
+                Help_Error.Visibility = Visibility.Hidden;
+
         }
 
         private void HelpButton_Click(object sender, MouseButtonEventArgs e)
@@ -522,54 +586,247 @@ namespace MultiRPC.GUI
             }
         }
 
-        private void ItemsDefaultLarge_Loaded(object sender, RoutedEventArgs e)
+        private void Default_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (RPC.Config.MultiRPC != null && RPC.Config.MultiRPC.LargeKey != -1)
-                ItemsDefaultLarge.SelectedItem = ItemsDefaultLarge.Items[RPC.Config.MultiRPC.LargeKey];
-            else
-                ItemsDefaultLarge.SelectedItem = ItemsDefaultLarge.Items[1];
+            if (!FormReady)
+                return;
+            TextBox Box = sender as TextBox;
+            ViewRPCControl View = ViewDefaultRPC.Content as ViewRPCControl;
+            switch (Box.Name)
+            {
+                case "TextDefaultText1":
+                    View.Text1.Content = Box.Text;
+                    break;
+                case "TextDefaultText2":
+                    View.Text2.Content = Box.Text;
+                    break;
+                case "TextDefaultLarge":
+                    if (string.IsNullOrEmpty(Box.Text))
+                        View.LargeImage.ToolTip = null;
+                    else
+                        View.LargeImage.ToolTip = new Button().Content = Box.Text;
+                    break;
+                case "TextDefaultSmall":
+                    if (string.IsNullOrEmpty(Box.Text))
+                        View.SmallImage.ToolTip = null;
+                    else
+                        View.SmallImage.ToolTip = new Button().Content = Box.Text;
+                    break;
+            }
+
         }
 
-        private void ItemsDefaultSmall_Loaded(object sender, RoutedEventArgs e)
+        private void Links_Clicked(object sender, MouseButtonEventArgs e)
+        {
+            string Url = "";
+            switch((sender as Image).Name)
+            {
+                case "LinkWebsite":
+                    {
+                        Url = "https://blazedev.me";
+                    }
+                    break;
+                case "LinkDownload":
+                    {
+                        Url = "https://multirpc.blazedev.me";
+                    }
+                    break;
+                case "LinkGithub":
+                    {
+                        Url = "https://github.com/xXBuilderBXx/MultiRPC";
+                    }
+                    break;
+                case "LinkServer":
+                    {
+                        MessageBox.Show("Discord Universe is a fun place to hang out with other users, talk about games, anime or development.\n\nWe also have many high quality bots made by me or other popular devs from anime to music to memes so enjoy playing with them.\n\nThis also serves as a support server for many of my projects so dont be afraid to say hi ;)", "Discord Server", MessageBoxButton.OK, MessageBoxImage.Information);
+                        Url = "https://discord.gg/WJTYdNb";
+                    }
+                    break;
+                case "LinkDWebsite":
+                    {
+                        Url = "https://discordapp.com";
+                    }
+                    break;
+                case "LinkDStatus":
+                    {
+                        Url = "https://status.discordapp.com/";
+                    }
+                    break;
+                case "LinkDGithub":
+                    {
+                        Url = "https://github.com/RogueException/Discord.Net";
+                    }
+                    break;
+            }
+            if (Url != "")
+                Process.Start(Url);
+        }
+
+        #region Updater
+        private void Window_ContentRendered(object sender, EventArgs e)
+        {
+            FormReady = true;
+            if (Info != null)
+            {
+                (ViewLiveRPC.Content as ViewRPCControl).Text1.Content = "Downloading Update";
+                (ViewLiveRPC.Content as ViewRPCControl).Text2.Content = "";
+                MessageBox.Show("An update is available, downloading update!");
+                ApplicationDeployment.CurrentDeployment.UpdateCompleted += CurrentDeployment_UpdateCompleted;
+                ApplicationDeployment.CurrentDeployment.UpdateProgressChanged += CurrentDeployment_UpdateProgressChanged;
+                ApplicationDeployment.CurrentDeployment.UpdateAsync();
+            }
+            FormIsReady();
+        }
+
+        private void CurrentDeployment_UpdateProgressChanged(object sender, DeploymentProgressChangedEventArgs e)
+        {
+            (ViewLiveRPC.Content as ViewRPCControl).Text2.Content = $"{e.ProgressPercentage}%/100%";
+        }
+
+        private void CurrentDeployment_UpdateCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/MultiRPC.appref-ms");
+                Application.Current.Shutdown();
+            }
+            else
+                Log.Error($"Failed to update, {e.Error.Message}");
+        }
+        #endregion
+
+        public void FormIsReady()
         {
             if (RPC.Config.MultiRPC != null)
             {
+                ViewRPCControl View = ViewDefaultRPC.Content as ViewRPCControl;
+                View.Text1.Content = RPC.Config.MultiRPC.Text1;
+                View.Text2.Content = RPC.Config.MultiRPC.Text2;
+                if (RPC.Config.MultiRPC != null && RPC.Config.MultiRPC.LargeKey != -1)
+                    ItemsDefaultLarge.SelectedItem = ItemsDefaultLarge.Items[RPC.Config.MultiRPC.LargeKey];
+                else
+                    ItemsDefaultLarge.SelectedItem = ItemsDefaultLarge.Items[1];
                 if (RPC.Config.MultiRPC.SmallKey != -1)
                     ItemsDefaultLarge.SelectedItem = ItemsDefaultLarge.Items[RPC.Config.MultiRPC.SmallKey];
-                (ViewDefaultRPC.Content as ViewRPCControl).Text1.Content = RPC.Config.MultiRPC.Text1;
-                (ViewDefaultRPC.Content as ViewRPCControl).Text2.Content = RPC.Config.MultiRPC.Text2;
-
+                if (!string.IsNullOrEmpty(RPC.Config.MultiRPC.LargeText))
+                    View.LargeImage.ToolTip = new Button().Content = RPC.Config.MultiRPC.LargeText;
+                if (!string.IsNullOrEmpty(RPC.Config.MultiRPC.SmallText))
+                    View.SmallImage.ToolTip = new Button().Content = RPC.Config.MultiRPC.SmallText;
             }
-        }
-
-        private void Default_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (!RPC.LoadingSettings)
+            if (RPC.Config.Disable.HelpIcons)
+                DisableHelpIcons();
+            if (RPC.Config.Disable.MultiProfiles)
+                DisableMulti();
+            if (RPC.Config.Disable.ProgramsTab)
             {
-                TextBox Box = sender as TextBox;
-                ViewRPCControl View = ViewDefaultRPC.Content as ViewRPCControl;
-                switch(Box.Name)
-                {
-                    case "TextDefaultText1":
-                        View.Text1.Content = Box.Text;
-                        break;
-                    case "TextDefaultText2":
-                        View.Text2.Content = Box.Text;
-                        break;
-                    case "TextDefaultLarge":
-                        if (string.IsNullOrEmpty(Box.Text))
-                            View.LargeImage.ToolTip = null;
-                        else
-                            View.LargeImage.ToolTip = new Button().Content = Box.Text;
-                        break;
-                    case "TextDefaultSmall":
-                        if (string.IsNullOrEmpty(Box.Text))
-                            View.SmallImage.ToolTip = null;
-                        else
-                            View.SmallImage.ToolTip = new Button().Content = Box.Text;
-                        break;
-                }
+                TabPrograms.Width = 0;
+                TabPrograms.Visibility = Visibility.Hidden;
+            }
+            if (RPC.Config.AutoStart == "MultiRPC")
+            {
+                TabCustom.IsEnabled = false;
+                Menu.SelectedIndex = 0;
+                BtnToggleRPC_Click(null, null);
+            }
+            else if (RPC.Config.AutoStart == "Custom")
+            {
+                TabMultiRPC.IsEnabled = false;
+                Menu.SelectedIndex = 1;
+                BtnToggleRPC_Click(null, null);
             }
         }
+
+        #region Settings Toggles
+        private void ToggleProgramsTab_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!FormReady)
+                return;
+            if (ToggleProgramsTab.IsChecked.Value)
+            {
+                TabPrograms.Width = 0;
+                TabPrograms.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                TabPrograms.Width = 67;
+                TabPrograms.Visibility = Visibility.Visible;
+            }
+            RPC.Config.Disable.ProgramsTab = !RPC.Config.Disable.ProgramsTab;
+            RPC.Config.Save();
+        }
+
+        private void ToggleHelpIcons_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!FormReady)
+                return;
+            if (ToggleHelpIcons.IsChecked.Value)
+                DisableHelpIcons();
+            else
+                EnableHelpIcons();
+            RPC.Config.Disable.HelpIcons = !RPC.Config.Disable.HelpIcons;
+            RPC.Config.Save();
+        }
+
+        public void EnableHelpIcons()
+        {
+            HelpClientID.Visibility = Visibility.Visible;
+            HelpText1.Visibility = Visibility.Visible;
+            HelpText2.Visibility = Visibility.Visible;
+            HelpLargeKey.Visibility = Visibility.Visible;
+            HelpLargeText.Visibility = Visibility.Visible;
+            HelpSmallKey.Visibility = Visibility.Visible;
+            HelpSmallText.Visibility = Visibility.Visible;
+        }
+
+        public void DisableHelpIcons()
+        {
+            HelpClientID.Visibility = Visibility.Hidden;
+            HelpText1.Visibility = Visibility.Hidden;
+            HelpText2.Visibility = Visibility.Hidden;
+            HelpLargeKey.Visibility = Visibility.Hidden;
+            HelpLargeText.Visibility = Visibility.Hidden;
+            HelpSmallKey.Visibility = Visibility.Hidden;
+            HelpSmallText.Visibility = Visibility.Hidden;
+        }
+        #endregion
+
+        private void ItemsAutoStart_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (FormReady)
+            {
+                RPC.Config.AutoStart = ((sender as ComboBox).SelectedItem as ComboBoxItem).Content.ToString();
+                RPC.Config.Save();
+            }
+        }
+
+#region ToggleProfiles
+        private void ToggleMultiProfiles_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!FormReady)
+                return;
+            if (ToggleMultiProfiles.IsChecked.Value)
+                DisableMulti();
+            else
+                EnableMulti();
+            RPC.Config.Disable.MultiProfiles = !RPC.Config.Disable.MultiProfiles;
+            RPC.Config.Save();
+        }
+
+        public void EnableMulti()
+        {
+            MenuCustomProfiles.Visibility = Visibility.Visible;
+            BtnShareProfile.Visibility = Visibility.Visible;
+            BtnAddProfile.Visibility = Visibility.Visible;
+            BtnDeleteProfile.Visibility = Visibility.Visible;
+        }
+
+        public void DisableMulti()
+        {
+            MenuCustomProfiles.Visibility = Visibility.Hidden;
+            BtnShareProfile.Visibility = Visibility.Hidden;
+            BtnAddProfile.Visibility = Visibility.Hidden;
+            BtnDeleteProfile.Visibility = Visibility.Hidden;
+        }
+        #endregion
     }
 }

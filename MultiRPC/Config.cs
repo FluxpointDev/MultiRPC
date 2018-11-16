@@ -13,8 +13,11 @@ namespace MultiRPC
     {
         public DefaultConfig MultiRPC;
         public CustomConfig Custom;
+        public DisableConfig Disable = new DisableConfig();
         public bool InviteWarn = false;
         public bool AFKTime = false;
+        public string AutoStart = "No";
+        public bool Once = true;
         public void Save(MainWindow window = null)
         {
             if (window != null)
@@ -69,5 +72,11 @@ namespace MultiRPC
         public string LargeText;
         public string SmallKey;
         public string SmallText;
+    }
+    public class DisableConfig
+    {
+        public bool ProgramsTab = false;
+        public bool HelpIcons = false;
+        public bool MultiProfiles = false;
     }
 }

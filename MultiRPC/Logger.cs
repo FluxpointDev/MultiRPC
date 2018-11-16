@@ -1,6 +1,9 @@
 ﻿using MultiRPC.GUI;
+using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace MultiRPC
 {
@@ -10,9 +13,10 @@ namespace MultiRPC
     public class Logger
     {
         BlockingCollection<LogEvent> bc = new BlockingCollection<LogEvent>();
-
-        public Logger()
+        private readonly string Name;
+        public Logger(string name)
         {
+            Name = name;
             Task.Factory.StartNew(() =>
             {
                 foreach (LogEvent p in bc.GetConsumingEnumerable())
@@ -33,17 +37,9 @@ namespace MultiRPC
         /// <summary>
         /// [Discord] Text + Color Custom
         /// </summary>
-        public void App(string message)
+        public void Write(string message)
         {
-            bc.Add(new LogEvent("MultiRPC", message));
-        }
-
-        /// <summary>
-        /// [Discord] Text + Color Custom
-        /// </summary>
-        public void Program(string message)
-        {
-            bc.Add(new LogEvent("Program", message));
+            bc.Add(new LogEvent(Name, message));
         }
 
         /// <summary>
@@ -54,9 +50,19 @@ namespace MultiRPC
             bc.Add(new LogEvent("Discord", message));
         }
 
+        public void Error(Exception ex)
+        {
+            bc.Add(new LogEvent($"{Name} Error", ex.Message));
+        }
+
+        public void ImageError(BitmapImage img, ExceptionEventArgs ex)
+        {
+            bc.Add(new LogEvent("Image Error", $"Failed to download ({img.UriSource.AbsoluteUri}) {ex.ErrorException.Message}"));
+        }
+
         public void Error(string message)
         {
-            bc.Add(new LogEvent("Error", message));
+            bc.Add(new LogEvent($"{Name} Error", message));
         }
 
         /// <summary>
