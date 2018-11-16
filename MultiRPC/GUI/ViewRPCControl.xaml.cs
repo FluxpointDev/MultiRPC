@@ -216,7 +216,7 @@ namespace MultiRPC.GUI
                 case ViewType.Error:
                     {
                         Title.Content = "Error!";
-                        Text1.Content = "";
+                        Text1.Content = Error;
                         Text2.Content = "";
                         ViewRPC.Background = new SolidColorBrush(new Color { R = 255, G = 57, B = 57, A = 80});
                         LargeImage.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/Resources/ExitIcon.png", UriKind.Absolute));

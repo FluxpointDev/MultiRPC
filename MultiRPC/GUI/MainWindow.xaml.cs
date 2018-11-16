@@ -105,7 +105,7 @@ namespace MultiRPC.GUI
             if (ApplicationDeployment.IsNetworkDeployed)
             {
                 Version Version = ApplicationDeployment.CurrentDeployment.CurrentVersion;
-                TextVersion.Content = $"{Version.Major}.{Version.Minor}.{Version.Build}";
+                TextVersion.Content = $"{Version.Major}.{Version.Minor}";
                 try
                 {
                     UpdateCheckInfo CheckInfo = ApplicationDeployment.CurrentDeployment.CheckForDetailedUpdate();
@@ -217,9 +217,11 @@ namespace MultiRPC.GUI
                 {
                     RPC.CheckField(TextCustomText1.Text);
                     RPC.CheckField(TextCustomText2.Text);
+                    TextCustomClientID.Text = TextCustomClientID.Text.Replace(" ", "");
                     if (!ulong.TryParse(TextCustomClientID.Text, out ID))
                     {
                         EnableElements();
+                        Log.Error($"Client ID is invalid");
                         ViewLiveRPC.Content = new ViewRPCControl(ViewType.Error, "Client ID is invalid");
                         return;
                     }
@@ -233,6 +235,7 @@ namespace MultiRPC.GUI
                         if (T.StatusCode.ToString() != "InternalServerError")
                         {
                             EnableElements();
+                            Log.Error($"(API) Client ID is invalid");
                             ViewLiveRPC.Content = new ViewRPCControl(ViewType.Error, "(API) Client ID is invalid");
                             return;
                         }
