@@ -38,6 +38,7 @@ namespace MultiRPC.GUI
                     };
                     RPC.Config = (Config)serializer.Deserialize(reader, typeof(Config));
                 }
+
                 ViewDefaultRPC.Content = new ViewRPCControl(ViewType.Default2);
                 if (RPC.Config.MultiRPC != null)
                 {
@@ -57,6 +58,8 @@ namespace MultiRPC.GUI
                     TextCustomSmallText.Text = RPC.Config.Custom.SmallText;
                 }
             }
+            else
+                RPC.Config.Save();
             ViewLiveRPC.Content = new ViewRPCControl(ViewType.Default);
             Data.Load();
             //   foreach (IProgram P in Data.Programs.Values.OrderBy(x => x.Data.Priority).Reverse())
