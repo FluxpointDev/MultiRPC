@@ -1,22 +1,24 @@
 ﻿using DiscordRPC;
 using MultiRPC.GUI;
 using System;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.NetworkInformation;
 using System.Windows;
 
 namespace MultiRPC
 {
     public static class RPC
     {
+
         public static Config Config = new Config();
-        public static string ConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC.json";
-        public static HttpClient HttpClient = new HttpClient();
-        public static Logger Log = new Logger("Rpc");
-        private readonly static System.Timers.Timer UpdateTimer = new System.Timers.Timer(new TimeSpan(0, 1, 0).TotalMilliseconds);
+        public static string ConfigFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC/";
+        public static string ConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC/Config.json";
+        public static HttpClient HttpClient = new HttpClient
+        {
+            Timeout = new TimeSpan(0, 0, 3)
+        };
+        public static Logger Log = new Logger();
         public static DiscordRpcClient Client = null;
         private static System.Timers.Timer ClientTimer;
         public static RichPresence Presence = new RichPresence();
@@ -42,6 +44,7 @@ namespace MultiRPC
                 Config.InviteWarn = true;
                 Config.Save();
                 MessageBox.Show("Advertising in rpc could result in you being kicked or banned from servers!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Log.App("Disabled invite warning message");
             }
         }
 
@@ -49,10 +52,40 @@ namespace MultiRPC
         {
             FirstUpdate = false;
             Failed = true;
-            //UpdateTimer.Elapsed += UpdateRPC;
-            Log.Write("Starting MultiRPC");
-            //Create a new client
-            Client = new DiscordRpcClient(id.ToString(),false, int.Parse(MainWindow.WD.ItemsPipe.Text) - 2);
+            Log.Rpc("Starting MultiRPC");
+            int Count = 0;
+            bool Found = false;
+            if (App.WD.ItemsPipe.SelectedIndex != 0)
+            {
+                foreach (string i in Directory.GetFiles(@"\\.\pipe\"))
+                {
+                    string[] Split = i.Split('\\');
+                    string Pipe = Split.Last();
+
+                    switch (Pipe)
+                    {
+                        case "discord-sock":
+                            if (App.WD.ItemsPipe.SelectedIndex == 1)
+                                Found = true;
+                            break;
+                        case "discordptb-sock":
+                            if (App.WD.ItemsPipe.SelectedIndex == 2)
+                                Found = true;
+                            break;
+                        case "discordcanary-sock":
+                            if (App.WD.ItemsPipe.SelectedIndex == 3)
+                                Found = true;
+                            break;
+                    }
+                    if (Found)
+                        break;
+                    else if (Pipe.StartsWith("discord"))
+                        Count++;
+                }
+            }
+            RPC.Log.App($"Pipe: {Count}");
+            Client = new DiscordRpcClient(id.ToString(), false, Count);
+            Client.Logger.Level = DiscordRPC.Logging.LogLevel.Info;
             Client.OnClose += Client_OnClose;
             Client.OnConnectionEstablished += Client_OnConnectionEstablished;
             Client.OnConnectionFailed += Client_OnConnectionFailed;
@@ -103,14 +136,14 @@ namespace MultiRPC
 
         private static void Client_OnReady(object sender, DiscordRPC.Message.ReadyMessage args)
         {
-            Log.Write($"Ready, hi {args.User.Username}#{args.User.Discriminator} 👋");
-            MainWindow.WD.TextUser.Dispatcher.BeginInvoke((Action)delegate ()
+            Log.Rpc($"Ready, hi {args.User.Username}#{args.User.Discriminator} 👋");
+            App.WD.TextUser.Dispatcher.BeginInvoke((Action)delegate ()
             {
-                MainWindow.WD.TextUser.Content = args.User.ToString();
+                App.WD.TextUser.Content = args.User.ToString();
                 MainWindow.DisableElements(true);
             });
-            
-            MainWindow.WD.TextStatus.Dispatcher.BeginInvoke((Action)delegate ()
+
+            App.WD.TextStatus.Dispatcher.BeginInvoke((Action)delegate ()
             {
                 MainWindow.DisableElements(true);
             });
@@ -121,7 +154,7 @@ namespace MultiRPC
         {
             if (FirstUpdate)
             {
-                Log.Write($"Updated presence for {args.Name}");
+                Log.Rpc($"Updated presence for {args.Name}");
                 MainWindow.SetLiveView(args);
             }
             FirstUpdate = true;
@@ -129,7 +162,7 @@ namespace MultiRPC
 
         private static void Client_OnError(object sender, DiscordRPC.Message.ErrorMessage args)
         {
-            Log.Error($"({args.Code}) {args.Message}");
+            Log.Error("RPC", $"({args.Code}) {args.Message}");
         }
 
         private static void Client_OnConnectionFailed(object sender, DiscordRPC.Message.ConnectionFailedMessage args)
@@ -137,7 +170,7 @@ namespace MultiRPC
             if (!Failed)
             {
                 Failed = true;
-                Log.Error($"Discord client invalid, {args.Type}");
+                Log.Error("RPC", $"Discord client invalid, {args.Type}");
                 MainWindow.SetLiveView(ViewType.Error, "Attempting to reconnect");
             }
         }
@@ -145,37 +178,21 @@ namespace MultiRPC
         private static void Client_OnConnectionEstablished(object sender, DiscordRPC.Message.ConnectionEstablishedMessage args)
         {
             Failed = false;
-            Log.Write($"Connected");
+            Log.Rpc($"Connected");
         }
 
         private static void Client_OnClose(object sender, DiscordRPC.Message.CloseMessage args)
         {
-            Log.Write($"Closed ({args.Code}) {args.Reason}");
+            Log.Rpc($"Closed ({args.Code}) {args.Reason}");
         }
 
         public static void Shutdown()
         {
-            Log.Write("Shutting down");
+            Log.Rpc("Shutting down");
             ClientTimer.Dispose();
             Client.Dispose();
         }
 
-        public static bool CheckPort()
-        {
-            bool isAvailable = true;
-            IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
-            IPEndPoint[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpListeners();
-
-            foreach (IPEndPoint endpoint in tcpConnInfoArray)
-            {
-                if (endpoint.Address.ToString() == "127.0.0.1" && endpoint.Port > 6462 && endpoint.Port < 6473)
-                {
-                    isAvailable = false;
-                    break;
-                }
-            }
-            return isAvailable;
-        }
     }
 }
 

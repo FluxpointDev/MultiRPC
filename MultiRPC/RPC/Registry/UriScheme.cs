@@ -1,14 +1,9 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace DiscordRPC.Registry
 {
-	internal static class UriScheme
+    internal static class UriScheme
 	{
 		private static void CreateUriScheme(string scheme, string friendlyName, string defaultIcon, string command)
 		{

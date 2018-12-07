@@ -1,16 +1,15 @@
-﻿using DiscordRPC.Converters;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DiscordRPC.RPC.Payload
 {
-	/// <summary>
-	/// The payload that is sent by the client to discord for events such as setting the rich presence.
-	/// <para>
-	/// SetPrecense
-	/// </para>
-	/// </summary>
-	internal class ArgumentPayload : IPayload
+    /// <summary>
+    /// The payload that is sent by the client to discord for events such as setting the rich presence.
+    /// <para>
+    /// SetPrecense
+    /// </para>
+    /// </summary>
+    internal class ArgumentPayload : IPayload
 	{
 		/// <summary>
 		/// The data the server sent too us

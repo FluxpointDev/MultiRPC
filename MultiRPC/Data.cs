@@ -1,7 +1,4 @@
-﻿using MultiRPC.GUI;
-using MultiRPC.Programs;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -13,7 +10,6 @@ namespace MultiRPC
     }
     public static class Data
     {
-        public static _Settings Settings = new _Settings();
         public static Dictionary<string, IProgram> Programs = new Dictionary<string, IProgram>();
 
         public static void Load()
@@ -32,8 +28,8 @@ namespace MultiRPC
                     Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0)),
                     Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(182, 182, 182))
                 };
-                MainWindow.WD.ItemsDefaultLarge.Items.Add(Box);
-                MainWindow.WD.ItemsDefaultSmall.Items.Add(Box2);
+                App.WD.ItemsDefaultLarge.Items.Add(Box);
+                App.WD.ItemsDefaultSmall.Items.Add(Box2);
             }
 
             //Programs.Add("afk", new Afk("AFK", "469643793851744257", ""));

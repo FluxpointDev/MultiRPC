@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DiscordRPC.Helper
 {
 
-	internal class BackoffDelay
+    internal class BackoffDelay
 	{
 		/// <summary>
 		/// The maximum time the backoff can reach

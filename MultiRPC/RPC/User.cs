@@ -1,15 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DiscordRPC
 {
-	/// <summary>
-	/// Object representing a Discord user. This is used for join requests.
-	/// </summary>
-	public class User
+    /// <summary>
+    /// Object representing a Discord user. This is used for join requests.
+    /// </summary>
+    public class User
 	{
 		/// <summary>
 		/// Possible formats for avatars

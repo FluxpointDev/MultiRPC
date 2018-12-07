@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MultiRPC.GUI"
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
-             xmlns:MultiRPC="clr-namespace:MultiRPC" x:Name="ViewRPC" x:Class="MultiRPC.GUI.ViewRPCControl"
+             xmlns:MultiRPC="clr-namespace:MultiRPC" x:Name="ViewRPCForm" x:Class="MultiRPC.GUI.ViewRPC"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Width="225" Height="85" ScrollViewer.VerticalScrollBarVisibility="Disabled" MaxWidth="225" MaxHeight="85" Background="{DynamicResource Brush_RPCBack}">
     <Grid x:Name="Back" MaxWidth="225" MaxHeight="85">
@@ -20,6 +20,7 @@
             </Ellipse.Fill>
         </Ellipse>
         <Image x:Name="Loading" gif:ImageBehavior.RepeatBehavior="3x" HorizontalAlignment="Left" Height="85" VerticalAlignment="Top" Width="85" Visibility="Hidden"/>
+        <Label x:Name="Time" Content="" HorizontalAlignment="Left" Height="18" Margin="85,59,0,0" VerticalAlignment="Top" Width="140" Foreground="White" Padding="0" FontFamily="Yu Gothic UI Semilight" FontSize="11"/>
 
     </Grid>
 </UserControl>

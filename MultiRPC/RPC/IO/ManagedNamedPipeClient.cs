@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using DiscordRPC.Logging;
 using System.IO.Pipes;
 using System.Threading;
@@ -9,10 +7,10 @@ using System.IO;
 
 namespace DiscordRPC.IO
 {
-	/// <summary>
-	/// A named pipe client using the .NET framework <see cref="NamedPipeClientStream"/>
-	/// </summary>
-	public class ManagedNamedPipeClient : INamedPipeClient
+    /// <summary>
+    /// A named pipe client using the .NET framework <see cref="NamedPipeClientStream"/>
+    /// </summary>
+    public class ManagedNamedPipeClient : INamedPipeClient
 	{
 		const string PIPE_NAME = @"discord-ipc-{0}";
 

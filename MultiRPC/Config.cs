@@ -1,23 +1,33 @@
 ﻿using MultiRPC.GUI;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MultiRPC
 {
     public class Config
     {
-        public DefaultConfig MultiRPC;
-        public CustomConfig Custom;
-        public DisableConfig Disable = new DisableConfig();
+        /// <summary> Has the user been warned for invites in rich presence text </summary>
         public bool InviteWarn = false;
+
+        /// <summary> Enable showing afk time </summary>
         public bool AFKTime = false;
+
+        /// <summary> Enable starting rich presence when app loads </summary>
         public string AutoStart = "No";
+
+        /// <summary> Default rich presence config </summary>
+        public DefaultConfig MultiRPC;
+
+        /// <summary> Custom rich presence config [OLD] </summary>
+        public CustomConfig Custom;
+
+        /// <summary> Disabled settings config  </summary>
+        public DisableConfig Disabled = new DisableConfig();
+
+        /// <summary> Only allow one instance of the app </summary>
         public bool Once = true;
+
+        /// <summary> Save the config </summary>
         public void Save(MainWindow window = null)
         {
             if (window != null)
@@ -54,6 +64,8 @@ namespace MultiRPC
             }
         }
     }
+
+    /// <summary> Default rich presence config </summary>
     public class DefaultConfig
     {
         public string Text1;
@@ -63,6 +75,8 @@ namespace MultiRPC
         public int SmallKey;
         public string SmallText;
     }
+
+    /// <summary> Custom rich presence config </summary>
     public class CustomConfig
     {
         public ulong ID;
@@ -73,10 +87,20 @@ namespace MultiRPC
         public string SmallKey;
         public string SmallText;
     }
+
+    /// <summary> Disabled settings config </summary>
     public class DisableConfig
     {
+        // Force check if Discord process is running on RPC start
+        public bool DiscordCheck = false;
+
+        /// <summary> Test </summary>
+        public bool TokenCheck = false;
+
+        /// <summary> Disable the programs tab </summary>
         public bool ProgramsTab = false;
+
+        /// <summary> Disable the custom tab help icons </summary>
         public bool HelpIcons = false;
-        public bool MultiProfiles = false;
     }
 }

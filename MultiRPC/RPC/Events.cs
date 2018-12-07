@@ -1,17 +1,13 @@
 ﻿using DiscordRPC.Message;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DiscordRPC.Events
 {
-	/// <summary>
-	/// Called when the Discord Client is ready to send and receive messages.
-	/// </summary>
-	/// <param name="sender">The Discord client handler that sent this event</param>
-	/// <param name="args">The arguments supplied with the event</param>
-	public delegate void OnReadyEvent(object sender, ReadyMessage args);
+    /// <summary>
+    /// Called when the Discord Client is ready to send and receive messages.
+    /// </summary>
+    /// <param name="sender">The Discord client handler that sent this event</param>
+    /// <param name="args">The arguments supplied with the event</param>
+    public delegate void OnReadyEvent(object sender, ReadyMessage args);
 
 	/// <summary>
 	/// Called when connection to the Discord Client is lost. The connection will remain close and unready to accept messages until the Ready event is called again.

@@ -1,17 +1,14 @@
 ﻿using DiscordRPC.Logging;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace DiscordRPC.IO
 {
-	/// <summary>
-	/// Pipe Client used to communicate with Discord.
-	/// </summary>
-	public class NativeNamedPipeClient : INamedPipeClient
+    /// <summary>
+    /// Pipe Client used to communicate with Discord.
+    /// </summary>
+    public class NativeNamedPipeClient : INamedPipeClient
 	{
 		const string PIPE_NAME = @"\\?\pipe\discord-ipc-{0}";
 

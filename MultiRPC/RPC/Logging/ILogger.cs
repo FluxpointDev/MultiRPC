@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DiscordRPC.Logging
+﻿namespace DiscordRPC.Logging
 {
-	/// <summary>
-	/// Logging interface to log the internal states of the pipe. Logs are sent in a NON thread safe way. They can come from multiple threads and it is upto the ILogger to account for it.
-	/// </summary>
-	public interface ILogger
+    /// <summary>
+    /// Logging interface to log the internal states of the pipe. Logs are sent in a NON thread safe way. They can come from multiple threads and it is upto the ILogger to account for it.
+    /// </summary>
+    public interface ILogger
 	{
 		/// <summary>
 		/// The level of logging to apply to this logger.

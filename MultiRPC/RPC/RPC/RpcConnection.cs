@@ -6,15 +6,14 @@ using DiscordRPC.RPC.Payload;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Newtonsoft.Json;
 using DiscordRPC.Logging;
 
 namespace DiscordRPC.RPC
 {
-	/// <summary>
-	/// Communicates between the client and discord through RPC
-	/// </summary>
-	public class RpcConnection : IDisposable
+    /// <summary>
+    /// Communicates between the client and discord through RPC
+    /// </summary>
+    public class RpcConnection : IDisposable
 	{
 		/// <summary>
 		/// Version of the RPC Protocol

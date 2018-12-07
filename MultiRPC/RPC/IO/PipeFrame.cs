@@ -1,16 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace DiscordRPC.IO
 {
-	/// <summary>
-	/// A frame received and sent to the Discord client for RPC communications.
-	/// </summary>
-	public struct PipeFrame
+    /// <summary>
+    /// A frame received and sent to the Discord client for RPC communications.
+    /// </summary>
+    public struct PipeFrame
 	{
 		/// <summary>
 		/// The maxium size of a pipe frame (16kb).

@@ -1,15 +1,11 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DiscordRPC
 {
-	/// <summary>
-	/// Configuration of the current RPC connection
-	/// </summary>
-	public class Configuration
+    /// <summary>
+    /// Configuration of the current RPC connection
+    /// </summary>
+    public class Configuration
 	{
 		/// <summary>
 		/// The Discord API endpoint that should be used.

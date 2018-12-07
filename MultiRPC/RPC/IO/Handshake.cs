@@ -1,12 +1,8 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DiscordRPC.IO
 {
-	internal class Handshake
+    internal class Handshake
 	{       
 		/// <summary>
 		/// Version of the IPC API we are using

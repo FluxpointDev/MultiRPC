@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DiscordRPC.Logging
+﻿namespace DiscordRPC.Logging
 {
-	/// <summary>
-	/// Ignores all log events
-	/// </summary>
-	public class NullLogger : ILogger
+    /// <summary>
+    /// Ignores all log events
+    /// </summary>
+    public class NullLogger : ILogger
 	{
 		/// <summary>
 		/// The level of logging to apply to this logger.

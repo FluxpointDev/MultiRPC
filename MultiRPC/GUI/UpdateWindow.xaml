@@ -1,0 +1,16 @@
+﻿<Window x:Class="MultiRPC.GUI.UpdateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title=" Update Available" Height="300" Width="400" WindowStyle="ToolWindow" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True" BorderBrush="{DynamicResource Brush_Button}" BorderThickness="2" WindowStartupLocation="CenterOwner">
+    <Grid Background="{DynamicResource Brush_MainBackground}">
+        <TextBox x:Name="Changelog" x:FieldModifier="public" IsReadOnly="True" TextWrapping="Wrap" Background="{DynamicResource ComboBox.Disabled.Background}" BorderBrush="{x:Null}" Foreground="#FFC9C9C9" Text="Loading changelog" BorderThickness="0" HorizontalScrollBarVisibility="Auto" Margin="10,55,10,0" Height="200" VerticalAlignment="Top"/>
+        <Button x:Name="BtnSkip" Content="Skip" Margin="0,10,10,0" Width="80" BorderBrush="{DynamicResource Brush_No}" Foreground="White" Background="{DynamicResource Brush_No}" Style="{DynamicResource ButtonHover}" Height="40" VerticalAlignment="Top" HorizontalAlignment="Right" Click="BtnSkip_Click"/>
+        <Label x:Name="TitleNewVersion" Content="New Version: 0.0.0" HorizontalAlignment="Left" Margin="10,27,0,0" VerticalAlignment="Top" Width="190" Height="23" Foreground="#FFE4E4E4" FontWeight="Bold" FontSize="11" HorizontalContentAlignment="Center"/>
+        <Button x:Name="BtnUpdate" Content="Update Now" Margin="0,10,95,0" Width="90" BorderBrush="{DynamicResource Brush_Ok}" Foreground="White" Background="{DynamicResource Brush_Ok}" Style="{DynamicResource ButtonHover}" Height="40" VerticalAlignment="Top" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Click="BtnUpdate_Click"/>
+        <Label x:Name="TitleOldVersion" Content="Current Version: 0.0.0" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush_LabelText}" Width="190" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="11"/>
+
+    </Grid>
+</Window>

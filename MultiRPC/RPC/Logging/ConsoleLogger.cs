@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DiscordRPC.Logging
 {
-	/// <summary>
-	/// Logs the outputs to the console using <see cref="Console.WriteLine()"/>
-	/// </summary>
-	public class ConsoleLogger : ILogger
+    /// <summary>
+    /// Logs the outputs to the console using <see cref="Console.WriteLine()"/>
+    /// </summary>
+    public class ConsoleLogger : ILogger
 	{
 		/// <summary>
 		/// The level of logging to apply to this logger.
@@ -32,9 +29,11 @@ namespace DiscordRPC.Logging
 		/// <param name="args"></param>
 		public void Info(string message, params object[] args)
 		{
+            MultiRPC.RPC.Log.App($"LOG: {message}");
 			if (Level != LogLevel.Info) return;
 
-			if (Coloured) Console.ForegroundColor = ConsoleColor.White;
+			if (Coloured)
+                Console.ForegroundColor = ConsoleColor.White;
 			Console.WriteLine("INFO: " + message, args);
 		}
 

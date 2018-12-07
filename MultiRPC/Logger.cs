@@ -1,5 +1,4 @@
-﻿using MultiRPC.GUI;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -13,17 +12,15 @@ namespace MultiRPC
     public class Logger
     {
         BlockingCollection<LogEvent> bc = new BlockingCollection<LogEvent>();
-        private readonly string Name;
-        public Logger(string name)
+        public Logger()
         {
-            Name = name;
             Task.Factory.StartNew(() =>
             {
                 foreach (LogEvent p in bc.GetConsumingEnumerable())
                 {
-                    MainWindow.WD.Logs.Dispatcher.Invoke(() =>
+                    MultiRPC.App.WD.Logs.Dispatcher.Invoke(() =>
                     {
-                        MainWindow.WD.Logs.AppendText($"\n[{p.Title}] {p.Message}");
+                        MultiRPC.App.WD.Logs.AppendText($"\n[{p.Title}] {p.Message}");
                     });
                 }
             });
@@ -34,40 +31,46 @@ namespace MultiRPC
             bc.CompleteAdding();
         }
 
-        /// <summary>
-        /// [Discord] Text + Color Custom
-        /// </summary>
-        public void Write(string message)
+        /// <summary> [App] Text </summary>
+        public void App(string message)
         {
-            bc.Add(new LogEvent(Name, message));
+            bc.Add(new LogEvent("App", message));
         }
 
-        /// <summary>
-        /// [Discord] Text + Color Custom
-        /// </summary>
+        /// <summary> [RPC] Text </summary>
+        public void Rpc(string message)
+        {
+            bc.Add(new LogEvent("RPC", message));
+        }
+
+        /// <summary> [Discord] Text </summary>
         public void Discord(string message)
         {
             bc.Add(new LogEvent("Discord", message));
         }
 
-        public void Error(Exception ex)
+        /// <summary> [Custom Error] Error message </summary>
+        public void Error(string name, string message)
         {
-            bc.Add(new LogEvent($"{Name} Error", ex.Message));
+            bc.Add(new LogEvent($"{name} Error", message));
         }
 
+        /// <summary> [Custom Error] Exception error </summary>
+        public void Error(string name, Exception ex)
+        {
+            bc.Add(new LogEvent($"{name} Error", ex.Message));
+        }
+
+        /// <summary> [Image Error] Failed to download </summary>
         public void ImageError(BitmapImage img, ExceptionEventArgs ex)
         {
-            bc.Add(new LogEvent("Image Error", $"Failed to download ({img.UriSource.AbsoluteUri}) {ex.ErrorException.Message}"));
+            if (ex == null)
+                bc.Add(new LogEvent("Image Error", $"Failed to download ({img.UriSource.AbsoluteUri}) Network error"));
+            else
+                bc.Add(new LogEvent("Image Error", $"Failed to download ({img.UriSource.AbsoluteUri}) {ex.ErrorException.Message}"));
         }
 
-        public void Error(string message)
-        {
-            bc.Add(new LogEvent($"{Name} Error", message));
-        }
-
-        /// <summary>
-        /// Log message
-        /// </summary>
+        /// <summary> Log message class </summary>
         internal class LogEvent
         {
             internal string Title;

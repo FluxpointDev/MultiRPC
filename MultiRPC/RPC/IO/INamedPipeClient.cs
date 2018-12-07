@@ -1,15 +1,12 @@
 ﻿using DiscordRPC.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DiscordRPC.IO
 {
-	/// <summary>
-	/// Pipe Client used to communicate with Discord.
-	/// </summary>
-	public interface INamedPipeClient : IDisposable
+    /// <summary>
+    /// Pipe Client used to communicate with Discord.
+    /// </summary>
+    public interface INamedPipeClient : IDisposable
 	{
 
 		/// <summary>
