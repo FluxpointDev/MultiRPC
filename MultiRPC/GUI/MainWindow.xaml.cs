@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,6 +19,7 @@ namespace MultiRPC.GUI
         public MainWindow()
         {
             InitializeComponent();
+            TabDebug.Visibility = Visibility.Hidden;
             IsEnabled = false;
             if (!Directory.Exists(RPC.ConfigFolder))
                 Directory.CreateDirectory(RPC.ConfigFolder);
@@ -325,7 +327,8 @@ namespace MultiRPC.GUI
         
         private void BtnUpdatePresence_Click(object sender, RoutedEventArgs e)
         {
-            if (BtnToggleRPC.Tag.ToString() == "default")
+            RPC.Config.Save(this);
+            if (RPC.Type == "default")
             {
                 string Large = "";
                 if (ItemsDefaultLarge.SelectedIndex != -1)
@@ -342,7 +345,6 @@ namespace MultiRPC.GUI
                     RPC.Presence.Timestamps = null;
                 RPC.SetPresence(TextDefaultText1.Text, TextDefaultText2.Text, Large, TextDefaultLarge.Text, Small, TextDefaultSmall.Text);
                 RPC.Update();
-                RPC.Config.Save(this);
             }
             else
             {
@@ -380,7 +382,8 @@ namespace MultiRPC.GUI
                 }
                 else
                 {
-                    RPC.Presence.State = TextAfk.Text;
+                    RPC.Presence.Details = TextAfk.Text;
+                    TextAfk.Text = "";
                     RPC.Update();
                 }
             }
@@ -400,6 +403,7 @@ namespace MultiRPC.GUI
                     if (RPC.Config.Disabled.DiscordCheck && !FuncDiscord.CheckDiscordClient())
                         return;
                     RPC.AFK = true;
+                    
                     ViewLiveRPC.Content = new ViewRPC(ViewType.Loading);
                     BtnAfk.BorderBrush = (Brush)Application.Current.Resources["Brush_Button"];
                     BtnAfk.Background = (Brush)Application.Current.Resources["Brush_Button"];
@@ -409,6 +413,7 @@ namespace MultiRPC.GUI
                     DisableElements();
                     BtnUpdatePresence.IsEnabled = false;
                     RPC.SetPresence(TextAfk.Text, "", "cat", "Sleepy cat zzzz", "", "");
+                    TextAfk.Text = "";
                     if (ToggleAfkTime.IsChecked.Value)
                         RPC.Presence.Timestamps = new DiscordRPC.Timestamps(DateTime.UtcNow);
                     else
@@ -719,6 +724,32 @@ namespace MultiRPC.GUI
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             RPC.Config.Save(this);
+        }
+
+        private void BntDebugMenu_Click(object sender, RoutedEventArgs e)
+        {
+            TabDebug.Visibility = Visibility.Visible;
+        }
+
+        private void BtnDebugConsole_Click(object sender, RoutedEventArgs e)
+        {
+            ConsoleManager.Toggle();
+        }
+
+        private void BtnDebugStartRPC_Click(object sender, RoutedEventArgs e)
+        {
+            RPC.SetPresence("Testing", "Debug", "debug", "", "", "");
+            RPC.Start(450894077165043722);
+        }
+
+        private void BtnDebugStopRPC_Click(object sender, RoutedEventArgs e)
+        {
+            RPC.Shutdown();
+        }
+
+        private void BtnDebugSteam_Click(object sender, RoutedEventArgs e)
+        {
+            RPC.Start(450894077165043722, TextDebugSteamID.Text);
         }
     }
 }

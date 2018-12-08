@@ -1,7 +1,5 @@
-﻿using System;
-using System.Deployment.Application;
+﻿using System.Deployment.Application;
 using System.IO;
-using System.Linq;
 using System.Net.NetworkInformation;
 using System.Windows;
 

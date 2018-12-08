@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -21,39 +20,30 @@ namespace MultiRPC.GUI
 
         private void ErrorWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            try
+            LabelDev.Content = App.Developer;
+            if (Test)
             {
-                LabelDev.Content = App.Developer;
-                if (Test)
-                {
-                    Title = "TEST - Error";
-                    Error.Text = "Grrr what are you looking at";
-                    Height += 10;
-                }
-                else
-                {
-                    string Username = Environment.UserName;
-                    foreach (string l in ErrorMessage.Split('\\'))
-                    {
-                        if (l.Contains(Username))
-                        {
-                            Username = l;
-                            break;
-                        }
-                    }
-                    Error.Text = ErrorMessage.Replace(Username, "(USER)");
-                    //Error.Height = ErrorMessage.Split(Environment.NewLine.ToCharArray()).Count() * 20 + 20;
-                    //Height = Height + Error.Height - 190;
-                    //if (Height > 700)
-                    //{
-                    //    Error.Height = 680;
-                    //    Height = 700;
-                    //}
-                }
+                Title = "TEST - Error";
+                Error.Text = "Grrr what are you looking at";
+                Height += 10;
             }
-            catch(Exception ex)
+            else
             {
-                MessageBox.Show(ex.ToString());
+                try
+                {
+                    RPC.Config.Save(App.WD);
+                }
+                catch { }
+                string Username = Environment.UserName;
+                foreach (string l in ErrorMessage.Split('\\'))
+                {
+                    if (l.Contains(Username))
+                    {
+                        Username = l;
+                        break;
+                    }
+                }
+                Error.Text = ErrorMessage.Replace(Username, "(USER)");
             }
         }
 

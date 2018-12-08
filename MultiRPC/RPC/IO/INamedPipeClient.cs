@@ -1,5 +1,4 @@
-﻿using DiscordRPC.Logging;
-using System;
+﻿using System;
 
 namespace DiscordRPC.IO
 {
@@ -8,12 +7,6 @@ namespace DiscordRPC.IO
     /// </summary>
     public interface INamedPipeClient : IDisposable
 	{
-
-		/// <summary>
-		/// The logger for the Pipe client to use
-		/// </summary>
-		ILogger Logger { get; set; }
-
 		/// <summary>
 		/// Is the pipe client currently connected?
 		/// </summary>

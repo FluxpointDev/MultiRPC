@@ -31,8 +31,8 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.0.0.0</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>3.1.0.1</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -124,6 +124,7 @@
     </ApplicationDefinition>
     <Compile Include="Config.cs" />
     <Compile Include="Data.cs" />
+    <Compile Include="GUI\ConsoleManager.cs" />
     <Compile Include="GUI\FuncDiscord.cs" />
     <Compile Include="GUI\FuncUpdater.cs" />
     <Compile Include="GUI\UpdateWindow.xaml.cs">
@@ -167,10 +168,6 @@
     <Compile Include="RPC\IO\NativeNamedPipeClient.cs" />
     <Compile Include="RPC\IO\Opcode.cs" />
     <Compile Include="RPC\IO\PipeFrame.cs" />
-    <Compile Include="RPC\Logging\ConsoleLogger.cs" />
-    <Compile Include="RPC\Logging\ILogger.cs" />
-    <Compile Include="RPC\Logging\LogLevel.cs" />
-    <Compile Include="RPC\Logging\NullLogger.cs" />
     <Compile Include="RPC\Message\CloseMessage.cs" />
     <Compile Include="RPC\Message\ConnectionEstablishedMessage.cs" />
     <Compile Include="RPC\Message\ConnectionFailedMessage.cs" />

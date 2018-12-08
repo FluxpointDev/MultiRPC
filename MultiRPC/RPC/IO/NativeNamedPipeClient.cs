@@ -1,5 +1,4 @@
-﻿using DiscordRPC.Logging;
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -11,11 +10,6 @@ namespace DiscordRPC.IO
     public class NativeNamedPipeClient : INamedPipeClient
 	{
 		const string PIPE_NAME = @"\\?\pipe\discord-ipc-{0}";
-
-		/// <summary>
-		/// The logger of this pipe
-		/// </summary>
-		public ILogger Logger { get; set; }
 		
 		/// <summary>
 		/// Is the pipe currently connected?
@@ -45,13 +39,13 @@ namespace DiscordRPC.IO
 		{
 			if (IsConnected)
 			{
-				Logger.Error("Cannot connect as the pipe is already connected");
+				Console.WriteLine("Cannot connect as the pipe is already connected");
 				throw new InvalidPipeException("Cannot connect as the pipe is already connected");
 			}
 
 			if (pipe > 9)
 			{
-				Logger.Error("Argument cannot be greater than 9");
+				Console.WriteLine("Argument cannot be greater than 9");
 				throw new ArgumentOutOfRangeException("pipe", "Argument cannot be greater than 9");
 			}
 			
@@ -74,24 +68,24 @@ namespace DiscordRPC.IO
 		{
 			if (IsConnected)
 			{
-				Logger.Error("Cannot connect as the pipe is already connected");
+				Console.WriteLine("Cannot connect as the pipe is already connected");
 				throw new InvalidPipeException("Cannot connect as the pipe is already connected");
 			}
 
 			//Prepare the pipe name
 			string pipename = string.Format(PIPE_NAME, pipe);
-			Logger.Info("Attempting to connect to " + pipename);
+			Console.WriteLine("Attempting to connect to " + pipename);
 			
 			uint err = NativePipe.Open(pipename);
 			if (err == 0 && IsConnected)
 			{
-				Logger.Info("Succesfully connected to " + pipename);
+				Console.WriteLine("Succesfully connected to " + pipename);
 				_connectedPipe = pipe;
 				return true;
 			}
 			else
 			{
-				Logger.Error("Failed to connect to native pipe. Err: {0}", err);
+				Console.WriteLine($"Failed to connect to native pipe. Err: {err}");
 				return false;
 			}
 		}
@@ -119,7 +113,7 @@ namespace DiscordRPC.IO
 				{
 					//We have a pretty bad error, we will log it for prosperity. 
 					_lasterr = (NativePipe.PipeReadError)bytesRead;
-					Logger.Error("Native pipe failed to read: {0}", _lasterr.ToString());
+					Console.WriteLine($"Native pipe failed to read: {_lasterr.ToString()}");
 
 					//Close this pipe
 					this.Close();
@@ -139,7 +133,7 @@ namespace DiscordRPC.IO
 					return true;
 				
 				//We failed
-				Logger.Error("Pipe failed to read from the data received by the stream.");
+				Console.WriteLine("Pipe failed to read from the data received by the stream.");
 				return false;
 			}
 		}

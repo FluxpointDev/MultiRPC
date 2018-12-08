@@ -53,7 +53,15 @@ namespace MultiRPC
             { "Youtube", "https://i.imgur.com/Hc9DirJ.png" },
             { "Kappa", "https://i.imgur.com/kdUCRrj.png" },
             { "Mmlol", "https://i.imgur.com/StXRONi.png" },
-            { "Nyancat", "https://i.imgur.com/YoiJGh5.png" }
+            { "Nyancat", "https://i.imgur.com/YoiJGh5.png" },
+            { "Monstercat", "https://i.imgur.com/QTGPwi0.png" },
+            { "Thonk", "https://i.imgur.com/P4Mvpmf.png" },
+            { "Lul", "https://i.imgur.com/ej6GQjc.png" },
+            { "Pepe", "https://i.imgur.com/7ybyrw7.png" },
+            { "Trollface", "https://i.imgur.com/tanLvrt.png" },
+            { "Doge", "https://i.imgur.com/ytpmvjg.png" },
+            { "Christmas", "https://i.imgur.com/NF2enEO.png" },
+            { "Present", "https://i.imgur.com/qMfJKt6.png" }
         };
     }
 }

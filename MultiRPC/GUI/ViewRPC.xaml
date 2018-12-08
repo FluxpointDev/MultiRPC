@@ -12,7 +12,7 @@
         <Label x:Name="Title" Content="Title" HorizontalAlignment="Left" Height="18" Margin="85,5,0,0" VerticalAlignment="Top" Width="135" Foreground="White" Padding="0" FontFamily="Yu Gothic UI Semibold" FontSize="11"/>
         <Label x:Name="Text1" Content="Text 1" HorizontalAlignment="Left" Height="18" Margin="85,23,0,0" VerticalAlignment="Top" Width="140" Padding="0" Foreground="White" FontFamily="Yu Gothic UI Semilight" FontSize="11"/>
         <Label x:Name="Text2" Content="Text 2" HorizontalAlignment="Left" Height="18" Margin="85,41,0,0" VerticalAlignment="Top" Width="140" Foreground="White" Padding="0" FontFamily="Yu Gothic UI Semilight" FontSize="11"/>
-        <Image x:Name="LargeImage" HorizontalAlignment="Left" Height="75" VerticalAlignment="Top" Width="75" Margin="5,5,0,0" RenderTransformOrigin="0,0" Source="../Resources/MultiRPC.jpg"/>
+        <Image x:Name="LargeImage" HorizontalAlignment="Left" Height="75" VerticalAlignment="Top" Width="75" Margin="5,5,0,0" RenderTransformOrigin="0,0" Source="../Resources/MultiRPC.jpg" Stretch="Fill"/>
         <Ellipse x:Name="SmallBack" HorizontalAlignment="Left" Height="30" Margin="55,55,0,0" VerticalAlignment="Top" Width="30" Fill="{DynamicResource Brush_RPCBack}"/>
         <Ellipse x:Name="SmallImage" HorizontalAlignment="Left" Height="28" Margin="56,56,0,0" VerticalAlignment="Top" Width="28" StrokeThickness="20">
             <Ellipse.Fill>

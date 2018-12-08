@@ -18,6 +18,21 @@ namespace MultiRPC.GUI
                     App.WD.Changelog.Text = reader.ReadToEnd();
                 }
             }
+            else
+            {
+                try
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        client.DownloadFile("https://multirpc.blazedev.me/Changelog.txt", RPC.ConfigFolder + "Changelog.txt");
+                    }
+                    using (StreamReader reader = new StreamReader(RPC.ConfigFolder + "Changelog.txt"))
+                    {
+                        App.WD.Changelog.Text = reader.ReadToEnd();
+                    }
+                }
+                catch { }
+            }
             if (ApplicationDeployment.IsNetworkDeployed)
             {
                 Version Version = ApplicationDeployment.CurrentDeployment.CurrentVersion;

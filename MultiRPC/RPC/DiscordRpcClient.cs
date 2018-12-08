@@ -1,6 +1,5 @@
 ﻿using DiscordRPC.Events;
 using DiscordRPC.IO;
-using DiscordRPC.Logging;
 using DiscordRPC.Message;
 using DiscordRPC.Registry;
 using DiscordRPC.RPC;
@@ -37,20 +36,6 @@ namespace DiscordRPC
         /// </summary>
         public bool Disposed { get { return _disposed; } }
         private bool _disposed = false;
-
-        /// <summary>
-        /// The logger used this client and its associated components. <see cref="ILogger"/> are not called safely and can come from any thread. It is upto the <see cref="ILogger"/> to account for this and apply appropriate thread safe methods.
-        /// </summary>
-        public ILogger Logger
-        {
-            get { return _logger; }
-            set
-            {
-                this._logger = value;
-                if (connection != null) connection.Logger = value;
-            }
-        }
-        private ILogger _logger = new NullLogger();
         #endregion
 
         /// <summary>
@@ -58,7 +43,7 @@ namespace DiscordRPC
         /// <para>This property can be used for testing multiple clients. For example, if a Discord Client was on pipe 0, the Discord Canary is most likely on pipe 1.</para>
         /// </summary>
         public int TargetPipe { get { return _pipe; } }
-        private int _pipe = -1;
+        private readonly int _pipe = -1;
         private RpcConnection connection;
 
         /// <summary>
@@ -204,7 +189,7 @@ namespace DiscordRPC
 
             //Create the RPC client
             connection = new RpcConnection(ApplicationID, ProcessID, TargetPipe, client) { ShutdownOnly = _shutdownOnly };
-            connection.Logger = this._logger;
+            
         }
 
         #endregion
@@ -253,7 +238,7 @@ namespace DiscordRPC
 
                     default:
                         //This in theory can never happen, but its a good idea as a reminder to update this part of the library if any new messages are implemented.
-                        Logger.Error("Message was queued with no appropriate handle! {0}", message.Type);
+                        Console.WriteLine($"Message was queued with no appropriate handle! {message.Type}");
                         break;
                 }
             }

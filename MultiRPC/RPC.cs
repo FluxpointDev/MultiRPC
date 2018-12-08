@@ -48,12 +48,13 @@ namespace MultiRPC
             }
         }
 
-        public static void Start(ulong id)
+        public static void Start(ulong id, string SteamID = "")
         {
             FirstUpdate = false;
             Failed = true;
             Log.Rpc("Starting MultiRPC");
             int Count = 0;
+            string DClient = "";
             bool Found = false;
             if (App.WD.ItemsPipe.SelectedIndex != 0)
             {
@@ -66,15 +67,24 @@ namespace MultiRPC
                     {
                         case "discord-sock":
                             if (App.WD.ItemsPipe.SelectedIndex == 1)
+                            {
+                                DClient = "Discord";
                                 Found = true;
+                            }
                             break;
                         case "discordptb-sock":
                             if (App.WD.ItemsPipe.SelectedIndex == 2)
+                            {
+                                DClient = "Discord PTB";
                                 Found = true;
+                            }
                             break;
                         case "discordcanary-sock":
                             if (App.WD.ItemsPipe.SelectedIndex == 3)
+                            {
+                                DClient = "Discord Canary";
                                 Found = true;
+                            }
                             break;
                     }
                     if (Found)
@@ -83,9 +93,11 @@ namespace MultiRPC
                         Count++;
                 }
             }
-            RPC.Log.App($"Pipe: {Count}");
-            Client = new DiscordRpcClient(id.ToString(), false, Count);
-            Client.Logger.Level = DiscordRPC.Logging.LogLevel.Info;
+            Log.App($"Client: {DClient} ({Count})");
+            if (SteamID == "")
+                Client = new DiscordRpcClient(id.ToString(), false, Count);
+            else
+                Client = new DiscordRpcClient(id.ToString(), SteamID, false, Count);
             Client.OnClose += Client_OnClose;
             Client.OnConnectionEstablished += Client_OnConnectionEstablished;
             Client.OnConnectionFailed += Client_OnConnectionFailed;

@@ -40,7 +40,7 @@ namespace MultiRPC
         /// <summary> [RPC] Text </summary>
         public void Rpc(string message)
         {
-            bc.Add(new LogEvent("RPC", message));
+            bc.Add(new LogEvent("Rpc", message));
         }
 
         /// <summary> [Discord] Text </summary>
