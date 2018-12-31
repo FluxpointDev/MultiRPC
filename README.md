@@ -1,6 +1,10 @@
 # Info
 A windows app for managing Discord rich presence with the ability to set a custom status or default ones with an afk option too.
-Ram usage: 15-20mb | Language: C# | GUI: wpf
+
+This supports all versions of windows with linux/mac support soon using .net core
+Ram usage: 15-20mb | Language: C# | GUI: Wpf
+
+
 
 # Support 
 
