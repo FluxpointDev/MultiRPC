@@ -2,12 +2,14 @@
 A windows app for managing Discord rich presence with the ability to set a custom status or default ones with an afk option too.
 Ram usage: 15-20mb | Language: C# | GUI: wpf
 
-Join the [Discord Server](https://discord.gg/susQ6XA) for more info and support
+# Support 
+
+Contact me xXBuilderBXx#8265 or join this [Discord Server](https://discord.gg/susQ6XA) for more info and support
 
 # Install
 Install the setup from here https://multirpc.blazedev.me
 
-Click more info and run anyway 
+Click more info and run anyway (windows limitation)
 
 ![Image](https://i.imgur.com/jV9jIte.png)
 
