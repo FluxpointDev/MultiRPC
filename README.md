@@ -9,7 +9,7 @@ Ram usage: 15-20mb | Language: C# | GUI: Wpf
 
 # Support 
 
-Contact me xXBuilderBXx#8265 or join this [Discord Server](https://discord.gg/susQ6XA) for more info and support
+Contact me Builderb#0001 or join this [Discord Server](https://discord.gg/susQ6XA) for more info and support
 
 # Install
 Install the setup from here https://multirpc.blazedev.me
