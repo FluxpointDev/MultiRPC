@@ -1,22 +1,30 @@
-# MultiRPC
-A windows app for managing Discord rich presence with the ability to set a custom status.
+# Info
+A windows app for managing Discord rich presence with the ability to set a custom status or default ones with an afk option too.
 
-Join the [Discord Server](https://discord.gg/WJTYdNb) for more info and support
+This supports all versions of windows, linux/mac support coming soon using .net core
+
+Ram usage: 15-20mb | Language: C# | GUI: Wpf
+
+
+
+# Support 
+
+Contact me xXBuilderBXx#8265 or join this [Discord Server](https://discord.gg/susQ6XA) for more info and support
 
 # Install
 Install the setup from here https://multirpc.blazedev.me
 
-Click more info and run anyway 
+Click more info and run anyway (windows limitation)
 
 ![Image](https://i.imgur.com/jV9jIte.png)
 
-![Image](https://i.imgur.com/9RsqoXm.png)
+![Image](https://i.imgur.com/nWzCTCO.png)
 
 # MultiRPC
 
-Default rpc profile change the text and select an image
+Default rpc profile change the text and select any images or set the tooltip
 
-![Image](https://i.imgur.com/73r9z12.png)
+![Image](https://i.imgur.com/NctHudZ.png)
 
 # Custom
 
