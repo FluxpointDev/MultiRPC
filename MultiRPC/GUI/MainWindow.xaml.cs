@@ -334,7 +334,7 @@ namespace MultiRPC.GUI
                     if (RPC.Presence.Timestamps == null)
                     {
                         RPC.Presence.Timestamps = new DiscordRPC.Timestamps(DateTime.UtcNow);
-                        RPC.StartTime = DateTime.UtcNow.Subtract(new TimeSpan(0, 0, 1));
+                        RPC.StartTime = DateTime.UtcNow;
                         RPC.Uptime.Start();
                     }
                 }
@@ -355,7 +355,7 @@ namespace MultiRPC.GUI
                     if (RPC.Presence.Timestamps == null)
                     {
                         RPC.Presence.Timestamps = new DiscordRPC.Timestamps(DateTime.UtcNow);
-                        RPC.StartTime = DateTime.UtcNow.Subtract(new TimeSpan(0, 0, 1));
+                        RPC.StartTime = DateTime.UtcNow;
                         RPC.Uptime.Start();
                     }
                 }
@@ -719,7 +719,8 @@ namespace MultiRPC.GUI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            RPC.Config.Save(this);
+            if (App.SettingsLoaded)
+                RPC.Config.Save(this);
             if (Taskbar != null)
                 Taskbar.Dispose();
         }
