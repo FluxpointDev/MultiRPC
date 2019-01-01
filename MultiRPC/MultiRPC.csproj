@@ -31,8 +31,8 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>3.1.0.1</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>3.3.0.0</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -92,6 +92,9 @@
     <StartupObject>MultiRPC.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1-beta1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -124,13 +127,13 @@
     </ApplicationDefinition>
     <Compile Include="Config.cs" />
     <Compile Include="Data.cs" />
-    <Compile Include="GUI\ConsoleManager.cs" />
-    <Compile Include="GUI\FuncDiscord.cs" />
-    <Compile Include="GUI\FuncUpdater.cs" />
+    <Compile Include="Functions\FuncData.cs" />
+    <Compile Include="Functions\FuncDiscord.cs" />
+    <Compile Include="Functions\FuncUpdater.cs" />
     <Compile Include="GUI\UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\FuncSettings.cs" />
+    <Compile Include="Functions\FuncSettings.cs" />
     <Compile Include="GUI\GifImage.cs" />
     <Compile Include="GUI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

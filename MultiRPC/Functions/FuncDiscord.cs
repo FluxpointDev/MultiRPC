@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MultiRPC.GUI;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 
-namespace MultiRPC.GUI
+namespace MultiRPC.Functions
 {
     public static class FuncDiscord
     {

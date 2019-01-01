@@ -30,7 +30,7 @@ namespace MultiRPC
         /// <summary> Save the config </summary>
         public void Save(MainWindow window = null)
         {
-            if (window != null)
+            if (App.SettingsLoaded && window != null)
             {
                 Custom = new CustomConfig
                 {
@@ -91,12 +91,6 @@ namespace MultiRPC
     /// <summary> Disabled settings config </summary>
     public class DisableConfig
     {
-        // Force check if Discord process is running on RPC start
-        public bool DiscordCheck = false;
-
-        /// <summary> Test </summary>
-        public bool TokenCheck = false;
-
         /// <summary> Disable the programs tab </summary>
         public bool ProgramsTab = false;
 

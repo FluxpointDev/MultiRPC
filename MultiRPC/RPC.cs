@@ -21,6 +21,7 @@ namespace MultiRPC
         public static Logger Log = new Logger();
         public static DiscordRpcClient Client = null;
         private static System.Timers.Timer ClientTimer;
+        public static System.Timers.Timer Uptime;
         public static RichPresence Presence = new RichPresence();
         /// <summary>
         /// Has rpc failed
@@ -104,6 +105,7 @@ namespace MultiRPC
             Client.OnError += Client_OnError;
             Client.OnPresenceUpdate += Client_OnPresenceUpdate;
             Client.OnReady += Client_OnReady;
+
             //Create a timer that will regularly call invoke
             ClientTimer = new System.Timers.Timer(150);
             ClientTimer.Elapsed += (sender, evt) => { Client.Invoke(); };
@@ -113,6 +115,7 @@ namespace MultiRPC
             Client.Initialize();
             //Send a presence. Do this as many times as you want
             Client.SetPresence(Presence);
+           
         }
 
         public static void SetPresence(MainWindow window)
@@ -148,18 +151,34 @@ namespace MultiRPC
 
         private static void Client_OnReady(object sender, DiscordRPC.Message.ReadyMessage args)
         {
-            Log.Rpc($"Ready, hi {args.User.Username}#{args.User.Discriminator} 👋");
+            string[] Split = args.User.ToString().Split('#');
+            string User = $"{Split[0]}#{Split[1].PadLeft(4, '0')}";
+            Log.Rpc($"Ready, hi {User} 👋");
+            StartTime = DateTime.UtcNow;
+            Uptime = new System.Timers.Timer(new TimeSpan(0, 0, 1).TotalMilliseconds);
+            if (Presence.Timestamps != null)
+                Uptime.Start();
+            Uptime.Elapsed += Uptime_Elapsed;
             App.WD.TextUser.Dispatcher.BeginInvoke((Action)delegate ()
             {
-                App.WD.TextUser.Content = args.User.ToString();
-                MainWindow.DisableElements(true);
-            });
-
-            App.WD.TextStatus.Dispatcher.BeginInvoke((Action)delegate ()
-            {
+                App.WD.TextUser.Content = User;
                 MainWindow.DisableElements(true);
             });
         }
+
+        public static DateTime StartTime;
+        private static void Uptime_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            TimeSpan TS = DateTime.UtcNow - StartTime;
+            TS.Add(new TimeSpan(0, 0, 1));
+            App.WD.ViewLiveRPC.Dispatcher.Invoke(() =>
+            {
+                ViewRPC View = App.WD.ViewLiveRPC.Content as ViewRPC;
+                View.Time.Content = $"{TS.Hours}:{TS.Minutes}:{TS.Seconds}";
+            });
+
+        }
+
 
         public static bool FirstUpdate = false;
         private static void Client_OnPresenceUpdate(object sender, DiscordRPC.Message.PresenceMessage args)
@@ -202,9 +221,9 @@ namespace MultiRPC
         {
             Log.Rpc("Shutting down");
             ClientTimer.Dispose();
+            Uptime.Dispose();
             Client.Dispose();
         }
-
     }
 }
 

@@ -1,15 +1,16 @@
-﻿using System;
+﻿using MultiRPC.GUI;
+using System;
 using System.Deployment.Application;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Windows;
 
-namespace MultiRPC.GUI
+namespace MultiRPC.Functions
 {
     public static class FuncUpdater
     {
-        public static void Check()
+        public static void Check(MainWindow window)
         {
             if (File.Exists(RPC.ConfigFolder + "Changelog.txt"))
             {

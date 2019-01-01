@@ -15,6 +15,7 @@ namespace MultiRPC.GUI
         public ErrorWindow()
         {
             InitializeComponent();
+
             Loaded += ErrorWindow_Loaded;
         }
 
@@ -23,17 +24,19 @@ namespace MultiRPC.GUI
             LabelDev.Content = App.Developer;
             if (Test)
             {
-                Title = "TEST - Error";
-                Error.Text = "Grrr what are you looking at";
+                Error.Text = "This is a nice error window dont you agree :D";
                 Height += 10;
             }
             else
             {
-                try
+                if (App.WD != null)
                 {
-                    RPC.Config.Save(App.WD);
+                    try
+                    {
+                        RPC.Config.Save(App.WD);
+                    }
+                    catch { }
                 }
-                catch { }
                 string Username = Environment.UserName;
                 foreach (string l in ErrorMessage.Split('\\'))
                 {
@@ -70,6 +73,11 @@ namespace MultiRPC.GUI
         private void BtnDiscord_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(App.SupportServer);
+        }
+
+        private void Dev_Clicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Clipboard.SetText(App.Developer);
         }
     }
 }

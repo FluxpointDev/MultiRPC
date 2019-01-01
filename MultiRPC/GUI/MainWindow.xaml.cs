@@ -1,24 +1,33 @@
-﻿using Newtonsoft.Json;
+﻿using Hardcodet.Wpf.TaskbarNotification;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using MultiRPC.Functions;
 
 namespace MultiRPC.GUI
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(Style style)
         {
             InitializeComponent();
+            this.StateChanged += MainWindow_StateChanged;
+            if (System.Environment.OSVersion.Version.Major == 6 && System.Environment.OSVersion.Version.Minor == 2)
+            {
+                ItemsDefaultLarge.Style = style;
+                ItemsDefaultSmall.Style = style;
+                ItemsPipe.Style = style;
+                ItemsAutoStart.Style = style;
+            }
             TabDebug.Visibility = Visibility.Hidden;
             IsEnabled = false;
             if (!Directory.Exists(RPC.ConfigFolder))
@@ -39,22 +48,10 @@ namespace MultiRPC.GUI
                 }
                 ViewLiveRPC.Content = new ViewRPC(ViewType.Default);
                 ViewDefaultRPC.Content = new ViewRPC(ViewType.Default2);
-                if (RPC.Config.Custom != null)
-                {
-                     TextCustomClientID.Text = RPC.Config.Custom.ID.ToString();
-                     TextCustomText1.Text = RPC.Config.Custom.Text1;
-                     TextCustomText2.Text = RPC.Config.Custom.Text2;
-                    TextCustomLargeKey.Text = RPC.Config.Custom.LargeKey;
-                     TextCustomLargeText.Text = RPC.Config.Custom.LargeText;
-                     TextCustomSmallKey.Text = RPC.Config.Custom.SmallKey;
-                     TextCustomSmallText.Text = RPC.Config.Custom.SmallText;
-                }
             }
             else
                 RPC.Config.Save();
             
-            
-
             //   foreach (IProgram P in Data.Programs.Values.OrderBy(x => x.Data.Priority).Reverse())
             //  {
             //     Button B = new Button
@@ -103,47 +100,43 @@ namespace MultiRPC.GUI
             catch { }
         }
 
+        private void MainWindow_StateChanged(object sender, EventArgs e)
+        {
+            if (Window.WindowState == WindowState.Normal)
+                Visibility = Visibility.Hidden;
+            WindowState = WindowState.Normal;
+        }
+
+        public TaskbarIcon Taskbar;
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            FuncUpdater.Check();
+            FuncUpdater.Check(this);
             if (!App.StartUpdate)
                 FormIsReady();
         }
 
         public void FormIsReady()
         {
+            Taskbar = new TaskbarIcon
+            {
+                IconSource = this.Icon,
+                Name = "Test",
+                ToolTipText = "MultiRPC"
+            };
+            Taskbar.TrayLeftMouseDown += Taskbar_TrayLeftMouseDown;
             FuncDiscord.LoadPipes();
             Data.Load();
             FormReady = true;
-            if (RPC.Config.Disabled.ProgramsTab)
-                App.WD.TabPrograms.Width = 0;
-            if (RPC.Config.MultiRPC != null)
-            {
-                TextDefaultText1.Text = RPC.Config.MultiRPC.Text1;
-                TextDefaultText2.Text = RPC.Config.MultiRPC.Text2;
-                TextDefaultLarge.Text = RPC.Config.MultiRPC.LargeText;
-                TextDefaultSmall.Text = RPC.Config.MultiRPC.SmallText;
-                if (RPC.Config.MultiRPC.LargeKey != -1)
-                    ItemsDefaultLarge.SelectedItem = ItemsDefaultLarge.Items[RPC.Config.MultiRPC.LargeKey];
-                if (RPC.Config.MultiRPC.SmallKey != -1)
-                    ItemsDefaultSmall.SelectedItem = ItemsDefaultSmall.Items[RPC.Config.MultiRPC.SmallKey];
-            }
-            if (RPC.Config.AutoStart == "MultiRPC")
-            {
-                ItemsAutoStart.SelectedIndex = 1;
-                Menu.SelectedIndex = 0;
-                BtnToggleRPC_Click(null, null);
-
-            }
-            else if (RPC.Config.AutoStart == "Custom")
-            {
-                ItemsAutoStart.SelectedIndex = 2;
-                RPC.Type = "custom";
-                Menu.SelectedIndex = 1;
-                BtnToggleRPC_Click(null, null);
-            }
-            
+            FuncData.MainData(this);
             IsEnabled = true;
+        }
+
+        private void Taskbar_TrayLeftMouseDown(object sender, RoutedEventArgs e)
+        {
+            if (this.Visibility == Visibility.Hidden)
+                Visibility = Visibility.Visible;
+            else
+                Visibility = Visibility.Hidden;
         }
 
         public void CheckProfileMenuWidth()
@@ -173,7 +166,7 @@ namespace MultiRPC.GUI
             });
         }
 
-        private void BtnToggleRPC_Click(object sender, RoutedEventArgs e)
+        public void BtnToggleRPC_Click(object sender, RoutedEventArgs e)
         {
             if (!IsRPCOn())
             {
@@ -184,7 +177,7 @@ namespace MultiRPC.GUI
                     App.WD.ViewLiveRPC.Content = new ViewRPC(ViewType.Error, "No Network Connection");
                     return;
                 }
-                if (RPC.Config.Disabled.DiscordCheck && !FuncDiscord.CheckDiscordClient())
+                if (ToggleDiscordCheck.IsChecked.Value && !FuncDiscord.CheckDiscordClient())
                     return;
                 DisableElements();
                 ulong ID = 0;
@@ -339,10 +332,19 @@ namespace MultiRPC.GUI
                 if (ToggleDefaultTime.IsChecked.Value)
                 {
                     if (RPC.Presence.Timestamps == null)
+                    {
                         RPC.Presence.Timestamps = new DiscordRPC.Timestamps(DateTime.UtcNow);
+                        RPC.StartTime = DateTime.UtcNow.Subtract(new TimeSpan(0, 0, 1));
+                        RPC.Uptime.Start();
+                    }
                 }
                 else
+                {
+                    ViewRPC View = ViewLiveRPC.Content as ViewRPC;
+                    View.Time.Content = "";
+                    RPC.Uptime.Stop();
                     RPC.Presence.Timestamps = null;
+                }
                 RPC.SetPresence(TextDefaultText1.Text, TextDefaultText2.Text, Large, TextDefaultLarge.Text, Small, TextDefaultSmall.Text);
                 RPC.Update();
             }
@@ -351,10 +353,19 @@ namespace MultiRPC.GUI
                 if (ToggleCustomTime.IsChecked.Value)
                 {
                     if (RPC.Presence.Timestamps == null)
+                    {
                         RPC.Presence.Timestamps = new DiscordRPC.Timestamps(DateTime.UtcNow);
+                        RPC.StartTime = DateTime.UtcNow.Subtract(new TimeSpan(0, 0, 1));
+                        RPC.Uptime.Start();
+                    }
                 }
                 else
+                {
+                    ViewRPC View = ViewLiveRPC.Content as ViewRPC;
+                    View.Time.Content = "";
+                    RPC.Uptime.Stop();
                     RPC.Presence.Timestamps = null;
+                }
                 RPC.SetPresence(this);
                 RPC.Update();
             }
@@ -400,7 +411,7 @@ namespace MultiRPC.GUI
                         App.WD.ViewLiveRPC.Content = new ViewRPC(ViewType.Error, "No Network Connection");
                         return;
                     }
-                    if (RPC.Config.Disabled.DiscordCheck && !FuncDiscord.CheckDiscordClient())
+                    if (ToggleDiscordCheck.IsChecked.Value && !FuncDiscord.CheckDiscordClient())
                         return;
                     RPC.AFK = true;
                     
@@ -503,8 +514,7 @@ namespace MultiRPC.GUI
             else
                 Box.Opacity = 1;
         }
-
-        private bool FirstSettings = true;
+        
         private void Menu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!FormReady)
@@ -522,8 +532,6 @@ namespace MultiRPC.GUI
                 case "custom":
                     {
                         RPC.Type = "custom";
-                        if (RPC.Config.Disabled.HelpIcons)
-                            FuncSettings.DisableHelpIcons();
                         CheckProfileMenuWidth();
                         if (!IsRPCOn())
                             BtnToggleRPC.Content = "Start Custom";
@@ -531,19 +539,7 @@ namespace MultiRPC.GUI
                     break;
                 case "settings":
                     {
-                        if (FirstSettings)
-                        {
-                            FirstSettings = false;
-                            FormReady = false;
-                            if (RPC.Config.AFKTime)
-                                App.WD.ToggleAfkTime.IsChecked = true;
-                            TextDev.Content = App.Developer;
-                            if (RPC.Config.Disabled.HelpIcons)
-                                App.WD.ToggleHelpIcons.IsChecked = true;
-                            if (RPC.Config.Disabled.ProgramsTab)
-                                App.WD.ToggleProgramsTab.IsChecked = true;
-                            FormReady = true;
-                        }
+                        
                     }
                     break;
             }
@@ -724,32 +720,39 @@ namespace MultiRPC.GUI
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             RPC.Config.Save(this);
+            if (Taskbar != null)
+                Taskbar.Dispose();
         }
 
         private void BntDebugMenu_Click(object sender, RoutedEventArgs e)
         {
+            BtnDebugSteam.Visibility = Visibility.Hidden;
+            TextDebugSteamID.Visibility = Visibility.Hidden;
             TabDebug.Visibility = Visibility.Visible;
-        }
-
-        private void BtnDebugConsole_Click(object sender, RoutedEventArgs e)
-        {
-            ConsoleManager.Toggle();
         }
 
         private void BtnDebugStartRPC_Click(object sender, RoutedEventArgs e)
         {
-            RPC.SetPresence("Testing", "Debug", "debug", "", "", "");
+            ViewLiveRPC.Content = new ViewRPC(ViewType.Loading);
+            RPC.SetPresence("Testing", "Debug Mode", "debug", "Beep boop", "", "");
             RPC.Start(450894077165043722);
         }
 
         private void BtnDebugStopRPC_Click(object sender, RoutedEventArgs e)
         {
             RPC.Shutdown();
+            ViewLiveRPC.Content = new ViewRPC(ViewType.Default);
+            EnableElements();
         }
 
         private void BtnDebugSteam_Click(object sender, RoutedEventArgs e)
         {
             RPC.Start(450894077165043722, TextDebugSteamID.Text);
+        }
+
+        private void Dev_Clicked(object sender, MouseButtonEventArgs e)
+        {
+            Clipboard.SetText(App.Developer);
         }
     }
 }

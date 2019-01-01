@@ -20,7 +20,7 @@
             </Ellipse.Fill>
         </Ellipse>
         <Image x:Name="Loading" gif:ImageBehavior.RepeatBehavior="3x" HorizontalAlignment="Left" Height="85" VerticalAlignment="Top" Width="85" Visibility="Hidden"/>
-        <Label x:Name="Time" Content="" HorizontalAlignment="Left" Height="18" Margin="85,59,0,0" VerticalAlignment="Top" Width="140" Foreground="White" Padding="0" FontFamily="Yu Gothic UI Semilight" FontSize="11"/>
+        <Label x:Name="Time" HorizontalAlignment="Left" Height="18" Margin="85,59,0,0" VerticalAlignment="Top" Width="140" Foreground="White" Padding="0" FontFamily="Yu Gothic UI Semilight" FontSize="11"/>
 
     </Grid>
 </UserControl>
