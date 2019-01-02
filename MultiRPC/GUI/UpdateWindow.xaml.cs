@@ -11,6 +11,7 @@ namespace MultiRPC.GUI
     public partial class UpdateWindow : Window 
     {
         public bool Test = false;
+        public bool ViewChangelog = false;
         public UpdateCheckInfo Info;
         public UpdateWindow()
         {
@@ -21,24 +22,25 @@ namespace MultiRPC.GUI
         private void UpdateWindow_Loaded(object sender, RoutedEventArgs e)
         {
             TitleOldVersion.Content = $"Current Version: {App.Version}";
-            if (Test)
+            if (ViewChangelog)
+            {
+                Title = $"{App.Version} changelog";
+                Changelog.Text = App.Changelog;
+                TitleOldVersion.Visibility = Visibility.Hidden;
+                TitleNewVersion.Visibility = Visibility.Hidden;
+                BtnUpdate.Visibility = Visibility.Hidden;
+            }
+            else if (Test)
             {
                 Title = "TEST - Update";
                 Changelog.Text = "Hello this is a nice changelog";
-                Height += 10;
             }
             else
             {
-                if (File.Exists(RPC.ConfigFolder + "Changelog.txt"))
-                {
-                    using (StreamReader reader = new StreamReader(RPC.ConfigFolder + "Changelog.txt"))
-                    {
-                        Changelog.Text = reader.ReadToEnd();
-                    }
-                }
+                Changelog.Text = App.Changelog;
                 TitleNewVersion.Content = $"New Version: {Info.AvailableVersion.Major}.{Info.AvailableVersion.Minor}.{Info.AvailableVersion.Build}";
-                
             }
+            Height += 10;
         }
 
         private void BtnUpdate_Click(object sender, RoutedEventArgs e)

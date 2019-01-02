@@ -16,7 +16,7 @@ namespace MultiRPC.Functions
             {
                 using (StreamReader reader = new StreamReader(RPC.ConfigFolder + "Changelog.txt"))
                 {
-                    App.WD.Changelog.Text = reader.ReadToEnd();
+                    App.Changelog = reader.ReadToEnd();
                 }
             }
             else
@@ -29,7 +29,7 @@ namespace MultiRPC.Functions
                     }
                     using (StreamReader reader = new StreamReader(RPC.ConfigFolder + "Changelog.txt"))
                     {
-                        App.WD.Changelog.Text = reader.ReadToEnd();
+                        App.Changelog = reader.ReadToEnd();
                     }
                 }
                 catch { }
@@ -50,6 +50,10 @@ namespace MultiRPC.Functions
                             using (WebClient client = new WebClient())
                             {
                                 client.DownloadFile("https://multirpc.blazedev.me/Changelog.txt", RPC.ConfigFolder + "Changelog.txt");
+                            }
+                            using (StreamReader reader = new StreamReader(RPC.ConfigFolder + "Changelog.txt"))
+                            {
+                                App.Changelog = reader.ReadToEnd();
                             }
                         }
                         catch { }

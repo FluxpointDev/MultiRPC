@@ -32,7 +32,7 @@
     <WebPage>publish.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.3.1.0</ApplicationVersion>
+    <ApplicationVersion>3.4.0.0</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -127,9 +127,11 @@
     </ApplicationDefinition>
     <Compile Include="Config.cs" />
     <Compile Include="Data.cs" />
+    <Compile Include="Functions\FuncCredits.cs" />
     <Compile Include="Functions\FuncData.cs" />
     <Compile Include="Functions\FuncDiscord.cs" />
     <Compile Include="Functions\FuncUpdater.cs" />
+    <Compile Include="Functions\FuncWindow.cs" />
     <Compile Include="GUI\UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>

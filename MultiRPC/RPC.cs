@@ -174,7 +174,10 @@ namespace MultiRPC
             App.WD.ViewLiveRPC.Dispatcher.Invoke(() =>
             {
                 ViewRPC View = App.WD.ViewLiveRPC.Content as ViewRPC;
-                View.Time.Content = $"{TS.Hours}:{TS.Minutes}:{TS.Seconds}";
+                if (TS.Hours == 0)
+                    View.Time.Content = $"{TS.Minutes.ToString().PadLeft(2, '0')}:{TS.Seconds.ToString().PadLeft(2, '0')}";
+                else
+                    View.Time.Content = $"{TS.Hours.ToString().PadLeft(2, '0')}:{TS.Minutes.ToString().PadLeft(2, '0')}:{TS.Seconds.ToString().PadLeft(2, '0')}";
             });
 
         }

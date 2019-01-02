@@ -14,7 +14,6 @@ namespace MultiRPC.GUI
     }
     public partial class ViewRPC : UserControl
     {
-        
         public ViewRPC(ViewType view, string Error = "")
         {
             InitializeComponent();

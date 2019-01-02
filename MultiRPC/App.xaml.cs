@@ -1,5 +1,10 @@
-﻿using MultiRPC.GUI;
+﻿using MultiRPC.Functions;
+using MultiRPC.GUI;
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -17,11 +22,27 @@ namespace MultiRPC
         public static MainWindow WD = null;
         public static bool StartUpdate = false;
         public static string Version = "0.0.0";
+        public static string Changelog = "";
+        public static string Donation = $"Want to support me and my projects?\n\n" +
+            $"Consider donating money to help fund my services and keep the projects alive by using Patreon or Paypal\n\n" +
+            $"You will gain perks on all my bots and discord server!";
         public App()
         {
             InitializeComponent();
             try
             {
+                try
+                {
+                    Process[] Proc = Process.GetProcessesByName("MultiRPC");
+                    if (Proc.Length == 2)
+                    {
+                        if (File.Exists(RPC.ConfigFolder + "Open.rpc"))
+                            File.Delete(RPC.ConfigFolder + "Open.rpc");
+                        File.Create(RPC.ConfigFolder + "Open.rpc");
+                        Current.Shutdown();
+                    }
+                }
+                catch { }
                 DispatcherUnhandledException += App_DispatcherUnhandledException;
                 WD = new MainWindow(Resources["ComboBoxStyle"] as Style);
                 WD.Show();

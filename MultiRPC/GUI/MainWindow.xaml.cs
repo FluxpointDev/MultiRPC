@@ -12,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MultiRPC.Functions;
+using System.Deployment.Application;
+using System.Net;
 
 namespace MultiRPC.GUI
 {
@@ -21,7 +23,7 @@ namespace MultiRPC.GUI
         {
             InitializeComponent();
             this.StateChanged += MainWindow_StateChanged;
-            if (System.Environment.OSVersion.Version.Major == 6 && System.Environment.OSVersion.Version.Minor == 2)
+            if (Environment.OSVersion.Version.Major == 6 && System.Environment.OSVersion.Version.Minor == 2)
             {
                 ItemsDefaultLarge.Style = style;
                 ItemsDefaultSmall.Style = style;
@@ -68,17 +70,6 @@ namespace MultiRPC.GUI
             // }
 
             //new UpdateWindow().Show();
-
-            if (RPC.Config.Once)
-            {
-                try
-                {
-                    Process[] Discord = Process.GetProcessesByName("MultiRPC");
-                    if (Discord.Length == 2)
-                        Application.Current.Shutdown();
-                }
-                catch { }
-            }
             try
             {
                 Process[] Discord = Process.GetProcessesByName("Discord");
@@ -108,32 +99,34 @@ namespace MultiRPC.GUI
         }
 
         public TaskbarIcon Taskbar;
+
+        /// <summary>
+        /// When window loads check for update and configure the config
+        /// </summary>
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             FuncUpdater.Check(this);
             if (!App.StartUpdate)
-                FormIsReady();
-        }
-
-        public void FormIsReady()
-        {
-            Taskbar = new TaskbarIcon
             {
-                IconSource = this.Icon,
-                Name = "Test",
-                ToolTipText = "MultiRPC"
-            };
-            Taskbar.TrayLeftMouseDown += Taskbar_TrayLeftMouseDown;
-            FuncDiscord.LoadPipes();
-            Data.Load();
-            FormReady = true;
-            FuncData.MainData(this);
-            IsEnabled = true;
+                Taskbar = new TaskbarIcon
+                {
+                    IconSource = Icon,
+                    Name = "MultiRPC",
+                    ToolTipText = "MultiRPC"
+                };
+                Taskbar.TrayLeftMouseDown += Taskbar_TrayLeftMouseDown;
+                FuncDiscord.LoadPipes();
+                Data.Load();
+                FormReady = true;
+                FuncData.MainData(this);
+                FileWatch.Create();
+                IsEnabled = true;
+            }
         }
 
         private void Taskbar_TrayLeftMouseDown(object sender, RoutedEventArgs e)
         {
-            if (this.Visibility == Visibility.Hidden)
+            if (Visibility == Visibility.Hidden)
                 Visibility = Visibility.Visible;
             else
                 Visibility = Visibility.Hidden;
@@ -150,6 +143,10 @@ namespace MultiRPC.GUI
         
         private bool FormReady = false;
 
+        /// <summary>
+        /// Update rpc view with presence data
+        /// </summary>
+        /// <param name="msg"></param>
         public static void SetLiveView(DiscordRPC.Message.PresenceMessage msg)
         {
             App.WD.ViewLiveRPC.Dispatcher.BeginInvoke((Action)delegate ()
@@ -158,6 +155,9 @@ namespace MultiRPC.GUI
             });
         }
 
+        /// <summary>
+        /// Update roc view with default modes
+        /// </summary>
         public static void SetLiveView(ViewType view, string error = "")
         {
             App.WD.ViewLiveRPC.Dispatcher.BeginInvoke((Action)delegate ()
@@ -166,6 +166,9 @@ namespace MultiRPC.GUI
             });
         }
 
+        /// <summary>
+        /// Start/Stop rpc
+        /// </summary>
         public void BtnToggleRPC_Click(object sender, RoutedEventArgs e)
         {
             if (!IsRPCOn())
@@ -271,6 +274,9 @@ namespace MultiRPC.GUI
             }
         }
 
+        /// <summary>
+        /// Enable all elements when rpc is stopped
+        /// </summary>
         public static void EnableElements(bool Failed = false)
         {
             App.WD.BtnToggleRPC.BorderBrush = (Brush)Application.Current.Resources["Brush_Ok"];
@@ -297,6 +303,9 @@ namespace MultiRPC.GUI
             App.WD.TextCustomClientID.IsEnabled = true;
         }
 
+        /// <summary>
+        /// Disable all elements when rpc is started
+        /// </summary>
         public static void DisableElements(bool Ready = false)
         {
             App.WD.BtnToggleRPC.BorderBrush = (Brush)Application.Current.Resources["Brush_No"];
@@ -318,6 +327,9 @@ namespace MultiRPC.GUI
             App.WD.Help_Error.ToolTip = new Button().Content = "RPC is running";
         }
         
+        /// <summary>
+        /// Update rpc presence
+        /// </summary>
         private void BtnUpdatePresence_Click(object sender, RoutedEventArgs e)
         {
             RPC.Config.Save(this);
@@ -371,11 +383,17 @@ namespace MultiRPC.GUI
             }
         }
 
+        /// <summary>
+        /// Toggle rpc auto mode
+        /// </summary>
         private void BtnAuto_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
+        /// <summary>
+        /// Toggle rpc afk mode
+        /// </summary>
         private void BtnAfk_Click(object sender, RoutedEventArgs e)
         {
             if (RPC.AFK)
@@ -434,6 +452,9 @@ namespace MultiRPC.GUI
             }
         }
 
+        /// <summary>
+        /// Check if RPC is running
+        /// </summary>
         public bool IsRPCOn()
         {
             return !TextCustomClientID.IsEnabled;
@@ -481,39 +502,6 @@ namespace MultiRPC.GUI
             }
 
         }
-
-        private void TextField_CheckLimit(object sender, TextChangedEventArgs e)
-        {
-            TextBox Box = (TextBox)sender;
-            if (Box.Tag != null)
-            {
-                switch (Box.Tag.ToString())
-                {
-                    case "text1":
-                        (ViewDefaultRPC.Content as ViewRPC).Text1.Content = Box.Text;
-                        break;
-                    case "text2":
-                        (ViewDefaultRPC.Content as ViewRPC).Text2.Content = Box.Text;
-                        break;
-                    case "large":
-                        if (string.IsNullOrEmpty(Box.Text))
-                            (ViewDefaultRPC.Content as ViewRPC).LargeImage.ToolTip = null;
-                        else
-                            (ViewDefaultRPC.Content as ViewRPC).LargeImage.ToolTip = new Button().Content = Box.Text;
-                        break;
-                    case "small":
-                        if (string.IsNullOrEmpty(Box.Text))
-                            (ViewDefaultRPC.Content as ViewRPC).SmallImage.ToolTip = null;
-                        else
-                            (ViewDefaultRPC.Content as ViewRPC).SmallImage.ToolTip = new Button().Content = Box.Text;
-                        break;
-                }
-            }
-            if (Box.Text.Length == 25)
-                Box.Opacity = 0.80;
-            else
-                Box.Opacity = 1;
-        }
         
         private void Menu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -539,7 +527,46 @@ namespace MultiRPC.GUI
                     break;
                 case "settings":
                     {
-                        
+                        DonationInfo.Text = App.Donation;
+                    }
+                    break;
+                case "credits":
+                    {
+                        using (StreamWriter file = File.CreateText(RPC.ConfigFolder + "Temp.json"))
+                        {
+                            JsonSerializer serializer = new JsonSerializer
+                            {
+                                Formatting = Formatting.Indented
+                            };
+                            serializer.Serialize(file, new CreditsList());
+                        }
+
+                        if (FuncCredits.CreditsList == null)
+                        {
+                            FuncCredits.Download();
+                            if (File.Exists(RPC.ConfigFolder + "Credits.json"))
+                            {
+                                try
+                                {
+                                    using (StreamReader reader = new StreamReader(RPC.ConfigFolder + "Credits.json"))
+                                    {
+                                        JsonSerializer serializer = new JsonSerializer
+                                        {
+                                            Formatting = Formatting.Indented
+                                        };
+                                        FuncCredits.CreditsList = (CreditsList)serializer.Deserialize(reader, typeof(CreditsList));
+                                    }
+                                }
+                                catch { }
+                                if (FuncCredits.CreditsList != null)
+                                {
+
+                                    ListAdmins.Text = string.Join("\n\n", FuncCredits.CreditsList.Admins);
+                                    ListPatreon.Text = string.Join("\n\n", FuncCredits.CreditsList.Patreon);
+                                    ListPaypal.Text = string.Join("\n\n", FuncCredits.CreditsList.Paypal);
+                                }
+                            }
+                        }
                     }
                     break;
             }
@@ -638,6 +665,16 @@ namespace MultiRPC.GUI
                     else
                         View.SmallImage.ToolTip = new Button().Content = Box.Text;
                     break;
+            }
+            SetLimitNumber(Box);
+            if (Box.Text.Length == 25)
+            {
+
+                Box.Opacity = 0.80;
+            }
+            else
+            {
+                Box.Opacity = 1;
             }
         }
 
@@ -754,6 +791,208 @@ namespace MultiRPC.GUI
         private void Dev_Clicked(object sender, MouseButtonEventArgs e)
         {
             Clipboard.SetText(App.Developer);
+        }
+
+        private void Textbox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox box = sender as TextBox;
+            SetLimitVisibility(box, Visibility.Visible);
+        }
+
+        private void Textbox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox box = sender as TextBox;
+            SetLimitVisibility(box, Visibility.Hidden);
+        }
+
+        private void SetLimitNumber(TextBox box)
+        {
+            double db = 0.50;
+            if (box.Text.Length == 25)
+                db = 1;
+            else if (box.Text.Length > 20)
+                db = 0.90;
+            else if (box.Text.Length > 15)
+                db = 0.80;
+            else if (box.Text.Length > 10)
+                db = 0.70;
+            else if (box.Text.Length > 5)
+                db = 0.60;
+            switch (box.Name)
+            {
+                case "TextDefaultText1":
+                    LimitDefaultText1.Content = 25 - box.Text.Length;
+                    LimitDefaultText1.Opacity = db;
+                    break;
+                case "TextDefaultText2":
+                    LimitDefaultText2.Content = 25 - box.Text.Length;
+                    LimitDefaultLargeText.Opacity = db;
+                    break;
+                case "TextDefaultLarge":
+                    LimitDefaultLargeText.Content = 25 - box.Text.Length;
+                    LimitDefaultLargeText.Opacity = db;
+                    break;
+                case "TextDefaultSmall":
+                    LimitDefaultSmallText.Content = 25 - box.Text.Length;
+                    LimitDefaultSmallText.Opacity = db;
+                    break;
+
+                case "TextCustomText1":
+                    LimitCustomText1.Content = 25 - box.Text.Length;
+                    LimitCustomText1.Opacity = db;
+                    break;
+                case "TextCustomText2":
+                    LimitCustomText2.Content = 25 - box.Text.Length;
+                    LimitCustomText2.Opacity = db;
+                    break;
+                case "TextCustomLargeKey":
+                    LimitCustomLargeKey.Content = 25 - box.Text.Length;
+                    LimitCustomLargeKey.Opacity = db;
+                    break;
+                case "TextCustomLargeText":
+                    LimitCustomLargeText.Content = 25 - box.Text.Length;
+                    LimitCustomLargeText.Opacity = db;
+                    break;
+                case "TextCustomSmallKey":
+                    LimitCustomSmallKey.Content = 25 - box.Text.Length;
+                    LimitCustomSmallKey.Opacity = db;
+                    break;
+                case "TextCustomSmallText":
+                    LimitCustomSmallText.Content = 25 - box.Text.Length;
+                    LimitCustomSmallText.Opacity = db;
+                    break;
+
+                case "TextAfk":
+                    LimitAfkText.Content = 25 - box.Text.Length;
+                    LimitAfkText.Opacity = db;
+                    break;
+            }
+        }
+
+        private void SetLimitVisibility(TextBox box, Visibility vis)
+        {
+            switch(box.Name)
+            {
+                case "TextDefaultText1":
+                    LimitDefaultText1.Visibility = vis;
+                    break;
+                case "TextDefaultText2":
+                    LimitDefaultText2.Visibility = vis;
+                    break;
+                case "TextDefaultLarge":
+                    LimitDefaultLargeText.Visibility = vis;
+                    break;
+                case "TextDefaultSmall":
+                    LimitDefaultSmallText.Visibility = vis;
+                    break;
+
+                case "TextCustomText1":
+                    LimitCustomText1.Visibility = vis;
+                    break;
+                case "TextCustomText2":
+                    LimitCustomText2.Visibility = vis;
+                    break;
+                case "TextCustomLargeKey":
+                    LimitCustomLargeKey.Visibility = vis;
+                    break;
+                case "TextCustomLargeText":
+                    LimitCustomLargeText.Visibility = vis;
+                    break;
+                case "TextCustomSmallKey":
+                    LimitCustomSmallKey.Visibility = vis;
+                    break;
+                case "TextCustomSmallText":
+                    LimitCustomSmallText.Visibility = vis;
+                    break;
+
+                case "TextAfk":
+                    LimitAfkText.Visibility = vis;
+                    break;
+            }
+        }
+
+        private void BtnChangelog_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateWindow UpdateWindow = new UpdateWindow
+            {
+                Test = true,
+                ViewChangelog = true
+            };
+            UpdateWindow.ShowDialog();
+        }
+
+        private void Link_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Image img = sender as Image;
+            img.Opacity = 1;
+            img.Width = 60;
+            img.Height = 60;
+            img.Margin = new Thickness(int.Parse(img.Tag as string), 48, 0, 0);
+        }
+
+        private void Link_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Image img = sender as Image;
+            img.Opacity = 0.6;
+            img.Width = 50;
+            img.Height = 50;
+            img.Margin = new Thickness(int.Parse(img.Tag as string) + 5, 53, 0, 0);
+        }
+
+        private void LabelPatreonClick_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Process.Start("https://www.patreon.com/builderb");
+        }
+
+        private void LabelPaypalClick_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBox.Show("Paypal donations have to be approved by me please contact me on Discord or join the Discord server");
+        }
+
+        private void BtnCheckUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            
+            if (ApplicationDeployment.IsNetworkDeployed)
+            {
+                IsEnabled = false;
+                Version Version = ApplicationDeployment.CurrentDeployment.CurrentVersion;
+                App.Version = $"{Version.Major}.{Version.Minor}.{Version.Build}";
+                App.WD.TextVersion.Content = App.Version;
+                UpdateCheckInfo Info = null;
+                try
+                {
+                    Info = ApplicationDeployment.CurrentDeployment.CheckForDetailedUpdate(false);
+                }
+                catch { }
+                if (Info == null || !Info.UpdateAvailable)
+                    MessageBox.Show("No new update available");
+                else
+                {
+                    try
+                    {
+                        using (WebClient client = new WebClient())
+                        {
+                            client.DownloadFile("https://multirpc.blazedev.me/Changelog.txt", RPC.ConfigFolder + "Changelog.txt");
+                        }
+                        using (StreamReader reader = new StreamReader(RPC.ConfigFolder + "Changelog.txt"))
+                        {
+                            App.Changelog = reader.ReadToEnd();
+                        }
+                    }
+                    catch { }
+                    UpdateWindow UpdateWindow = new UpdateWindow
+                    {
+                        Info = Info
+                    };
+                    UpdateWindow.ShowDialog();
+                    if (App.StartUpdate)
+                    {
+                        App.WD.ViewLiveRPC.Content = new ViewRPC(ViewType.Update);
+                        FuncUpdater.Start();
+                    }
+                }
+                IsEnabled = true;
+            }
         }
     }
 }
