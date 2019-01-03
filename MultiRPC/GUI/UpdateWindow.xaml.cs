@@ -1,6 +1,7 @@
 ﻿using System.Deployment.Application;
 using System.IO;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Windows;
 
 namespace MultiRPC.GUI
@@ -46,7 +47,9 @@ namespace MultiRPC.GUI
         private void BtnUpdate_Click(object sender, RoutedEventArgs e)
         {
             if (Test)
+            {
                 MessageBox.Show("Honk honk");
+            }
             else
             {
                 try

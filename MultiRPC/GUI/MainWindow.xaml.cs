@@ -965,7 +965,7 @@ namespace MultiRPC.GUI
                 }
                 catch { }
                 if (Info == null || !Info.UpdateAvailable)
-                    MessageBox.Show("No new update available");
+                    MessageBox.Show("You are running the latest version");
                 else
                 {
                     try

@@ -223,6 +223,8 @@ namespace MultiRPC
         public static void Shutdown()
         {
             Log.Rpc("Shutting down");
+            if (Presence != null)
+                Presence.Timestamps = null;
             ClientTimer.Dispose();
             Uptime.Dispose();
             Client.Dispose();

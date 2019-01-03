@@ -38,7 +38,8 @@ namespace MultiRPC
                     {
                         if (File.Exists(RPC.ConfigFolder + "Open.rpc"))
                             File.Delete(RPC.ConfigFolder + "Open.rpc");
-                        File.Create(RPC.ConfigFolder + "Open.rpc");
+                        File.Create(RPC.ConfigFolder + "Open.rpc").Close();
+                        File.Delete(RPC.ConfigFolder + "Open.rpc");
                         Current.Shutdown();
                     }
                 }

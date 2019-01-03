@@ -4,6 +4,7 @@ using System.Deployment.Application;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Windows;
 
 namespace MultiRPC.Functions
@@ -92,7 +93,9 @@ namespace MultiRPC.Functions
         {
             if (e.Error == null)
             {
-                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/MultiRPC.appref-ms");
+                string filepath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/MultiRPC.appref-ms";
+                if (File.Exists(filepath))
+                    Process.Start(filepath);
                 Application.Current.Shutdown();
             }
             else

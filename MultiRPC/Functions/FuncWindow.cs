@@ -74,12 +74,20 @@ namespace MultiRPC.Functions
         {
             if (e.Name == "Open.rpc")
             {
-                File.Delete(RPC.ConfigFolder + "Open.rpc");
                 if (App.WD.Visibility == Visibility.Hidden)
                 {
-                    App.WD.Dispatcher.BeginInvoke((Action)delegate ()
+                    App.WD.Taskbar.Dispatcher.BeginInvoke((Action)delegate ()
                     {
-                        App.WD.Visibility = Visibility.Visible;
+                        try
+                        {
+                            App.WD.WindowState = WindowState.Normal;
+                        }
+                        catch { }
+                        try
+                        {
+                            App.WD.Visibility = Visibility.Visible;
+                        }
+                        catch { }
                     });
                 }
             }
