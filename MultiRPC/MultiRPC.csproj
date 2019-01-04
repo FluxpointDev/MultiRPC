@@ -31,8 +31,8 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>3.4.1.1</ApplicationVersion>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>4.0.0.2</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -125,13 +125,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Config.cs" />
-    <Compile Include="Data.cs" />
+    <Compile Include="Data\Config.cs" />
+    <Compile Include="Data\CustomProfile.cs" />
+    <Compile Include="Data\Data.cs" />
+    <Compile Include="Data\DefaultProfile.cs" />
     <Compile Include="Functions\FuncCredits.cs" />
     <Compile Include="Functions\FuncData.cs" />
     <Compile Include="Functions\FuncDiscord.cs" />
     <Compile Include="Functions\FuncUpdater.cs" />
     <Compile Include="Functions\FuncWindow.cs" />
+    <Compile Include="GUI\CustomPage.xaml.cs">
+      <DependentUpon>CustomPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
@@ -195,7 +200,11 @@
     <Compile Include="RPC\RPC\Payload\ServerEvent.cs" />
     <Compile Include="RPC\RPC\RpcConnection.cs" />
     <Compile Include="RPC\User.cs" />
-    <Compile Include="_Program.cs" />
+    <Compile Include="Data\_Program.cs" />
+    <Page Include="GUI\CustomPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GUI\UpdateWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

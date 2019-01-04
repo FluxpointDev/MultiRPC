@@ -1,4 +1,5 @@
-﻿using MultiRPC.GUI;
+﻿using MultiRPC.Data;
+using MultiRPC.GUI;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -32,17 +33,14 @@ namespace MultiRPC
         {
             if (App.SettingsLoaded && window != null)
             {
-                Custom = new CustomConfig
-                {
-                    Text1 = window.TextCustomText1.Text,
-                    Text2 = window.TextCustomText2.Text,
-                    LargeKey = window.TextCustomLargeKey.Text,
-                    LargeText = window.TextCustomLargeText.Text,
-                    SmallKey = window.TextCustomSmallKey.Text,
-                    SmallText = window.TextCustomSmallText.Text
-                };
-                if (ulong.TryParse(window.TextCustomClientID.Text, out ulong id))
-                    Custom.ID = id;
+                MainWindow.CustomPage.Profile.ClientID = MainWindow.CustomPage.TextClientID.Text;
+                MainWindow.CustomPage.Profile.Text1 = MainWindow.CustomPage.Text1.Text;
+                MainWindow.CustomPage.Profile.Text2 = MainWindow.CustomPage.Text2.Text;
+                MainWindow.CustomPage.Profile.LargeKey = MainWindow.CustomPage.TextLargeKey.Text;
+                MainWindow.CustomPage.Profile.LargeText = MainWindow.CustomPage.TextLargeText.Text;
+                MainWindow.CustomPage.Profile.SmallKey = MainWindow.CustomPage.TextSmallKey.Text;
+                MainWindow.CustomPage.Profile.SmallText = MainWindow.CustomPage.TextSmallText.Text;
+                _Data.SaveProfiles();
                 MultiRPC = new DefaultConfig
                 {
                     Text1 = window.TextDefaultText1.Text,

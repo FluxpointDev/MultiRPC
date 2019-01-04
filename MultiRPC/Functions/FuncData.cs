@@ -24,16 +24,7 @@ namespace MultiRPC.Functions
                 if (RPC.Config.MultiRPC.SmallKey != -1)
                     window.ItemsDefaultSmall.SelectedItem = window.ItemsDefaultSmall.Items[RPC.Config.MultiRPC.SmallKey];
             }
-            if (RPC.Config.Custom != null)
-            {
-                window.TextCustomClientID.Text = RPC.Config.Custom.ID.ToString();
-                window.TextCustomText1.Text = RPC.Config.Custom.Text1;
-                window.TextCustomText2.Text = RPC.Config.Custom.Text2;
-                window.TextCustomLargeKey.Text = RPC.Config.Custom.LargeKey;
-                window.TextCustomLargeText.Text = RPC.Config.Custom.LargeText;
-                window.TextCustomSmallKey.Text = RPC.Config.Custom.SmallKey;
-                window.TextCustomSmallText.Text = RPC.Config.Custom.SmallText;
-            }
+            
             App.SettingsLoaded = true;
             if (RPC.Config.AutoStart == "MultiRPC")
             {
@@ -48,16 +39,13 @@ namespace MultiRPC.Functions
                 window.Menu.SelectedIndex = 1;
                 window.BtnToggleRPC_Click(null, null);
             }
-            if (RPC.Config.Disabled.HelpIcons)
-            {
-                App.WD.ToggleHelpIcons.IsChecked = true;
-                FuncSettings.DisableHelpIcons(window);
-            }
             if (RPC.Config.Disabled.ProgramsTab)
             {
                 App.WD.ToggleProgramsTab.IsChecked = true;
                 FuncSettings.SetProgramsTab(window);
             }
+            if (RPC.Config.Disabled.HelpIcons)
+                App.WD.ToggleHelpIcons.IsChecked = true;
             if (RPC.Config.AFKTime)
                 App.WD.ToggleAfkTime.IsChecked = true;
             window.TextDev.Content = App.Developer;

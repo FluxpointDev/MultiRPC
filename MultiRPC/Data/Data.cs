@@ -1,16 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace MultiRPC
+namespace MultiRPC.Data
 {
     public enum WinType
     {
         Auto, Win10, Win8, Win7, WinXP
     }
-    public static class Data
+    public static class _Data
     {
         public static Dictionary<string, IProgram> Programs = new Dictionary<string, IProgram>();
+        public static Dictionary<string, CustomProfile> Profiles = new Dictionary<string, CustomProfile>();
+
 
         public static void Load()
         {
@@ -19,14 +23,14 @@ namespace MultiRPC
                 ComboBoxItem Box = new ComboBoxItem
                 {
                     Content = s,
-                    Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0)),
-                    Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(182, 182, 182))
+                    Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0)),
+                    Background = new SolidColorBrush(Color.FromRgb(182, 182, 182))
             };
                 ComboBoxItem Box2 = new ComboBoxItem
                 {
                     Content = s,
-                    Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0)),
-                    Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(182, 182, 182))
+                    Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0)),
+                    Background = new SolidColorBrush(Color.FromRgb(182, 182, 182))
                 };
                 App.WD.ItemsDefaultLarge.Items.Add(Box);
                 App.WD.ItemsDefaultSmall.Items.Add(Box2);
@@ -40,6 +44,19 @@ namespace MultiRPC
             //Programs.Add("minecraft", new Minecraft("Minecraft", "", ""));
             //Programs.Add("winmedia", new WindowsMediaPlayer("Win Media Player", "450910667331993601", ""));
             //Programs.Add("custom", new Custom("Custom", "", ""));
+        }
+
+        public static void SaveProfiles()
+        {
+            using (StreamWriter file = File.CreateText(RPC.ConfigFolder + "Profiles.json"))
+            {
+                JsonSerializer serializer = new JsonSerializer
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    Formatting = Formatting.Indented
+                };
+                serializer.Serialize(file, Profiles);
+            }
         }
 
         public static Dictionary<string, string> MultiRPC_Images = new Dictionary<string, string>()

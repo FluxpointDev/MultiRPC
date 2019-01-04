@@ -8,7 +8,7 @@ namespace MultiRPC.Functions
     {
         public static void ToggleSetting(MainWindow window, string name)
         {
-            switch(name)
+            switch (name)
             {
                 case "TokenCheck":
                     RPC.Log.App("Toggled token check");
@@ -25,10 +25,13 @@ namespace MultiRPC.Functions
                 case "HelpIcons":
                     RPC.Log.App("Toggled help icons");
                     RPC.Config.Disabled.HelpIcons = window.ToggleHelpIcons.IsChecked.Value;
-                    if (window.ToggleHelpIcons.IsChecked.Value)
-                        DisableHelpIcons(window);
-                    else
-                        EnableHelpIcons(window);
+                    if (MainWindow.CustomPage != null)
+                    {
+                        if (window.ToggleHelpIcons.IsChecked.Value)
+                            MainWindow.CustomPage.DisableHelpIcons();
+                        else
+                            MainWindow.CustomPage.EnableHelpIcons();
+                    }
                     break;
                 default:
                     RPC.Log.Error("App", "Unknown setting toggled");
@@ -55,28 +58,6 @@ namespace MultiRPC.Functions
                 window.TabPrograms.Width = 67;
                 window.TabPrograms.Visibility = Visibility.Visible;
             }
-        }
-
-        public static void EnableHelpIcons(MainWindow window)
-        {
-            window.HelpClientID.Visibility = Visibility.Visible;
-            window.HelpText1.Visibility = Visibility.Visible;
-            window.HelpText2.Visibility = Visibility.Visible;
-            window.HelpLargeKey.Visibility = Visibility.Visible;
-            window.HelpLargeText.Visibility = Visibility.Visible;
-            window.HelpSmallKey.Visibility = Visibility.Visible;
-            window.HelpSmallText.Visibility = Visibility.Visible;
-        }
-
-        public static void DisableHelpIcons(MainWindow window)
-        {
-            window.HelpClientID.Visibility = Visibility.Hidden;
-            window.HelpText1.Visibility = Visibility.Hidden;
-            window.HelpText2.Visibility = Visibility.Hidden;
-            window.HelpLargeKey.Visibility = Visibility.Hidden;
-            window.HelpLargeText.Visibility = Visibility.Hidden;
-            window.HelpSmallKey.Visibility = Visibility.Hidden;
-            window.HelpSmallText.Visibility = Visibility.Hidden;
         }
     }
 }

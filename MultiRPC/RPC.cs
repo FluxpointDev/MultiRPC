@@ -1,4 +1,5 @@
 ﻿using DiscordRPC;
+using MultiRPC.Data;
 using MultiRPC.GUI;
 using System;
 using System.IO;
@@ -14,6 +15,7 @@ namespace MultiRPC
         public static Config Config = new Config();
         public static string ConfigFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC/";
         public static string ConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC/Config.json";
+        public static string ProfilesFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC/Profiles.json";
         public static HttpClient HttpClient = new HttpClient
         {
             Timeout = new TimeSpan(0, 0, 3)
@@ -118,16 +120,16 @@ namespace MultiRPC
            
         }
 
-        public static void SetPresence(MainWindow window)
+        public static void SetPresence(CustomProfile profile)
         {
-            Presence.Details = window.TextCustomText1.Text;
-            Presence.State = window.TextCustomText2.Text;
+            Presence.Details = profile.Text1;
+            Presence.State = profile.Text2;
             Presence.Assets = new Assets
             {
-                LargeImageKey = window.TextCustomLargeKey.Text,
-                LargeImageText = window.TextCustomLargeText.Text,
-                SmallImageKey = window.TextCustomSmallKey.Text,
-                SmallImageText = window.TextCustomSmallText.Text
+                LargeImageKey = profile.LargeKey,
+                LargeImageText = profile.LargeText,
+                SmallImageKey = profile.SmallKey,
+                SmallImageText = profile.SmallText
             };
         }
 
@@ -161,6 +163,8 @@ namespace MultiRPC
             Uptime.Elapsed += Uptime_Elapsed;
             App.WD.TextUser.Dispatcher.BeginInvoke((Action)delegate ()
             {
+                if (!AFK)
+                    App.WD.BtnUpdatePresence.IsEnabled = true;
                 App.WD.TextUser.Content = User;
                 MainWindow.DisableElements(true);
             });
@@ -226,6 +230,7 @@ namespace MultiRPC
             if (Presence != null)
                 Presence.Timestamps = null;
             ClientTimer.Dispose();
+            if (Uptime != null)
             Uptime.Dispose();
             Client.Dispose();
         }

@@ -46,20 +46,20 @@ namespace MultiRPC.GUI
                         break;
                     }
                 }
-                Error.Text = ErrorMessage.Replace(Username, "(USER)");
+                Error.Text = ErrorMessage.Replace("C:\\Users\\Brandan Lees\\documents\\visual studio 2017\\Projects\\MultiRPC\\MultiRPC\\", "\\").Replace("Brandan Lees", "User");
             }
         }
 
         public void SetError(DispatcherUnhandledExceptionEventArgs error)
         {
             Exception ex = error.Exception;
-            ErrorMessage = $"{ex.Message}\n\n{ex.ToString()}";
+            ErrorMessage = $"{ex.Message}\n\n{ex.ToString().Replace("C:\\Users\\Brandan Lees\\documents\\visual studio 2017\\Projects\\MultiRPC\\MultiRPC\\", "\\").Replace("Brandan Lees", "User")}";
         }
 
         public void SetUpdateError(Exception ex)
         {
             Title = "Update Error";
-            ErrorMessage = $"{ex.Message}\n\n{ex.ToString()}";
+            ErrorMessage = $"{ex.Message}\n\n{ex.ToString().Replace("C:\\Users\\Brandan Lees\\documents\\visual studio 2017\\Projects\\MultiRPC\\MultiRPC\\", "\\").Replace("Brandan Lees", "User")}";
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
