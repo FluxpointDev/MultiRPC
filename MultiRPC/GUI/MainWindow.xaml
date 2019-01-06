@@ -15,7 +15,7 @@
         <Label x:Name="TextUser" Content="" HorizontalAlignment="Left" Margin="180,40,0,0" VerticalAlignment="Top" Foreground="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Width="150" Height="25" VerticalContentAlignment="Center"/>
         <Button x:Name="BtnAfk" Content="AFK" HorizontalAlignment="Left" Height="40" Margin="335,55,0,0" VerticalAlignment="Top" Width="45" BorderBrush="{DynamicResource Brush_Button}" Foreground="{DynamicResource Brush_Button}" Background="#FF3C3C3C" Style="{DynamicResource ButtonStyle}" Click="BtnAfk_Click" ToolTip="Toggle AFK status"/>
         <TextBox x:Name="TextAfk" MaxLength="25" HorizontalAlignment="Left" Height="25" Margin="130,70,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="200" Foreground="#FFD1D1D1" Background="#FF484B51" VerticalContentAlignment="Center" BorderBrush="{x:Null}" ToolTip="AFK Text" GotFocus="Textbox_GotFocus" LostFocus="Textbox_LostFocus" TextChanged="Default_TextChanged" />
-        <TabControl x:Name="Menu" HorizontalAlignment="Left" Height="360" Margin="0,100,0,0" VerticalAlignment="Top" Width="620" Background="{DynamicResource Brush_TabBackground}" BorderBrush="{DynamicResource Brush_LabelText}" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionChanged="Menu_SelectionChanged" BorderThickness="0,1,0,0">
+        <TabControl x:Name="Menu" HorizontalAlignment="Left" Height="360" Margin="0,100,0,0" VerticalAlignment="Top" Width="620" Background="{DynamicResource Brush_TabBackground}" BorderBrush="{DynamicResource Brush_TabBackground}" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionChanged="Menu_SelectionChanged" BorderThickness="0,1,0,0">
             <TabItem x:Name="TabMultiRPC" Header="MultiRPC" Style="{DynamicResource TabItemStyle}">
                 <Grid x:Name="BackMultiRPC" Background="{DynamicResource Brush_TabBackground}">
                     <Label x:Name="LabelDefaultText1" Content="Text 1:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush_LabelText}" Width="65" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" RenderTransformOrigin="0.957,0.92"/>
@@ -47,8 +47,8 @@
             </TabItem>
             <TabItem x:Name="TabCustom" Header="Custom" Style="{DynamicResource TabItemStyle}">
                 <Grid x:Name="BackCustom" Background="{DynamicResource Brush_TabBackground}">
-                    <ToolBar x:Name="MenuProfiles" HorizontalAlignment="Left" Width="636" Background="{DynamicResource TabItem.Disabled.Background}" BorderBrush="{DynamicResource TabItem.Disabled.Background}" UseLayoutRounding="False" ScrollViewer.VerticalScrollBarVisibility="Disabled" ClipToBounds="False" SnapsToDevicePixels="False" IsEnabled="True" OverridesDefaultStyle="False" Margin="-20,0,0,0" Padding="0,0,0,0" VerticalAlignment="Top" Visibility="Hidden">
-                        <Button x:Name="Custom" Content="Custom" Background="{DynamicResource Brush_Button}" Foreground="White" BorderBrush="#FF606060" Padding="10,1" Margin="20,0,10,0"/>
+                    <ToolBar x:Name="MenuProfiles" HorizontalAlignment="Left" Width="636" Background="{DynamicResource TabItem.Disabled.Background}" BorderBrush="{DynamicResource TabItem.Disabled.Background}" UseLayoutRounding="False" ScrollViewer.VerticalScrollBarVisibility="Disabled" ClipToBounds="False" SnapsToDevicePixels="False" IsEnabled="True" Margin="-20,0,0,0" Padding="0,0,0,0" VerticalAlignment="Top" Visibility="Hidden">
+                        <Button x:Name="Custom" Content="Custom" Background="{DynamicResource Brush_Button}" Foreground="White" BorderBrush="#FF606060" Padding="10,1" Margin="20,0,0,0"/>
                     </ToolBar>
                     <Frame x:Name="ViewCustomPage" Content="Frame" HorizontalAlignment="Left" Height="308" Margin="0" VerticalAlignment="Top" Width="616" NavigationUIVisibility="Hidden"/>
 

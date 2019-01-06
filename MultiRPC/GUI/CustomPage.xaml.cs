@@ -1,4 +1,5 @@
 ﻿using MultiRPC.Data;
+using MultiRPC.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,12 @@ namespace MultiRPC.GUI
             else
                 HelpError.Visibility = Visibility.Hidden;
             if (profile.Name == "Custom")
-                (MenuIcons.Items[4] as Image).Visibility = Visibility.Hidden;
+            {
+                (MenuIcons.Items[2] as Image).Visibility = Visibility.Hidden;
+                (MenuIcons.Items[2] as Image).Width = 0;
+                (MenuIcons.Items[5] as Image).Visibility = Visibility.Hidden;
+                (MenuIcons.Items[5] as Image).Width = 0;
+            }
             if (RPC.Config.Disabled.HelpIcons)
                 DisableHelpIcons();
         }
@@ -54,9 +60,22 @@ namespace MultiRPC.GUI
             Image img = sender as Image;
             switch(img.Name)
             {
+                case "ProfileEdit":
+                    {
+                        ProfileName PN = new ProfileName(Profile)
+                        {
+                            Owner = App.WD
+                        };
+                        PN.ShowDialog();
+                    }
+                    break;
                 case "ProfileShare":
                     {
-
+                        ProfileShare PS = new ProfileShare(Profile)
+                        {
+                            Owner = App.WD
+                        };
+                        PS.ShowDialog();
                     }
                     break;
                 case "ProfileAdd":
@@ -73,7 +92,7 @@ namespace MultiRPC.GUI
                         CustomProfile p = new CustomProfile { Name = Name };
                         _Data.Profiles.Add(p.Name, p);
                         _Data.SaveProfiles();
-                        Button btn = GetButton(p);
+                        Button btn = p.GetButton();
                         btn.Click += MainWindow.ProfileBtn_Click;
                         App.WD.MenuProfiles.Items.Add(btn);
                         App.WD.ToggleMenu();
@@ -228,21 +247,6 @@ namespace MultiRPC.GUI
             }
         }
         #endregion
-
-        public Button GetButton(CustomProfile p)
-        {
-            return new Button
-            {
-                Name = p.Name,
-                Content = p.Name,
-                Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)),
-                BorderBrush = new SolidColorBrush(Color.FromRgb(96, 96, 96)),
-                Background = new SolidColorBrush(Color.FromRgb(96, 96, 96)),
-                Padding = new Thickness(10, 1, 10, 1),
-                Margin = new Thickness(5, 0, 5, 0),
-                Height = 20
-            };
-        }
 
         private void HelpButton_Click(object sender, MouseButtonEventArgs e)
         {

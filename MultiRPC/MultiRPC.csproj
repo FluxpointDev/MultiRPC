@@ -31,8 +31,8 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>4.0.0.2</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>4.1.0.0</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -134,8 +134,15 @@
     <Compile Include="Functions\FuncDiscord.cs" />
     <Compile Include="Functions\FuncUpdater.cs" />
     <Compile Include="Functions\FuncWindow.cs" />
+    <Compile Include="Functions\Utils.cs" />
     <Compile Include="GUI\CustomPage.xaml.cs">
       <DependentUpon>CustomPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\ProfileShare.xaml.cs">
+      <DependentUpon>ProfileShare.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\ProfileName.xaml.cs">
+      <DependentUpon>ProfileName.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
@@ -205,6 +212,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GUI\ProfileShare.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GUI\ProfileName.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GUI\UpdateWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -261,6 +276,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\AddIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\EditIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\GithubIcon.png">
@@ -365,6 +383,16 @@
       <FileType>File</FileType>
     </PublishFile>
     <PublishFile Include="Resources\DownloadIcon.png">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="Resources\EditIcon.png">
       <Visible>False</Visible>
       <Group>
       </Group>

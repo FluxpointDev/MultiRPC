@@ -78,14 +78,14 @@
             <GradientStop Color="#FF707070" Offset="0.0"/>
             <GradientStop Color="#FF707070" Offset="1.0"/>
         </LinearGradientBrush>
-        <SolidColorBrush x:Key="TabItem.Static.Border" Color="#ACACAC"/>
+        <SolidColorBrush x:Key="TabItem.Static.Border" Color="#FF7289DA"/>
         <LinearGradientBrush x:Key="TabItem.MouseOver.Background" EndPoint="0,1" StartPoint="0,0">
             <GradientStop Color="#FF5F7A95" Offset="0.0"/>
             <GradientStop Color="#FF5F7A95" Offset="1.0"/>
         </LinearGradientBrush>
         <SolidColorBrush x:Key="TabItem.MouseOver.Border" Color="#7EB4EA"/>
         <SolidColorBrush x:Key="TabItem.Disabled.Background" Color="#FF443B3B"/>
-        <SolidColorBrush x:Key="TabItem.Disabled.Border" Color="#D9D9D9"/>
+        <SolidColorBrush x:Key="TabItem.Disabled.Border" Color="#FF7B8CC9"/>
         <SolidColorBrush x:Key="TabItem.Selected.Border" Color="#ACACAC"/>
         <SolidColorBrush x:Key="TabItem.Selected.Background" Color="#FF00719B"/>
         <Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}">

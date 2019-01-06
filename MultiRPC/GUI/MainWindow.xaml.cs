@@ -145,12 +145,13 @@ namespace MultiRPC.GUI
                         }
                         else
                         {
-                            Button btn = CustomPage.GetButton(p);
+                            Button btn = p.GetButton();
                             btn.Click += ProfileBtn_Click;
                             MenuProfiles.Items.Add(btn);
                         }
                     }
                     App.WD.ToggleMenu();
+                    CheckProfileMenuWidth();
                 }
                 else
                 {
@@ -187,7 +188,8 @@ namespace MultiRPC.GUI
 
         public void CheckProfileMenuWidth()
         {
-            MenuProfiles.Margin = new Thickness(-20, 0, 20, 0);
+            MenuProfiles.Margin = new Thickness(-20, 0, 0, 0);
+            MenuProfiles.UpdateLayout();
             if (!MenuProfiles.HasOverflowItems)
                 MenuProfiles.Margin = new Thickness(-20, 0, 20, 0);
             else
@@ -941,6 +943,7 @@ namespace MultiRPC.GUI
 
         public void ToggleMenu()
         {
+            CheckProfileMenuWidth();
             if (_Data.Profiles.Keys.Count() == 1)
             {
                 MenuProfiles.Visibility = Visibility.Hidden;

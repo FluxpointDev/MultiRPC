@@ -1,0 +1,15 @@
+﻿<Window x:Name="ProfileRenameWindow" x:Class="MultiRPC.GUI.ProfileName"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MultiRPC.GUI"
+        mc:Ignorable="d"
+        Title="ProfileName" Height="140" Width="260" WindowStartupLocation="CenterOwner" Topmost="True" ResizeMode="NoResize">
+    <Grid x:Name="Back" Background="{DynamicResource Brush_TabBackground}">
+        <TextBox x:Name="TextName" MaxLength="20" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="224" Foreground="#FFD1D1D1" Background="#FF484B51" VerticalContentAlignment="Center" BorderBrush="{x:Null}" />
+        <Label x:Name="LabelLength" Content="Max length 20" HorizontalAlignment="Left" Margin="143,41,0,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush_LabelText}" Width="91" Height="40" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" RenderTransformOrigin="0.957,0.92"/>
+        <Button x:Name="BtnDone" Content="Done" HorizontalAlignment="Left" Height="40" Margin="10,41,0,0" VerticalAlignment="Top" Width="100" BorderBrush="{DynamicResource Brush_Button}" Foreground="White" Background="{DynamicResource Brush_Ok}" Style="{DynamicResource ButtonStyle}" Click="BtnDone_Click"/>
+
+    </Grid>
+</Window>
