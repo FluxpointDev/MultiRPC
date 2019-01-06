@@ -3,7 +3,7 @@ A windows app for managing Discord rich presence with the ability to set a custo
 
 This supports all versions of windows, linux/mac support coming soon using .net core
 
-Ram usage: 15-20mb | Language: C# | GUI: Wpf
+Ram usage: 25mb | Language: C# | GUI: Wpf
 
 
 
