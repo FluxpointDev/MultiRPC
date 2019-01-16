@@ -608,7 +608,7 @@ namespace MultiRPC.GUI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!App.Crashed)
+            if (!App.Crashed && App.FormReady)
             {
                 _Data.SaveProfiles();
                 App.Config.Save();

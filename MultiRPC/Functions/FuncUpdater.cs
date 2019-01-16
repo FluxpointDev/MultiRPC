@@ -46,6 +46,7 @@ namespace MultiRPC.Functions
                     Info = ApplicationDeployment.CurrentDeployment.CheckForDetailedUpdate(false);
                     if (Info != null && Info.UpdateAvailable)
                     {
+                        App.StartUpdate = true;
                         try
                         {
                             using (WebClient client = new WebClient())
