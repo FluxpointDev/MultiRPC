@@ -17,14 +17,15 @@ using System.Windows.Shapes;
 namespace MultiRPC.GUI
 {
     /// <summary>
-    /// Interaction logic for ProfileShare.xaml
+    /// Interaction logic for ShareWindow.xaml
     /// </summary>
-    public partial class ProfileShare : Window
+    public partial class ShareWindow : Window
     {
-        public ProfileShare(CustomProfile profile)
+        public ShareWindow(CustomProfile profile)
         {
             InitializeComponent();
             Profile = profile;
+            Title = $"Share - {Profile.Name}";
         }
         private CustomProfile Profile;
 

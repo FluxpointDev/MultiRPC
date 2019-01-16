@@ -1,29 +1,19 @@
 ﻿using MultiRPC.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MultiRPC.GUI
 {
     /// <summary>
-    /// Interaction logic for ProfileName.xaml
+    /// Interaction logic for RenameWindow.xaml
     /// </summary>
-    public partial class ProfileName : Window
+    public partial class RenameWindow : Window
     {
-        public ProfileName(CustomProfile profile)
+        public RenameWindow(CustomProfile profile)
         {
             InitializeComponent();
             Profile = profile;
+            Title = $"Rename - {Profile.Name}";
         }
         private CustomProfile Profile;
 
@@ -57,14 +47,13 @@ namespace MultiRPC.GUI
                 if ((string)b.Content == Profile.Name)
                 {
                     b.Content = New.Name;
-                    b.Name = New.Name;
                 }
             }
             _Data.Profiles.Remove(Profile.Name);
             _Data.Profiles.Add(New.Name, New);
             _Data.SaveProfiles();
-            MainWindow.CustomPage = new CustomPage(New);
-            App.WD.ViewCustomPage.Content = MainWindow.CustomPage;
+            Views.Custom = new ViewCustom(New);
+            App.WD.FrameCustomView.Content = Views.Custom;
             Close();
         }
     }

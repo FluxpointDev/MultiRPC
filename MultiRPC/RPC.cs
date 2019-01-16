@@ -1,5 +1,6 @@
 ﻿using DiscordRPC;
 using MultiRPC.Data;
+using MultiRPC.Functions;
 using MultiRPC.GUI;
 using System;
 using System.IO;
@@ -11,16 +12,10 @@ namespace MultiRPC
 {
     public static class RPC
     {
-
-        public static Config Config = new Config();
-        public static string ConfigFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC/";
-        public static string ConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC/Config.json";
-        public static string ProfilesFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC/Profiles.json";
         public static HttpClient HttpClient = new HttpClient
         {
             Timeout = new TimeSpan(0, 0, 3)
         };
-        public static Logger Log = new Logger();
         public static DiscordRpcClient Client = null;
         private static System.Timers.Timer ClientTimer;
         public static System.Timers.Timer Uptime;
@@ -42,12 +37,12 @@ namespace MultiRPC
         //public static bool LoadingSettings = true;
         public static void CheckField(string text)
         {
-            if (!Config.InviteWarn && text.ToLower().Contains("discord.gg/"))
+            if (!App.Config.InviteWarn && text.ToLower().Contains("discord.gg/"))
             {
-                Config.InviteWarn = true;
-                Config.Save();
+                App.Config.InviteWarn = true;
+                App.Config.Save();
                 MessageBox.Show("Advertising in rpc could result in you being kicked or banned from servers!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                Log.App("Disabled invite warning message");
+                App.Log.App("Disabled invite warning message");
             }
         }
 
@@ -55,7 +50,7 @@ namespace MultiRPC
         {
             FirstUpdate = false;
             Failed = true;
-            Log.Rpc("Starting MultiRPC");
+            App.Log.Rpc("Starting MultiRPC");
             int Count = 0;
             string DClient = "";
             bool Found = false;
@@ -96,7 +91,7 @@ namespace MultiRPC
                         Count++;
                 }
             }
-            Log.App($"Client: {DClient} ({Count})");
+            App.Log.App($"Client: {DClient} ({Count})");
             if (SteamID == "")
                 Client = new DiscordRpcClient(id.ToString(), false, Count);
             else
@@ -155,7 +150,12 @@ namespace MultiRPC
         {
             string[] Split = args.User.ToString().Split('#');
             string User = $"{Split[0]}#{Split[1].PadLeft(4, '0')}";
-            Log.Rpc($"Ready, hi {User} 👋");
+            if (App.Config.LastUser != User)
+            {
+                App.Config.LastUser = User;
+                FuncCredits.CheckBadges();
+            }
+            App.Log.Rpc($"Ready, hi {User} 👋");
             StartTime = DateTime.UtcNow;
             Uptime = new System.Timers.Timer(new TimeSpan(0, 0, 1).TotalMilliseconds);
             if (Presence.Timestamps != null)
@@ -175,9 +175,9 @@ namespace MultiRPC
         {
             TimeSpan TS = DateTime.UtcNow - StartTime;
             TS.Add(new TimeSpan(0, 0, 1));
-            App.WD.ViewLiveRPC.Dispatcher.Invoke(() =>
+            App.WD.FrameLiveRPC.Dispatcher.Invoke(() =>
             {
-                ViewRPC View = App.WD.ViewLiveRPC.Content as ViewRPC;
+                ViewRPC View = App.WD.FrameLiveRPC.Content as ViewRPC;
                 if (TS.Hours == 0)
                     View.Time.Content = $"{TS.Minutes.ToString().PadLeft(2, '0')}:{TS.Seconds.ToString().PadLeft(2, '0')}";
                 else
@@ -192,7 +192,7 @@ namespace MultiRPC
         {
             if (FirstUpdate)
             {
-                Log.Rpc($"Updated presence for {args.Name}");
+                App.Log.Rpc($"Updated presence for {args.Name}");
                 MainWindow.SetLiveView(args);
             }
             FirstUpdate = true;
@@ -200,7 +200,7 @@ namespace MultiRPC
 
         private static void Client_OnError(object sender, DiscordRPC.Message.ErrorMessage args)
         {
-            Log.Error("RPC", $"({args.Code}) {args.Message}");
+            App.Log.Error("RPC", $"({args.Code}) {args.Message}");
         }
 
         private static void Client_OnConnectionFailed(object sender, DiscordRPC.Message.ConnectionFailedMessage args)
@@ -208,7 +208,7 @@ namespace MultiRPC
             if (!Failed)
             {
                 Failed = true;
-                Log.Error("RPC", $"Discord client invalid, {args.Type}");
+                App.Log.Error("RPC", $"Discord client invalid, {args.Type}");
                 MainWindow.SetLiveView(ViewType.Error, "Attempting to reconnect");
             }
         }
@@ -216,17 +216,17 @@ namespace MultiRPC
         private static void Client_OnConnectionEstablished(object sender, DiscordRPC.Message.ConnectionEstablishedMessage args)
         {
             Failed = false;
-            Log.Rpc($"Connected");
+            App.Log.Rpc($"Connected");
         }
 
         private static void Client_OnClose(object sender, DiscordRPC.Message.CloseMessage args)
         {
-            Log.Rpc($"Closed ({args.Code}) {args.Reason}");
+            App.Log.Rpc($"Closed ({args.Code}) {args.Reason}");
         }
 
         public static void Shutdown()
         {
-            Log.Rpc("Shutting down");
+            App.Log.Rpc("Shutting down");
             if (Presence != null)
                 Presence.Timestamps = null;
             ClientTimer.Dispose();

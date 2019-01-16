@@ -60,7 +60,7 @@ namespace MultiRPC.GUI
                 }
                 catch
                 {
-                    RPC.Log.Error("App", "Could not ping multirpc.blazedev.me");
+                    App.Log.Error("App", "Could not ping multirpc.blazedev.me");
                     MessageBox.Show("Could not contact download server");
                 }
                 Close();

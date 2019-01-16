@@ -18,19 +18,18 @@ using System.Windows.Shapes;
 namespace MultiRPC.GUI
 {
     /// <summary>
-    /// Interaction logic for CustomPage.xaml
+    /// Interaction logic for ViewCustom.xaml
     /// </summary>
-    public partial class CustomPage : UserControl
+    public partial class ViewCustom : UserControl
     {
-        public CustomPage(CustomProfile profile)
+        public ViewCustom(CustomProfile profile)
         {
             Profile = profile;
             InitializeComponent();
-            Name = profile.Name;
             ProfileName.Content = profile.Name;
             TextClientID.Text = profile.ClientID;
-            Text1.Text = profile.Text1;
-            Text2.Text = profile.Text2;
+            TextText1.Text = profile.Text1;
+            TextText2.Text = profile.Text2;
             TextLargeKey.Text = profile.LargeKey;
             TextLargeText.Text = profile.LargeText;
             TextSmallKey.Text = profile.SmallKey;
@@ -49,7 +48,7 @@ namespace MultiRPC.GUI
                 (MenuIcons.Items[5] as Image).Visibility = Visibility.Hidden;
                 (MenuIcons.Items[5] as Image).Width = 0;
             }
-            if (RPC.Config.Disabled.HelpIcons)
+            if (App.Config.Disabled.HelpIcons)
                 DisableHelpIcons();
         }
 
@@ -62,7 +61,7 @@ namespace MultiRPC.GUI
             {
                 case "ProfileEdit":
                     {
-                        ProfileName PN = new ProfileName(Profile)
+                        RenameWindow PN = new RenameWindow(Profile)
                         {
                             Owner = App.WD
                         };
@@ -71,7 +70,7 @@ namespace MultiRPC.GUI
                     break;
                 case "ProfileShare":
                     {
-                        ProfileShare PS = new ProfileShare(Profile)
+                        ShareWindow PS = new ShareWindow(Profile)
                         {
                             Owner = App.WD
                         };
@@ -124,12 +123,12 @@ namespace MultiRPC.GUI
                                 return;
                             }
                             App.WD.MenuProfiles.Items.RemoveAt(Index);
-                            MainWindow.CustomPage = new CustomPage(_Data.Profiles.Values.First());
+                           Views.Custom = new ViewCustom(_Data.Profiles.Values.First());
                             (App.WD.MenuProfiles.Items[0] as Button).Background = (Brush)Application.Current.Resources["Brush_Button"];
-                            App.WD.ViewCustomPage.Content = MainWindow.CustomPage;
                             _Data.Profiles.Remove(Profile.Name);
                             _Data.SaveProfiles();
                             App.WD.ToggleMenu();
+                            App.WD.FrameCustomView.Content = Views.Custom;
                         }
                     }
                     break;
@@ -139,7 +138,7 @@ namespace MultiRPC.GUI
         private void TextClientID_TextChanged(object sender, TextChangedEventArgs e)
         {
             Profile.ClientID = (sender as TextBox).Text;
-            if (TextClientID.Text.Length < 15 || !ulong.TryParse(TextClientID.Text, out ulong ID))
+            if (Profile.ClientID.Length < 15 || !ulong.TryParse(Profile.ClientID, out ulong ID))
             {
                 HelpError.ToolTip = "Invalid client ID";
                 HelpError.Visibility = Visibility.Visible;
@@ -175,13 +174,13 @@ namespace MultiRPC.GUI
                 db = 0.60;
             switch (box.Name)
             {
-                case "Text1":
-                    Profile.Text1 = Text1.Text;
+                case "TextText1":
+                    Profile.Text1 = TextText1.Text;
                     LimitCustomText1.Content = 25 - box.Text.Length;
                     LimitCustomText1.Opacity = db;
                     break;
-                case "Text2":
-                    Profile.Text2 = Text2.Text;
+                case "TextText2":
+                    Profile.Text2 = TextText2.Text;
                     LimitCustomText2.Content = 25 - box.Text.Length;
                     LimitCustomText2.Opacity = db;
                     break;
@@ -226,10 +225,10 @@ namespace MultiRPC.GUI
         {
             switch (box.Name)
             {
-                case "Text1":
+                case "TextText1":
                     LimitCustomText1.Visibility = vis;
                     break;
-                case "Text2":
+                case "TextText2":
                     LimitCustomText2.Visibility = vis;
                     break;
                 case "TextLargeKey":

@@ -24,7 +24,6 @@ namespace MultiRPC.Data
         {
             return new Button
             {
-                Name = Name,
                 Content = Name,
                 Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)),
                 BorderBrush = new SolidColorBrush(Color.FromRgb(96, 96, 96)),

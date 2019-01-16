@@ -24,7 +24,7 @@ namespace MultiRPC.GUI
                         Title.Content = "MultiRPC";
                         Text1.Content = "Thanks for using";
                         Text2.Content = "This program";
-                        ViewRPCForm.Background = SystemColors.ControlDarkDarkBrush;
+                        Background = SystemColors.ControlDarkDarkBrush;
                         SmallBack.Fill = SystemColors.ControlDarkDarkBrush;
 
                     }
@@ -48,7 +48,7 @@ namespace MultiRPC.GUI
                         ImageBehavior.SetRepeatBehavior(Loading, System.Windows.Media.Animation.RepeatBehavior.Forever);
                         LargeImage.Source = null;
                         SmallImage.Fill = null;
-                        ViewRPCForm.Background = SystemColors.ControlDarkDarkBrush;
+                        Background = SystemColors.ControlDarkDarkBrush;
                         Loading.Visibility = Visibility.Visible;
                         SmallBack.Visibility = Visibility.Hidden;
                     }
@@ -70,7 +70,7 @@ namespace MultiRPC.GUI
                         Text2.Content = ":(";
                         LargeImage.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/Resources/DownloadIcon.png", UriKind.Absolute));
                         SmallImage.Fill = new ImageBrush(new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/Resources/ExitIcon.png", UriKind.Absolute)));
-                        ViewRPCForm.Background = new SolidColorBrush(new Color { R = 255, G = 57, B = 57, A = 80 });
+                        Background = new SolidColorBrush(new Color { R = 255, G = 57, B = 57, A = 80 });
                     }
                     break;
                 case ViewType.Error:
@@ -78,7 +78,7 @@ namespace MultiRPC.GUI
                         Title.Content = "Error!";
                         Text1.Content = Error;
                         Text2.Content = "";
-                        ViewRPCForm.Background = new SolidColorBrush(new Color { R = 255, G = 57, B = 57, A = 80});
+                        Background = new SolidColorBrush(new Color { R = 255, G = 57, B = 57, A = 80});
                         LargeImage.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/Resources/ExitIcon.png", UriKind.Absolute));
                         SmallImage.Fill = null;
                         SmallBack.Visibility = Visibility.Hidden;
@@ -124,7 +124,7 @@ namespace MultiRPC.GUI
 
         public static void Image_FailedLoading(object sender, ExceptionEventArgs e)
         {
-            RPC.Log.ImageError(sender as BitmapImage, e);
+            App.Log.ImageError(sender as BitmapImage, e);
         }
     }
 }

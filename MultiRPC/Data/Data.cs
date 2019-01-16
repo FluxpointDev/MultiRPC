@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using MultiRPC.Functions;
+using MultiRPC.GUI;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Controls;
@@ -15,40 +17,42 @@ namespace MultiRPC.Data
         public static Dictionary<string, IProgram> Programs = new Dictionary<string, IProgram>();
         public static Dictionary<string, CustomProfile> Profiles = new Dictionary<string, CustomProfile>();
 
-
-        public static void Load()
+        public static void AutoStart(MainWindow window)
         {
-            foreach(string s in MultiRPC_Images.Keys)
+            if (App.Config.AutoStart == "MultiRPC")
             {
-                ComboBoxItem Box = new ComboBoxItem
-                {
-                    Content = s,
-                    Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0)),
-                    Background = new SolidColorBrush(Color.FromRgb(182, 182, 182))
-            };
-                ComboBoxItem Box2 = new ComboBoxItem
-                {
-                    Content = s,
-                    Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0)),
-                    Background = new SolidColorBrush(Color.FromRgb(182, 182, 182))
-                };
-                App.WD.ItemsDefaultLarge.Items.Add(Box);
-                App.WD.ItemsDefaultSmall.Items.Add(Box2);
+                window.ItemsAutoStart.SelectedIndex = 1;
+                window.Menu.SelectedIndex = 0;
+                window.BtnToggleRPC_Click(null, null);
             }
+            else if (App.Config.AutoStart == "Custom")
+            {
+                RPC.Type = "custom";
+                window.ItemsAutoStart.SelectedIndex = 2;
+                window.Menu.SelectedIndex = 1;
+                window.BtnToggleRPC_Click(null, null);
+            }
+        }
 
-            //Programs.Add("afk", new Afk("AFK", "469643793851744257", ""));
-            //Programs.Add("windows", new Windows("Windows", "469675182802599936", ""));
-            //Programs.Add("anime", new Anime("Anime", "451178426439565312", ""));
-            //Programs.Add("firefox", new Firefox("Firefox", "450894077165043722", "firefox"));
-            //Programs.Add("chrome", new Chrome("Chrome", "", "chrome"));
-            //Programs.Add("minecraft", new Minecraft("Minecraft", "", ""));
-            //Programs.Add("winmedia", new WindowsMediaPlayer("Win Media Player", "450910667331993601", ""));
-            //Programs.Add("custom", new Custom("Custom", "", ""));
+        public static void SetupCustom(MainWindow window)
+        {
+            if (App.Config.Disabled.ProgramsTab)
+                window.TabPrograms.Width = 0;
+
+            if (App.Config.Disabled.ProgramsTab)
+            {
+                App.WD.ToggleProgramsTab.IsChecked = true;
+                FuncSettings.SetProgramsTab(window);
+            }
+            if (App.Config.Disabled.HelpIcons)
+                App.WD.ToggleHelpIcons.IsChecked = true;
+            if (App.Config.AFKTime)
+                App.WD.ToggleAfkTime.IsChecked = true;
         }
 
         public static void SaveProfiles()
         {
-            using (StreamWriter file = File.CreateText(RPC.ConfigFolder + "Profiles.json"))
+            using (StreamWriter file = File.CreateText(App.ConfigFolder + "Profiles.json"))
             {
                 JsonSerializer serializer = new JsonSerializer
                 {
@@ -62,7 +66,7 @@ namespace MultiRPC.Data
         public static Dictionary<string, string> MultiRPC_Images = new Dictionary<string, string>()
         {
             { "Discord", "https://i.imgur.com/QN5WA4W.png" },
-            { "MultiRPC", "https://i.imgur.com/VwBsOkG.png" },
+            { "MultiRPC", "https://i.imgur.com/d6OLF2z.png" },
             { "Firefox", "https://i.imgur.com/oTuovMT.png" },
             { "FirefoxNightly", "https://i.imgur.com/JBjTLUs.png" },
             { "Google", "https://i.imgur.com/DJjs5Yc.png" },
@@ -73,12 +77,19 @@ namespace MultiRPC.Data
             { "Nyancat", "https://i.imgur.com/YoiJGh5.png" },
             { "Monstercat", "https://i.imgur.com/QTGPwi0.png" },
             { "Thonk", "https://i.imgur.com/P4Mvpmf.png" },
-            { "Lul", "https://i.imgur.com/ej6GQjc.png" },
+            { "Lul", "https://i.imgur.com/1Q1Nbin.png" },
             { "Pepe", "https://i.imgur.com/7ybyrw7.png" },
             { "Trollface", "https://i.imgur.com/tanLvrt.png" },
             { "Doge", "https://i.imgur.com/ytpmvjg.png" },
             { "Christmas", "https://i.imgur.com/NF2enEO.png" },
-            { "Present", "https://i.imgur.com/qMfJKt6.png" }
+            { "Present", "https://i.imgur.com/qMfJKt6.png" },
+            { "Neko", "https://i.imgur.com/l2RsYY7.png" },
+            { "Popcorn", "https://i.imgur.com/xplfztu.png" },
+            { "Skype", "https://i.imgur.com/PjQFB6d.png" },
+            { "Games", "https://i.imgur.com/lPrT5BG.png" },
+            { "Steam", "https://i.imgur.com/bKxJ7Lj.png" },
+            { "Minecraft", "https://i.imgur.com/vnw6Z8X.png" },
+            { "Coke", "https://i.imgur.com/GAsmn3P.png" }
         };
     }
 }

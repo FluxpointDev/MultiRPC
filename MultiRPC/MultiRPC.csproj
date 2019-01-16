@@ -32,7 +32,7 @@
     <WebPage>publish.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>4.1.0.0</ApplicationVersion>
+    <ApplicationVersion>4.2.2.0</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -130,21 +130,27 @@
     <Compile Include="Data\Data.cs" />
     <Compile Include="Data\DefaultProfile.cs" />
     <Compile Include="Functions\FuncCredits.cs" />
-    <Compile Include="Functions\FuncData.cs" />
     <Compile Include="Functions\FuncDiscord.cs" />
     <Compile Include="Functions\FuncUpdater.cs" />
     <Compile Include="Functions\FuncWindow.cs" />
     <Compile Include="Functions\Utils.cs" />
-    <Compile Include="GUI\CustomPage.xaml.cs">
-      <DependentUpon>CustomPage.xaml</DependentUpon>
+    <Compile Include="GUI\Views\ViewPrograms.xaml.cs">
+      <DependentUpon>ViewPrograms.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\ProfileShare.xaml.cs">
-      <DependentUpon>ProfileShare.xaml</DependentUpon>
+    <Compile Include="GUI\Views\ViewDefault.xaml.cs">
+      <DependentUpon>ViewDefault.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\ProfileName.xaml.cs">
-      <DependentUpon>ProfileName.xaml</DependentUpon>
+    <Compile Include="GUI\Views\ViewCustom.xaml.cs">
+      <DependentUpon>ViewCustom.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\UpdateWindow.xaml.cs">
+    <Compile Include="GUI\Views\Views.cs" />
+    <Compile Include="GUI\Windows\ShareWindow.xaml.cs">
+      <DependentUpon>ShareWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Windows\RenameWindow.xaml.cs">
+      <DependentUpon>RenameWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Windows\UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Functions\FuncSettings.cs" />
@@ -152,10 +158,10 @@
     <Compile Include="GUI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\ErrorWindow.xaml.cs">
+    <Compile Include="GUI\Windows\ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\ViewRPC.xaml.cs">
+    <Compile Include="GUI\Views\ViewRPC.xaml.cs">
       <DependentUpon>ViewRPC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logger.cs" />
@@ -208,19 +214,27 @@
     <Compile Include="RPC\RPC\RpcConnection.cs" />
     <Compile Include="RPC\User.cs" />
     <Compile Include="Data\_Program.cs" />
-    <Page Include="GUI\CustomPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\ProfileShare.xaml">
+    <Page Include="GUI\Views\ViewPrograms.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="GUI\ProfileName.xaml">
+    <Page Include="GUI\Views\ViewDefault.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GUI\Views\ViewCustom.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\UpdateWindow.xaml">
+    <Page Include="GUI\Windows\ShareWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GUI\Windows\RenameWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Windows\UpdateWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -228,11 +242,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\ErrorWindow.xaml">
+    <Page Include="GUI\Windows\ErrorWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="GUI\ViewRPC.xaml">
+    <Page Include="GUI\Views\ViewRPC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -258,6 +272,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
@@ -272,10 +287,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\AdminBadge.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\DeleteIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\AddIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\DonatorBadge.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\EditIcon.png">
@@ -287,7 +308,7 @@
     <Content Include="Resources\DownloadIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\MultiRPC.jpg">
+    <Content Include="Resources\MultiRPC.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\ServerIcon.jpg">
@@ -362,6 +383,16 @@
       <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
+    <PublishFile Include="Resources\AdminBadge.png">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
     <PublishFile Include="Resources\DeleteIcon.png">
       <Visible>False</Visible>
       <Group>
@@ -373,6 +404,16 @@
       <FileType>File</FileType>
     </PublishFile>
     <PublishFile Include="Resources\DiscordIcon.png">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="Resources\DonatorBadge.png">
       <Visible>False</Visible>
       <Group>
       </Group>
@@ -432,7 +473,7 @@
       <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
-    <PublishFile Include="Resources\MultiRPC.jpg">
+    <PublishFile Include="Resources\MultiRPC.png">
       <Visible>False</Visible>
       <Group>
       </Group>

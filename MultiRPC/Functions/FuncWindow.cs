@@ -54,7 +54,7 @@ namespace MultiRPC.Functions
             placement.Length = Marshal.SizeOf(placement);
             GetWindowPlacement(handle, out placement);
             if (placement.ShowCmd == ShowWindowCommands.Hide)
-                File.Create(RPC.ConfigFolder + "Open.rpc");
+                File.Create(App.ConfigFolder + "Open.rpc");
         }
     }
 
@@ -65,7 +65,7 @@ namespace MultiRPC.Functions
             FileSystemWatcher watcher = new FileSystemWatcher
             {
                 Filter = "*.rpc",
-                Path = RPC.ConfigFolder,
+                Path = App.ConfigFolder,
                 EnableRaisingEvents = true
             };
             watcher.Created += new FileSystemEventHandler(Watcher_FileCreated);

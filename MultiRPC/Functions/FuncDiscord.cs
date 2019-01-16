@@ -15,17 +15,17 @@ namespace MultiRPC.Functions
                 LoadPipes();
                 if (App.WD.Title == "MultiRPC")
                 {
-                    RPC.Log.Error("RPC", "No Discord client found");
+                    App.Log.Error("RPC", "No Discord client found");
                     MainWindow.EnableElements();
-                    App.WD.ViewLiveRPC.Content = new ViewRPC(ViewType.Error, "No Discord client found");
+                    App.WD.FrameLiveRPC.Content = new ViewRPC(ViewType.Error, "No Discord client found");
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                RPC.Log.Error("RPC", $"No Discord client found, {ex.Message}");
+                App.Log.Error("RPC", $"No Discord client found, {ex.Message}");
                 MainWindow.EnableElements();
-                App.WD.ViewLiveRPC.Content = new ViewRPC(ViewType.Error, "No Discord client");
+                App.WD.FrameLiveRPC.Content = new ViewRPC(ViewType.Error, "No Discord client");
                 return false;
             }
             return true;

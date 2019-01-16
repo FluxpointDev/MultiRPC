@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MultiRPC.Data;
+using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
@@ -33,7 +34,8 @@ namespace MultiRPC.GUI
                 {
                     try
                     {
-                        RPC.Config.Save(App.WD);
+                        _Data.SaveProfiles();
+                        App.Config.Save();
                     }
                     catch { }
                 }

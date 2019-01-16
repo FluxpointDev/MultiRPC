@@ -13,9 +13,9 @@ namespace MultiRPC.Functions
     {
         public static void Check(MainWindow window)
         {
-            if (File.Exists(RPC.ConfigFolder + "Changelog.txt"))
+            if (File.Exists(App.ConfigFolder + "Changelog.txt"))
             {
-                using (StreamReader reader = new StreamReader(RPC.ConfigFolder + "Changelog.txt"))
+                using (StreamReader reader = new StreamReader(App.ConfigFolder + "Changelog.txt"))
                 {
                     App.Changelog = reader.ReadToEnd();
                 }
@@ -26,9 +26,9 @@ namespace MultiRPC.Functions
                 {
                     using (WebClient client = new WebClient())
                     {
-                        client.DownloadFile("https://multirpc.blazedev.me/Changelog.txt", RPC.ConfigFolder + "Changelog.txt");
+                        client.DownloadFile("https://multirpc.blazedev.me/Changelog.txt", App.ConfigFolder + "Changelog.txt");
                     }
-                    using (StreamReader reader = new StreamReader(RPC.ConfigFolder + "Changelog.txt"))
+                    using (StreamReader reader = new StreamReader(App.ConfigFolder + "Changelog.txt"))
                     {
                         App.Changelog = reader.ReadToEnd();
                     }
@@ -50,9 +50,9 @@ namespace MultiRPC.Functions
                         {
                             using (WebClient client = new WebClient())
                             {
-                                client.DownloadFile("https://multirpc.blazedev.me/Changelog.txt", RPC.ConfigFolder + "Changelog.txt");
+                                client.DownloadFile("https://multirpc.blazedev.me/Changelog.txt", App.ConfigFolder + "Changelog.txt");
                             }
-                            using (StreamReader reader = new StreamReader(RPC.ConfigFolder + "Changelog.txt"))
+                            using (StreamReader reader = new StreamReader(App.ConfigFolder + "Changelog.txt"))
                             {
                                 App.Changelog = reader.ReadToEnd();
                             }
@@ -65,14 +65,14 @@ namespace MultiRPC.Functions
                         UpdateWindow.ShowDialog();
                         if (App.StartUpdate)
                         {
-                            App.WD.ViewLiveRPC.Content = new ViewRPC(ViewType.Update);
+                            App.WD.FrameLiveRPC.Content = new ViewRPC(ViewType.Update);
                             Start();
                         }
                     }
                 }
                 catch
                 {
-                    RPC.Log.Error("App", "Failed to check for updates");
+                    App.Log.Error("App", "Failed to check for updates");
                 }
             }
         }
@@ -86,7 +86,7 @@ namespace MultiRPC.Functions
 
         private static void CurrentDeployment_UpdateProgressChanged(object sender, DeploymentProgressChangedEventArgs e)
         {
-            (App.WD.ViewLiveRPC.Content as ViewRPC).Text2.Content = $"{e.ProgressPercentage}%/100%";
+            (App.WD.FrameLiveRPC.Content as ViewRPC).Text2.Content = $"{e.ProgressPercentage}%/100%";
         }
 
         private static void CurrentDeployment_UpdateCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
@@ -100,7 +100,7 @@ namespace MultiRPC.Functions
             }
             else
             {
-                App.WD.ViewLiveRPC.Content = new ViewRPC(ViewType.UpdateFail);
+                App.WD.FrameLiveRPC.Content = new ViewRPC(ViewType.UpdateFail);
                 ErrorWindow ErrorWindow = new ErrorWindow();
                 ErrorWindow.SetUpdateError(e.Error);
                 ErrorWindow.ShowDialog();

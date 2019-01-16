@@ -11,39 +11,39 @@ namespace MultiRPC.Functions
             switch (name)
             {
                 case "TokenCheck":
-                    RPC.Log.App("Toggled token check");
+                    App.Log.App("Toggled token check");
                     break;
                 case "Afk":
-                    RPC.Log.App("Toggled afk time");
-                    RPC.Config.AFKTime = window.ToggleAfkTime.IsChecked.Value;
+                    App.Log.App("Toggled afk time");
+                    App.Config.AFKTime = window.ToggleAfkTime.IsChecked.Value;
                     break;
                 case "ProgramsTab":
-                    RPC.Log.App("Toggled programs tab");
-                    RPC.Config.Disabled.ProgramsTab = window.ToggleProgramsTab.IsChecked.Value;
+                    App.Log.App("Toggled programs tab");
+                    App.Config.Disabled.ProgramsTab = window.ToggleProgramsTab.IsChecked.Value;
                     SetProgramsTab(window);
                     break;
                 case "HelpIcons":
-                    RPC.Log.App("Toggled help icons");
-                    RPC.Config.Disabled.HelpIcons = window.ToggleHelpIcons.IsChecked.Value;
-                    if (MainWindow.CustomPage != null)
+                    App.Log.App("Toggled help icons");
+                    App.Config.Disabled.HelpIcons = window.ToggleHelpIcons.IsChecked.Value;
+                    if (Views.Custom != null)
                     {
                         if (window.ToggleHelpIcons.IsChecked.Value)
-                            MainWindow.CustomPage.DisableHelpIcons();
+                            Views.Custom.DisableHelpIcons();
                         else
-                            MainWindow.CustomPage.EnableHelpIcons();
+                            Views.Custom.EnableHelpIcons();
                     }
                     break;
                 default:
-                    RPC.Log.Error("App", "Unknown setting toggled");
+                    App.Log.Error("App", "Unknown setting toggled");
                     break;
             }
-            RPC.Config.Save();
+            App.Config.Save();
         }
 
         public static void SelectAutoStart(ComboBox comboBox)
         {
-            RPC.Config.AutoStart = (comboBox.SelectedItem as ComboBoxItem).Content.ToString();
-            RPC.Config.Save();
+            App.Config.AutoStart = (comboBox.SelectedItem as ComboBoxItem).Content.ToString();
+            App.Config.Save();
         }
 
         public static void SetProgramsTab(MainWindow window)
