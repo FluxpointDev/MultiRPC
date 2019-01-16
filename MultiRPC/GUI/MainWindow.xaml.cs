@@ -509,7 +509,7 @@ namespace MultiRPC.GUI
                 case "multirpc":
                     {
                         RPC.Type = "default";
-                        if (Views.Custom.TextClientID.IsEnabled)
+                        if (Views.Custom != null && Views.Custom.TextClientID.IsEnabled)
                             BtnToggleRPC.Content = "Start MultiRPC";
                     }
                     break;
@@ -517,7 +517,7 @@ namespace MultiRPC.GUI
                     {
                         RPC.Type = "custom";
                         CheckProfileMenuWidth();
-                        if (Views.Custom.TextClientID.IsEnabled)
+                        if (Views.Custom != null && Views.Custom.TextClientID.IsEnabled)
                             BtnToggleRPC.Content = "Start Custom";
                     }
                     break;
