@@ -113,21 +113,33 @@ namespace MultiRPC.GUI
                         _Data.Profiles = (Dictionary<string, CustomProfile>)serializer.Deserialize(reader, typeof(Dictionary<string, CustomProfile>));
 
                     }
-                    foreach (CustomProfile p in _Data.Profiles.Values)
+                    if (_Data.Profiles.Count == 0)
                     {
-                        if (Views.Custom == null)
+                        CustomProfile profile = new CustomProfile { Name = "Custom" };
+                        _Data.Profiles.Add("Custom", profile);
+                        _Data.SaveProfiles();
+                        Views.Custom = new ViewCustom(profile);
+                        FrameCustomView.Content = Views.Custom;
+                        (MenuProfiles.Items[0] as Button).Click += ProfileBtn_Click;
+                    }
+                    else
+                    {
+                        foreach (CustomProfile p in _Data.Profiles.Values)
                         {
-                            Views.Custom = new ViewCustom(p);
-                            FrameCustomView.Content = Views.Custom;
-                            (MenuProfiles.Items[0] as Button).Name = p.Name;
-                            (MenuProfiles.Items[0] as Button).Content = p.Name;
-                            (MenuProfiles.Items[0] as Button).Click += ProfileBtn_Click;
-                        }
-                        else
-                        {
-                            Button btn = p.GetButton();
-                            btn.Click += ProfileBtn_Click;
-                            MenuProfiles.Items.Add(btn);
+                            if (Views.Custom == null)
+                            {
+                                Views.Custom = new ViewCustom(p);
+                                FrameCustomView.Content = Views.Custom;
+                                (MenuProfiles.Items[0] as Button).Name = p.Name;
+                                (MenuProfiles.Items[0] as Button).Content = p.Name;
+                                (MenuProfiles.Items[0] as Button).Click += ProfileBtn_Click;
+                            }
+                            else
+                            {
+                                Button btn = p.GetButton();
+                                btn.Click += ProfileBtn_Click;
+                                MenuProfiles.Items.Add(btn);
+                            }
                         }
                     }
                     App.WD.ToggleMenu();
