@@ -72,10 +72,8 @@
   <PropertyGroup>
     <ManifestCertificateThumbprint>09E1E68370017DAA1F20CC1F58E01D8CA2EF4F77</ManifestCertificateThumbprint>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <ManifestKeyFile>MultiRPC_TemporaryKey.pfx</ManifestKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
@@ -134,6 +132,12 @@
     <Compile Include="Functions\FuncUpdater.cs" />
     <Compile Include="Functions\FuncWindow.cs" />
     <Compile Include="Functions\Utils.cs" />
+    <Compile Include="GUI\BaseWindow.xaml.cs">
+      <DependentUpon>BaseWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Views\ViewPrograms.xaml.cs">
       <DependentUpon>ViewPrograms.xaml</DependentUpon>
     </Compile>
@@ -155,9 +159,6 @@
     </Compile>
     <Compile Include="Functions\FuncSettings.cs" />
     <Compile Include="GUI\GifImage.cs" />
-    <Compile Include="GUI\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="GUI\Windows\ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
     </Compile>
@@ -214,6 +215,12 @@
     <Compile Include="RPC\RPC\RpcConnection.cs" />
     <Compile Include="RPC\User.cs" />
     <Compile Include="Data\_Program.cs" />
+    <Page Include="GUI\BaseWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GUI\Views\ViewPrograms.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -237,10 +244,6 @@
     <Page Include="GUI\Windows\UpdateWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="GUI\MainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Windows\ErrorWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

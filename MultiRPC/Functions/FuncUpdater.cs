@@ -11,7 +11,7 @@ namespace MultiRPC.Functions
 {
     public static class FuncUpdater
     {
-        public static void Check(MainWindow window)
+        public static void Check()
         {
             if (File.Exists(App.ConfigFolder + "Changelog.txt"))
             {

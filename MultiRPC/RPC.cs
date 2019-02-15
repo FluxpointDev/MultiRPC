@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Windows;
+using MultiRPC.GUI.Pages;
 
 namespace MultiRPC
 {
@@ -166,7 +167,7 @@ namespace MultiRPC
                 if (!AFK)
                     App.WD.BtnUpdatePresence.IsEnabled = true;
                 App.WD.TextUser.Content = User;
-                MainWindow.DisableElements(true);
+                MainPage.DisableElements(true);
             });
         }
 
@@ -193,7 +194,7 @@ namespace MultiRPC
             if (FirstUpdate)
             {
                 App.Log.Rpc($"Updated presence for {args.Name}");
-                MainWindow.SetLiveView(args);
+                MainPage.SetLiveView(args);
             }
             FirstUpdate = true;
         }
@@ -209,7 +210,7 @@ namespace MultiRPC
             {
                 Failed = true;
                 App.Log.Error("RPC", $"Discord client invalid, {args.Type}");
-                MainWindow.SetLiveView(ViewType.Error, "Attempting to reconnect");
+                MainPage.SetLiveView(ViewType.Error, "Attempting to reconnect");
             }
         }
 

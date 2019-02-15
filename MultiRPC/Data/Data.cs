@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Controls;
 using System.Windows.Media;
+using MultiRPC.GUI.Pages;
 
 namespace MultiRPC.Data
 {
@@ -17,7 +18,7 @@ namespace MultiRPC.Data
         public static Dictionary<string, IProgram> Programs = new Dictionary<string, IProgram>();
         public static Dictionary<string, CustomProfile> Profiles = new Dictionary<string, CustomProfile>();
 
-        public static void AutoStart(MainWindow window)
+        public static void AutoStart(MainPage window)
         {
             if (App.Config.AutoStart == "MultiRPC")
             {
@@ -34,7 +35,7 @@ namespace MultiRPC.Data
             }
         }
 
-        public static void SetupCustom(MainWindow window)
+        public static void SetupCustom(MainPage window)
         {
             if (App.Config.Disabled.ProgramsTab)
                 window.TabPrograms.Width = 0;

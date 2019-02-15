@@ -7,8 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="308" d:DesignWidth="616" Width="616" Height="308" VerticalAlignment="Top">
     <Grid x:Name="Back" Background="{DynamicResource Brush_TabBackground}" Height="308">
-        <StatusBar x:Name="MenuIcons" HorizontalAlignment="Left" Margin="-20,0,0,0" Width="636" Background="{DynamicResource TabItem.Disabled.Background}" VerticalAlignment="Top">
-            <Label x:Name="ProfileName" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" Margin="28,0,0,0" FontSize="20" Focusable="False" IsTabStop="False" ScrollViewer.VerticalScrollBarVisibility="Disabled" IsEnabled="False" Content="Test" Height="24" VerticalAlignment="Center" Padding="5,0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <StatusBar x:Name="MenuIcons" HorizontalAlignment="Left" Margin="-20,0,0,0" Background="{DynamicResource Brush_TabBackground}" VerticalAlignment="Top">
+            <Label x:Name="ProfileName" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" Margin="28,0,0,0" FontSize="20" Focusable="False" IsTabStop="False" ScrollViewer.VerticalScrollBarVisibility="Disabled" IsEnabled="False" Content="Test" VerticalAlignment="Center" Padding="5,0" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <Separator x:Name="Divider" Width="1" HorizontalAlignment="Left"/>
             <Image x:Name="ProfileEdit" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="30" Source="../../Resources/EditIcon.png" MouseLeftButtonDown="ProfileIcon_Click" ToolTip="Rename profile"/>
             <Image x:Name="ProfileShare" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="30" Source="../../Resources/ShareIcon.png" MouseLeftButtonDown="ProfileIcon_Click" ToolTip="Share this profile"/>

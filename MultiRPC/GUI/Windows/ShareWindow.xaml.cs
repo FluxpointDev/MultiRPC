@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MultiRPC.GUI.Pages;
 
 namespace MultiRPC.GUI
 {
@@ -68,7 +69,7 @@ namespace MultiRPC.GUI
                 Count++;
             }
             Button btn = New.GetButton();
-            btn.Click += MainWindow.ProfileBtn_Click;
+            btn.Click += MainPage.ProfileBtn_Click;
             _Data.Profiles.Add(New.Name, New);
             _Data.SaveProfiles();
             App.WD.MenuProfiles.Items.Add(btn);

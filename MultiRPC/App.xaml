@@ -9,7 +9,7 @@
         <SolidColorBrush x:Key="Brush_Button" Color="#FF7289DA"/>
         <SolidColorBrush x:Key="Brush_Ok" Color="#FF43B581"/>
         <SolidColorBrush x:Key="Brush_MainBackground" Color="#FF36393E"/>
-        <SolidColorBrush x:Key="Brush_TabBackground" Color="#FF3C3C3C"/>
+        <SolidColorBrush x:Key="Brush_TabBackground" Color="#FF2C2E30"/>
         <SolidColorBrush x:Key="Brush_No" Color="#FFE44141"/>
         <SolidColorBrush x:Key="Brush_LabelText" Color="#FF8F97A0"/>
         <SolidColorBrush x:Key="BrushLabelText2" Color="#FFB4B4B4"/>
@@ -26,7 +26,7 @@
         </Style>
 
         <!--#region Button Theme -->
-        <SolidColorBrush x:Key="Button.Static.Background" Color="#FF3C3C3C"/>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FF2C2E30"/>
         <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
         <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FF35457C"/>
         <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
