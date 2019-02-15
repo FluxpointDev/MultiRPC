@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MultiRPC.GUI"
         mc:Ignorable="d"
-        Title="BaseWindow" Height="503" Width="640"
+        Title="MultiRPC" Height="503" Width="640"
         Background="Transparent"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -45,7 +45,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Rectangle Fill="Transparent" MouseDown="UIElement_OnMouseDown"/>
-        <TextBlock Foreground="White" Text="MultiRPC" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBlock Foreground="White" Text="MultiRPC" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Style="{DynamicResource TitleBarButtons}" Click="Min_OnClick">
                 <Button.Content>
