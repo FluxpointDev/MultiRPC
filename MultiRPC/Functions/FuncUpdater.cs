@@ -35,7 +35,14 @@ namespace MultiRPC.Functions
                 }
                 catch { }
             }
-            if (ApplicationDeployment.IsNetworkDeployed)
+
+            bool deployed = false;
+            try
+            {
+                deployed = ApplicationDeployment.IsNetworkDeployed;
+            }
+            catch (Exception e) {            }
+            if (deployed)
             {
                 Version Version = ApplicationDeployment.CurrentDeployment.CurrentVersion;
                 App.Version = $"{Version.Major}.{Version.Minor}.{Version.Build}";

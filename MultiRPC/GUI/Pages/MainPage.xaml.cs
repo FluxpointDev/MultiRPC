@@ -65,17 +65,17 @@ namespace MultiRPC.GUI.Pages
             {
                 Process[] Discord = Process.GetProcessesByName("Discord");
                 if (Discord.Count() != 0)
-                    Title = "MultiRPC - Discord";
+                    Window.Title = "MultiRPC - Discord";
                 else
                 {
                     Process[] DiscordCanary = Process.GetProcessesByName("DiscordCanary");
                     if (DiscordCanary.Count() != 0)
-                        Title = "MultiRPC - Discord Canary";
+                        Window.Title = "MultiRPC - Discord Canary";
                     else
                     {
                         Process[] DiscordPTB = Process.GetProcessesByName("DiscordPTB");
                         if (DiscordPTB.Count() != 0)
-                            Title = "MultiRPC - Discord PTB";
+                            Window.Title = "MultiRPC - Discord PTB";
                     }
                 }
             }
