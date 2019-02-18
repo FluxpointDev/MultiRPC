@@ -9,37 +9,14 @@
         Background="Transparent"
         WindowStyle="None"
         AllowsTransparency="True"
-        WindowStartupLocation="CenterScreen" Icon="/MultiRPC;component/MultiRPC-Icon.ico">
-    <Window.Resources>
-        <Style TargetType="Button" x:Key="TitleBarButtons">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ButtonBase}">
-                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="Transparent" SnapsToDevicePixels="True">
-                            <ContentPresenter Width="28" x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" TargetName="border" Value="#FF2B2D30"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" TargetName="border" Value="#FF1B1C1D"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
+        WindowStartupLocation="CenterScreen" Icon="/MultiRPC;component/MultiRPC-Icon.ico"
+        >
 
     <Border Background="#FF202225" Margin="5">
         <Border.Effect>
             <DropShadowEffect BlurRadius="5" Opacity="0.7" ShadowDepth="0" RenderingBias="Quality"/>
         </Border.Effect>
         <Grid Background="Transparent">
-            <Grid.Effect>
-                <DropShadowEffect BlurRadius="5" ShadowDepth="0" RenderingBias="Quality"/>
-            </Grid.Effect>
             <Grid.RowDefinitions>
             <RowDefinition Height="22"/>
             <RowDefinition Height="*"/>
@@ -47,12 +24,12 @@
         <Rectangle Fill="Transparent" MouseDown="UIElement_OnMouseDown"/>
             <TextBlock Foreground="White" Text="MultiRPC" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{DynamicResource TitleBarButtons}" Click="Min_OnClick">
+                <Button Style="{DynamicResource TitleBarMin}" Click="Min_OnClick">
                 <Button.Content>
                     <Rectangle HorizontalAlignment="Center" VerticalAlignment="Center" Width="10" Height="1" Margin="0,5,0,0" Fill="White"/>
                 </Button.Content>
             </Button>
-            <Button Style="{DynamicResource TitleBarButtons}" Click="Close_OnClick">
+            <Button Width="28" Style="{DynamicResource TitleBarClose}" Click="Close_OnClick" Background="Transparent">
                 <Button.Content>
                     <Polygon HorizontalAlignment="Center" VerticalAlignment="Center" Fill="White" Points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"/>
                 </Button.Content>

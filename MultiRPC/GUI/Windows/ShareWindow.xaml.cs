@@ -69,7 +69,7 @@ namespace MultiRPC.GUI
                 Count++;
             }
             Button btn = New.GetButton();
-            btn.Click += MainPage.ProfileBtn_Click;
+            btn.Click += ((sender1, e1) => MainPage.ProfileBtn_Click(sender1, e1, false)); ;
             _Data.Profiles.Add(New.Name, New);
             _Data.SaveProfiles();
             App.WD.MenuProfiles.Items.Add(btn);

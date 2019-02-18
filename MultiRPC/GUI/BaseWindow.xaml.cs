@@ -32,6 +32,12 @@ namespace MultiRPC.GUI
         public BaseWindow()
         {
             InitializeComponent();
+            this.Closing += BaseWindow_Closing;
+        }
+
+        private void BaseWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            App.WD.tbTaskbarIcon.Visibility = Visibility.Collapsed;
         }
 
         private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -52,6 +58,7 @@ namespace MultiRPC.GUI
 
         private void Close_OnClick(object sender, RoutedEventArgs e)
         {
+            App.WD.tbTaskbarIcon.Visibility = Visibility.Collapsed;
             Close();
         }
     }

@@ -16,6 +16,9 @@ using System.Deployment.Application;
 using System.Net;
 using MultiRPC.Data;
 using System.Threading.Tasks;
+using System.Windows.Markup;
+using System.Xml;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace MultiRPC.GUI.Pages
 {
@@ -33,6 +36,7 @@ namespace MultiRPC.GUI.Pages
             Window.ContentRendered += Window_ContentRendered;
 
             InitializeComponent();
+;
             TextVersion.Content = App.Version;
             IsEnabled = false;
             if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 2)
@@ -41,8 +45,7 @@ namespace MultiRPC.GUI.Pages
                 ItemsPipe.Style = ComboBoxStyle;
                 ItemsAutoStart.Style = ComboBoxStyle;
             }
-            else
-                Views.Default = new ViewDefault(null);
+            else { Views.Default = new ViewDefault(null); }
             FrameDefaultView.Content = Views.Default;
             FrameLiveRPC.Content = new ViewRPC(ViewType.Default);
             TabDebug.Visibility = Visibility.Hidden;
@@ -92,13 +95,7 @@ namespace MultiRPC.GUI.Pages
             FuncUpdater.Check();
             if (!App.StartUpdate)
             {
-                Taskbar = new TaskbarIcon
-                {
-                    IconSource = App.BW.Icon,
-                    Name = "MultiRPC",
-                    ToolTipText = "MultiRPC"
-                };
-                Taskbar.TrayLeftMouseDown += Taskbar_TrayLeftMouseDown;
+                tbTaskbarIcon.TrayLeftMouseDown += Taskbar_TrayLeftMouseDown;
                 FuncDiscord.LoadPipes();
                 _Data.SetupCustom(this);
                 Views.Default.SetData();
@@ -122,10 +119,23 @@ namespace MultiRPC.GUI.Pages
                         _Data.SaveProfiles();
                         Views.Custom = new ViewCustom(profile);
                         FrameCustomView.Content = Views.Custom;
-                        (MenuProfiles.Items[0] as Button).Click += ProfileBtn_Click;
+
+                        string gridXaml = XamlWriter.Save((MenuProfiles.Items[0] as Button));
+                        StringReader stringReader = new StringReader(gridXaml);
+                        XmlReader xmlReader = XmlReader.Create(stringReader);
+                        var toolbarButton = (Button)XamlReader.Load(xmlReader);
+                        spTaskbarIcon.Children.Add(toolbarButton);
+                        toolbarButton.Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, true));
+
+                        (MenuProfiles.Items[0] as Button).Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, false));
                     }
                     else
                     {
+                        var firstToolbarButton = (Button)XamlReader.Load(XmlReader.Create(new StringReader(XamlWriter.Save((MenuProfiles.Items[0] as Button)))));
+                        firstToolbarButton.Margin = new Thickness(0);
+                        spTaskbarIcon.Children.Add(firstToolbarButton);
+                        firstToolbarButton.Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, true));
+
                         foreach (CustomProfile p in _Data.Profiles.Values)
                         {
                             if (Views.Custom == null)
@@ -134,13 +144,15 @@ namespace MultiRPC.GUI.Pages
                                 FrameCustomView.Content = Views.Custom;
                                 (MenuProfiles.Items[0] as Button).Name = p.Name;
                                 (MenuProfiles.Items[0] as Button).Content = p.Name;
-                                (MenuProfiles.Items[0] as Button).Click += ProfileBtn_Click;
+                                (MenuProfiles.Items[0] as Button).Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, false));
+
                             }
                             else
                             {
                                 Button btn = p.GetButton();
-                                btn.Click += ProfileBtn_Click;
+                                btn.Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, false)); ;
                                 MenuProfiles.Items.Add(btn);
+                                AddOrRemoveButton(btn);
                             }
                         }
                     }
@@ -154,7 +166,7 @@ namespace MultiRPC.GUI.Pages
                     _Data.SaveProfiles();
                     Views.Custom = new ViewCustom(profile);
                     FrameCustomView.Content = Views.Custom;
-                    (MenuProfiles.Items[0] as Button).Click += ProfileBtn_Click;
+                    (MenuProfiles.Items[0] as Button).Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, false));
                 }
                 App.FormReady = true;
                 if (!string.IsNullOrEmpty(App.Config.LastUser))
@@ -165,12 +177,48 @@ namespace MultiRPC.GUI.Pages
             }
         }
 
+        public static void AddOrRemoveButton(Button btn, bool remove = false)
+        {
+            if (!remove)
+            {
+                string gridXaml = XamlWriter.Save(btn);
+                StringReader stringReader = new StringReader(gridXaml);
+                XmlReader xmlReader = XmlReader.Create(stringReader);
+                var toolbarButton = (Button) XamlReader.Load(xmlReader);
+                toolbarButton.Margin = new Thickness(0);
+                App.WD.spTaskbarIcon.Children.Add(toolbarButton);
+                toolbarButton.Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, true));
+            }
+            else
+            {
+                Button b = null;
+                foreach (Button button in App.WD.spTaskbarIcon.Children)
+                {
+                    if (button.Content.Equals(btn.Content))
+                    {
+                        b = button;
+                        break;
+                    }
+                }
+                App.WD.spTaskbarIcon.Children.Remove(b);
+            }
+        }
+
         private void Taskbar_TrayLeftMouseDown(object sender, RoutedEventArgs e)
         {
-            if (Visibility == Visibility.Hidden)
-                Visibility = Visibility.Visible;
+            if (Window.WindowState == WindowState.Minimized)
+            {
+                tbTaskbarIcon.ToolTipText = "Hide MultiRPC";
+                Window.WindowState = WindowState.Normal;
+                Window.ShowInTaskbar = true;
+                Window.Activate();
+            }
             else
-                Visibility = Visibility.Hidden;
+            {
+                tbTaskbarIcon.ToolTipText = "Show MultiRPC";
+                Window.WindowState = WindowState.Minimized;
+                Window.ShowInTaskbar = false;
+            }
         }
 
         public void CheckProfileMenuWidth()
@@ -311,6 +359,7 @@ namespace MultiRPC.GUI.Pages
             }
             else
             {
+                //cbTaskbarIcon.SelectedIndex = -1;
                 RPC.AFK = false;
                 RPC.Shutdown();
                 FrameLiveRPC.Content = new ViewRPC(ViewType.Default);
@@ -815,9 +864,42 @@ namespace MultiRPC.GUI.Pages
             }
         }
 
-        public static void ProfileBtn_Click(object sender, RoutedEventArgs e)
+        public static void ProfileBtn_Click(object sender, RoutedEventArgs e, bool fromToolbar = false)
         {
+            void UpdateButtons(dynamic buttons)
+            {
+                foreach (Button b in buttons)
+                {
+                    if (b.Content.Equals((sender as Button).Content))
+                        b.Background = (Brush)Application.Current.Resources["Brush_Button"];
+                    else
+                        b.Background = new SolidColorBrush(Color.FromRgb(96, 96, 96));
+                }
+            }
+
             _Data.Profiles.TryGetValue((sender as Button).Content.ToString(), out CustomProfile profile);
+            if (profile == null)
+                return;
+            _Data.SaveProfiles();
+            Views.Custom = new ViewCustom(profile);
+            App.WD.FrameCustomView.Content = Views.Custom;
+            UpdateButtons(App.WD.MenuProfiles.Items);
+            UpdateButtons(App.WD.spTaskbarIcon.Children);
+
+            if (fromToolbar)
+            {
+                App.WD.TabCustom.IsSelected = true;
+                RPC.Type = "custom";
+                App.WD.BtnToggleRPC.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            }
+        }
+
+        private void CbTaskbarIcon_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //App.WD.MenuProfiles.Items.CurrentItem
+            if (e.RemovedItems.Count > 0) { return; }
+            var Item = (KeyValuePair<string, CustomProfile>)e.AddedItems[0];
+            var profile = Item.Value;
             if (profile == null)
                 return;
             _Data.SaveProfiles();
@@ -825,11 +907,17 @@ namespace MultiRPC.GUI.Pages
             App.WD.FrameCustomView.Content = Views.Custom;
             foreach (Button b in App.WD.MenuProfiles.Items)
             {
-                if (b.Content == (sender as Button).Content)
+                if (b.Content == profile.Name)
                     b.Background = (Brush)Application.Current.Resources["Brush_Button"];
                 else
                     b.Background = new SolidColorBrush(Color.FromRgb(96, 96, 96));
             }
+        }
+
+        private void Close_OnClick(object sender, RoutedEventArgs e)
+        {
+            tbTaskbarIcon.Visibility = Visibility.Collapsed;
+            Application.Current.Shutdown();
         }
     }
 }
