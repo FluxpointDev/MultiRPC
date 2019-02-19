@@ -890,13 +890,14 @@ namespace MultiRPC.GUI.Pages
             {
                 App.WD.TabCustom.IsSelected = true;
                 RPC.Type = "custom";
+                if (Views.Custom.TextClientID.IsEnabled)
+                    RPC.Shutdown();
                 App.WD.BtnToggleRPC.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             }
         }
 
         private void CbTaskbarIcon_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //App.WD.MenuProfiles.Items.CurrentItem
             if (e.RemovedItems.Count > 0) { return; }
             var Item = (KeyValuePair<string, CustomProfile>)e.AddedItems[0];
             var profile = Item.Value;

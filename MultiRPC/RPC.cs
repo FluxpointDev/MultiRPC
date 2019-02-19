@@ -230,10 +230,9 @@ namespace MultiRPC
             App.Log.Rpc("Shutting down");
             if (Presence != null)
                 Presence.Timestamps = null;
-            ClientTimer.Dispose();
-            if (Uptime != null)
-            Uptime.Dispose();
-            Client.Dispose();
+            ClientTimer?.Dispose();
+            Uptime?.Dispose();
+            Client?.Dispose();
         }
     }
 }
