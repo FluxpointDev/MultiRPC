@@ -80,7 +80,7 @@ namespace MultiRPC.Functions
                     {
                         try
                         {
-                            App.WD.WindowState = WindowState.Normal;
+                            App.BW.WindowState = WindowState.Normal;
                         }
                         catch { }
                         try

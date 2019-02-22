@@ -49,6 +49,13 @@ namespace MultiRPC.GUI
                     b.Content = New.Name;
                 }
             }
+            foreach (Button b in App.WD.spTaskbarIcon.Children)
+            {
+                if ((string)b.Content == Profile.Name)
+                {
+                    b.Content = New.Name;
+                }
+            }
             _Data.Profiles.Remove(Profile.Name);
             _Data.Profiles.Add(New.Name, New);
             _Data.SaveProfiles();

@@ -1,12 +1,13 @@
 ﻿using MultiRPC.GUI;
 using System.Windows;
 using System.Windows.Controls;
+using MultiRPC.GUI.Pages;
 
 namespace MultiRPC.Functions
 {
     public static class FuncSettings
     {
-        public static void ToggleSetting(MainWindow window, string name)
+        public static void ToggleSetting(MainPage window, string name)
         {
             switch (name)
             {
@@ -46,7 +47,7 @@ namespace MultiRPC.Functions
             App.Config.Save();
         }
 
-        public static void SetProgramsTab(MainWindow window)
+        public static void SetProgramsTab(MainPage window)
         {
             if (window.ToggleProgramsTab.IsChecked.Value)
             {

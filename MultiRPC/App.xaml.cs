@@ -6,7 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
+using MultiRPC.GUI.Pages;
 
 namespace MultiRPC
 {
@@ -24,9 +26,10 @@ namespace MultiRPC
         public static string ConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC/Config.json";
         public static string ProfilesFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + $"/MultiRPC/Profiles.json";
         public static Logger Log = new Logger();
-        public static MainWindow WD = null;
+        public static MainPage WD = null;
+        public static BaseWindow BW = null;
         public static bool StartUpdate = false;
-        public static string Version = "0.0.0";
+        public static string Version = "4.2.4";
         public static string Changelog = "";
         public static string Donation =
             $"Consider donating money to help fund my services to keep the projects alive by using Patreon or Paypal\n\n" +
@@ -50,8 +53,11 @@ namespace MultiRPC
                 }
                 catch { }
                 DispatcherUnhandledException += App_DispatcherUnhandledException;
-                WD = new MainWindow(Resources["ComboBoxStyle"] as Style);
-                WD.Show();
+                BW = new BaseWindow();
+                WD = new MainPage(Resources["ComboBoxStyle"] as Style, BW);
+                var frame = (Frame)BW.FindName("MainFrame");
+                frame.Content = WD;
+                BW.Show();
             }
             catch(Exception ex)
             {

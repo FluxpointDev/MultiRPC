@@ -24,8 +24,8 @@ namespace MultiRPC.GUI
                         Title.Content = "MultiRPC";
                         Text1.Content = "Thanks for using";
                         Text2.Content = "This program";
-                        Background = SystemColors.ControlDarkDarkBrush;
-                        SmallBack.Fill = SystemColors.ControlDarkDarkBrush;
+                        Background = (Brush)Application.Current.Resources["Brush_TabBackground"];
+                        SmallBack.Fill = (Brush)Application.Current.Resources["Brush_TabBackground"];
 
                     }
                     break;
@@ -48,7 +48,7 @@ namespace MultiRPC.GUI
                         ImageBehavior.SetRepeatBehavior(Loading, System.Windows.Media.Animation.RepeatBehavior.Forever);
                         LargeImage.Source = null;
                         SmallImage.Fill = null;
-                        Background = SystemColors.ControlDarkDarkBrush;
+                        Background = (Brush)Application.Current.Resources["Brush_TabBackground"];
                         Loading.Visibility = Visibility.Visible;
                         SmallBack.Visibility = Visibility.Hidden;
                     }

@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MultiRPC.GUI.Pages;
 
 namespace MultiRPC.GUI
 {
@@ -63,7 +64,7 @@ namespace MultiRPC.GUI
                     {
                         RenameWindow PN = new RenameWindow(Profile)
                         {
-                            Owner = App.WD
+                            Owner = App.BW
                         };
                         PN.ShowDialog();
                     }
@@ -72,7 +73,7 @@ namespace MultiRPC.GUI
                     {
                         ShareWindow PS = new ShareWindow(Profile)
                         {
-                            Owner = App.WD
+                            Owner = App.BW
                         };
                         PS.ShowDialog();
                     }
@@ -92,7 +93,8 @@ namespace MultiRPC.GUI
                         _Data.Profiles.Add(p.Name, p);
                         _Data.SaveProfiles();
                         Button btn = p.GetButton();
-                        btn.Click += MainWindow.ProfileBtn_Click;
+                        btn.Click += ((sender1, e1) => MainPage.ProfileBtn_Click(sender1, e1, false));
+                        MainPage.AddOrRemoveButton(btn);
                         App.WD.MenuProfiles.Items.Add(btn);
                         App.WD.ToggleMenu();
                     }
@@ -108,7 +110,7 @@ namespace MultiRPC.GUI
                             foreach(object i in App.WD.MenuProfiles.Items)
                             {
                                 Button b = i as Button;
-                                if (b.Name == Profile.Name)
+                                if (b.Content == Profile.Name)
                                 {
                                     Found = true;
                                     break;
@@ -122,8 +124,9 @@ namespace MultiRPC.GUI
                                 MessageBox.Show("Cannot delete the first profile");
                                 return;
                             }
+                            MainPage.AddOrRemoveButton((Button)App.WD.MenuProfiles.Items[Index], true);
                             App.WD.MenuProfiles.Items.RemoveAt(Index);
-                           Views.Custom = new ViewCustom(_Data.Profiles.Values.First());
+                            Views.Custom = new ViewCustom(_Data.Profiles.Values.First());
                             (App.WD.MenuProfiles.Items[0] as Button).Background = (Brush)Application.Current.Resources["Brush_Button"];
                             _Data.Profiles.Remove(Profile.Name);
                             _Data.SaveProfiles();

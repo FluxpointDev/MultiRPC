@@ -9,12 +9,11 @@
         <SolidColorBrush x:Key="Brush_Button" Color="#FF7289DA"/>
         <SolidColorBrush x:Key="Brush_Ok" Color="#FF43B581"/>
         <SolidColorBrush x:Key="Brush_MainBackground" Color="#FF36393E"/>
-        <SolidColorBrush x:Key="Brush_TabBackground" Color="#FF3C3C3C"/>
-        <SolidColorBrush x:Key="Brush_No" Color="#FFE44141"/>
+        <SolidColorBrush x:Key="Brush_TabBackground" Color="#FF2C2E30"/>
+        <SolidColorBrush x:Key="Brush_No" Color="#FFE64747"/>
         <SolidColorBrush x:Key="Brush_LabelText" Color="#FF8F97A0"/>
         <SolidColorBrush x:Key="BrushLabelText2" Color="#FFB4B4B4"/>
         <SolidColorBrush x:Key="Brush_TextBackground" Color="#FF484B51"/>
-        
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -25,8 +24,47 @@
             </Setter>
         </Style>
 
+        <Style TargetType="Button" x:Key="TitleBarMin">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="Transparent" SnapsToDevicePixels="True">
+                            <ContentPresenter Width="28" x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="#FF2B2D30"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="#FF1B1C1D"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Button" x:Key="TitleBarClose">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                            <ContentPresenter Width="{TemplateBinding Width}" x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="#FFE64747"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="#FFEE3333"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!--#region Button Theme -->
-        <SolidColorBrush x:Key="Button.Static.Background" Color="#FF3C3C3C"/>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FF2C2E30"/>
         <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
         <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FF35457C"/>
         <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>

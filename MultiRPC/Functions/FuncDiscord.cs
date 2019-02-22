@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
+using MultiRPC.GUI.Pages;
 
 namespace MultiRPC.Functions
 {
@@ -16,7 +17,7 @@ namespace MultiRPC.Functions
                 if (App.WD.Title == "MultiRPC")
                 {
                     App.Log.Error("RPC", "No Discord client found");
-                    MainWindow.EnableElements();
+                    MainPage.EnableElements();
                     App.WD.FrameLiveRPC.Content = new ViewRPC(ViewType.Error, "No Discord client found");
                     return false;
                 }
@@ -24,7 +25,7 @@ namespace MultiRPC.Functions
             catch (Exception ex)
             {
                 App.Log.Error("RPC", $"No Discord client found, {ex.Message}");
-                MainWindow.EnableElements();
+                MainPage.EnableElements();
                 App.WD.FrameLiveRPC.Content = new ViewRPC(ViewType.Error, "No Discord client");
                 return false;
             }

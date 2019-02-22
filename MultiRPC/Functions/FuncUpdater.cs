@@ -11,7 +11,7 @@ namespace MultiRPC.Functions
 {
     public static class FuncUpdater
     {
-        public static void Check(MainWindow window)
+        public static void Check()
         {
             if (File.Exists(App.ConfigFolder + "Changelog.txt"))
             {
@@ -35,7 +35,14 @@ namespace MultiRPC.Functions
                 }
                 catch { }
             }
-            if (ApplicationDeployment.IsNetworkDeployed)
+
+            bool deployed = false;
+            try
+            {
+                deployed = ApplicationDeployment.IsNetworkDeployed;
+            }
+            catch (Exception e) {            }
+            if (deployed)
             {
                 Version Version = ApplicationDeployment.CurrentDeployment.CurrentVersion;
                 App.Version = $"{Version.Major}.{Version.Minor}.{Version.Build}";
