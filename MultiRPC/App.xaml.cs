@@ -29,7 +29,7 @@ namespace MultiRPC
         public static MainPage WD = null;
         public static BaseWindow BW = null;
         public static bool StartUpdate = false;
-        public static string Version = "4.2.4";
+        public static string Version = "4.3";
         public static string Changelog = "";
         public static string Donation =
             $"Consider donating money to help fund my services to keep the projects alive by using Patreon or Paypal\n\n" +

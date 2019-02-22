@@ -26,14 +26,19 @@ namespace MultiRPC.GUI
             InitializeComponent();
             this.StateChanged += MainWindow_StateChanged;
             IsEnabled = false;
+
+
             if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 2)
             {
+                // Running windows 10/8
                 Views.Default = new ViewDefault(ComboBoxStyle);
                 ItemsPipe.Style = ComboBoxStyle;
                 ItemsAutoStart.Style = ComboBoxStyle;
             }
             else
                 Views.Default = new ViewDefault(null);
+
+
             FrameDefaultView.Content = Views.Default;
             FrameLiveRPC.Content = new ViewRPC(ViewType.Default);
             TabDebug.Visibility = Visibility.Hidden;
