@@ -81,8 +81,7 @@ namespace MultiRPC.Functions
         public static void Start()
         {
             ApplicationDeployment.CurrentDeployment.UpdateCompleted += CurrentDeployment_UpdateCompleted;
-            //ApplicationDeployment.CurrentDeployment.UpdateProgressChanged += CurrentDeployment_UpdateProgressChanged;
-           
+            ApplicationDeployment.CurrentDeployment.UpdateProgressChanged += CurrentDeployment_UpdateProgressChanged;
             ApplicationDeployment.CurrentDeployment.UpdateAsync();
         }
 
@@ -101,13 +100,20 @@ namespace MultiRPC.Functions
                     State = "Downloading deployment";
                     break;
             }
-           App.BW.LabelLoading.Content = $"{State} {e.ProgressPercentage}%/100%";
+            App.BW.LabelLoading.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                App.BW.LabelLoading.Content = $"{State} {e.ProgressPercentage}%/100%";
+            });
         }
 
         private static void CurrentDeployment_UpdateCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
             if (e.Error == null)
             {
+                App.BW.Dispatcher.BeginInvoke((Action)delegate ()
+                {
+                    App.BW.Hide();
+                });
                 string filepath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/MultiRPC.appref-ms";
                 if (File.Exists(filepath))
                     Process.Start(filepath);

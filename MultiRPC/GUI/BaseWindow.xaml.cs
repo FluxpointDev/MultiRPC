@@ -58,22 +58,6 @@ namespace MultiRPC.GUI
 
         }
 
-        private void BtnSkip_Click(object sender, RoutedEventArgs e)
-        {
-            BtnUpdate.Visibility = Visibility.Hidden;
-            BtnSkip.Visibility = Visibility.Hidden;
-            ImageError.Visibility = Visibility.Hidden;
-            Changelog.Visibility = Visibility.Hidden;
-            LoadMain();
-        }
-
-        private void BtnUpdate_Click(object sender, RoutedEventArgs e)
-        {
-            BtnSkip.Visibility = Visibility.Hidden;
-            BtnUpdate.Visibility = Visibility.Hidden;
-            FuncUpdater.Start();
-        }
-
         private void Start_Loaded(object sender, RoutedEventArgs e)
         {
             Load();
@@ -87,31 +71,13 @@ namespace MultiRPC.GUI
             if (Info != null && Info.UpdateAvailable)
             {
                 LabelLoading.Content = $"Update {Info.AvailableVersion.Major}.{Info.AvailableVersion.Minor}.{Info.AvailableVersion.Build} available";
-                BtnUpdate.Visibility = Visibility.Visible;
-                BtnSkip.Visibility = Visibility.Visible;
                 ImageError.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/Resources/DownloadIcon.png", UriKind.Absolute));
-                Changelog.Visibility = Visibility.Visible;
-                try
-                {
-                    using (WebClient client = new WebClient())
-                    {
-                        client.DownloadFile("https://multirpc.blazedev.me/Changelog.txt", App.ConfigFolder + "Changelog.txt");
-                    }
-                    using (StreamReader reader = new StreamReader(App.ConfigFolder + "Changelog.txt"))
-                    {
-                        App.Changelog = reader.ReadToEnd();
-                    }
-                    Changelog.Text = App.Changelog;
-                }
-                catch (Exception ex)
-                {
-                    Changelog.Text = $"Error getting changelog text, {ex.Message}";
-                }
+                FrameMain.Height = 460;
+                FrameMain.Margin = new Thickness(0, 0, 0, 0);
+                FrameMain.Content = new UpdatePage();
             }
             else
-            {
                 LoadMain();
-            }
         }
 
         public void LoadMain()
@@ -139,9 +105,10 @@ namespace MultiRPC.GUI
                 Error("Could not find any Discord client");
             else
             {
+                
                 App.WD = new MainPage(this);
-                FrameMain.Content = App.WD;
                 FrameMain.ContentRendered += FrameMain_ContentRendered;
+                FrameMain.Content = App.WD;
             }
         }
 

@@ -6,7 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       Title="MultiRPC" Background="{DynamicResource Brush_MainBackground}" Height="460" Width="620">
 
-    <Grid x:Name="BackMain">
+    <Grid x:Name="BackMain" Background="{DynamicResource Brush_MainBackground}">
         <Button x:Name="BtnToggleRPC" Content="Start MultiRPC" HorizontalAlignment="Left" Height="40" Margin="10,10,0,0" VerticalAlignment="Top" Width="105" BorderBrush="{DynamicResource Brush_Ok}" Foreground="{DynamicResource Brush_Ok}" Background="{DynamicResource Brush_TabBackground}" Style="{DynamicResource ButtonStyle}" Click="BtnToggleRPC_Click"/>
         <Label x:Name="LabelStatus" Content="Status:" HorizontalAlignment="Left" Margin="135,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush_LabelText}" Width="45" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
         <Label x:Name="LabelUser" Content="User:" HorizontalAlignment="Left" Margin="135,40,0,0" VerticalAlignment="Top" Foreground="{DynamicResource Brush_LabelText}" Width="45" Height="25" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
@@ -133,28 +133,9 @@
         <tb:TaskbarIcon
             IconSource="../../MultiRPC-Icon.ico"
             ToolTipText="Hide MultiRPC"
-            Name="tbTaskbarIcon" PopupActivation="RightClick"
+            Name="tbTaskbarIcon" 
+            PopupActivation="RightClick"
             >
-            <tb:TaskbarIcon.TrayPopup>
-                <Border
-                    Background="{DynamicResource Brush_MainBackground}"
-                    BorderBrush="#FF7289DA"
-                    BorderThickness="2"
-                    MinWidth="80"
-                    MinHeight="25"
-                    Opacity="0.95"
-                    >
-                    <StackPanel>
-                        <TextBlock Text="Custom Profiles" Foreground="White" Margin="3,0,0,1"/>
-                        <StackPanel Name="spTaskbarIcon"/>
-                        <Button Style="{DynamicResource TitleBarClose}" Click="Close_OnClick" Background="#FFE95656">
-                            <Button.Content>
-                                <TextBlock Foreground="White" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Close MultiRPC" />
-                            </Button.Content>
-                        </Button>
-                    </StackPanel>
-                </Border>
-            </tb:TaskbarIcon.TrayPopup>
         </tb:TaskbarIcon>
         
     </Grid>

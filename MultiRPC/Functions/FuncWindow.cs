@@ -74,9 +74,9 @@ namespace MultiRPC.Functions
         {
             if (e.Name == "Open.rpc")
             {
-                if (App.WD.Visibility == Visibility.Hidden)
+                if (App.BW.Visibility == Visibility.Hidden)
                 {
-                    App.WD.Taskbar.Dispatcher.BeginInvoke((Action)delegate ()
+                    App.BW.Dispatcher.BeginInvoke((Action)delegate ()
                     {
                         try
                         {
@@ -85,7 +85,7 @@ namespace MultiRPC.Functions
                         catch { }
                         try
                         {
-                            App.WD.Visibility = Visibility.Visible;
+                            App.BW.Visibility = Visibility.Visible;
                         }
                         catch { }
                     });

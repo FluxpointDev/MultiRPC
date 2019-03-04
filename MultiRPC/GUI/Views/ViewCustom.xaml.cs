@@ -94,7 +94,7 @@ namespace MultiRPC.GUI
                         _Data.SaveProfiles();
                         Button btn = p.GetButton();
                         btn.Click += ((sender1, e1) => MainPage.ProfileBtn_Click(sender1, e1, false));
-                        MainPage.AddOrRemoveButton(btn);
+                        //MainPage.AddOrRemoveButton(btn);
                         App.WD.MenuProfiles.Items.Add(btn);
                         App.WD.ToggleMenu();
                     }
@@ -110,7 +110,7 @@ namespace MultiRPC.GUI
                             foreach(object i in App.WD.MenuProfiles.Items)
                             {
                                 Button b = i as Button;
-                                if (b.Content == Profile.Name)
+                                if ((string)b.Content == Profile.Name)
                                 {
                                     Found = true;
                                     break;
@@ -124,7 +124,7 @@ namespace MultiRPC.GUI
                                 MessageBox.Show("Cannot delete the first profile");
                                 return;
                             }
-                            MainPage.AddOrRemoveButton((Button)App.WD.MenuProfiles.Items[Index], true);
+                            //MainPage.AddOrRemoveButton((Button)App.WD.MenuProfiles.Items[Index], true);
                             App.WD.MenuProfiles.Items.RemoveAt(Index);
                             Views.Custom = new ViewCustom(_Data.Profiles.Values.First());
                             (App.WD.MenuProfiles.Items[0] as Button).Background = (Brush)Application.Current.Resources["Brush_Button"];

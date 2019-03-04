@@ -63,7 +63,7 @@ namespace MultiRPC.GUI.Pages
             this.Loaded += Window_ContentRendered;
         }
 
-        public TaskbarIcon Taskbar;
+        public TaskbarIcon Taskbar2;
 
         /// <summary>
         /// When window loads check for update and configure the config
@@ -98,21 +98,21 @@ namespace MultiRPC.GUI.Pages
                         Views.Custom = new ViewCustom(profile);
                         FrameCustomView.Content = Views.Custom;
 
-                        string gridXaml = XamlWriter.Save((MenuProfiles.Items[0] as Button));
-                        StringReader stringReader = new StringReader(gridXaml);
-                        XmlReader xmlReader = XmlReader.Create(stringReader);
-                        Button toolbarButton = (Button)XamlReader.Load(xmlReader);
-                        spTaskbarIcon.Children.Add(toolbarButton);
-                        toolbarButton.Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, true));
+                        //string gridXaml = XamlWriter.Save((MenuProfiles.Items[0] as Button));
+                        //StringReader stringReader = new StringReader(gridXaml);
+                        //XmlReader xmlReader = XmlReader.Create(stringReader);
+                        //Button toolbarButton = (Button)XamlReader.Load(xmlReader);
+                        //spTaskbarIcon.Children.Add(toolbarButton);
+                        //toolbarButton.Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, true));
 
-                        (MenuProfiles.Items[0] as Button).Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, false));
+                        //(MenuProfiles.Items[0] as Button).Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, false));
                     }
                     else
                     {
-                        Button firstToolbarButton = (Button)XamlReader.Load(XmlReader.Create(new StringReader(XamlWriter.Save((MenuProfiles.Items[0] as Button)))));
-                        firstToolbarButton.Margin = new Thickness(0);
-                        spTaskbarIcon.Children.Add(firstToolbarButton);
-                        firstToolbarButton.Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, true));
+                        //Button firstToolbarButton = (Button)XamlReader.Load(XmlReader.Create(new StringReader(XamlWriter.Save((MenuProfiles.Items[0] as Button)))));
+                        //firstToolbarButton.Margin = new Thickness(0);
+                        //spTaskbarIcon.Children.Add(firstToolbarButton);
+                        //firstToolbarButton.Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, true));
 
                         foreach (CustomProfile p in _Data.Profiles.Values)
                         {
@@ -130,7 +130,7 @@ namespace MultiRPC.GUI.Pages
                                 Button btn = p.GetButton();
                                 btn.Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, false)); ;
                                 MenuProfiles.Items.Add(btn);
-                                AddOrRemoveButton(btn);
+                                //AddOrRemoveButton(btn);
                             }
                         }
                     }
@@ -155,7 +155,7 @@ namespace MultiRPC.GUI.Pages
             }
         }
 
-        public static void AddOrRemoveButton(Button btn, bool remove = false)
+        public static void AddOrRemoveButton2(Button btn, bool remove = false)
         {
             if (!remove)
             {
@@ -164,21 +164,21 @@ namespace MultiRPC.GUI.Pages
                 XmlReader xmlReader = XmlReader.Create(stringReader);
                 Button toolbarButton = (Button) XamlReader.Load(xmlReader);
                 toolbarButton.Margin = new Thickness(0);
-                App.WD.spTaskbarIcon.Children.Add(toolbarButton);
+                //App.WD.spTaskbarIcon.Children.Add(toolbarButton);
                 toolbarButton.Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, true));
             }
             else
             {
-                Button b = null;
-                foreach (Button button in App.WD.spTaskbarIcon.Children)
-                {
-                    if (button.Content.Equals(btn.Content))
-                    {
-                        b = button;
-                        break;
-                    }
-                }
-                App.WD.spTaskbarIcon.Children.Remove(b);
+                //Button b = null;
+                //foreach (Button button in App.WD.spTaskbarIcon.Children)
+                //{
+                //    if (button.Content.Equals(btn.Content))
+                //    {
+                //        b = button;
+                //        break;
+                //    }
+                //}
+                //App.WD.spTaskbarIcon.Children.Remove(b);
             }
         }
 
@@ -573,19 +573,19 @@ namespace MultiRPC.GUI.Pages
 
         private readonly Dictionary<string, string> WebLinks = new Dictionary<string, string>
         {
-            { "Website", "https://blazedev.me" },
-            { "Download", "https://multirpc.blazedev.me" },
-            { "Github", "https://github.com/xXBuilderBXx/MultiRPC" },
-            { "Discord_Website", "https://discordapp.com" },
-            { "Discord_Status", "https://status.discordapp.com" },
-            { "C#_Github", "https://github.com/RogueException/Discord.Net" }
+            { "LinkWebsite", "https://blazedev.me" },
+            { "LinkDownload", "https://multirpc.blazedev.me" },
+            { "LinkGithub", "https://github.com/xXBuilderBXx/MultiRPC" },
+            { "LinkDWebsite", "https://discordapp.com" },
+            { "LinkDStatus", "https://status.discordapp.com" },
+            { "LinkDGithub", "https://github.com/RogueException/Discord.Net" }
         };
 
         private void Links_Clicked(object sender, MouseButtonEventArgs e)
         {
             string Url = "";
-            string Name = (string)(sender as Image).Tag;
-            if (Name == "Server")
+            string Name = (string)(sender as Image).Name;
+            if (Name == "LinkServer")
             {
                 MessageBox.Show("Discord Universe is a fun place to hang out with other users, talk about games, anime or development.\n\n" +
                            "We also have many high quality bots made by me or other popular devs from anime to music to memes so enjoy playing with them.\n\n" +
@@ -638,8 +638,8 @@ namespace MultiRPC.GUI.Pages
                 _Data.SaveProfiles();
                 App.Config.Save();
             }
-            if (Taskbar != null)
-                Taskbar.Dispose();
+            //if (Taskbar != null)
+            //    Taskbar.Dispose();
         }
 
         private void BntDebugMenu_Click(object sender, RoutedEventArgs e)
@@ -845,7 +845,7 @@ namespace MultiRPC.GUI.Pages
             Views.Custom = new ViewCustom(profile);
             App.WD.FrameCustomView.Content = Views.Custom;
             UpdateButtons(App.WD.MenuProfiles.Items);
-            UpdateButtons(App.WD.spTaskbarIcon.Children);
+            //UpdateButtons(App.WD.spTaskbarIcon.Children);
 
             if (fromToolbar)
             {
@@ -869,7 +869,7 @@ namespace MultiRPC.GUI.Pages
             App.WD.FrameCustomView.Content = Views.Custom;
             foreach (Button b in App.WD.MenuProfiles.Items)
             {
-                if (b.Content == profile.Name)
+                if ((string)b.Content == profile.Name)
                     b.Background = (Brush)Application.Current.Resources["Brush_Button"];
                 else
                     b.Background = new SolidColorBrush(Color.FromRgb(96, 96, 96));
