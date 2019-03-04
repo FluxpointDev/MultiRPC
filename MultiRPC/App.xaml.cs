@@ -29,11 +29,14 @@ namespace MultiRPC
         public static MainPage WD = null;
         public static BaseWindow BW = null;
         public static bool StartUpdate = false;
-        public static string Version = "4.3";
+        public static string Version = "0.0";
         public static string Changelog = "";
         public static string Donation =
             $"Consider donating money to help fund my services to keep the projects alive by using Patreon or Paypal\n\n" +
             $"You will gain perks on all my bots and discord server!";
+
+        private static Style comboboxstyle;
+        public static Style ComboBoxStyle { get { return comboboxstyle; } }
         public App()
         {
             InitializeComponent();
@@ -53,10 +56,8 @@ namespace MultiRPC
                 }
                 catch { }
                 DispatcherUnhandledException += App_DispatcherUnhandledException;
+                comboboxstyle = (Style)Resources["ComboBoxStyle"];
                 BW = new BaseWindow();
-                WD = new MainPage(Resources["ComboBoxStyle"] as Style, BW);
-                var frame = (Frame)BW.FindName("MainFrame");
-                frame.Content = WD;
                 BW.Show();
             }
             catch(Exception ex)

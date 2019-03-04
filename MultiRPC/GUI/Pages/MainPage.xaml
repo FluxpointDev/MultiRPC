@@ -4,7 +4,7 @@
       xmlns:tb="http://www.hardcodet.net/taskbar"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      Title="MultiRPC" Background="{DynamicResource Brush_MainBackground}">
+      Title="MultiRPC" Background="{DynamicResource Brush_MainBackground}" Height="460" Width="620">
 
     <Grid x:Name="BackMain">
         <Button x:Name="BtnToggleRPC" Content="Start MultiRPC" HorizontalAlignment="Left" Height="40" Margin="10,10,0,0" VerticalAlignment="Top" Width="105" BorderBrush="{DynamicResource Brush_Ok}" Foreground="{DynamicResource Brush_Ok}" Background="{DynamicResource Brush_TabBackground}" Style="{DynamicResource ButtonStyle}" Click="BtnToggleRPC_Click"/>
@@ -124,7 +124,7 @@
         </TabControl>
 
         <Button x:Name="BtnUpdatePresence" Content="Update Presence" HorizontalAlignment="Left" Height="40" Margin="10,55,0,0" VerticalAlignment="Top" Width="105" BorderBrush="{DynamicResource Brush_RPCBack}" Foreground="White" Background="{DynamicResource Brush_Button}" Style="{DynamicResource ButtonStyle}" Click="BtnUpdatePresence_Click" IsEnabled="False"/>
-        <Button x:Name="BtnAuto" Content="Auto" HorizontalAlignment="Left" Height="40" Margin="335,0,0,421" VerticalAlignment="Bottom" Width="45" BorderBrush="{DynamicResource Brush_No}" Foreground="{DynamicResource Brush_No}" Background="{DynamicResource Brush_TabBackground}" Style="{DynamicResource ButtonStyle}" Click="BtnAuto_Click" IsEnabled="False"/>
+        <Button x:Name="BtnAuto" Content="Auto" HorizontalAlignment="Left" Height="40" Margin="335,0,0,410" VerticalAlignment="Bottom" Width="45" BorderBrush="{DynamicResource Brush_No}" Foreground="{DynamicResource Brush_No}" Background="{DynamicResource Brush_TabBackground}" Style="{DynamicResource ButtonStyle}" Click="BtnAuto_Click" IsEnabled="False"/>
         <Label x:Name="LimitAfkText" Content="25" HorizontalAlignment="Left" Margin="308,70,0,0" VerticalAlignment="Top" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" Width="22" Height="23" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" RenderTransformOrigin="0.957,0.92" Background="{x:Null}" Opacity="0.5" Visibility="Hidden"/>
         <Rectangle x:Name="TooltipDefault" Fill="#00000000" HorizontalAlignment="Left" Height="22" Margin="0,100,0,0" VerticalAlignment="Top" Width="65" ToolTip="Cannot use default mode when RPC is running" Visibility="Hidden"/>
         <Rectangle x:Name="TooltipCustom" Fill="#00000000" HorizontalAlignment="Left" Height="22" Margin="65,100,0,0" VerticalAlignment="Top" Width="51" ToolTip="Cannot use custom mode when RPC is running" Visibility="Hidden"/>

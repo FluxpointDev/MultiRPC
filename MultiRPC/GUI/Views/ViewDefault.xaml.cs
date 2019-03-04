@@ -22,13 +22,13 @@ namespace MultiRPC.GUI
     /// </summary>
     public partial class ViewDefault : UserControl
     {
-        public ViewDefault(Style style)
+        public ViewDefault(bool Win10)
         {
             InitializeComponent();
-            if (style != null)
+            if (Win10)
             {
-                ItemsLarge.Style = style;
-                ItemsSmall.Style = style;
+                ItemsLarge.Style = App.ComboBoxStyle;
+                ItemsSmall.Style = App.ComboBoxStyle;
             }
             View = new ViewRPC(ViewType.Default2);
             FrameRPC.Content = View;

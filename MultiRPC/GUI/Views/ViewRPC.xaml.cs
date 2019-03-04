@@ -10,7 +10,7 @@ namespace MultiRPC.GUI
 {
     public enum ViewType
     {
-        Default, Default2, Custom, Loading, Error, Update, UpdateFail
+        Default, Default2, Custom, Loading, Error
     }
     public partial class ViewRPC : UserControl
     {
@@ -51,26 +51,6 @@ namespace MultiRPC.GUI
                         Background = (Brush)Application.Current.Resources["Brush_TabBackground"];
                         Loading.Visibility = Visibility.Visible;
                         SmallBack.Visibility = Visibility.Hidden;
-                    }
-                    break;
-                case ViewType.Update:
-                    {
-                        Title.Content = "Update";
-                        Text1.Content = "Downloading...";
-                        Text2.Content = "0%";
-                        LargeImage.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/Resources/DownloadIcon.png", UriKind.Absolute));
-                        SmallImage.Fill = null;
-                        SmallBack.Visibility = Visibility.Hidden;
-                    }
-                    break;
-                case ViewType.UpdateFail:
-                    {
-                        Title.Content = "Update";
-                        Text1.Content = "Failed!";
-                        Text2.Content = ":(";
-                        LargeImage.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/Resources/DownloadIcon.png", UriKind.Absolute));
-                        SmallImage.Fill = new ImageBrush(new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/Resources/ExitIcon.png", UriKind.Absolute)));
-                        Background = new SolidColorBrush(new Color { R = 255, G = 57, B = 57, A = 80 });
                     }
                     break;
                 case ViewType.Error:

@@ -1,8 +1,15 @@
-﻿using System;
+﻿using MultiRPC.Functions;
+using MultiRPC.GUI.Pages;
+using System;
 using System.Collections.Generic;
+using System.Deployment.Application;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,6 +20,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfAnimatedGif;
 
 namespace MultiRPC.GUI
 {
@@ -26,18 +34,129 @@ namespace MultiRPC.GUI
 
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+
         [DllImport("user32.dll")]
         public static extern bool ReleaseCapture();
-
+        
         public BaseWindow()
         {
             InitializeComponent();
-            this.Closing += BaseWindow_Closing;
+            if (ApplicationDeployment.IsNetworkDeployed)
+            {
+                Version Version = ApplicationDeployment.CurrentDeployment.CurrentVersion;
+                App.Version = $"{Version.Major}.{Version.Minor}.{Version.Build}";
+            }
+            LabelMultiRPC.Content = $"MultiRPC v{App.Version}";
+            LabelMadeBy.Content = "Made By: " + App.Developer;
+            this.Loaded += Start_Loaded;
         }
 
-        private void BaseWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        public void Error(string text)
         {
-            App.WD.tbTaskbarIcon.Visibility = Visibility.Collapsed;
+            LabelLoading.Content = text;
+            ImageError.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/Resources/ExitIcon.png", UriKind.Absolute));
+
+        }
+
+        private void BtnSkip_Click(object sender, RoutedEventArgs e)
+        {
+            BtnUpdate.Visibility = Visibility.Hidden;
+            BtnSkip.Visibility = Visibility.Hidden;
+            ImageError.Visibility = Visibility.Hidden;
+            Changelog.Visibility = Visibility.Hidden;
+            LoadMain();
+        }
+
+        private void BtnUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            BtnSkip.Visibility = Visibility.Hidden;
+            BtnUpdate.Visibility = Visibility.Hidden;
+            FuncUpdater.Start();
+        }
+
+        private void Start_Loaded(object sender, RoutedEventArgs e)
+        {
+            Load();
+        }
+
+        private void Load()
+        {
+            UpdateCheckInfo Info = null;
+            if (ApplicationDeployment.IsNetworkDeployed)
+                Info = ApplicationDeployment.CurrentDeployment.CheckForDetailedUpdate(false);
+            if (Info != null && Info.UpdateAvailable)
+            {
+                LabelLoading.Content = $"Update {Info.AvailableVersion.Major}.{Info.AvailableVersion.Minor}.{Info.AvailableVersion.Build} available";
+                BtnUpdate.Visibility = Visibility.Visible;
+                BtnSkip.Visibility = Visibility.Visible;
+                ImageError.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "/Resources/DownloadIcon.png", UriKind.Absolute));
+                Changelog.Visibility = Visibility.Visible;
+                try
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        client.DownloadFile("https://multirpc.blazedev.me/Changelog.txt", App.ConfigFolder + "Changelog.txt");
+                    }
+                    using (StreamReader reader = new StreamReader(App.ConfigFolder + "Changelog.txt"))
+                    {
+                        App.Changelog = reader.ReadToEnd();
+                    }
+                    Changelog.Text = App.Changelog;
+                }
+                catch (Exception ex)
+                {
+                    Changelog.Text = $"Error getting changelog text, {ex.Message}";
+                }
+            }
+            else
+            {
+                LoadMain();
+            }
+        }
+
+        public void LoadMain()
+        {
+            try
+            {
+                Process[] Discord = Process.GetProcessesByName("Discord");
+                if (Discord.Count() != 0)
+                    LabelTitle.Text = "MultiRPC - Discord";
+                else
+                {
+                    Process[] DiscordCanary = Process.GetProcessesByName("DiscordCanary");
+                    if (DiscordCanary.Count() != 0)
+                        LabelTitle.Text = "MultiRPC - Discord Canary";
+                    else
+                    {
+                        Process[] DiscordPTB = Process.GetProcessesByName("DiscordPTB");
+                        if (DiscordPTB.Count() != 0)
+                            LabelTitle.Text = "MultiRPC - Discord PTB";
+                    }
+                }
+            }
+            catch { }
+            if (LabelTitle.Text == "MultiRPC")
+                Error("Could not find any Discord client");
+            else
+            {
+                App.WD = new MainPage(this);
+                FrameMain.Content = App.WD;
+                FrameMain.ContentRendered += FrameMain_ContentRendered;
+            }
+        }
+
+        private void FrameMain_ContentRendered(object sender, EventArgs e)
+        {
+            FrameMain.Height = 460;
+            FrameMain.Margin = new Thickness(0, 0, 0, 0);
+            LabelMultiRPC.Visibility = Visibility.Hidden;
+            LabelLoading.Visibility = Visibility.Hidden;
+            LabelMadeBy.Visibility = Visibility.Hidden;
+            TextMadeBy.Visibility = Visibility.Hidden;
+            TextDiscordLink.Visibility = Visibility.Hidden;
+            LabelDiscord.Visibility = Visibility.Hidden;
+            ImageMultiRPC.Visibility = Visibility.Hidden;
+            FrameMain.Visibility = Visibility.Visible;
         }
 
         private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -58,8 +177,12 @@ namespace MultiRPC.GUI
 
         private void Close_OnClick(object sender, RoutedEventArgs e)
         {
-            App.WD.tbTaskbarIcon.Visibility = Visibility.Collapsed;
-            Close();
+            Application.Current.Shutdown();
+        }
+
+        private void TextDiscordLink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Process.Start(App.SupportServer);
         }
     }
 }

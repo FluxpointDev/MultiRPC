@@ -27,25 +27,22 @@ namespace MultiRPC.GUI.Pages
     /// </summary>
     public partial class MainPage : Page
     {
-        public Window Window = null;
-
-        public MainPage(Style ComboBoxStyle, Window window)
+        public BaseWindow Window;
+        public MainPage(BaseWindow window)
         {
             Window = window;
-            Window.Closing += Window_Closing;
-            Window.ContentRendered += Window_ContentRendered;
-
             InitializeComponent();
-;
             TextVersion.Content = App.Version;
             IsEnabled = false;
             if (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor == 2)
             {
-                Views.Default = new ViewDefault(ComboBoxStyle);
-                ItemsPipe.Style = ComboBoxStyle;
-                ItemsAutoStart.Style = ComboBoxStyle;
+                Views.Default = new ViewDefault(true);
+                ItemsPipe.Style = App.ComboBoxStyle;
+                ItemsAutoStart.Style = App.ComboBoxStyle;
             }
-            else { Views.Default = new ViewDefault(null); }
+            else
+                Views.Default = new ViewDefault(false);
+
             FrameDefaultView.Content = Views.Default;
             FrameLiveRPC.Content = new ViewRPC(ViewType.Default);
             TabDebug.Visibility = Visibility.Hidden;
@@ -63,26 +60,7 @@ namespace MultiRPC.GUI.Pages
                     App.Config = (Config)serializer.Deserialize(reader, typeof(Config));
                 }
             }
-
-            try
-            {
-                Process[] Discord = Process.GetProcessesByName("Discord");
-                if (Discord.Count() != 0)
-                    Window.Title = "MultiRPC - Discord";
-                else
-                {
-                    Process[] DiscordCanary = Process.GetProcessesByName("DiscordCanary");
-                    if (DiscordCanary.Count() != 0)
-                        Window.Title = "MultiRPC - Discord Canary";
-                    else
-                    {
-                        Process[] DiscordPTB = Process.GetProcessesByName("DiscordPTB");
-                        if (DiscordPTB.Count() != 0)
-                            Window.Title = "MultiRPC - Discord PTB";
-                    }
-                }
-            }
-            catch { }
+            this.Loaded += Window_ContentRendered;
         }
 
         public TaskbarIcon Taskbar;
@@ -90,9 +68,9 @@ namespace MultiRPC.GUI.Pages
         /// <summary>
         /// When window loads check for update and configure the config
         /// </summary>
-        private void Window_ContentRendered(object sender, EventArgs e)
+        private void Window_ContentRendered(object sender, RoutedEventArgs e)
         {
-            FuncUpdater.Check();
+            //FuncUpdater.Check();
             if (!App.StartUpdate)
             {
                 tbTaskbarIcon.TrayLeftMouseDown += Taskbar_TrayLeftMouseDown;
@@ -123,7 +101,7 @@ namespace MultiRPC.GUI.Pages
                         string gridXaml = XamlWriter.Save((MenuProfiles.Items[0] as Button));
                         StringReader stringReader = new StringReader(gridXaml);
                         XmlReader xmlReader = XmlReader.Create(stringReader);
-                        var toolbarButton = (Button)XamlReader.Load(xmlReader);
+                        Button toolbarButton = (Button)XamlReader.Load(xmlReader);
                         spTaskbarIcon.Children.Add(toolbarButton);
                         toolbarButton.Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, true));
 
@@ -131,7 +109,7 @@ namespace MultiRPC.GUI.Pages
                     }
                     else
                     {
-                        var firstToolbarButton = (Button)XamlReader.Load(XmlReader.Create(new StringReader(XamlWriter.Save((MenuProfiles.Items[0] as Button)))));
+                        Button firstToolbarButton = (Button)XamlReader.Load(XmlReader.Create(new StringReader(XamlWriter.Save((MenuProfiles.Items[0] as Button)))));
                         firstToolbarButton.Margin = new Thickness(0);
                         spTaskbarIcon.Children.Add(firstToolbarButton);
                         firstToolbarButton.Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, true));
@@ -184,7 +162,7 @@ namespace MultiRPC.GUI.Pages
                 string gridXaml = XamlWriter.Save(btn);
                 StringReader stringReader = new StringReader(gridXaml);
                 XmlReader xmlReader = XmlReader.Create(stringReader);
-                var toolbarButton = (Button) XamlReader.Load(xmlReader);
+                Button toolbarButton = (Button) XamlReader.Load(xmlReader);
                 toolbarButton.Margin = new Thickness(0);
                 App.WD.spTaskbarIcon.Children.Add(toolbarButton);
                 toolbarButton.Click += ((sender1, e1) => ProfileBtn_Click(sender1, e1, true));
@@ -593,48 +571,32 @@ namespace MultiRPC.GUI.Pages
 
         }
 
+        private readonly Dictionary<string, string> WebLinks = new Dictionary<string, string>
+        {
+            { "Website", "https://blazedev.me" },
+            { "Download", "https://multirpc.blazedev.me" },
+            { "Github", "https://github.com/xXBuilderBXx/MultiRPC" },
+            { "Discord_Website", "https://discordapp.com" },
+            { "Discord_Status", "https://status.discordapp.com" },
+            { "C#_Github", "https://github.com/RogueException/Discord.Net" }
+        };
+
         private void Links_Clicked(object sender, MouseButtonEventArgs e)
         {
             string Url = "";
-            switch ((sender as Image).Name)
+            string Name = (string)(sender as Image).Tag;
+            if (Name == "Server")
             {
-                case "LinkWebsite":
-                    {
-                        Url = "https://blazedev.me";
-                    }
-                    break;
-                case "LinkDownload":
-                    {
-                        Url = "https://multirpc.blazedev.me";
-                    }
-                    break;
-                case "LinkGithub":
-                    {
-                        Url = "https://github.com/xXBuilderBXx/MultiRPC";
-                    }
-                    break;
-                case "LinkServer":
-                    {
-                        MessageBox.Show("Discord Universe is a fun place to hang out with other users, talk about games, anime or development.\n\nWe also have many high quality bots made by me or other popular devs from anime to music to memes so enjoy playing with them.\n\nThis also serves as a support server for many of my projects so dont be afraid to say hi ;)", "Discord Server", MessageBoxButton.OK, MessageBoxImage.Information);
-                        Url = App.SupportServer;
-                    }
-                    break;
-                case "LinkDWebsite":
-                    {
-                        Url = "https://discordapp.com";
-                    }
-                    break;
-                case "LinkDStatus":
-                    {
-                        Url = "https://status.discordapp.com/";
-                    }
-                    break;
-                case "LinkDGithub":
-                    {
-                        Url = "https://github.com/RogueException/Discord.Net";
-                    }
-                    break;
+                MessageBox.Show("Discord Universe is a fun place to hang out with other users, talk about games, anime or development.\n\n" +
+                           "We also have many high quality bots made by me or other popular devs from anime to music to memes so enjoy playing with them.\n\n" +
+                           "This also serves as a support server for many of my projects so dont be afraid to say hi ;)",
+                           "Discord Server",
+                           MessageBoxButton.OK,
+                           MessageBoxImage.Information);
+                Url = App.SupportServer;
             }
+            else
+                WebLinks.TryGetValue(Name, out Url);
             if (Url != "")
                 Process.Start(Url);
         }
@@ -841,7 +803,6 @@ namespace MultiRPC.GUI.Pages
                     UpdateWindow.ShowDialog();
                     if (App.StartUpdate)
                     {
-                        App.WD.FrameLiveRPC.Content = new ViewRPC(ViewType.Update);
                         FuncUpdater.Start();
                     }
                 }
@@ -899,8 +860,8 @@ namespace MultiRPC.GUI.Pages
         private void CbTaskbarIcon_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.RemovedItems.Count > 0) { return; }
-            var Item = (KeyValuePair<string, CustomProfile>)e.AddedItems[0];
-            var profile = Item.Value;
+            KeyValuePair<string, CustomProfile> Item = (KeyValuePair<string, CustomProfile>)e.AddedItems[0];
+            CustomProfile profile = Item.Value;
             if (profile == null)
                 return;
             _Data.SaveProfiles();

@@ -1,41 +1,50 @@
-﻿<Window x:Class="MultiRPC.GUI.BaseWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MultiRPC.GUI"
+    x:Class="MultiRPC.GUI.BaseWindow"
         mc:Ignorable="d"
-        Title="MultiRPC" Height="503" Width="640"
-        Background="Transparent"
+        Title="MultiRPC" Height="482" Width="620"
         WindowStyle="None"
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen" Icon="/MultiRPC;component/MultiRPC-Icon.ico"
         >
 
-    <Border Background="#FF202225" Margin="5">
+    <Border Background="#FF202225">
         <Border.Effect>
             <DropShadowEffect BlurRadius="5" Opacity="0.7" ShadowDepth="0" RenderingBias="Quality"/>
         </Border.Effect>
-        <Grid Background="Transparent">
+        <Grid x:Name="MainGrid" Background="Transparent" Margin="1,0,1,1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-            <RowDefinition Height="22"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Rectangle Fill="Transparent" MouseDown="UIElement_OnMouseDown"/>
-            <TextBlock Foreground="White" Text="MultiRPC" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Style="{DynamicResource TitleBarMin}" Click="Min_OnClick">
-                <Button.Content>
-                    <Rectangle HorizontalAlignment="Center" VerticalAlignment="Center" Width="10" Height="1" Margin="0,5,0,0" Fill="White"/>
-                </Button.Content>
+                <RowDefinition Height="22"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border x:Name="Back" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="454" Grid.Row="1" VerticalAlignment="Top" Width="618" Background="{DynamicResource Brush_MainBackground}" Margin="0,5,0,0"/>
+            <Image x:Name="ImageApp" HorizontalAlignment="Left" Height="22" Margin="0,0,0,0" VerticalAlignment="Top" Width="22" Source="../Resources/MultiRPC.png"/>
+            <TextBlock x:Name="LabelTitle" Foreground="White" Text="MultiRPC" Margin="27,3,0,3" HorizontalAlignment="Left" VerticalAlignment="Center" Width="150"/>
+            <Rectangle Fill="Transparent" MouseDown="UIElement_OnMouseDown" Margin="0,0,60,0"/>
+            <Button Style="{DynamicResource TitleBarMin}" Click="Min_OnClick" Margin="560,0,30,0" Width="30">
+                <Rectangle HorizontalAlignment="Center" VerticalAlignment="Center" Width="10" Height="1" Margin="0,5,0,0" Fill="White"/>
             </Button>
-            <Button Width="28" Style="{DynamicResource TitleBarClose}" Click="Close_OnClick" Background="Transparent">
-                <Button.Content>
-                    <Polygon HorizontalAlignment="Center" VerticalAlignment="Center" Fill="White" Points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"/>
-                </Button.Content>
+            <Button Style="{DynamicResource TitleBarClose}" Click="Close_OnClick" Background="Transparent" Margin="590,0,0,0" Width="30">
+                <Polygon HorizontalAlignment="Center" VerticalAlignment="Center" Fill="White" Points="11,1.576 6.583,6 11,10.424 10.424,11 6,6.583 1.576,11 1,10.424 5.417,6 1,1.576 1.576,1 6,5.417 10.424,1"/>
             </Button>
-        </StackPanel>
-        <Frame x:Name="MainFrame" Grid.Row="1" NavigationUIVisibility="Hidden"/>
-    </Grid>
+            <Frame x:Name="FrameMain" Content="" HorizontalAlignment="Left" Height="60" Grid.Row="1" VerticalAlignment="Top" Width="618" ScrollViewer.VerticalScrollBarVisibility="Disabled" NavigationUIVisibility="Hidden" Margin="0,399,0,0" />
+            <Label x:Name="LabelLoading" Content="Loading and checking for updates" HorizontalAlignment="Left" Height="35" Margin="150,115,0,0" VerticalAlignment="Top" Width="276" Foreground="White" FontSize="16" Grid.Row="1"/>
+            <Image x:Name="ImageMultiRPC" HorizontalAlignment="Left" Height="100" Margin="150,10,0,0" VerticalAlignment="Top" Width="100" Source="../Resources/MultiRPC.png" Grid.Row="1"/>
+            <Label x:Name="TextMadeBy" Content="Builderb#0001" HorizontalAlignment="Left" Height="30" Margin="330,50,0,0" VerticalAlignment="Top" Width="220" Foreground="White" FontSize="14" Grid.Row="1"/>
+            <Label x:Name="LabelMultiRPC" Content="MultiRPC" HorizontalAlignment="Left" Height="35" Margin="255,10,0,0" VerticalAlignment="Top" Width="180" Foreground="White" FontSize="20" Grid.Row="1"/>
+            <Button x:Name="BtnSkip" Content="Skip Update" Margin="0,150,203,0" Width="90" BorderBrush="{DynamicResource Brush_No}" Foreground="White" Background="{DynamicResource Brush_No}" Style="{DynamicResource ButtonStyle}" Height="40" VerticalAlignment="Top" HorizontalAlignment="Right" Click="BtnSkip_Click" Grid.Row="1" Visibility="Hidden"/>
+            <Button x:Name="BtnUpdate" Content="Update Now" Margin="0,150,378,0" Width="90" BorderBrush="{DynamicResource Brush_Ok}" Foreground="White" Background="{DynamicResource Brush_Ok}" Style="{DynamicResource ButtonStyle}" Height="40" VerticalAlignment="Top" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Click="BtnUpdate_Click" Grid.Row="1" Visibility="Hidden"/>
+            <TextBox x:Name="Changelog" x:FieldModifier="public" IsReadOnly="True" TextWrapping="Wrap" Background="{DynamicResource ComboBox.Disabled.Background}" BorderBrush="{x:Null}" Foreground="#FFC9C9C9" Text="Loading changelog" BorderThickness="0" HorizontalScrollBarVisibility="Auto" Margin="156,230,192,0" Height="219" VerticalAlignment="Top" Grid.Row="1" Visibility="Hidden"/>
+            <Image x:Name="ImageError" HorizontalAlignment="Left" Height="75" Margin="245,150,0,0" VerticalAlignment="Top" Width="75" Grid.Row="1"/>
+            <Label x:Name="LabelDiscord" Content="Discord:" HorizontalAlignment="Left" Height="25" Margin="255,85,0,0" VerticalAlignment="Top" Width="70" Foreground="{DynamicResource Brush_LabelText}" FontSize="14" Grid.Row="1"/>
+            <Label x:Name="TextDiscordLink" Content="susQ6XA" HorizontalAlignment="Left" Height="30" Margin="330,85,0,0" VerticalAlignment="Top" Width="90" Foreground="{DynamicResource Brush_Button}" FontSize="14" Grid.Row="1" Cursor="Hand" MouseLeftButtonDown="TextDiscordLink_MouseLeftButtonDown"/>
+            <Label x:Name="LabelMadeBy" Content="Made By:" HorizontalAlignment="Left" Height="30" Margin="255,50,0,0" VerticalAlignment="Top" Width="70" Foreground="{DynamicResource Brush_LabelText}" FontSize="14" Grid.Row="1"/>
+        </Grid>
     </Border>
 </Window>

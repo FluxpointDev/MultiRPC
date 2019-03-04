@@ -550,6 +550,7 @@ namespace MultiRPC.GUI
         private void Links_Clicked(object sender, MouseButtonEventArgs e)
         {
             string Url = "";
+            string Tag = (sender as Image).Tag;
             switch((sender as Image).Name)
             {
                 case "LinkWebsite":

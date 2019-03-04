@@ -1,4 +1,5 @@
 ﻿using MultiRPC.GUI;
+using MultiRPC.GUI.Pages;
 using System;
 using System.Deployment.Application;
 using System.Diagnostics;
@@ -36,16 +37,8 @@ namespace MultiRPC.Functions
                 catch { }
             }
 
-            bool deployed = false;
-            try
+            if (ApplicationDeployment.IsNetworkDeployed)
             {
-                deployed = ApplicationDeployment.IsNetworkDeployed;
-            }
-            catch (Exception e) {            }
-            if (deployed)
-            {
-                Version Version = ApplicationDeployment.CurrentDeployment.CurrentVersion;
-                App.Version = $"{Version.Major}.{Version.Minor}.{Version.Build}";
                 App.WD.TextVersion.Content = App.Version;
                 UpdateCheckInfo Info = null;
                 try
@@ -73,7 +66,6 @@ namespace MultiRPC.Functions
                         UpdateWindow.ShowDialog();
                         if (App.StartUpdate)
                         {
-                            App.WD.FrameLiveRPC.Content = new ViewRPC(ViewType.Update);
                             Start();
                         }
                     }
@@ -85,16 +77,31 @@ namespace MultiRPC.Functions
             }
         }
 
+        
         public static void Start()
         {
             ApplicationDeployment.CurrentDeployment.UpdateCompleted += CurrentDeployment_UpdateCompleted;
-            ApplicationDeployment.CurrentDeployment.UpdateProgressChanged += CurrentDeployment_UpdateProgressChanged;
+            //ApplicationDeployment.CurrentDeployment.UpdateProgressChanged += CurrentDeployment_UpdateProgressChanged;
+           
             ApplicationDeployment.CurrentDeployment.UpdateAsync();
         }
 
         private static void CurrentDeployment_UpdateProgressChanged(object sender, DeploymentProgressChangedEventArgs e)
         {
-            (App.WD.FrameLiveRPC.Content as ViewRPC).Text2.Content = $"{e.ProgressPercentage}%/100%";
+            string State = "Unknown?";
+            switch(e.State)
+            {
+                case DeploymentProgressState.DownloadingApplicationFiles:
+                    State = "Downloading files";
+                    break;
+                case DeploymentProgressState.DownloadingApplicationInformation:
+                    State = "Getting app info";
+                    break;
+                case DeploymentProgressState.DownloadingDeploymentInformation:
+                    State = "Downloading deployment";
+                    break;
+            }
+           App.BW.LabelLoading.Content = $"{State} {e.ProgressPercentage}%/100%";
         }
 
         private static void CurrentDeployment_UpdateCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
@@ -108,7 +115,6 @@ namespace MultiRPC.Functions
             }
             else
             {
-                App.WD.FrameLiveRPC.Content = new ViewRPC(ViewType.UpdateFail);
                 ErrorWindow ErrorWindow = new ErrorWindow();
                 ErrorWindow.SetUpdateError(e.Error);
                 ErrorWindow.ShowDialog();
