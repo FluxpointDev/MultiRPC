@@ -8,13 +8,14 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>MultiRPC</RootNamespace>
     <AssemblyName>MultiRPC</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>true</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -32,7 +33,7 @@
     <WebPage>publish.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>4.2.3.0</ApplicationVersion>
+    <ApplicationVersion>4.3.42.0</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -47,6 +48,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -75,6 +77,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <ManifestKeyFile>MultiRPC_TemporaryKey.pfx</ManifestKeyFile>
     <SignManifests>true</SignManifests>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -84,18 +87,12 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>MultiRPC-Icon.ico</ApplicationIcon>
+    <ApplicationIcon>MultiRPCIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>MultiRPC.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1-beta1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -114,170 +111,93 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WpfAnimatedGif, Version=1.4.17.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WpfAnimatedGif.1.4.17\lib\net\WpfAnimatedGif.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Data\Config.cs" />
-    <Compile Include="Data\CustomProfile.cs" />
-    <Compile Include="Data\Data.cs" />
-    <Compile Include="Data\DefaultProfile.cs" />
-    <Compile Include="Functions\FuncCredits.cs" />
-    <Compile Include="Functions\FuncDiscord.cs" />
-    <Compile Include="Functions\FuncUpdater.cs" />
-    <Compile Include="Functions\FuncWindow.cs" />
-    <Compile Include="Functions\Utils.cs" />
-    <Compile Include="GUI\BaseWindow.xaml.cs">
-      <DependentUpon>BaseWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Pages\MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Views\ViewPrograms.xaml.cs">
-      <DependentUpon>ViewPrograms.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Views\ViewDefault.xaml.cs">
-      <DependentUpon>ViewDefault.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Views\ViewCustom.xaml.cs">
-      <DependentUpon>ViewCustom.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Views\Views.cs" />
-    <Compile Include="GUI\Windows\ShareWindow.xaml.cs">
-      <DependentUpon>ShareWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Windows\RenameWindow.xaml.cs">
-      <DependentUpon>RenameWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Windows\UpdateWindow.xaml.cs">
-      <DependentUpon>UpdateWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Functions\FuncSettings.cs" />
-    <Compile Include="GUI\GifImage.cs" />
-    <Compile Include="GUI\Windows\ErrorWindow.xaml.cs">
-      <DependentUpon>ErrorWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Views\ViewRPC.xaml.cs">
-      <DependentUpon>ViewRPC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Logger.cs" />
-    <Compile Include="Programs\Afk.cs" />
-    <Compile Include="Programs\Anime.cs" />
-    <Compile Include="Programs\Chrome.cs" />
-    <Compile Include="Programs\Custom.cs" />
-    <Compile Include="Programs\Firefox.cs" />
-    <Compile Include="Programs\Minecraft.cs" />
-    <Compile Include="Programs\Windows.cs" />
-    <Compile Include="Programs\WindowsMediaPlayer.cs" />
-    <Compile Include="RPC.cs" />
-    <Compile Include="RPC\Configuration.cs" />
-    <Compile Include="RPC\Converters\EnumSnakeCaseConverter.cs" />
-    <Compile Include="RPC\Converters\EnumValueAttribute.cs" />
-    <Compile Include="RPC\DiscordRpcClient.cs" />
-    <Compile Include="RPC\Events.cs" />
-    <Compile Include="RPC\Exceptions\BadPresenceException.cs" />
-    <Compile Include="RPC\Exceptions\InvalidConfigurationException.cs" />
-    <Compile Include="RPC\Exceptions\StringOutOfRangeException.cs" />
-    <Compile Include="RPC\Helper\BackoffDelay.cs" />
-    <Compile Include="RPC\Helper\StringTools.cs" />
-    <Compile Include="RPC\IO\Handshake.cs" />
-    <Compile Include="RPC\IO\INamedPipeClient.cs" />
-    <Compile Include="RPC\IO\InvalidPipeException.cs" />
-    <Compile Include="RPC\IO\ManagedNamedPipeClient.cs" />
-    <Compile Include="RPC\IO\NativeNamedPipeClient.cs" />
-    <Compile Include="RPC\IO\Opcode.cs" />
-    <Compile Include="RPC\IO\PipeFrame.cs" />
-    <Compile Include="RPC\Message\CloseMessage.cs" />
-    <Compile Include="RPC\Message\ConnectionEstablishedMessage.cs" />
-    <Compile Include="RPC\Message\ConnectionFailedMessage.cs" />
-    <Compile Include="RPC\Message\ErrorMessage.cs" />
-    <Compile Include="RPC\Message\IMessage.cs" />
-    <Compile Include="RPC\Message\MessageType.cs" />
-    <Compile Include="RPC\Message\PresenceMessage.cs" />
-    <Compile Include="RPC\Message\ReadyMessage.cs" />
-    <Compile Include="RPC\Registry\UriScheme.cs" />
-    <Compile Include="RPC\RichPresence.cs" />
-    <Compile Include="RPC\RPC\Commands\CloseCommand.cs" />
-    <Compile Include="RPC\RPC\Commands\ICommand.cs" />
-    <Compile Include="RPC\RPC\Commands\PresenceCommand.cs" />
-    <Compile Include="RPC\RPC\Commands\RespondCommand.cs" />
-    <Compile Include="RPC\RPC\Payload\ClosePayload.cs" />
-    <Compile Include="RPC\RPC\Payload\Command.cs" />
-    <Compile Include="RPC\RPC\Payload\IPayload.cs" />
-    <Compile Include="RPC\RPC\Payload\PayloadArgument.cs" />
-    <Compile Include="RPC\RPC\Payload\PayloadEvent.cs" />
-    <Compile Include="RPC\RPC\Payload\ServerEvent.cs" />
-    <Compile Include="RPC\RPC\RpcConnection.cs" />
-    <Compile Include="RPC\User.cs" />
-    <Compile Include="Data\_Program.cs" />
-    <Page Include="GUI\BaseWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\Pages\MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\Views\ViewPrograms.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="GUI\Views\ViewDefault.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="GUI\Views\ViewCustom.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\Windows\ShareWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="GUI\Windows\RenameWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\Windows\UpdateWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="GUI\Windows\ErrorWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="GUI\Views\ViewRPC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Data.cs" />
+    <Compile Include="Functions\BitmapDownloader.cs" />
+    <Compile Include="Functions\Checks.cs" />
+    <Compile Include="Functions\FileWatch.cs" />
+    <Compile Include="Functions\Updater.cs" />
+    <Compile Include="Functions\Uri.Extra.cs" />
+    <Compile Include="Functions\Utils.cs" />
+    <Compile Include="GUI\Controls\ToolTip.cs" />
+    <Compile Include="GUI\Pages\ChangelogPage.xaml.cs">
+      <DependentUpon>ChangelogPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\EditProfileNamePage.xaml.cs">
+      <DependentUpon>EditProfileNamePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\ShareProfilePage.xaml.cs">
+      <DependentUpon>ShareProfilePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\UpdateFailedPage.xaml.cs">
+      <DependentUpon>UpdateFailedPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\UpdatePage.xaml.cs">
+      <DependentUpon>UpdatePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Views\RPCPreview.xaml.cs">
+      <DependentUpon>RPCPreview.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Functions\Logging.cs" />
+    <Compile Include="JsonClasses\Config.cs" />
+    <Compile Include="JsonClasses\CreditsList.cs" />
+    <Compile Include="JsonClasses\CustomProfile.cs" />
+    <Compile Include="JsonClasses\FileLocations.cs" />
+    <Compile Include="JsonClasses\Theme.cs" />
+    <Compile Include="JsonClasses\UIText.cs" />
+    <Compile Include="RPC.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\CreditsPage.xaml.cs">
+      <DependentUpon>CreditsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\CustomPage.xaml.cs">
+      <DependentUpon>CustomPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\LogsPage.xaml.cs">
+      <DependentUpon>LogsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\MultiRPCPage.xaml.cs">
+      <DependentUpon>MultiRPCPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <None Include="packages.config" />
+    <Resource Include="Assets\ServerIcon.jpg" />
+    <Resource Include="Assets\ClientIDHelp.jpg" />
+    <Resource Include="Assets\LargeTextHelp.jpg" />
+    <Resource Include="Assets\SmallAndLargeKeyHelp.jpg" />
+    <Resource Include="Assets\SmallTextHelp.jpg" />
+    <Resource Include="Assets\Text1Help.jpg" />
+    <Resource Include="Assets\Text2Help.jpg" />
+    <Resource Include="Assets\Loading.gif" />
+    <Content Include="Lang\english.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="MultiRPCIcon.ico" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -288,60 +208,6 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\AdminBadge.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\DeleteIcon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\AddIcon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\DonatorBadge.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\EditIcon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\GithubIcon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\DownloadIcon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\MultiRPC.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ServerIcon.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ShareIcon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\WebsiteIcon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Resource Include="MultiRPC-Icon.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Content Include="Resources\DiscordIcon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\ExitIcon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\HelpIcon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Loading.gif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
@@ -356,16 +222,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <PublishFile Include="Loading.gif">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
     <PublishFile Include="MultiRPC.pdb">
       <Visible>False</Visible>
       <Group>
@@ -376,147 +232,76 @@
       <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
-    <PublishFile Include="Resources\AddIcon.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\AdminBadge.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\DeleteIcon.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\DiscordIcon.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\DonatorBadge.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\DownloadIcon.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\EditIcon.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\ExitIcon.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\GithubIcon.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\HelpIcon.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\MultiRPC.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\ServerIcon.jpg">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\ShareIcon.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Resources\WebsiteIcon.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Assets\DarkTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\LightTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Page Include="GUI\Controls\MuiltiRPCAndCustomDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\ChangelogPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\CreditsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\CustomPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\EditProfileNamePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\LogsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\MultiRPCPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\ShareProfilePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\UpdateFailedPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\UpdatePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Views\RPCPreview.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DiscordRichPresence">
+      <Version>1.0.77</Version>
+    </PackageReference>
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf">
+      <Version>1.0.8</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="XamlAnimatedGif">
+      <Version>1.2.1</Version>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
