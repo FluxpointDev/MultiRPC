@@ -17,7 +17,11 @@
             <SolidColorBrush Color="#505050" x:Key="DisabledButtonColour"/>
             <SolidColorBrush Color="#FFEEAD37" x:Key="Orange"/>
 
-            <Style TargetType="Button" x:Key="ButtonRed">
+            <Style TargetType="Hyperlink">
+                <Setter Property="Foreground" Value="{DynamicResource TextColourSCBrush}"/>
+            </Style>
+
+                <Style TargetType="Button" x:Key="ButtonRed">
                 <Setter Property="Background" Value="{DynamicResource Red}"/>
                 <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="Template">
