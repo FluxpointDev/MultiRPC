@@ -382,7 +382,7 @@ namespace MultiRPC.GUI.Pages
 
         private async Task ShowHelpImages()
         {
-            var vis = App.Config.Disabled.HelpIcons ? Visibility.Visible : Visibility.Collapsed;
+            var vis = !App.Config.Disabled.HelpIcons ? Visibility.Visible : Visibility.Collapsed;
             imgClientID.Visibility = vis;
             imgText1.Visibility = vis;
             imgText2.Visibility = vis;

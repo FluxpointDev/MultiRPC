@@ -416,6 +416,36 @@
     </DrawingGroup>
     <DrawingImage x:Key="LogsIconSelectedDrawingImage" Drawing="{StaticResource LogsIconSelectedDrawingGroup}" />
 
+    <Geometry x:Key="DebugIconGeometry1">F1 M512,512z M0,0z M215.728,120L215.728,120 174.272,120 159.272,150 230.728,150z</Geometry>
+    <Geometry x:Key="DebugIconGeometry2">F1 M512,512z M0,0z M150,225C150,244.53,162.578,261.024,180,267.237L180,180 150,180 150,225z</Geometry>
+    <Geometry x:Key="DebugIconGeometry3">F1 M512,512z M0,0z M195,0C87.48,0 0,87.48 0,195 0,302.52 87.48,390 195,390 302.52,390 390,302.52 390,195 390,87.48 302.52,0 195,0z M285,210C309.814,210 330,230.186 330,255 330,263.291 323.291,270 315,270 306.709,270 300,263.291 300,255 300,246.724 293.276,240 285,240L268.482,240C266.074,251.812 260.636,262.41 253.378,271.501 263.718,282.188 270,296.353 270,311.836L270,315C270,323.291 263.291,330 255,330 246.709,330 240,323.291 240,315L240,311.836C240,303.56 236.451,295.964 230.482,290.664 219.869,296.426 207.902,300 195,300 182.098,300 170.131,296.426 159.518,290.663 153.549,295.964 150,303.559 150,311.835L150,315C150,323.291 143.291,330 135,330 126.709,330 120,323.291 120,315L120,311.836C120,296.353 126.282,282.188 136.622,271.502 129.364,262.411 123.925,251.813 121.518,240.001L105,240.001C96.724,240.001 90,246.725 90,255.001 90,263.292 83.291,270.001 75,270.001 66.709,270.001 60,263.292 60,255.001 60,230.187 80.186,210.001 105,210.001L120,210.001 120,174.273 95.127,161.836C92.798,160.64 90,162.339 90,165 90,173.291 83.291,180 75,180 66.709,180 60,173.291 60,165 60,140.004 86.314,123.86 108.53,135L128.289,144.875 143.567,114.32C129.602,106.674 120,92.014 120,75 120,66.709 126.709,60 135,60 143.291,60 150,66.709 150,75 150,83.276 156.724,90 165,90L225,90C233.276,90 240,83.276 240,75 240,66.709 246.709,60 255,60 263.291,60 270,66.709 270,75 270,92.014 260.398,106.674 246.433,114.32L261.709,144.873 281.455,135C303.748,123.776 330,140.109 330,165 330,173.291 323.291,180 315,180 306.709,180 300,173.291 300,165 300,162.48 297.448,160.659 294.858,161.836L270,174.271 270,210 285,210z</Geometry>
+    <Geometry x:Key="DebugIconGeometry4">F1 M512,512z M0,0z M210,267.237C227.422,261.024,240,244.53,240,225L240,180 210,180 210,267.237z</Geometry>
+    <Geometry x:Key="DebugIconGeometry5">F1 M512,512z M0,0z M318.959,382.592L343.078,406.711 406.711,343.078 382.592,318.959C365.858,344.196,344.196,365.858,318.959,382.592z</Geometry>
+    <Geometry x:Key="DebugIconGeometry6">F1 M512,512z M0,0z M498.848,435.214L427.922,364.289 364.289,427.922 435.215,498.847C452.709,516.368 481.248,516.401 498.862,498.847 516.382,481.283 516.382,452.748 498.848,435.214z</Geometry>
+    <DrawingGroup x:Key="DebugIconDrawingGroup" ClipGeometry="M0,0 V512 H512 V0 H0 Z">
+        <DrawingGroup Opacity="1">
+            <GeometryDrawing Brush="{DynamicResource AccentColour3SCBrush}" Geometry="{StaticResource DebugIconGeometry1}" />
+            <GeometryDrawing Brush="{DynamicResource AccentColour3SCBrush}" Geometry="{StaticResource DebugIconGeometry2}" />
+            <GeometryDrawing Brush="{DynamicResource AccentColour3SCBrush}" Geometry="{StaticResource DebugIconGeometry3}" />
+            <GeometryDrawing Brush="{DynamicResource AccentColour3SCBrush}" Geometry="{StaticResource DebugIconGeometry4}" />
+            <GeometryDrawing Brush="{DynamicResource AccentColour3SCBrush}" Geometry="{StaticResource DebugIconGeometry5}" />
+            <GeometryDrawing Brush="{DynamicResource AccentColour3SCBrush}" Geometry="{StaticResource DebugIconGeometry6}" />
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingImage x:Key="DebugIconDrawingImage" Drawing="{StaticResource DebugIconDrawingGroup}" />
+
+    <DrawingGroup x:Key="DebugIconSelectedDrawingGroup" ClipGeometry="M0,0 V512 H512 V0 H0 Z">
+        <DrawingGroup Opacity="1">
+            <GeometryDrawing Brush="White" Geometry="{StaticResource DebugIconGeometry1}" />
+            <GeometryDrawing Brush="White" Geometry="{StaticResource DebugIconGeometry2}" />
+            <GeometryDrawing Brush="White" Geometry="{StaticResource DebugIconGeometry3}" />
+            <GeometryDrawing Brush="White" Geometry="{StaticResource DebugIconGeometry4}" />
+            <GeometryDrawing Brush="White" Geometry="{StaticResource DebugIconGeometry5}" />
+            <GeometryDrawing Brush="White" Geometry="{StaticResource DebugIconGeometry6}" />
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingImage x:Key="DebugIconSelectedDrawingImage" Drawing="{StaticResource DebugIconDrawingGroup}" />
+
     <LinearGradientBrush x:Key="BackgroundGradient" StartPoint="1091.51,158.49" EndPoint="-91.51,841.51" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
       <GradientStop Color="#FF00FFED" Offset="0" />
       <GradientStop Color="#FF0077E9" Offset="1" />

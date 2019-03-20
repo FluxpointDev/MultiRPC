@@ -42,8 +42,8 @@ namespace MultiRPC.GUI.Pages
             cbAfkTime.IsChecked = App.Config.AFKTime;
             cbDiscordCheck.IsChecked = !App.Config.DiscordCheck;
             cbTokenCheck.IsChecked = !App.Config.CheckToken;
-            cbProgramsTab.IsChecked = !App.Config.Disabled.ProgramsTab;
-            cbHelpIcons.IsChecked = !App.Config.Disabled.HelpIcons;
+            cbProgramsTab.IsChecked = App.Config.Disabled.ProgramsTab;
+            cbHelpIcons.IsChecked = App.Config.Disabled.HelpIcons;
             cbAutoUpdating.IsChecked = !App.Config.AutoUpdate;
             rAppDev.Text = App.AppDev;
             cbTheme.SelectedIndex = (int)App.Config.ActiveTheme;
@@ -191,7 +191,7 @@ namespace MultiRPC.GUI.Pages
         {
             if (IsInitialized)
             {
-                App.Config.Disabled.ProgramsTab = !((CheckBox) sender).IsChecked.Value;
+                App.Config.Disabled.ProgramsTab = ((CheckBox) sender).IsChecked.Value;
                 App.Config.Save();
             }
         }
@@ -200,7 +200,7 @@ namespace MultiRPC.GUI.Pages
         {
             if (IsInitialized)
             {
-                App.Config.Disabled.HelpIcons = !((CheckBox) sender).IsChecked.Value;
+                App.Config.Disabled.HelpIcons = ((CheckBox) sender).IsChecked.Value;
                 App.Config.Save();
             }
         }
@@ -229,7 +229,8 @@ namespace MultiRPC.GUI.Pages
 
         private void ButDebug_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            MainPage.mainPage.butDebug.Visibility = Visibility.Visible;
+            butDebug.IsEnabled = false;
         }
 
         private void RAppDev_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

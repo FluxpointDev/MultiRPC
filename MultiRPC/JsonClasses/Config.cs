@@ -13,7 +13,7 @@ namespace MultiRPC
 
         public Theme.ActiveTheme ActiveTheme = Theme.ActiveTheme.Dark;
 
-        public bool AutoUpdate = true;
+        public bool AutoUpdate = false;
 
         public string LastUser = "";
         /// <summary> Has the user been warned for invites in rich presence text </summary>

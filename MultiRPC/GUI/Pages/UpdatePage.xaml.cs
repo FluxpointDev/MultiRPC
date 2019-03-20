@@ -38,7 +38,8 @@ namespace MultiRPC.GUI.Pages
                 tblNewVersion.Text = App.Text.NewVersion + ": " + info.AvailableVersion;
             else
                 tblNewVersion.Text = App.Text.NewVersion + ": " + "???";
-            tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
+            if(File.Exists(FileLocations.ChangelogFileLocalLocation))
+                tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
 
             WindowID = windowID;
         }

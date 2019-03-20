@@ -102,7 +102,7 @@
   "NewVersion": "New Version",
   "DontRestartProgram": "Don't restart program",
   "UpdateFailed": "Update Failed",
-  "UpdateFailedMessage": "Looks like the update failed, what do want to do?",
+  "UpdateFailedMessage": "Looks like the update failed, what do you want to do?",
   "RetryUpdate": "Retry update",
   "RetryOnNextStartUp": "Retry next time MultiRPC is started",
   "NoUpdate": "There is no update available",
@@ -127,5 +127,16 @@
   "CheckingClientID": "Checking Client ID",
   "ShowMultiRPC": "Show MultiRPC",
   "HideMultiRPC": "Hide MultiRPC",
-  "UnhandledException": "Unhandled Exception"
+  "UnhandledException": "Unhandled Exception",
+  "DebugRPCStart": "Start RPC",
+  "DebugRPCStop": "Stop RPC",
+  "DebugStartRPCTooltip": "Start RPC debug mode",
+  "DebugStopRPCTooltip": "Stop RPC debug mode",
+  "RPCSteam": "RPC Steam",
+  "RPCSteamTooltip": "Minor test for steam RPC",
+  "TestUpdateWindow": "Test Update Window",
+  "TestUpdateWindowTooltip": "Test the update window",
+  "Testing": "Testing",
+  "DebugMode": "Debug Mode",
+  "BeepBoop": "Beep boop"
 }

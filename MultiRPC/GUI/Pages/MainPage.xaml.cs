@@ -34,6 +34,7 @@ namespace MultiRPC.GUI.Pages
             butLogs.Tag = new LogsPage();
             butCredits.Tag = new CreditsPage();
             butSettings.Tag = new SettingsPage();
+            butDebug.Tag = new DebugPage();
             butMuiltiRPC.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             frameRPCPreview.Content = new RPCPreview(RPCPreview.ViewType.Default);
         }
@@ -155,6 +156,7 @@ namespace MultiRPC.GUI.Pages
             ((Image)butLogs.Content).Source = (DrawingImage)App.Current.Resources[ImageName(butLogs)];
             ((Image)butSettings.Content).Source = (DrawingImage)App.Current.Resources[ImageName(butSettings)];
             ((Image)butCredits.Content).Source = (DrawingImage)App.Current.Resources[ImageName(butCredits)];
+            ((Image)butDebug.Content).Source = (DrawingImage)App.Current.Resources[ImageName(butDebug)];
         }
 
         public async Task CanRunRPC()

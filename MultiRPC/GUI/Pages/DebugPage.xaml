@@ -1,0 +1,25 @@
+﻿<Page x:Class="MultiRPC.GUI.Pages.DebugPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="DebugPage">
+    <Grid Margin="10">
+        <StackPanel Orientation="Horizontal">
+            <StackPanel>
+                <TextBlock Text="RPC" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <Button Name="butDebugStartRPC" Style="{DynamicResource ButtonPurple}" Margin="0,0,0,10" Click="ButDebugStartRPC_OnClick"/>
+                <Button Name="butDebugStopRPC" Style="{DynamicResource ButtonPurple}" Margin="0,0,0,10" Click="ButDebugStopRPC_OnClick"/>
+                <Button Name="butDebugSteam" Style="{DynamicResource ButtonPurple}" Margin="0,0,0,10" Click="ButDebugSteam_OnClick"/>
+                <TextBox Name="tbDebugSteamID" MaxLength="25" HorizontalAlignment="Left" Width="150" />
+            </StackPanel>
+            <StackPanel Margin="10,0,0,0">
+                <TextBlock Text="GUI" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <Button Name="butTestUpdate" Style="{DynamicResource ButtonPurple}" Click="ButTestUpdate_OnClick"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

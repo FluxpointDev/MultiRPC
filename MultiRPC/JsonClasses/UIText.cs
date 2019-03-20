@@ -131,5 +131,16 @@
         public string ShowMultiRPC;
         public string HideMultiRPC;
         public string UnhandledException;
+        public string DebugRPCStart;
+        public string DebugRPCStop;
+        public string DebugStartRPCTooltip;
+        public string DebugStopRPCTooltip;
+        public string RPCSteam;
+        public string RPCSteamTooltip;
+        public string TestUpdateWindow;
+        public string TestUpdateWindowTooltip;
+        public string Testing;
+        public string DebugMode;
+        public string BeepBoop;
     }
 }

@@ -66,7 +66,7 @@ namespace MultiRPC
                 Type = type;
         }
 
-        public static async void Start()
+        public static async void Start(string steamID = "")
         {
             if(!await CheckPresence(Presence.Details) || !await CheckPresence(Presence.State))
                 return;
@@ -115,7 +115,7 @@ namespace MultiRPC
             }
 
             App.Logging.Application($"Discord {App.Text.Client}: {DClient} ({Count})");           
-            RPCClient = new DiscordRpcClient(IDToUse.ToString(), false, Count, App.Logging);
+            RPCClient = new DiscordRpcClient(IDToUse.ToString(), steamID, false, Count, App.Logging);
 
             RPCClient.OnConnectionEstablished += Client_OnConnectionEstablished;
             RPCClient.OnConnectionFailed += Client_OnConnectionFailed;
@@ -257,7 +257,6 @@ namespace MultiRPC
             App.Logging.LogEvent(App.Text.Client,App.Text.ShuttingDown);
             ClientTimer?.Dispose();
             Uptime?.Dispose();
-            RPCClient?.ClearPresence();
             RPCClient?.Dispose();
             MainPage.mainPage.frameRPCPreview.Dispatcher.Invoke( async () =>
             {

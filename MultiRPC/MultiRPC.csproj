@@ -132,6 +132,9 @@
     <Compile Include="GUI\Pages\ChangelogPage.xaml.cs">
       <DependentUpon>ChangelogPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Pages\DebugPage.xaml.cs">
+      <DependentUpon>DebugPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Pages\EditProfileNamePage.xaml.cs">
       <DependentUpon>EditProfileNamePage.xaml</DependentUpon>
     </Compile>
@@ -259,6 +262,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Pages\CustomPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\DebugPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Pages\EditProfileNamePage.xaml">

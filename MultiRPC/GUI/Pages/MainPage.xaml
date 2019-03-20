@@ -6,7 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d" 
-      MinHeight="513" MinWidth="735"
+      MinHeight="516" MinWidth="735"
       Title="MainPage"
       >
     <Page.Resources>
@@ -80,41 +80,51 @@
             </Grid.ColumnDefinitions>
 
             <!--Nav bar-->
-            <Grid Grid.RowSpan="2" Background="{DynamicResource AccentColour1SCBrush}">
-                <StackPanel Margin="5,10,5,0">
-                    <Button Style="{DynamicResource NavButton}" Name="butMuiltiRPC" Click="ChangePage_OnClick">
-                        <Button.Content>
-                            <Image Name="imgDiscordIcon" Source="{DynamicResource DiscordIconDrawingImage}"/>
-                        </Button.Content>
-                    </Button>
-                    <Button Style="{DynamicResource NavButton}" Name="butCustom" Click="ChangePage_OnClick">
-                        <Button.Content>
-                            <Image Name="imgCustomIcon" Source="{DynamicResource CustomIconDrawingImage}"/>
-                        </Button.Content>
-                    </Button>
-                    <Button Style="{DynamicResource NavButton}" Name="butSettings" Click="ChangePage_OnClick">
-                        <Button.Content>
-                            <Image Name="imgSettingsIcon" Source="{DynamicResource SettingsIconDrawingImage}"/>
-                        </Button.Content>
-                    </Button>
-                    <Button Style="{DynamicResource NavButton}" Name="butLogs" Click="ChangePage_OnClick">
-                        <Button.Content>
-                            <Image Name="imgLogsIcon" Source="{DynamicResource LogsIconDrawingImage}"/>
-                        </Button.Content>
-                    </Button>
-                    <Button Style="{DynamicResource NavButton}" Name="butCredits" Click="ChangePage_OnClick">
-                        <Button.Content>
-                            <Image Name="imgCreditsIcon" Source="{DynamicResource CreditsIconDrawingImage}"/>
-                        </Button.Content>
-                    </Button>
-                </StackPanel>
+            <ScrollViewer Grid.RowSpan="2" VerticalScrollBarVisibility="Hidden">
+                <Grid Background="{DynamicResource AccentColour1SCBrush}">
+                    <StackPanel Margin="5,10,5,0">
+                        <Button Style="{DynamicResource NavButton}" Name="butMuiltiRPC" Click="ChangePage_OnClick">
+                            <Button.Content>
+                                <Image Name="imgDiscordIcon" Source="{DynamicResource DiscordIconDrawingImage}"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Style="{DynamicResource NavButton}" Name="butCustom" Click="ChangePage_OnClick">
+                            <Button.Content>
+                                <Image Name="imgCustomIcon" Source="{DynamicResource CustomIconDrawingImage}"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Style="{DynamicResource NavButton}" Name="butSettings" Click="ChangePage_OnClick">
+                            <Button.Content>
+                                <Image Name="imgSettingsIcon" Source="{DynamicResource SettingsIconDrawingImage}"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Style="{DynamicResource NavButton}" Name="butLogs" Click="ChangePage_OnClick">
+                            <Button.Content>
+                                <Image Name="imgLogsIcon" Source="{DynamicResource LogsIconDrawingImage}"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Style="{DynamicResource NavButton}" Name="butCredits" Click="ChangePage_OnClick">
+                            <Button.Content>
+                                <Image Name="imgCreditsIcon" Source="{DynamicResource CreditsIconDrawingImage}"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Visibility="Collapsed" Style="{DynamicResource NavButton}" Name="butDebug" Click="ChangePage_OnClick">
+                            <Button.Content>
+                                <Image Name="imgDebugIcon" Source="{DynamicResource DebugIconDrawingImage}"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                 </Grid>
+            </ScrollViewer>
+            <Grid Grid.Row="1" VerticalAlignment="Bottom">
+                <Rectangle Opacity="0.55" Fill="{DynamicResource AccentColour1SCBrush}"/>
                 <StackPanel VerticalAlignment="Bottom">
-                    <TextBlock Name="tbVersion" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                    <ProgressBar Name="pbUpdateProgress" Height="3"/>
+                <TextBlock Name="tbVersion" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <ProgressBar Name="pbUpdateProgress" Height="3"/>
                 </StackPanel>
             </Grid>
 
-            <!--Status bar-->
+                    <!--Status bar-->
             <Grid Grid.Column="1" Background="{DynamicResource AccentColour1SCBrush}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0">
@@ -146,7 +156,7 @@
             <!--C O N T E N T-->
         <Frame Name="ContentFrame" Grid.Column="1" Grid.Row="1"/>
         </Grid>
-        <Grid Background="{DynamicResource AccentColour2SCBrush}" Name="spCheckForDiscord" HorizontalAlignment="Stretch">
+        <Grid Visibility="Collapsed" Background="{DynamicResource AccentColour2SCBrush}" Name="spCheckForDiscord" HorizontalAlignment="Stretch">
             <StackPanel HorizontalAlignment="Center" Margin="10">
                 <Grid>
                     <Grid.ColumnDefinitions>
