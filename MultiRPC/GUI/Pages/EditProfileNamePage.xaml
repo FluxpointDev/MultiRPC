@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d" 
       MinHeight="79" MinWidth="250"
-      Title="EditProfileNamePage">
+      Title="Edit Profile Name">
 
     <StackPanel Margin="10">
         <TextBox Name="tbNewProfileName"/>

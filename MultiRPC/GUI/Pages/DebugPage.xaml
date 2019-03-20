@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="DebugPage">
+      Title="Debug">
     <Grid Margin="10">
         <StackPanel Orientation="Horizontal">
             <StackPanel>

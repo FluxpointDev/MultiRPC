@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="LogsPage">
+      Title="Logs">
 
     <ScrollViewer Background="Black" VerticalScrollBarVisibility="Auto">
         <TextBlock Name="LogText" Text="{Binding LogText}" Margin="5" Foreground="White"/>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,7 @@ namespace MultiRPC.GUI.Pages
             Profiles = profiles;
             OldName = oldName;
             butDone.Content = App.Text.Done;
+            Title = App.Text.ProfileEdit;
         }
 
         private async void ButDone_OnClick(object sender, RoutedEventArgs e)

@@ -102,6 +102,9 @@ namespace MultiRPC.GUI
             MinHeight = page.MinHeight + 30;
             Width = MinWidth;
             Height = MinHeight;
+            ShowInTaskbar = false;
+            Title = "MultiRPC - " + page.Title;
+            tbTitle.Text = Title;
             ContentFrame.Content = page;
 
             if (!MinButton)

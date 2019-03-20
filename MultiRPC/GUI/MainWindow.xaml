@@ -47,7 +47,7 @@
         <Rectangle Fill="Transparent" Name="RecHandle" MouseDown="RecHandle_OnMouseDown"/>
             <StackPanel Orientation="Horizontal">
             <Image Width="20" Height="20" VerticalAlignment="Center" Margin="5,0,0,0" Source="{DynamicResource MultiRPCLogoDrawingImage}"/>
-            <TextBlock Text="MuiltiRPC" FontSize="11" VerticalAlignment="Center" Margin="3,0,0,0"/>
+            <TextBlock Name="tbTitle" Text="MuiltiRPC" FontSize="11" VerticalAlignment="Center" Margin="3,0,0,0" MouseDown="RecHandle_OnMouseDown"/>
         </StackPanel>
 
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">

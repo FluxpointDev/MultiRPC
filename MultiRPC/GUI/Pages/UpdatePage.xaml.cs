@@ -42,6 +42,7 @@ namespace MultiRPC.GUI.Pages
                 tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
 
             WindowID = windowID;
+            Title = App.Text.Update;
         }
 
         private async void ButSkip_OnClick(object sender, RoutedEventArgs e)

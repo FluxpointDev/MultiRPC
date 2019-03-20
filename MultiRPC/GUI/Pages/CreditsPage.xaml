@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="CreditsPage">
+      Title="Credits">
     <Page.Resources>
         <Style TargetType="Image">
             <Setter Property="Width" Value="20"/>

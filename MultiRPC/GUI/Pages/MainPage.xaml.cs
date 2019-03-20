@@ -90,7 +90,7 @@ namespace MultiRPC.GUI.Pages
                         await Task.Delay(750);
                         goto FindClient;
                     }
-                    else if (count != 6)
+                    else if (count < 6)
                     {
                         tblDiscordClientMessage.Text = $"{DiscordClient} {App.Text.IsLoading}....";
                         await Task.Delay(750);

@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="SettingsPage">
+      Title="Settings">
     <Page.Resources>
         <Style x:Key="Title" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="FontWeight" Value="SemiBold"/>

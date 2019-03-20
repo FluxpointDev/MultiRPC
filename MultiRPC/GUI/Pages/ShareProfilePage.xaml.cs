@@ -20,6 +20,7 @@ namespace MultiRPC.GUI.Pages
             butImport.Content = App.Text.Import;
             Profile = profile;
             WindowID = windowID;
+            Title = App.Text.ProfileShare;
         }
 
         private void ButImport_OnClick(object sender, RoutedEventArgs e)

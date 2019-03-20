@@ -27,6 +27,7 @@ namespace MultiRPC.GUI.Pages
         {
             InitializeComponent();
             tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
+            Title = App.Text.Changelog;
         }
     }
 }

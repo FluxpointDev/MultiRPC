@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d" 
       MinHeight="450" MinWidth="400"
-      Title="ChangelogPage">
+      Title="Changelog">
 
     <Grid>
         <TextBox TextWrapping="Wrap" IsReadOnly="True" Height="NaN" Name="tbChangelogText" Margin="10"/>

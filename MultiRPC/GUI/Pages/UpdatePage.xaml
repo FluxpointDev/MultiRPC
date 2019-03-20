@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d" 
       MinHeight="350" MinWidth="400"
-      Title="UpdatePage">
+      Title="Update">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>

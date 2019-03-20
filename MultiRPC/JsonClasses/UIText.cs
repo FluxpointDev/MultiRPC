@@ -142,5 +142,6 @@
         public string Testing;
         public string DebugMode;
         public string BeepBoop;
+        public string Update;
     }
 }

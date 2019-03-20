@@ -156,7 +156,7 @@
             <!--C O N T E N T-->
         <Frame Name="ContentFrame" Grid.Column="1" Grid.Row="1"/>
         </Grid>
-        <Grid Visibility="Collapsed" Background="{DynamicResource AccentColour2SCBrush}" Name="spCheckForDiscord" HorizontalAlignment="Stretch">
+        <Grid Background="{DynamicResource AccentColour2SCBrush}" Name="spCheckForDiscord" HorizontalAlignment="Stretch">
             <StackPanel HorizontalAlignment="Center" Margin="10">
                 <Grid>
                     <Grid.ColumnDefinitions>

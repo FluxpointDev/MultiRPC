@@ -20,6 +20,7 @@ namespace MultiRPC.GUI.Pages
             butRetryUpdate.Content = App.Text.RetryUpdate;
             butRetryOnNextStartUp.Content = App.Text.RetryOnNextStartUp;
             tbUpdateError.Text = e.Message;
+            Title = App.Text.UpdateFailed;
         }
 
         private void ButRetryUpdate_OnClick(object sender, RoutedEventArgs e)

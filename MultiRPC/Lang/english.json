@@ -138,5 +138,6 @@
   "TestUpdateWindowTooltip": "Test the update window",
   "Testing": "Testing",
   "DebugMode": "Debug Mode",
-  "BeepBoop": "Beep boop"
+  "BeepBoop": "Beep boop",
+  "Update": "Update"
 }
