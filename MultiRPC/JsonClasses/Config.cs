@@ -26,7 +26,7 @@ namespace MultiRPC
         public string AutoStart = App.Text.No;
 
         /// <summary> If to check the token </summary>
-        public bool CheckToken = false;
+        public bool CheckToken = true;
 
         /// <summary> Check if discord is running </summary>
         public bool DiscordCheck = true;

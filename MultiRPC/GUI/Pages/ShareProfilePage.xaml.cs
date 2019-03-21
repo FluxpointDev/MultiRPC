@@ -21,11 +21,13 @@ namespace MultiRPC.GUI.Pages
             Profile = profile;
             WindowID = windowID;
             Title = App.Text.ProfileShare;
+            if (RPC.RPCClient != null && RPC.RPCClient.IsInitialized && !RPC.RPCClient.Disposed)
+                butImport.IsEnabled = false;
         }
 
         private void ButImport_OnClick(object sender, RoutedEventArgs e)
         {
-            string Get = Newtonsoft.Json.JsonConvert.SerializeObject(Profile);
+            string Get = Newtonsoft.Json.JsonConvert.SerializeObject(tbShare.Text);
             Clipboard.SetText(Get = Utils.Base64Encode(Get));
             MainWindow.CloseWindow(WindowID, Get);
         }

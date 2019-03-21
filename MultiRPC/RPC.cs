@@ -146,8 +146,10 @@ namespace MultiRPC
 
             MainPage.mainPage.Dispatcher.Invoke(() => MainPage.mainPage.rCon.Text = App.Text.Loading);
             RPCClient.SetPresence(Presence);
-            foreach (var button in CustomPage.ProfileButtons)
+            foreach (var button in CustomPage.customPage.ProfileButtons)
                 button.IsEnabled = false;
+            CustomPage.customPage.imgProfileAdd.IsEnabled = false;
+            CustomPage.customPage.imgProfileDelete.IsEnabled = false;
         }
 
         public static void SetPresence(string text1, string text2, string largeKey, string largeText, string smallKey, string smallText, bool showTime)
@@ -273,8 +275,10 @@ namespace MultiRPC
 
             MainPage.mainPage.butUpdate.IsEnabled = false;
             MainPage.mainPage.rCon.Text = App.Text.Disconnected;
-            foreach (var button in CustomPage.ProfileButtons)
+            foreach (var button in CustomPage.customPage.ProfileButtons)
                 button.IsEnabled = true;
+            CustomPage.customPage.imgProfileAdd.IsEnabled = true;
+            CustomPage.customPage.imgProfileDelete.IsEnabled = true;
         }
     }
 }

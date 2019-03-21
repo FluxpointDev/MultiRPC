@@ -26,14 +26,18 @@ namespace MultiRPC.GUI.Pages
     {
         private Image SelectedHelpImage;
         private Dictionary<string, CustomProfile> Profiles;
-        public static List<Button> ProfileButtons = new List<Button>();
+        public List<Button> ProfileButtons = new List<Button>();
         private Button CurrentButton;
+
+        private static CustomPage _CustomPage;
+        public static CustomPage customPage => _CustomPage;
 
         public CustomPage()
         {
             InitializeComponent();
             UpdateText();
             Loaded += CustomPage_Loaded;
+            _CustomPage = this;
 
             if (File.Exists(FileLocations.ProfilesFileLocalLocation))
             {
