@@ -283,7 +283,8 @@ namespace MultiRPC.GUI.Pages
                 }
             }
 
-            if (Profiles[CurrentButton.Content.ToString()].ClientID == (ID != 0 ? ID.ToString() : "") && MainPage.mainPage.ContentFrame.Content is CustomPage)
+            if (Profiles[CurrentButton.Content.ToString()].ClientID == (ID != 0 ? ID.ToString() : "") && 
+                MainPage.mainPage.ContentFrame.Content is CustomPage && MainPage.mainPage.butStart.Content != App.Text.Shutdown)
                 MainPage.mainPage.butStart.IsEnabled = isEnabled;
         }
 

@@ -277,7 +277,7 @@ namespace MultiRPC.GUI.Pages
                 App.Current.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText($"Assets/Icons.xaml")));
                 App.Current.Resources.MergedDictionaries.Remove(App.Current.Resources.MergedDictionaries[0]);
                 var frameRPCPreviewBG = MainPage.mainPage.frameRPCPreview.Content != null ? ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).gridBackground.Background : ((SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]);
-                if (((SolidColorBrush)frameRPCPreviewBG).Color != ((SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]).Color && ((SolidColorBrush)frameRPCPreviewBG).Color != ((SolidColorBrush)Application.Current.Resources["Red"]).Color)
+                if (((SolidColorBrush)frameRPCPreviewBG).Color != ((SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]).Color && ((SolidColorBrush)frameRPCPreviewBG).Color != ((SolidColorBrush)Application.Current.Resources["Red"]).Color && ((SolidColorBrush)frameRPCPreviewBG).Color != ((SolidColorBrush)Application.Current.Resources["Purple"]).Color)
                 {
                     ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateBackground(
                         (SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]);
