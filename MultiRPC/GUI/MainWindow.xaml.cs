@@ -156,7 +156,7 @@ namespace MultiRPC.GUI
             {
                 bool runCode = true;
                 if (RPC.RPCClient != null)
-                    if (!RPC.RPCClient.Disposed || RPC.RPCClient.IsInitialized)
+                    if (!RPC.RPCClient.Disposed && RPC.RPCClient.IsInitialized)
                         runCode = false;
 
                 var content = ((Frame)sender).Content;
