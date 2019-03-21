@@ -29,6 +29,7 @@ namespace MultiRPC.Functions
                 { 
                     App.Current.MainWindow.Dispatcher.Invoke(async () =>
                     {
+                        App.Current.MainWindow.WindowState = WindowState.Normal;
                         App.Current.MainWindow.Activate();
                         await Task.Delay(1000);
                         try
