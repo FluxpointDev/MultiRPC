@@ -139,5 +139,6 @@
   "Testing": "Testing",
   "DebugMode": "Debug Mode",
   "BeepBoop": "Beep boop",
-  "Update": "Update"
+  "Update": "Update",
+  "EmptyProfileName": "Profile name can't be empty"
 }

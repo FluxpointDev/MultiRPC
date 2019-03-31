@@ -120,7 +120,7 @@
                 <Rectangle Opacity="0.55" Fill="{DynamicResource AccentColour1SCBrush}"/>
                 <StackPanel VerticalAlignment="Bottom">
                 <TextBlock Name="tbVersion" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                <ProgressBar Name="pbUpdateProgress" Height="3"/>
+                <ProgressBar Name="pbUpdateProgress" Height="4"/>
                 </StackPanel>
             </Grid>
 

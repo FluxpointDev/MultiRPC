@@ -143,5 +143,6 @@
         public string DebugMode;
         public string BeepBoop;
         public string Update;
+        public string EmptyProfileName;
     }
 }

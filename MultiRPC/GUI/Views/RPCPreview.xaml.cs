@@ -14,6 +14,8 @@ namespace MultiRPC.GUI.Views
     /// </summary>
     public partial class RPCPreview : UserControl
     {
+        public ViewType CurrentViewType;
+
         public enum ViewType
         {
             Default, Default2, Loading, Error
@@ -40,6 +42,12 @@ namespace MultiRPC.GUI.Views
 
         public async Task UpdateTime(TimeSpan ts)
         {
+            if (CurrentViewType == ViewType.Error)
+            {
+                tblTime.Text = "";
+                return;
+            }
+
             if (ts.Hours == 0)
                 tblTime.Text = $"{ts.Minutes.ToString().PadLeft(2, '0')}:{ts.Seconds.ToString().PadLeft(2, '0')}";
             else
@@ -48,6 +56,7 @@ namespace MultiRPC.GUI.Views
 
         public async Task UpdateUIViewType(ViewType view, string error = "", SolidColorBrush background = null, SolidColorBrush forground = null)
         {
+            CurrentViewType = view;
             if (background == null)
                 background = (SolidColorBrush)Application.Current.Resources["AccentColour2SCBrush"];
             UpdateBackground(background);

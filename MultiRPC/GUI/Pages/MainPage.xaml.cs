@@ -213,7 +213,7 @@ namespace MultiRPC.GUI.Pages
             }
             else
             {
-                MessageBox.Show(App.Text.NeedAfkReason, "MuiltiRPC");
+                await CustomMessageBox.Show(App.Text.NeedAfkReason);
             }
         }
 

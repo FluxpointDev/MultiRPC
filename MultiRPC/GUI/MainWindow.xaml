@@ -10,7 +10,7 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Activated="MainWindow_OnActivated"
-        Deactivated="MainWindow_OnDeactivated"
+        Deactivated="MainWindow_OnActivated"
         SizeChanged="MainWindow_OnSizeChanged"
         Background="Transparent"
         Closing="MainWindow_OnClosing"
@@ -38,7 +38,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Border BorderThickness="1" BorderBrush="{DynamicResource AccentColour5SCBrush}" Name="WindowsContent" Background="{DynamicResource AccentColour1SCBrush}">
+    <Border BorderThickness="0" BorderBrush="{DynamicResource AccentColour5SCBrush}" Name="WindowsContent" Background="{DynamicResource AccentColour1SCBrush}">
         <Grid>
             <Grid.RowDefinitions>
             <RowDefinition Height="30"/>

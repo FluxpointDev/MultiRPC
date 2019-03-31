@@ -32,8 +32,6 @@ namespace MultiRPC
         public const string AppDev = "Builder#0001";
         public const string ServerInviteCode = "susQ6XA";
 
-        //[TODO]: Make Debug Page
-        //[TODO]: Maybe tap into Windows 10 api's 🤔
         public App()
         {
             if (Process.GetProcessesByName("MultiRPC").Length > 1)

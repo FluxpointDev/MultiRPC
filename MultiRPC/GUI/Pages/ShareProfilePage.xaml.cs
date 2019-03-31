@@ -32,12 +32,12 @@ namespace MultiRPC.GUI.Pages
             MainWindow.CloseWindow(WindowID, Get);
         }
 
-        private void ButExport_OnClick(object sender, RoutedEventArgs e)
+        private async void ButExport_OnClick(object sender, RoutedEventArgs e)
         {
             string Get = Newtonsoft.Json.JsonConvert.SerializeObject(Profile);
             Clipboard.SetText(Get = Utils.Base64Encode(Get));
             tbShare.Text = Get;
-            MessageBox.Show(App.Text.ProfileCopyMessage);
+            await CustomMessageBox.Show(App.Text.ProfileCopyMessage);
         }
     }
 }

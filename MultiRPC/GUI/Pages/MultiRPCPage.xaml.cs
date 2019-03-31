@@ -6,7 +6,6 @@ using MultiRPC.GUI.Views;
 using System.Windows.Media;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI.Pages
@@ -17,12 +16,15 @@ namespace MultiRPC.GUI.Pages
     public partial class MultiRPCPage : Page
     {
         private RPCPreview Preview;
+        private static MultiRPCPage _page;
+        public static MultiRPCPage multiRpcPage => _page;
 
         public MultiRPCPage()
         {
             InitializeComponent();
             UpdateText();
             Loaded += MuiltiRPCPage_Loaded;
+            _page = this;
 
             Preview = new RPCPreview(RPCPreview.ViewType.Default, background: (SolidColorBrush)App.Current.Resources["Purple"], forground: Brushes.White);
             Preview.tblText1.Text = "";
@@ -43,13 +45,6 @@ namespace MultiRPC.GUI.Pages
 
         private async void MuiltiRPCPage_Loaded(object sender, RoutedEventArgs e)
         {
-            RPC.IDToUse = RPC.MuiltiRPCID;
-            RPC.UpdateType(RPC.RPCType.MultiRPC);
-            RPC.SetPresence(tbText1.Text, tbText2.Text, cbLargeKey.Text.ToLower(), tbLargeText.Text, cbSmallKey.Text.ToLower(), tbSmallText.Text, cbElapasedTime.IsChecked.Value);
-            UpdatePreviewImage(false);
-            UpdatePreviewImage(true);
-            CanRunRPC();
-            UpdateText();
             Data.MultiRPCImages = await Data.MakeImagesDictionary();
             cbSmallKey.ItemsSource = Data.MultiRPCImages.Keys;
             cbLargeKey.ItemsSource = Data.MultiRPCImages.Keys;
@@ -57,6 +52,14 @@ namespace MultiRPC.GUI.Pages
             cbLargeKey.SelectedIndex = App.Config.MultiRPC.LargeKey;
             cbSmallKey.Items.Refresh();
             cbLargeKey.Items.Refresh();
+
+            RPC.IDToUse = RPC.MuiltiRPCID;
+            RPC.UpdateType(RPC.RPCType.MultiRPC);
+            RPC.SetPresence(tbText1.Text, tbText2.Text, cbLargeKey.Text.ToLower(), tbLargeText.Text, cbSmallKey.Text.ToLower(), tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            UpdatePreviewImage(false);
+            UpdatePreviewImage(true);
+            CanRunRPC();
+            UpdateText();
         }
 
         public async Task UpdatePreviewImage(bool updateSmall, string key = "")

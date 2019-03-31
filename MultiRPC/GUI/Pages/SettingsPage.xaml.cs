@@ -133,9 +133,9 @@ namespace MultiRPC.GUI.Pages
             Process.Start(((Image) sender).Tag.ToString());
         }
 
-        private void Server_OnMouseDown(object sender, MouseButtonEventArgs e)
+        private async void Server_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show(App.Text.JoinServerMessage,
+            await CustomMessageBox.Show(App.Text.JoinServerMessage,
                 App.Text.DiscordServer,
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
@@ -205,9 +205,9 @@ namespace MultiRPC.GUI.Pages
             }
         }
 
-        private void ButPaypal_OnClick(object sender, RoutedEventArgs e)
+        private async void ButPaypal_OnClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(App.Text.PaypalDonateMessage);
+            await CustomMessageBox.Show(App.Text.PaypalDonateMessage);
         }
 
         private void ButPatreon_OnClick(object sender, RoutedEventArgs e)
@@ -263,10 +263,10 @@ namespace MultiRPC.GUI.Pages
                     App.Config.ActiveTheme = Theme.ActiveTheme.Dark;
                     reName = "Dark";
                 }
-                else // if (active == App.Text.Dark)
-                {
-                    App.Config.ActiveTheme = Theme.ActiveTheme.Custom;
-                }
+                //else if (active == App.Text.Dark)
+                //{
+                //    App.Config.ActiveTheme = Theme.ActiveTheme.Custom;
+                //}
                 App.Config.Save();
 
                 while (MainPage.mainPage.frameRPCPreview.Content == null)
@@ -276,17 +276,30 @@ namespace MultiRPC.GUI.Pages
                 App.Current.Resources.MergedDictionaries.Remove(App.Current.Resources.MergedDictionaries[1]);
                 App.Current.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText($"Assets/Icons.xaml")));
                 App.Current.Resources.MergedDictionaries.Remove(App.Current.Resources.MergedDictionaries[0]);
+
                 var frameRPCPreviewBG = MainPage.mainPage.frameRPCPreview.Content != null ? ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).gridBackground.Background : ((SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]);
                 if (((SolidColorBrush)frameRPCPreviewBG).Color != ((SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]).Color && ((SolidColorBrush)frameRPCPreviewBG).Color != ((SolidColorBrush)Application.Current.Resources["Red"]).Color && ((SolidColorBrush)frameRPCPreviewBG).Color != ((SolidColorBrush)Application.Current.Resources["Purple"]).Color)
                 {
-                    ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateBackground(
+                    await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateBackground(
                         (SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]);
-                    ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateForground(
+                    await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateForground(
                         (SolidColorBrush)App.Current.Resources["TextColourSCBrush"]);
-                }
-                
+                }                
                 MainPage.mainPage.RerenderButtons();
+
                 ((MainWindow)App.Current.MainWindow).TaskbarIcon.TrayToolTip = new ToolTip(App.Current.MainWindow.WindowState == WindowState.Minimized ? App.Text.ShowMultiRPC : App.Text.HideMultiRPC);
+                var preview = ((RPCPreview) MainPage.mainPage.frameRPCPreview.Content);
+                if (preview.ellSmallImage.ToolTip != null)
+                    preview.ellSmallImage.ToolTip = new ToolTip(((ToolTip)preview.ellSmallImage.ToolTip).Content.ToString());
+                if (preview.recLargeImage.ToolTip != null)
+                    preview.recLargeImage.ToolTip = new ToolTip(((ToolTip)preview.recLargeImage.ToolTip).Content.ToString());
+
+
+                    preview = ((RPCPreview)MultiRPCPage.multiRpcPage.frameRPCPreview.Content);
+                    if (preview.ellSmallImage.ToolTip != null)
+                        preview.ellSmallImage.ToolTip = new ToolTip(((ToolTip)preview.ellSmallImage.ToolTip).Content.ToString());
+                    if (preview.recLargeImage.ToolTip != null)
+                        preview.recLargeImage.ToolTip = new ToolTip(((ToolTip)preview.recLargeImage.ToolTip).Content.ToString());
             }
         }
 

@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Navigation;
+using System.Windows.Shell;
 using Hardcodet.Wpf.TaskbarNotification;
 using MultiRPC.GUI.Pages;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
@@ -24,8 +25,9 @@ namespace MultiRPC.GUI
         public object ToReturn;
         public long WindowID; //This is so we can know that the window we look for is the window we are looking for
 
-        public const int WM_NCLBUTTONDOWN = 0xA1;
-        public const int HT_CAPTION = 0x2;
+        private const int WM_NCLBUTTONDOWN = 0xA1;
+        private const int HT_CAPTION = 0x2;
+        private DateTime TimeWindowWasDeactived;
 
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
@@ -36,26 +38,58 @@ namespace MultiRPC.GUI
         public MainWindow()
         {
             InitializeComponent();
+            if(this != App.Current.MainWindow)
+                return;
+
             var mainPage = new MainPage();
-            MinWidth = mainPage.MinWidth;
-            MinHeight = mainPage.MinHeight + 30;
-            Width = MinWidth;
-            Height = MinHeight;
+            StartLogic(mainPage);
             mainPage.ContentFrame.Navigated += MainPageContentFrame_OnNavigated;
             ContentRendered += MainWindow_ContentRendered;
-            ContentFrame.Content = mainPage;
+
+            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
+            {
+                TaskbarItemInfo = new TaskbarItemInfo();
+                TaskbarItemInfo.ThumbnailClipMargin = new Thickness(471, 41, 9, 420);
+                //I would like to maybe mess with this more
+                //TaskbarItemInfo.ThumbButtonInfos.Add(new ThumbButtonInfo
+                //{
+                //    ImageSource = (DrawingImage)App.Current.Resources["DeleteIconDrawingImage"]
+                //});
+            }
+
             TaskbarIcon = new TaskbarIcon();
             TaskbarIcon.IconSource = Icon;
             TaskbarIcon.TrayLeftMouseDown += IconOnTrayLeftMouseDown;
             TaskbarIcon.TrayToolTip = new ToolTip(App.Text.HideMultiRPC);
         }
 
+        public MainWindow(Page page, bool minButton = true)
+        {
+            InitializeComponent();
+            StartLogic(page);
+            ShowInTaskbar = false;
+            Title = "MultiRPC - " + page.Title;
+            tbTitle.Text = Title;
+
+            if (!minButton)
+                butMin.Visibility = Visibility.Collapsed;
+        }
+
+        private void StartLogic(Page page)
+        {
+            MinWidth = page.MinWidth;
+            MinHeight = page.MinHeight + 30;
+            Width = MinWidth;
+            Height = MinHeight;
+            ContentFrame.Content = page;
+        }
+
         private void IconOnTrayLeftMouseDown(object sender, RoutedEventArgs e)
         {
-            WindowState = WindowState == WindowState.Normal ? WindowState.Minimized : WindowState.Normal;
-            if(App.Config.HideTaskbarIconWhenMin)
-                ShowInTaskbar = WindowState == WindowState.Minimized ? false : true;
-            TaskbarIcon.TrayToolTip = new ToolTip(WindowState == WindowState.Minimized ? App.Text.ShowMultiRPC : App.Text.HideMultiRPC);
+            var timeSpan = DateTime.Now.Subtract(TimeWindowWasDeactived);
+            if (timeSpan.TotalSeconds < 1 || WindowState == WindowState.Minimized)
+                WindowState = WindowState == WindowState.Normal ? WindowState.Minimized : WindowState.Normal;
+
             if (WindowState == WindowState.Normal)
                 Activate();
         }
@@ -64,11 +98,11 @@ namespace MultiRPC.GUI
         {
             foreach (var window in App.Current.Windows)
             {
-                if (window is MainWindow && ((MainWindow)window).WindowID == WindowID)
+                if (window is MainWindow mainWindow && ((MainWindow)window).WindowID == WindowID)
                 {
-                    var win = ((MainWindow)window);
-                    win.ToReturn = Return;
-                    win.Close();
+                    mainWindow.ToReturn = Return;
+                    mainWindow.Close();
+                    break;
                 }
             }
         }
@@ -95,22 +129,6 @@ namespace MultiRPC.GUI
             }
         }
 
-        public MainWindow(Page page, bool MinButton = true)
-        {
-            InitializeComponent();
-            MinWidth = page.MinWidth;
-            MinHeight = page.MinHeight + 30;
-            Width = MinWidth;
-            Height = MinHeight;
-            ShowInTaskbar = false;
-            Title = "MultiRPC - " + page.Title;
-            tbTitle.Text = Title;
-            ContentFrame.Content = page;
-
-            if (!MinButton)
-                butMin.Visibility = Visibility.Collapsed;
-        }
-
         private void RecHandle_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -134,10 +152,7 @@ namespace MultiRPC.GUI
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (WindowState == WindowState.Maximized)
-                WindowsContent.Margin = new Thickness(7);
-            else
-                WindowsContent.Margin = new Thickness(0);
+            WindowsContent.Margin = WindowState == WindowState.Maximized ? new Thickness(7) : new Thickness(0);
         }
 
         private void Close_OnMouseEnter(object sender, MouseEventArgs e)
@@ -182,18 +197,17 @@ namespace MultiRPC.GUI
 
         private void MainWindow_OnActivated(object sender, EventArgs e)
         {
-            WindowsContent.BorderThickness = new Thickness(1);
-        }
-
-        private void MainWindow_OnDeactivated(object sender, EventArgs e)
-        {
-            WindowsContent.BorderThickness = new Thickness(0);
+            WindowsContent.BorderThickness = (int)WindowsContent.BorderThickness.Top == 0 ? new Thickness(1) : new Thickness(0);
+            if (TaskbarIcon != null)
+                TaskbarIcon.TrayToolTip = new ToolTip(!IsActive ? App.Text.ShowMultiRPC : App.Text.HideMultiRPC);
+            if (!IsActive)
+                TimeWindowWasDeactived = DateTime.Now;
         }
 
         private void MainWindow_OnStateChanged(object sender, EventArgs e)
         {
-            if(Icon != null && App.Config.HideTaskbarIconWhenMin)
-                ShowInTaskbar = WindowState == WindowState.Minimized ? false : true;
+            if (Icon != null && App.Config.HideTaskbarIconWhenMin)
+                ShowInTaskbar = WindowState != WindowState.Minimized;
         }
 
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)

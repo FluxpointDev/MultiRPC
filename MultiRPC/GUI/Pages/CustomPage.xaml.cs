@@ -42,20 +42,21 @@ namespace MultiRPC.GUI.Pages
             if (File.Exists(FileLocations.ProfilesFileLocalLocation))
             {
                 using (StreamReader reader = File.OpenText(FileLocations.ProfilesFileLocalLocation))
-                {
                     Profiles = (Dictionary<string, CustomProfile>)App.JsonSerializer.Deserialize(reader, typeof(Dictionary<string, CustomProfile>));
-                }
             }
             else
             {
-                Profiles = new Dictionary<string, CustomProfile>
+                Task.Run(() =>
                 {
-                    { App.Text.Custom, new CustomProfile { Name = App.Text.Custom } }
-                };
-                using (var writer = new StreamWriter(FileLocations.ProfilesFileLocalLocation))
-                {
-                    App.JsonSerializer.Serialize(writer, Profiles);
-                }
+                    Profiles = new Dictionary<string, CustomProfile>
+                    {
+                        { App.Text.Custom, new CustomProfile { Name = App.Text.Custom } }
+                    };
+                    using (var writer = new StreamWriter(FileLocations.ProfilesFileLocalLocation))
+                    {
+                        App.JsonSerializer.Serialize(writer, Profiles);
+                    }
+                });
             }
 
             foreach (var profile in Profiles)
@@ -63,6 +64,7 @@ namespace MultiRPC.GUI.Pages
                 MakeMenuButton(profile.Key);
             }
             tbProfiles.ItemsSource = ProfileButtons;
+
             imgSmallText.Tag = new Image
             {
                 Source = new BitmapImage(new Uri("../../Assets/SmallTextHelp.jpg", UriKind.Relative))
@@ -114,16 +116,19 @@ namespace MultiRPC.GUI.Pages
             ShowHelpImages();
             RPC.UpdateType(RPC.RPCType.Custom);
             RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+
             while (tbProfiles.Items.Count < 0)
             {
                 tbProfiles.Items.Refresh();
                 await Task.Delay(520);
             }
+
             if(CurrentButton != null)
                 CurrentButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             else
-                ProfileButtons[0].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                ProfileButtons[App.Config.SelectedCustom].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             tbProfiles.Visibility = tbProfiles.Items.Count == 1 ? Visibility.Collapsed : Visibility.Visible;
+
             UpdateText();
             CanRunRPC();
         }
@@ -337,7 +342,7 @@ namespace MultiRPC.GUI.Pages
             UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
         }
 
-        private void CustomProfileButton_Click(object sender, RoutedEventArgs e)
+        private async void CustomProfileButton_Click(object sender, RoutedEventArgs e)
         {
             imgProfileDelete.Visibility = Profiles[((Button)sender).Content.ToString()] == Profiles.Values.First()
                 ? Visibility.Collapsed
@@ -357,6 +362,9 @@ namespace MultiRPC.GUI.Pages
             tbSmallKey.Text = profile.SmallKey;
             tbClientID.Text = profile.ClientID;
             cbElapasedTime.IsChecked = profile.ShowTime;
+
+            App.Config.SelectedCustom = ProfileButtons.IndexOf((Button) sender);
+            await App.Config.Save();
         }
 
         private void Image_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -451,7 +459,7 @@ namespace MultiRPC.GUI.Pages
                 }
                 catch (Exception exception)
                 {
-                    MessageBox.Show(App.Text.SharingError);
+                    await CustomMessageBox.Show(App.Text.SharingError);
                     App.Logging.Application($"{App.Text.SharingError}\r\n{App.Text.ExceptionMessage}{exception.Message}");
                 }
 

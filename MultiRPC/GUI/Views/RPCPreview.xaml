@@ -8,7 +8,6 @@
              d:DesignHeight="85" d:DesignWidth="255">
     <UserControl.Resources>
         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-            <Setter Property="FontSize" Value="12"/>
             <Setter Property="Margin" Value="0,0,0,0"/>
         </Style>
     </UserControl.Resources>

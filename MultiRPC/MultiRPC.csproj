@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>MultiRPC</RootNamespace>
     <AssemblyName>MultiRPC</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -129,6 +129,10 @@
     <Compile Include="Functions\Uri.Extra.cs" />
     <Compile Include="Functions\Utils.cs" />
     <Compile Include="GUI\Controls\ToolTip.cs" />
+    <Compile Include="GUI\MessageBox\CustomMessageBox.cs" />
+    <Compile Include="GUI\MessageBox\MessageBoxPage.xaml.cs">
+      <DependentUpon>MessageBoxPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Pages\ChangelogPage.xaml.cs">
       <DependentUpon>ChangelogPage.xaml</DependentUpon>
     </Compile>
@@ -227,12 +231,12 @@
   <ItemGroup>
     <PublishFile Include="MultiRPC.pdb">
       <Visible>False</Visible>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
@@ -253,6 +257,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\MessageBox\MessageBoxPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Pages\ChangelogPage.xaml">

@@ -4,6 +4,7 @@ using DiscordRPC;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using MultiRPC.GUI;
 using MultiRPC.GUI.Pages;
 using MultiRPC.GUI.Views;
 using MultiRPC.JsonClasses;
@@ -42,7 +43,7 @@ namespace MultiRPC
         {
             if (!string.IsNullOrWhiteSpace(text) && !App.Config.InviteWarn && text.ToLower().Contains("discord.gg"))
             {
-                var result = MessageBox.Show(App.Text.AdvertisingWarning, App.Text.Warning, MessageBoxButton.OKCancel,
+                var result = await CustomMessageBox.Show(App.Text.AdvertisingWarning, App.Text.Warning, MessageBoxButton.OKCancel,
                     MessageBoxImage.Warning);
                 if (result == MessageBoxResult.OK)
                 {

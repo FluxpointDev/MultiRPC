@@ -29,13 +29,17 @@ namespace MultiRPC.GUI.Pages
         private async void ButDone_OnClick(object sender, RoutedEventArgs e)
         {
             if (await UpdateProfileName(tbNewProfileName.Text))
-            {
                 MainWindow.CloseWindow(WindowID, tbNewProfileName.Text);
-            }
         }
 
         private async Task<bool> UpdateProfileName(string newProfileName)
         {
+            if (string.IsNullOrWhiteSpace(newProfileName))
+            {
+                await CustomMessageBox.Show(App.Text.EmptyProfileName + "!!!");
+                return false;
+            }
+
             if (!Profiles.ContainsKey(newProfileName))
             {
                 var profile = Profiles[OldName];
@@ -46,11 +50,9 @@ namespace MultiRPC.GUI.Pages
             }
             else
             {
-                MessageBox.Show(App.Text.SameProfileName, "MultiRPC");
+                await CustomMessageBox.Show(App.Text.SameProfileName);
                 return false;
             }
-
-            return false;
         }
     }
 }

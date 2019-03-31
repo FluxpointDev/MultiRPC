@@ -81,7 +81,7 @@ namespace MultiRPC.Functions
                     }
                     else if (ShowNoUpdateMessage)
                     {
-                        MessageBox.Show(App.Text.NoUpdate, "MultiRPC");
+                        await CustomMessageBox.Show(App.Text.NoUpdate);
                     }
                 }
                 catch
