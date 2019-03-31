@@ -140,5 +140,8 @@
   "DebugMode": "Debug Mode",
   "BeepBoop": "Beep boop",
   "Update": "Update",
-  "EmptyProfileName": "Profile name can't be empty"
+  "EmptyProfileName": "Profile name can't be empty",
+  "Ok": "Ok",
+  "Yes": "Yes",
+  "Cancel": "Cancel"
 }

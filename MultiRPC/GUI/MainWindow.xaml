@@ -47,14 +47,14 @@
         <Rectangle Fill="Transparent" Name="RecHandle" MouseDown="RecHandle_OnMouseDown"/>
             <StackPanel Orientation="Horizontal">
             <Image Width="20" Height="20" VerticalAlignment="Center" Margin="5,0,0,0" Source="{DynamicResource MultiRPCLogoDrawingImage}"/>
-            <TextBlock Name="tbTitle" Text="MuiltiRPC" FontSize="11" VerticalAlignment="Center" Margin="3,0,0,0" MouseDown="RecHandle_OnMouseDown"/>
+            <TextBlock Name="tblTitle" Text="MuiltiRPC" FontSize="11" VerticalAlignment="Center" Margin="3,0,0,0" MouseDown="RecHandle_OnMouseDown"/>
         </StackPanel>
 
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
             <Button Name="butMin" Click="Min_OnClick" Width="57" Style="{DynamicResource TitleBarMin}">
                 <Rectangle HorizontalAlignment="Center" VerticalAlignment="Center" Width="10" Height="1" Margin="0,5,0,0" Fill="{DynamicResource TextColourSCBrush}"/>
             </Button>
-            <Button Background="Transparent" Click="Close_OnClick" Width="57" Style="{DynamicResource ButtonRed}" MouseLeave="Close_OnMouseLeave" MouseEnter="Close_OnMouseEnter">
+            <Button Name="butClose" Background="Transparent" Click="Close_OnClick" Width="57" Style="{DynamicResource ButtonRed}" MouseLeave="Close_OnMouseLeave" MouseEnter="Close_OnMouseEnter">
                 <Button.Template>
                     <ControlTemplate TargetType="{x:Type ButtonBase}">
                         <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" UseLayoutRounding="True" d:DesignUseLayoutRounding="True">

@@ -144,5 +144,8 @@
         public string BeepBoop;
         public string Update;
         public string EmptyProfileName;
+        public string Ok;
+        public string Yes;
+        public string Cancel;
     }
 }

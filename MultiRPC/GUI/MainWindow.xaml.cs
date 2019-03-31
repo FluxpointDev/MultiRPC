@@ -69,18 +69,28 @@ namespace MultiRPC.GUI
             StartLogic(page);
             ShowInTaskbar = false;
             Title = "MultiRPC - " + page.Title;
-            tbTitle.Text = Title;
+            tblTitle.Text = Title;
 
             if (!minButton)
                 butMin.Visibility = Visibility.Collapsed;
         }
 
-        private void StartLogic(Page page)
+        internal void StartLogic(Page page)
         {
-            MinWidth = page.MinWidth;
-            MinHeight = page.MinHeight + 30;
-            Width = MinWidth;
-            Height = MinHeight;
+            if (page.MinWidth > Width)
+            {
+                MinWidth = page.MinWidth;
+                Width = MinWidth;
+            }
+
+            if (page.MinHeight + 30 > Height)
+            {
+                MinHeight = page.MinHeight + 30;
+                Height = MinHeight;
+            }
+
+            MaxHeight = page.MaxHeight;
+            MaxWidth = page.MaxWidth;
             ContentFrame.Content = page;
         }
 
