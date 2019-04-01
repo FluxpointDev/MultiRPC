@@ -143,5 +143,7 @@
   "EmptyProfileName": "Profile name can't be empty",
   "Ok": "Ok",
   "Yes": "Yes",
-  "Cancel": "Cancel"
+  "Cancel": "Cancel",
+  "CustomProfiles": "Custom Profiles",
+  "Load": "Load" 
 }

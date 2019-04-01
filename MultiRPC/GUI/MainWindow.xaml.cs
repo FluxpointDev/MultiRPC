@@ -158,8 +158,8 @@ namespace MultiRPC.GUI
                         Arguments = $"-custom \"{CustomPage.customPage.Profiles.ElementAt(i).Key}\"",
                         IconResourcePath = FileLocations.MultiRPCStartLink,
                         Title = CustomPage.customPage.Profiles.ElementAt(i).Key,
-                        Description = $"Load '{CustomPage.customPage.Profiles.ElementAt(i).Key}'",
-                        CustomCategory = "Custom Profiles"
+                        Description = $"{App.Text.Load} '{CustomPage.customPage.Profiles.ElementAt(i).Key}'",
+                        CustomCategory = App.Text.CustomProfiles
                     };
                     jumpList.JumpItems.Add(jumpTask);
 
