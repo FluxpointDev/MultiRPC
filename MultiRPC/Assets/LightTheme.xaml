@@ -10,8 +10,8 @@
     <SolidColorBrush Color="{DynamicResource TextColour}" x:Key="TextColourSCBrush" />
 
     <Color A="255" R="255" G="255" B="255" x:Key="AccentColour1" />
-    <Color A="255" R="244" G="247" B="248" x:Key="AccentColour2" />
-    <Color A="255" R="239" G="239" B="239" x:Key="AccentColour2Hover" />
+    <Color A="255" R="239" G="242" B="243" x:Key="AccentColour2" />
+    <Color A="255" R="234" G="234" B="234" x:Key="AccentColour2Hover" />
     <Color A="255" R="209" G="209" B="209" x:Key="AccentColour3" />
     <Color A="255" R="180" G="180" B="180" x:Key="AccentColour4" />
     <Color A="255" R="112" G="112" B="112" x:Key="AccentColour5" />

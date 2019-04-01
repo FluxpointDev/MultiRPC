@@ -2,12 +2,12 @@
 using System.IO;
 using DiscordRPC;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
 using MultiRPC.GUI;
+using System.Windows;
 using MultiRPC.GUI.Pages;
 using MultiRPC.GUI.Views;
 using MultiRPC.JsonClasses;
+using System.Threading.Tasks;
 
 namespace MultiRPC
 {
@@ -19,20 +19,21 @@ namespace MultiRPC
             Custom
         }
 
-        public static DiscordRpcClient RPCClient;
-        private static System.Timers.Timer ClientTimer;
-        private static DateTime StartTime;
         public static RPCType Type;
-        private static System.Timers.Timer Uptime;
-        public static RichPresence Presence = new RichPresence();
-        public const ulong MuiltiRPCID = 450894077165043722;
         public static ulong IDToUse;
+        private static DateTime StartTime;
+        public static DiscordRpcClient RPCClient;
+        private static System.Timers.Timer Uptime;
+        private static System.Timers.Timer ClientTimer;
         private static string PageUserWasOnWhenStarted;
+        public const ulong MuiltiRPCID = 450894077165043722;
+        public static RichPresence Presence = new RichPresence();
+
 
         /// <summary>
         /// Has rpc failed
         /// </summary>
-        public static bool Failed = false;
+        private static bool Failed = false;
 
         /// <summary>
         /// Is afk rpc status on
@@ -45,10 +46,11 @@ namespace MultiRPC
             {
                 var result = await CustomMessageBox.Show(App.Text.AdvertisingWarning, App.Text.Warning, MessageBoxButton.OKCancel,
                     MessageBoxImage.Warning);
+
                 if (result == MessageBoxResult.OK)
                 {
                     App.Config.InviteWarn = true;
-                    App.Config.Save();
+                    await App.Config.Save();
                     App.Logging.Application(App.Text.AdvertisingWarningDisabled);
                     return true;
                 }
@@ -67,71 +69,79 @@ namespace MultiRPC
                 Type = type;
         }
 
-        public static async void Start(string steamID = "")
+        public static async Task Start(string steamID = "")
         {
-            if(!await CheckPresence(Presence.Details) || !await CheckPresence(Presence.State))
+            //Check that the presence isn't ban worthy
+            if (!await CheckPresence(Presence.Details) || !await CheckPresence(Presence.State))
                 return;
-            Failed = true;
-            App.Logging.Application(App.Text.StartingRpc);
-            int Count = 0;
-            string DClient = "Discord";
-            bool Found = false;
 
+            App.Logging.Application(App.Text.StartingRpc);
+
+            Failed = true;
+            int count = 0;
+            string DClient = "Discord";
+            bool found = false;
+
+            //Get the client to connect to
             if (App.Config.ClientToUse != 0)
             {
                 foreach (string i in Directory.GetFiles(@"\\.\pipe\"))
                 {
-                    string[] Split = i.Split('\\');
-                    string Pipe = Split.Last();
+                    string pipe = i.Split('\\').Last();
 
-                    switch (Pipe)
+                    switch (pipe)
                     {
                         case "discord-sock":
                             if (App.Config.ClientToUse == 1)
                             {
                                 DClient = "Discord";
-                                Found = true;
+                                found = true;
                             }
                             break;
                         case "discordptb-sock":
                             if (App.Config.ClientToUse == 2)
                             {
                                 DClient = "Discord PTB";
-                                Found = true;
+                                found = true;
                             }
                             break;
                         case "discordcanary-sock":
                             if (App.Config.ClientToUse == 3)
                             {
                                 DClient = "Discord Canary";
-                                Found = true;
+                                found = true;
                             }
                             break;
                     }
-                    if (Found)
+                    if (found)
                         break;
-                    else if (Pipe.StartsWith("discord"))
-                        Count++;
+                    else if (pipe.StartsWith("discord"))
+                        count++;
                 }
             }
 
-            App.Logging.Application($"Discord {App.Text.Client}: {DClient} ({Count})");           
-            RPCClient = new DiscordRpcClient(IDToUse.ToString(), steamID, false, Count, App.Logging);
+            //Log the client we are going to connect to
+            App.Logging.Application($"Discord {App.Text.Client}: {DClient} ({count})");           
+            RPCClient = new DiscordRpcClient(IDToUse.ToString(), steamID, false, count, App.Logging);
 
+            //Set up events
             RPCClient.OnConnectionEstablished += Client_OnConnectionEstablished;
             RPCClient.OnConnectionFailed += Client_OnConnectionFailed;
             RPCClient.OnPresenceUpdate += Client_OnPresenceUpdate;
             RPCClient.OnReady += Client_OnReady;
 
-            MainPage.mainPage.frameRPCPreview.Dispatcher.Invoke( async () =>
+            if (!AFK)
+                MainPage.mainPage.butUpdate.IsEnabled = true;
+
+            //Show that we are going to load things™
+            await MainPage.mainPage.frameRPCPreview.Dispatcher.InvokeAsync(async () =>
             {
                 await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Loading);
+                MainPage.mainPage.rCon.Text = App.Text.Loading;
+                MainPage.mainPage.butStart.Style = (Style)MainPage.mainPage.Resources["ButtonRed"];
+                PageUserWasOnWhenStarted = MainPage.mainPage.butStart.Content.ToString();
+                MainPage.mainPage.butStart.Content = App.Text.Shutdown;
             });
-            MainPage.mainPage.butStart.Style = (Style)MainPage.mainPage.Resources["ButtonRed"];
-            if(!AFK)
-                MainPage.mainPage.butUpdate.IsEnabled = true;
-            PageUserWasOnWhenStarted = MainPage.mainPage.butStart.Content.ToString();
-            MainPage.mainPage.butStart.Content = App.Text.Shutdown;
 
             //Create a timer that will regularly call invoke
             ClientTimer = new System.Timers.Timer(150);
@@ -140,15 +150,18 @@ namespace MultiRPC
 
             //Connect
             RPCClient.Initialize();
-            //Send a presence. Do this as many times as you want
+
+            //Set up the time that will show (if user wants it)
             StartTime = DateTime.UtcNow;
             if (Presence.Timestamps != null)
                 Presence.Timestamps.Start = StartTime;
-
-            MainPage.mainPage.Dispatcher.Invoke(() => MainPage.mainPage.rCon.Text = App.Text.Loading);
+            //Send the presence
             RPCClient.SetPresence(Presence);
-            foreach (var button in CustomPage.customPage.ProfileButtons)
+
+            //Disable buttons
+            foreach (var button in CustomPage.ProfileButtons)
                 button.IsEnabled = false;
+
             CustomPage.customPage.imgProfileAdd.IsEnabled = false;
             CustomPage.customPage.imgProfileDelete.IsEnabled = false;
         }
@@ -181,7 +194,7 @@ namespace MultiRPC
             Presence.Timestamps = profile.ShowTime ? new Timestamps() : null;
         }
 
-        public static void Update()
+        public static async void Update()
         {
             if (RPCClient != null && RPCClient.IsInitialized && !RPCClient.Disposed)
             {
@@ -191,33 +204,37 @@ namespace MultiRPC
             }
             else
             {
-                Start();
+                await Start();
             }
         }
 
-        private async static void Client_OnReady(object sender, DiscordRPC.Message.ReadyMessage args)
+        private static async void Client_OnReady(object sender, DiscordRPC.Message.ReadyMessage args)
         {
-            string User = $"{args.User.Username}#{args.User.Discriminator}";
-            MainPage.mainPage.Dispatcher.Invoke(() => MainPage.mainPage.rUsername.Text = User);
-            if (App.Config.LastUser != User)
+            string user = $"{args.User.Username}#{args.User.Discriminator}";
+            if (App.Config.LastUser != user)
             {
-                App.Config.LastUser = User;
+                App.Config.LastUser = user;
                 await App.Config.Save();
             }
 
-            App.Logging.LogEvent(App.Text.Client, $"{App.Text.Hi} {User} 👋");
-            
+            App.Logging.LogEvent(App.Text.Client, $"{App.Text.Hi} {user} 👋");
+
+            //Make update timer to update time in GUI
             Uptime = new System.Timers.Timer(new TimeSpan(0, 0, 1).TotalMilliseconds);
             if (Presence.Timestamps != null)
                 Uptime.Start();
             Uptime.Elapsed += Uptime_Elapsed;
-            MainPage.mainPage.Dispatcher.Invoke(() => MainPage.mainPage.rCon.Text = App.Text.Connected);
+
+            MainPage.mainPage.Dispatcher.Invoke(() =>
+            {
+                MainPage.mainPage.rUsername.Text = user;
+                MainPage.mainPage.rCon.Text = App.Text.Connected;
+            });
         }
 
         private static void Uptime_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            TimeSpan ts = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - StartTime.Ticks);
-            ts.Add(new TimeSpan(0, 0, 1));
+            TimeSpan ts = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - StartTime.Ticks + TimeSpan.TicksPerSecond);
             MainPage.mainPage.frameRPCPreview.Dispatcher.Invoke( async () =>
             {
                 await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateTime(ts);
@@ -258,6 +275,7 @@ namespace MultiRPC
         public static void Shutdown()
         {
             App.Logging.LogEvent(App.Text.Client,App.Text.ShuttingDown);
+
             ClientTimer?.Dispose();
             Uptime?.Dispose();
             RPCClient?.Dispose();
@@ -276,7 +294,8 @@ namespace MultiRPC
 
             MainPage.mainPage.butUpdate.IsEnabled = false;
             MainPage.mainPage.rCon.Text = App.Text.Disconnected;
-            foreach (var button in CustomPage.customPage.ProfileButtons)
+
+            foreach (var button in CustomPage.ProfileButtons)
                 button.IsEnabled = true;
             CustomPage.customPage.imgProfileAdd.IsEnabled = true;
             CustomPage.customPage.imgProfileDelete.IsEnabled = true;

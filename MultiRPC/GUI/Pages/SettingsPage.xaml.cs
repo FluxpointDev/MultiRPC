@@ -294,12 +294,12 @@ namespace MultiRPC.GUI.Pages
                 if (preview.recLargeImage.ToolTip != null)
                     preview.recLargeImage.ToolTip = new ToolTip(((ToolTip)preview.recLargeImage.ToolTip).Content.ToString());
 
-
-                    preview = ((RPCPreview)MultiRPCPage.multiRpcPage.frameRPCPreview.Content);
-                    if (preview.ellSmallImage.ToolTip != null)
-                        preview.ellSmallImage.ToolTip = new ToolTip(((ToolTip)preview.ellSmallImage.ToolTip).Content.ToString());
-                    if (preview.recLargeImage.ToolTip != null)
-                        preview.recLargeImage.ToolTip = new ToolTip(((ToolTip)preview.recLargeImage.ToolTip).Content.ToString());
+                preview = ((RPCPreview)MultiRPCPage.multiRpcPage.frameRPCPreview.Content);
+                if (preview.ellSmallImage.ToolTip != null)
+                    preview.ellSmallImage.ToolTip = new ToolTip(((ToolTip)preview.ellSmallImage.ToolTip).Content.ToString());
+                if (preview.recLargeImage.ToolTip != null)
+                    preview.recLargeImage.ToolTip = new ToolTip(((ToolTip)preview.recLargeImage.ToolTip).Content.ToString());
+                MainWindow.MakeJumpList();
             }
         }
 

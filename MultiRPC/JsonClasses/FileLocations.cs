@@ -28,5 +28,7 @@ namespace MultiRPC.JsonClasses
 
         public static string OpenFileName = "Open.rpc";
         public static string OpenFileLocalLocation = Path.Combine(ConfigFolder, OpenFileName);
+        public static string MultiRPCStartLink = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), "Programs", "Discord Universe", "MultiRPC.appref-ms");
+
     }
 }

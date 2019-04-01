@@ -48,7 +48,7 @@
                 <Image Name="imgCommunityAdmins" Source="{DynamicResource ShieldIconDrawingImage}"/>
                 <TextBlock Name="tblCommunityAdminsTitle" Style="{DynamicResource Title}"/>
             </StackPanel>
-            <Rectangle Grid.Row="2" Fill="{DynamicResource AccentColour1SCBrush}"/>
+            <Rectangle RadiusX="15" RadiusY="15" Grid.Row="2" Fill="{DynamicResource AccentColour1SCBrush}"/>
             <ScrollViewer Grid.Row="2">
                 <TextBlock Name="tblCommunityAdmins"/>
             </ScrollViewer>
@@ -63,7 +63,7 @@
                 <Image Name="imgPatreonDonators" Source="{DynamicResource HeartIconDrawingImage}"/>
                 <TextBlock Name="tblPatreonDonatorsTitle" Style="{DynamicResource Title}"/>
             </StackPanel>
-            <Rectangle Grid.Row="2" Fill="{DynamicResource AccentColour1SCBrush}"/>
+            <Rectangle RadiusX="15" RadiusY="15" Grid.Row="2" Fill="{DynamicResource AccentColour1SCBrush}"/>
             <ScrollViewer Grid.Row="2">
                 <TextBlock Name="tblPatreonDonators"/>
             </ScrollViewer>
@@ -78,7 +78,7 @@
                 <Image Name="imgPaypalDonators" Source="{DynamicResource HeartIconDrawingImage}"/>
                 <TextBlock Name="tblPaypalDonatorsTitle" Style="{DynamicResource Title}"/>
             </StackPanel>
-            <Rectangle Grid.Row="2" Fill="{DynamicResource AccentColour1SCBrush}"/>
+            <Rectangle RadiusX="15" RadiusY="15" Grid.Row="2" Fill="{DynamicResource AccentColour1SCBrush}"/>
             <ScrollViewer Grid.Row="2">
                 <TextBlock Name="tblPaypalDonators"/>
             </ScrollViewer>
@@ -93,7 +93,7 @@
                 <Image Source="{DynamicResource HeartIconDrawingImage}"/>
                 <TextBlock Name="tblIconProvidersTitle" Style="{DynamicResource Title}"/>
             </StackPanel>
-            <Rectangle Grid.Row="2" Fill="{DynamicResource AccentColour1SCBrush}"/>
+            <Rectangle RadiusX="15" RadiusY="15" Grid.Row="2" Fill="{DynamicResource AccentColour1SCBrush}"/>
             <ScrollViewer Grid.Row="2">
                 <TextBlock>
                     <Hyperlink RequestNavigate="LinkUri_OnRequestNavigate" NavigateUri="https://www.iconfinder.com/">Iconfinder</Hyperlink><LineBreak/>

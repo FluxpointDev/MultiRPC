@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shell;
 using Hardcodet.Wpf.TaskbarNotification;
 using MultiRPC.GUI.Pages;
+using MultiRPC.JsonClasses;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI
@@ -27,7 +30,7 @@ namespace MultiRPC.GUI
 
         private const int WM_NCLBUTTONDOWN = 0xA1;
         private const int HT_CAPTION = 0x2;
-        private DateTime TimeWindowWasDeactived;
+        private DateTime TimeWindowWasDeactivated;
 
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
@@ -43,18 +46,15 @@ namespace MultiRPC.GUI
 
             var mainPage = new MainPage();
             StartLogic(mainPage);
+            MakeJumpList();
             mainPage.ContentFrame.Navigated += MainPageContentFrame_OnNavigated;
             ContentRendered += MainWindow_ContentRendered;
 
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
             {
                 TaskbarItemInfo = new TaskbarItemInfo();
+                TaskbarItemInfo.Description = "MultiRPC";
                 TaskbarItemInfo.ThumbnailClipMargin = new Thickness(471, 41, 9, 420);
-                //I would like to maybe mess with this more
-                //TaskbarItemInfo.ThumbButtonInfos.Add(new ThumbButtonInfo
-                //{
-                //    ImageSource = (DrawingImage)App.Current.Resources["DeleteIconDrawingImage"]
-                //});
             }
 
             TaskbarIcon = new TaskbarIcon();
@@ -96,7 +96,7 @@ namespace MultiRPC.GUI
 
         private void IconOnTrayLeftMouseDown(object sender, RoutedEventArgs e)
         {
-            var timeSpan = DateTime.Now.Subtract(TimeWindowWasDeactived);
+            var timeSpan = DateTime.Now.Subtract(TimeWindowWasDeactivated);
             if (timeSpan.TotalSeconds < 1 || WindowState == WindowState.Minimized)
                 WindowState = WindowState == WindowState.Normal ? WindowState.Minimized : WindowState.Normal;
 
@@ -136,6 +136,36 @@ namespace MultiRPC.GUI
             {
                 MainPage.mainPage.butCustom.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                 MainPage.mainPage.butStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            }
+        }
+
+        public static async Task MakeJumpList()
+        {
+            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
+            {
+                JumpList jumpList = new JumpList();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    if (i > CustomPage.customPage.Profiles.Count - 1)
+                        break;
+
+                    //Configure a new JumpTask
+                    JumpTask jumpTask = new JumpTask
+                    {
+                        // Set the JumpTask properties.
+                        ApplicationPath = FileLocations.MultiRPCStartLink,
+                        Arguments = $"-custom \"{CustomPage.customPage.Profiles.ElementAt(i).Key}\"",
+                        IconResourcePath = FileLocations.MultiRPCStartLink,
+                        Title = CustomPage.customPage.Profiles.ElementAt(i).Key,
+                        Description = $"Load '{CustomPage.customPage.Profiles.ElementAt(i).Key}'",
+                        CustomCategory = "Custom Profiles"
+                    };
+                    jumpList.JumpItems.Add(jumpTask);
+
+                }
+
+                JumpList.SetJumpList(App.Current, jumpList);
             }
         }
 
@@ -211,7 +241,7 @@ namespace MultiRPC.GUI
             if (TaskbarIcon != null)
                 TaskbarIcon.TrayToolTip = new ToolTip(!IsActive ? App.Text.ShowMultiRPC : App.Text.HideMultiRPC);
             if (!IsActive)
-                TimeWindowWasDeactived = DateTime.Now;
+                TimeWindowWasDeactivated = DateTime.Now;
         }
 
         private void MainWindow_OnStateChanged(object sender, EventArgs e)

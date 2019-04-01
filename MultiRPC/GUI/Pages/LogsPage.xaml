@@ -9,6 +9,6 @@
       Title="Logs">
 
     <ScrollViewer Background="Black" VerticalScrollBarVisibility="Auto">
-        <TextBlock Name="LogText" Text="{Binding LogText}" Margin="5" Foreground="White"/>
+        <TextBlock Name="LogText" Text="{Binding LogText}" Margin="10,10,5,5" Foreground="White"/>
     </ScrollViewer>
 </Page>

@@ -34,6 +34,11 @@ namespace MultiRPC
 
         public App()
         {
+            Startup += App_Startup;
+        }
+
+        private void App_Startup(object sender, StartupEventArgs e)
+        {
             if (Process.GetProcessesByName("MultiRPC").Length > 1)
             {
                 if (File.Exists(FileLocations.OpenFileLocalLocation))
@@ -47,8 +52,19 @@ namespace MultiRPC
 
                     }
                 }
-                File.Create(FileLocations.OpenFileLocalLocation);
-                App.Current.Shutdown();
+                if (e.Args.Length > 0)
+                {
+                    File.WriteAllLines(FileLocations.OpenFileLocalLocation, new List<string> { "LOADCUSTOM", e.Args[1] });
+                }
+                else
+                {
+                    File.Create(FileLocations.OpenFileLocalLocation);
+                }
+                Current.Shutdown();
+            }
+            else if (e.Args.Length > 1 && e.Args[0] == "-custom")
+            {
+                CustomPage.JumpListLogic(e.Args[1], true);
             }
 
             FileWatch.Create();
@@ -95,11 +111,8 @@ namespace MultiRPC
             }
 
             string s = "";
-            foreach (var line in File.ReadAllLines("Lang/english.json"))
-            {
-                s += line;
-            }
-            Text = JsonConvert.DeserializeObject<UIText>(s);
+            using (var reader = File.OpenText("Lang/english.json"))
+                Text = (UIText)JsonSerializer.Deserialize(reader, typeof(UIText));
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

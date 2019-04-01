@@ -38,6 +38,7 @@ namespace MultiRPC.GUI.Pages
                 tblNewVersion.Text = App.Text.NewVersion + ": " + info.AvailableVersion;
             else
                 tblNewVersion.Text = App.Text.NewVersion + ": " + "???";
+
             if(File.Exists(FileLocations.ChangelogFileLocalLocation))
                 tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
 
@@ -64,9 +65,8 @@ namespace MultiRPC.GUI.Pages
             }
             else
             {
-                string filepath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/MultiRPC.appref-ms";
-                if (File.Exists(filepath))
-                    Process.Start(filepath);
+                if (File.Exists(FileLocations.MultiRPCStartLink))
+                    Process.Start(FileLocations.MultiRPCStartLink);
                 App.Current.Shutdown();
             }
         }

@@ -154,9 +154,15 @@
             </Grid>
 
             <!--C O N T E N T-->
-        <Frame Name="ContentFrame" Grid.Column="1" Grid.Row="1"/>
+            <Rectangle Grid.Column="1" Grid.Row="1" Fill="{DynamicResource AccentColour1SCBrush}"/>
+            <Border Name="mask" CornerRadius="15,15,0,0" Grid.Column="1" Grid.Row="1" Background="{DynamicResource AccentColour2SCBrush}"/>
+            <Frame Name="ContentFrame" Grid.Column="1" Grid.Row="1">
+                <Frame.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=mask}"/>
+                </Frame.OpacityMask>
+            </Frame>
         </Grid>
-        <Grid Background="{DynamicResource AccentColour2SCBrush}" Name="spCheckForDiscord" HorizontalAlignment="Stretch">
+        <Grid Background="{DynamicResource AccentColour2SCBrush}" Name="spCheckForDiscord" HorizontalAlignment="Stretch" Visibility="Collapsed">
             <StackPanel HorizontalAlignment="Center" Margin="10">
                 <Grid>
                     <Grid.ColumnDefinitions>
