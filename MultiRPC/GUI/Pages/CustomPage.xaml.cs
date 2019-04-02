@@ -27,7 +27,7 @@ namespace MultiRPC.GUI.Pages
         private Image SelectedHelpImage;
         public Dictionary<string, CustomProfile> Profiles;
         public static List<Button> ProfileButtons = new List<Button>();
-        private Button CurrentButton;
+        public Button CurrentButton;
 
         private static CustomPage _CustomPage;
         public static CustomPage customPage => _CustomPage;
@@ -296,7 +296,7 @@ namespace MultiRPC.GUI.Pages
                         }
                     }
                     
-                    if (Profiles[CurrentButton.Content.ToString()].ClientID == ID.ToString() && MainPage.mainPage.ContentFrame.Content is CustomPage)
+                    if (T != null && Profiles[CurrentButton.Content.ToString()].ClientID == ID.ToString() && MainPage.mainPage.ContentFrame.Content is CustomPage)
                     {
                         if (T.StatusCode == HttpStatusCode.BadRequest)
                         {
@@ -532,7 +532,7 @@ namespace MultiRPC.GUI.Pages
             return name;
         }
 
-        private async Task MakeMenuButton(string profileName)
+        public async Task MakeMenuButton(string profileName)
         {
             await Dispatcher.InvokeAsync(() =>
             {

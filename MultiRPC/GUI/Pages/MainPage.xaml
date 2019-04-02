@@ -162,7 +162,7 @@
                 </Frame.OpacityMask>
             </Frame>
         </Grid>
-        <Grid Background="{DynamicResource AccentColour2SCBrush}" Name="spCheckForDiscord" HorizontalAlignment="Stretch" Visibility="Collapsed">
+        <Grid Background="{DynamicResource AccentColour2SCBrush}" Name="spCheckForDiscord" HorizontalAlignment="Stretch">
             <StackPanel HorizontalAlignment="Center" Margin="10">
                 <Grid>
                     <Grid.ColumnDefinitions>

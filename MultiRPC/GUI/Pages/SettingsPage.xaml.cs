@@ -300,6 +300,16 @@ namespace MultiRPC.GUI.Pages
                 if (preview.recLargeImage.ToolTip != null)
                     preview.recLargeImage.ToolTip = new ToolTip(((ToolTip)preview.recLargeImage.ToolTip).Content.ToString());
                 MainWindow.MakeJumpList();
+
+                if (CustomPage.ProfileButtons.Count > 0)
+                {
+                    foreach (var b in CustomPage.ProfileButtons)
+                    {
+                        b.Style = (Style)App.Current.Resources["DefaultButton"];
+                    }
+                    if (CustomPage.customPage.CurrentButton != null)
+                        CustomPage.customPage.CurrentButton.Background = (SolidColorBrush)App.Current.Resources["AccentColour2HoverSCBrush"];
+                }
             }
         }
 

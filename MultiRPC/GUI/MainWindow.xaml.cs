@@ -252,7 +252,11 @@ namespace MultiRPC.GUI
 
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)
         {
-            TaskbarIcon?.Dispose();
+            if (TaskbarIcon != null)
+            {
+                TaskbarIcon.Icon = null;
+                TaskbarIcon.Dispose();
+            }
         }
     }
 }
