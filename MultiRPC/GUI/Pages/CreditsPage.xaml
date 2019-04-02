@@ -99,7 +99,7 @@
                     <Hyperlink RequestNavigate="LinkUri_OnRequestNavigate" NavigateUri="https://www.iconfinder.com/">Iconfinder</Hyperlink><LineBreak/>
                     <Hyperlink RequestNavigate="LinkUri_OnRequestNavigate" NavigateUri="https://icons8.com/">Icons8</Hyperlink><LineBreak/>
                     <Hyperlink RequestNavigate="LinkUri_OnRequestNavigate" NavigateUri="https://www.flaticon.com/">Flaticon</Hyperlink><LineBreak/>
-                    <Hyperlink RequestNavigate="LinkUri_OnRequestNavigate" NavigateUri="https://www.onlinewebfonts.com/">OnlineWebFonts</Hyperlink><LineBreak/>
+                    <Hyperlink RequestNavigate="LinkUri_OnRequestNavigate" NavigateUri="https://www.onlinewebfonts.com/info/">OnlineWebFonts</Hyperlink><LineBreak/>
                 </TextBlock>
             </ScrollViewer>
         </Grid>

@@ -328,26 +328,16 @@
     </DrawingGroup>
   </DrawingGroup>
   <DrawingImage x:Key="ShareIconDrawingImage" Drawing="{StaticResource ShareIconDrawingGroup}" />
-  <Geometry x:Key="HelpIconGeometry">F1 M50,50z M0,0z M18,16C18,12.101 21.188,8.946 25.1,9.001 28.817,9.053 31.948,12.183 32,15.901 32.035,18.412 30.748,20.624 28.79,21.887 26.355,23.457 25,26.261 25,29.158L25,32</Geometry>
-  <DrawingGroup x:Key="HelpIconDrawingGroup" ClipGeometry="M0,0 V50 H50 V0 H0 Z">
-    <GeometryDrawing Brush="#FF48A0DC">
-      <GeometryDrawing.Geometry>
-        <EllipseGeometry RadiusX="25" RadiusY="25" Center="25,25" />
-      </GeometryDrawing.Geometry>
-    </GeometryDrawing>
-    <GeometryDrawing>
-      <GeometryDrawing.Pen>
-        <Pen Brush="#FFFFFFFF" Thickness="2" StartLineCap="Round" EndLineCap="Round" LineJoin="Miter" />
-      </GeometryDrawing.Pen>
-      <GeometryDrawing.Geometry>
-        <LineGeometry StartPoint="25,37" EndPoint="25,39" />
-      </GeometryDrawing.Geometry>
-    </GeometryDrawing>
-    <GeometryDrawing Geometry="{StaticResource HelpIconGeometry}">
-      <GeometryDrawing.Pen>
-        <Pen Brush="#FFFFFFFF" Thickness="2" StartLineCap="Round" EndLineCap="Round" LineJoin="Miter" />
-      </GeometryDrawing.Pen>
-    </GeometryDrawing>
+  <Geometry x:Key="HelpIconGeometry1">F1 M48,48z M0,0z M24,4C12.9,4 4,12.9 4,24 4,35.1 12.9,44 24,44 35.1,44 44,35 44,24 44,13 35,4 24,4z M26,38L22,38 22,34 26,34 26,38z M30.1,22.5L28.3,24.3C26.9,25.8,26,27,26,30L22,30 22,29C22,26.8,22.9,24.8,24.3,23.3L26.8,20.8C27.5,20.1 28,19.1 28,18 28,15.8 26.2,14 24,14 21.8,14 20,15.8 20,18L16,18C16,13.6 19.6,10 24,10 28.4,10 32,13.6 32,18 32,19.8 31.3,21.4 30.1,22.5z</Geometry>
+  <Geometry x:Key="HelpIconGeometry2">F1 M48,48z M0,0z M30.1,22.5L28.3,24.3C26.9,25.8,26,27,26,30L22,30 22,29C22,26.8,22.9,24.8,24.3,23.3L26.8,20.8C27.5,20.1 28,19.1 28,18 28,15.8 26.2,14 24,14 21.8,14 20,15.8 20,18L16,18C16,13.6 19.6,10 24,10 28.4,10 32,13.6 32,18 32,19.8 31.3,21.4 30.1,22.5z</Geometry>
+  <DrawingGroup x:Key="HelpIconDrawingGroup" ClipGeometry="M0,0 V48 H48 V0 H0 Z">
+      <GeometryDrawing Brush="#FF48A0DC" Geometry="{StaticResource HelpIconGeometry1}" />
+      <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource HelpIconGeometry2}" />
+      <GeometryDrawing Brush="#FFFFFFFF">
+          <GeometryDrawing.Geometry>
+              <RectangleGeometry RadiusX="0" RadiusY="0" Rect="22,34,4,4" />
+          </GeometryDrawing.Geometry>
+      </GeometryDrawing>
   </DrawingGroup>
   <DrawingImage x:Key="HelpIconDrawingImage" Drawing="{StaticResource HelpIconDrawingGroup}" />
     <Geometry x:Key="SettingsIconSelectedGeometry">F1 M29,29.793z M0,0z M25.548,16.353A13.5,13.5,0,0,0,25.648,14.871A14.437,14.437,0,0,0,25.548,13.389L28.716,10.936A0.707,0.707,0,0,0,28.869,9.965L25.905,4.855A0.719,0.719,0,0,0,24.985,4.548L21.255,6.03A11.158,11.158,0,0,0,18.755,4.548L18.189,0.613A0.681,0.681,0,0,0,17.473,0L11.494,0A0.717,0.717,0,0,0,10.779,0.613L10.217,4.6A9.527,9.527,0,0,0,7.717,6.082L3.982,4.548A0.737,0.737,0,0,0,3.062,4.855L0.1,10.016A0.738,0.738,0,0,0,0.3,10.987L3.471,13.44A13.5,13.5,0,0,0,3.371,14.922A14.438,14.438,0,0,0,3.471,16.404L0.3,18.857A0.771,0.771,0,0,0,0.1,19.828L3.064,24.938A0.737,0.737,0,0,0,3.984,25.245L7.715,23.763A11.158,11.158,0,0,0,10.215,25.245L10.777,29.18A0.717,0.717,0,0,0,11.492,29.793L17.471,29.793A0.717,0.717,0,0,0,18.186,29.18L18.748,25.245A9.527,9.527,0,0,0,21.248,23.763L24.979,25.245A0.737,0.737,0,0,0,25.899,24.938L28.863,19.777A0.783,0.783,0,0,0,28.71,18.806z M14.509,20.135A5.213,5.213,0,1,1,19.722,14.922A5.234,5.234,0,0,1,14.509,20.135z</Geometry>
@@ -450,4 +440,41 @@
       <GradientStop Color="#FF00FFED" Offset="0" />
       <GradientStop Color="#FF0077E9" Offset="1" />
   </LinearGradientBrush>
+    <Geometry x:Key="AlertIconGeometry1">F1 M48,48z M0,0z M4,24C4,13 13,4 24,4 35,4 44,13 44,24 44,35 35,44 24,44 13,44 4,35 4,24z</Geometry>
+    <Geometry x:Key="AlertIconGeometry2">F1 M48,48z M0,0z M26,26L22,26 22,15 26,15 26,26z</Geometry>
+    <Geometry x:Key="AlertIconGeometry3">F1 M48,48z M0,0z M21.5,31.5C21.5,30.1 22.6,29 24,29 25.4,29 26.5,30.1 26.5,31.5 26.5,32.9 25.4,34 24,34 22.6,34 21.5,32.9 21.5,31.5z</Geometry>
+    <DrawingGroup x:Key="AlertIconDrawingGroup" ClipGeometry="M0,0 V48 H48 V0 H0 Z">
+        <DrawingGroup Opacity="1">
+            <GeometryDrawing Brush="#FFF23622" Geometry="{StaticResource AlertIconGeometry1}" />
+            <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource AlertIconGeometry2}" />
+            <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource AlertIconGeometry3}" />
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingImage x:Key="AlertIconDrawingImage" Drawing="{StaticResource AlertIconDrawingGroup}" />
+  <Geometry x:Key="WarningIconGeometry">F1 M1024,1024z M0,0z M1005.9,863.7L567.6,96.7C556.2,76.8 535,64.5 512,64.5 489,64.5 467.8,76.8 456.4,96.7L18.1,863.7C6.79999999999997,883.5 6.89999999999997,907.8 18.3,927.6 29.8,947.3 50.8,959.5 73.7,959.5L950.3,959.5C973.1,959.5 994.2,947.4 1005.7,927.6 1017.2,907.8 1017.2,883.6 1005.9,863.7z M576,831.5L448,831.5 448,703.5 576,703.5 576,831.5z M576,639.5L448,639.5 448,383.5 576,383.5 576,639.5z</Geometry>
+  <DrawingGroup x:Key="WarningIconDrawingGroup" ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+      <GeometryDrawing Brush="#FFE0B119" Geometry="{StaticResource WarningIconGeometry}" />
+      <GeometryDrawing Brush="#FFFFFFFF">
+          <GeometryDrawing.Geometry>
+              <RectangleGeometry RadiusX="0" RadiusY="0" Rect="448,383.5,128,256" />
+          </GeometryDrawing.Geometry>
+      </GeometryDrawing>
+      <GeometryDrawing Brush="#FFFFFFFF">
+          <GeometryDrawing.Geometry>
+              <RectangleGeometry RadiusX="0" RadiusY="0" Rect="448,703,128,128" />
+          </GeometryDrawing.Geometry>
+      </GeometryDrawing>
+  </DrawingGroup>
+  <DrawingImage x:Key="WarningIconDrawingImage" Drawing="{StaticResource WarningIconDrawingGroup}" />
+    <Geometry x:Key="InfoIconGeometry1">F1 M48,48z M0,0z M44,24C44,35.045 35.045,44 24,44 12.955,44 4,35.045 4,24 4,12.955 12.955,4 24,4 35.045,4 44,12.955 44,24z</Geometry>
+    <Geometry x:Key="InfoIconGeometry2">F1 M48,48z M0,0z M22,22L26,22 26,33 22,33 22,22z</Geometry>
+    <Geometry x:Key="InfoIconGeometry3">F1 M48,48z M0,0z M26.5,16.5C26.5,17.879 25.379,19 24,19 22.621,19 21.5,17.879 21.5,16.5 21.5,15.121 22.621,14 24,14 25.379,14 26.5,15.121 26.5,16.5z</Geometry>
+    <DrawingGroup x:Key="InfoIconDrawingGroup" ClipGeometry="M0,0 V48 H48 V0 H0 Z">
+        <DrawingGroup Opacity="1">
+            <GeometryDrawing Brush="#FF2196F3" Geometry="{StaticResource InfoIconGeometry1}" />
+            <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource InfoIconGeometry2}" />
+            <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource InfoIconGeometry3}" />
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingImage x:Key="InfoIconDrawingImage" Drawing="{StaticResource InfoIconDrawingGroup}" />
 </ResourceDictionary>

@@ -54,31 +54,19 @@ namespace MultiRPC.GUI
                 butCancel.Visibility = Visibility.Visible;
             }
 
-            if ((int)messageBoxImage != 0)
-                MinHeight = 220;
-            else
+            if ((int)messageBoxImage == 0)
                 imgmessageBoxImage.Visibility = Visibility.Collapsed;
 
-            //if ((int)messageBoxImage == 64)
-            //    imgmessageBoxImage.Source = ImageSource.FromFile("Images/information-outline.png");
-            //else if ((int)messageBoxImage == 48)
-            //    imgmessageBoxImage.Source = ImageSource.FromFile("Images/alert.png");
-            //else if ((int)messageBoxImage == 16)
-            //    imgmessageBoxImage.Source = ImageSource.FromFile("Images/alert-circle-outline.png");
-            //else if ((int)messageBoxImage == 32)
-            //    imgmessageBoxImage.Source = ImageSource.FromFile("Images/information-outline.png");
+            if ((int)messageBoxImage == 64)
+                imgmessageBoxImage.Source = (ImageSource)App.Current.Resources["InfoIconDrawingImage"];
+            else if ((int)messageBoxImage == 48)
+                imgmessageBoxImage.Source = (ImageSource)App.Current.Resources["WarningIconDrawingImage"];
+            else if ((int)messageBoxImage == 16)
+                imgmessageBoxImage.Source = (ImageSource)App.Current.Resources["AlertIconDrawingImage"];
+            else if ((int)messageBoxImage == 32)
+                imgmessageBoxImage.Source = (ImageSource)App.Current.Resources["HelpIconDrawingImage"];
         }
 
-        //private void MessageBoxPage_OnLoaded(object sender, RoutedEventArgs e)
-        //{
-        //    foreach (var window in App.Current.Windows)
-        //    {
-        //        if (window is MainWindow mainWindow && mainWindow.WindowID == WindowID)
-        //        {
-        //            break;
-        //        }
-        //    }
-        //}
         private void ButOk_OnClick(object sender, RoutedEventArgs e)
         {
             CustomMessageBox.CloseWindow(WindowID, MessageBoxResult.OK);
