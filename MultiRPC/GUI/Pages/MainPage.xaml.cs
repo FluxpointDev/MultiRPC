@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Navigation;
+using System.Reflection;
+using System.Diagnostics;
 using MultiRPC.Functions;
 using MultiRPC.GUI.Views;
+using System.Windows.Media;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI.Pages

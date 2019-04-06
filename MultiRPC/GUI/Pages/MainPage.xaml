@@ -124,7 +124,7 @@
                 </StackPanel>
             </Grid>
 
-                    <!--Status bar-->
+            <!--Status bar-->
             <Grid Grid.Column="1" Background="{DynamicResource AccentColour1SCBrush}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0">

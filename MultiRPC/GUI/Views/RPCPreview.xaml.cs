@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Windows;
+using DiscordRPC.Message;
 using System.Windows.Media;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using DiscordRPC.Message;
+using System.Windows.Media.Animation;
 
 namespace MultiRPC.GUI.Views
 {

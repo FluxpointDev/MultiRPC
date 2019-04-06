@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using MultiRPC.GUI.Views;
+using System.Threading.Tasks;
+using System.Windows.Controls;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI.Pages
@@ -40,8 +30,6 @@ namespace MultiRPC.GUI.Pages
             btnDebugStopRPC.Content = App.Text.DebugRPCStop;
             btnDebugStartRPC.ToolTip = new ToolTip(App.Text.DebugStartRPCTooltip);
             btnDebugStopRPC.ToolTip = new ToolTip(App.Text.DebugStopRPCTooltip);
-            btnDebugSteam.Content = App.Text.RPCSteam;
-            btnDebugSteam.ToolTip = new ToolTip(App.Text.RPCSteamTooltip);
             btnTestUpdate.Content = App.Text.TestUpdateWindow;
             btnTestUpdate.ToolTip = new ToolTip(App.Text.TestUpdateWindowTooltip);
 
@@ -59,12 +47,6 @@ namespace MultiRPC.GUI.Pages
         {
             RPC.Shutdown();
             ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Default);
-        }
-
-        private void ButDebugSteam_OnClick(object sender, RoutedEventArgs e)
-        {
-            RPC.IDToUse = 450894077165043722;
-            RPC.Start(tbDebugSteamID.Text);
         }
 
         private void ButTestUpdate_OnClick(object sender, RoutedEventArgs e)

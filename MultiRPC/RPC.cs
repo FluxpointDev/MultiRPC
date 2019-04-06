@@ -69,7 +69,7 @@ namespace MultiRPC
                 Type = type;
         }
 
-        public static async Task Start(string steamID = "")
+        public static async Task Start()
         {
             //Check that the presence isn't ban worthy
             if (!await CheckPresence(Presence.Details) || !await CheckPresence(Presence.State))
@@ -122,7 +122,7 @@ namespace MultiRPC
 
             //Log the client we are going to connect to
             App.Logging.Application($"Discord {App.Text.Client}: {DClient} ({count})");           
-            RPCClient = new DiscordRpcClient(IDToUse.ToString(), steamID, false, count, App.Logging);
+            RPCClient = new DiscordRpcClient(IDToUse.ToString(), count, App.Logging, true);
 
             //Set up events
             RPCClient.OnConnectionEstablished += Client_OnConnectionEstablished;

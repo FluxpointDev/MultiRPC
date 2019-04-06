@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Net.Mime;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using MultiRPC.JsonClasses;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Collections.Generic;
 
 namespace MultiRPC.GUI.Pages
 {

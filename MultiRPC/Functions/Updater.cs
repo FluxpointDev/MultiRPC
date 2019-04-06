@@ -1,15 +1,15 @@
 ﻿using System;
-using MultiRPC.GUI;
-using System.Deployment.Application;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Threading.Tasks;
+using MultiRPC.GUI;
 using System.Windows;
+using MultiRPC.GUI.Pages;
+using System.Diagnostics;
+using MultiRPC.JsonClasses;
 using System.Windows.Shell;
 using MultiRPC.GUI.Controls;
-using MultiRPC.GUI.Pages;
-using MultiRPC.JsonClasses;
+using System.Threading.Tasks;
+using System.Deployment.Application;
 
 namespace MultiRPC.Functions
 {

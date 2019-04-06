@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using MultiRPC.Functions;
+using System.Windows.Controls;
 
 namespace MultiRPC.GUI.Pages
 {

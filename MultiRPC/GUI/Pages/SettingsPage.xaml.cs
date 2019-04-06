@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
 using MultiRPC.Functions;
 using MultiRPC.GUI.Views;
+using System.Diagnostics;
+using System.Windows.Input;
+using System.Windows.Media;
 using MultiRPC.JsonClasses;
+using System.Windows.Markup;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Collections.Generic;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI.Pages

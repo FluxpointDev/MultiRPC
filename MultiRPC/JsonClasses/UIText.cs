@@ -135,8 +135,6 @@
         public string DebugRPCStop;
         public string DebugStartRPCTooltip;
         public string DebugStopRPCTooltip;
-        public string RPCSteam;
-        public string RPCSteamTooltip;
         public string TestUpdateWindow;
         public string TestUpdateWindowTooltip;
         public string Testing;

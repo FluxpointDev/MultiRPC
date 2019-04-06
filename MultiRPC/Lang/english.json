@@ -132,8 +132,6 @@
   "DebugRPCStop": "Stop RPC",
   "DebugStartRPCTooltip": "Start RPC debug mode",
   "DebugStopRPCTooltip": "Stop RPC debug mode",
-  "RPCSteam": "RPC Steam",
-  "RPCSteamTooltip": "Minor test for steam RPC",
   "TestUpdateWindow": "Test Update Window",
   "TestUpdateWindowTooltip": "Test the update window",
   "Testing": "Testing",

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Deployment.Application;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Windows;
-using System.Windows.Controls;
+using System.Reflection;
 using MultiRPC.Functions;
+using System.Diagnostics;
 using MultiRPC.JsonClasses;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Deployment.Application;
 
 namespace MultiRPC.GUI.Pages
 {

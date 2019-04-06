@@ -434,7 +434,7 @@
             <GeometryDrawing Brush="White" Geometry="{StaticResource DebugIconGeometry6}" />
         </DrawingGroup>
     </DrawingGroup>
-    <DrawingImage x:Key="DebugIconSelectedDrawingImage" Drawing="{StaticResource DebugIconDrawingGroup}" />
+    <DrawingImage x:Key="DebugIconSelectedDrawingImage" Drawing="{StaticResource DebugIconSelectedDrawingGroup}" />
 
     <LinearGradientBrush x:Key="BackgroundGradient" StartPoint="1091.51,158.49" EndPoint="-91.51,841.51" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
       <GradientStop Color="#FF00FFED" Offset="0" />

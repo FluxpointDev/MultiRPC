@@ -304,7 +304,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DiscordRichPresence">
-      <Version>1.0.77</Version>
+      <Version>1.0.95</Version>
     </PackageReference>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf">
       <Version>1.0.8</Version>

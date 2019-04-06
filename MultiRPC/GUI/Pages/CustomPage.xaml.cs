@@ -1,20 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+using DiscordRPC;
+using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
+using System.Net.Http;
+using Newtonsoft.Json;
+using MultiRPC.Functions;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using DiscordRPC;
-using MultiRPC.Functions;
+using System.Globalization;
 using MultiRPC.JsonClasses;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Collections.Generic;
+using System.Windows.Media.Imaging;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI.Pages
@@ -207,13 +207,19 @@ namespace MultiRPC.GUI.Pages
             }
         }
 
-        public async Task<bool> CanRunRPC()
+        /// <summary>
+        /// If the content will not crash the RPC Client
+        /// </summary>
+        /// <param name="TokenTextChanged">If to check the token because the token text had changed</param>
+        /// <returns></returns>
+        public async Task<bool> CanRunRPC(bool TokenTextChanged = false)
         {
+            MainPage.mainPage.btnStart.IsEnabled = false;
             bool isEnabled = true;
             if (tbText2.Text.Length == 1)
             {
                 tbText2.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
-                tbText2.ToolTip = new Controls.ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
+                tbText2.ToolTip = new ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
                 isEnabled = false;
             }
             else
@@ -224,7 +230,7 @@ namespace MultiRPC.GUI.Pages
             if (tbText1.Text.Length == 1)
             {
                 tbText1.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
-                tbText1.ToolTip = new Controls.ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
+                tbText1.ToolTip = new ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
                 isEnabled = false;
             }
             else
@@ -236,7 +242,8 @@ namespace MultiRPC.GUI.Pages
             if (tbSmallText.Text.Length == 1)
             {
                 tbSmallText.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
-                tbSmallText.ToolTip = new Controls.ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
+                tbSmallText.ToolTip = new ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
+                isEnabled = false;
             }
             else
             {
@@ -247,6 +254,7 @@ namespace MultiRPC.GUI.Pages
             {
                 tbLargeText.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
                 tbLargeText.ToolTip = new ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
+                isEnabled = false;
             }
             else
             {
@@ -255,12 +263,15 @@ namespace MultiRPC.GUI.Pages
             }
 
             ulong ID = 0;
-            if (App.Config.CheckToken)
+            if (App.Config.CheckToken && TokenTextChanged)
             {
+                //Want this is check we are still on the profile we was checking because internet speeds and api response time are a thing 🙃
+                var profile = Profiles[tblProfileName.Text];
                 var isValidCode =
                     ulong.TryParse(tbClientID.Text, NumberStyles.Any, new NumberFormatInfo(), out ID);
                 if (!isValidCode && tbClientID.Text.Length == 0)
                     isValidCode = true;
+
                 if ((ID.ToString().Length != tbClientID.MaxLength || !isValidCode))
                 {
                     RPC.IDToUse = 0;
@@ -307,8 +318,8 @@ namespace MultiRPC.GUI.Pages
                         }
                         else if (T.StatusCode != HttpStatusCode.InternalServerError)
                         {
-                            string Response = T.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                            App.Logging.Error("API", $"{App.Text.APIError} {Response}");
+                            string response = T.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                            App.Logging.Error("API", $"{App.Text.APIError} {response}");
                             tbClientID.ToolTip = new ToolTip($"{App.Text.APIIssue}!");
                             tbClientID.BorderBrush = (SolidColorBrush) App.Current.Resources["Red"];
                             isEnabled = false;
@@ -321,10 +332,24 @@ namespace MultiRPC.GUI.Pages
                         }
                     }
                 }
+
+                if (Profiles.ContainsValue(profile))
+                {
+                    if (Profiles[CurrentButton.Content.ToString()].ClientID != profile.ClientID)
+                        return isEnabled;
+                }
+                else
+                {
+                    return isEnabled;
+                }
+            }
+            else
+            {
+                if (tbClientID.BorderBrush == (SolidColorBrush)App.Current.Resources["Red"])
+                    isEnabled = false;
             }
 
-            if (Profiles[CurrentButton.Content.ToString()].ClientID == (ID != 0 ? ID.ToString() : "") && 
-                MainPage.mainPage.ContentFrame.Content is CustomPage && MainPage.mainPage.btnStart.Content != App.Text.Shutdown)
+            if (MainPage.mainPage.ContentFrame.Content is CustomPage && MainPage.mainPage.btnStart.Content.ToString() != App.Text.Shutdown)
                 MainPage.mainPage.btnStart.IsEnabled = isEnabled;
             return isEnabled;
         }
@@ -346,15 +371,12 @@ namespace MultiRPC.GUI.Pages
 
         public static async Task UpdateTimestamps(CheckBox checkBox)
         {
-            if (checkBox.IsChecked.Value)
-                RPC.Presence.Timestamps = new Timestamps();
-            else
-                RPC.Presence.Timestamps = null;
+            RPC.Presence.Timestamps = checkBox.IsChecked.Value ? new Timestamps() : null;
         }
 
         public async void CbElapasedTime_OnChecked(object sender, RoutedEventArgs e)
         {
-            await UpdateTimestamps((CheckBox)sender);
+            UpdateTimestamps((CheckBox)sender);
             UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
         }
 
@@ -362,8 +384,8 @@ namespace MultiRPC.GUI.Pages
 
         private async void TbClientID_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            await UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
-            CanRunRPC();
+            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
+            CanRunRPC(true);
         }
 
         private void TbLargeKey_OnTextChanged(object sender, TextChangedEventArgs e)

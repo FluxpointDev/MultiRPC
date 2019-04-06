@@ -1,19 +1,19 @@
 ﻿using System;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Navigation;
-using System.Windows.Shell;
-using Hardcodet.Wpf.TaskbarNotification;
 using MultiRPC.GUI.Pages;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shell;
 using MultiRPC.JsonClasses;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Windows.Interop;
+using System.Windows.Controls;
+using System.Windows.Navigation;
+using System.Windows.Media.Animation;
+using System.Runtime.InteropServices;
+using Hardcodet.Wpf.TaskbarNotification;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI
@@ -24,6 +24,8 @@ namespace MultiRPC.GUI
     public partial class MainWindow : Window
     {
         public TaskbarIcon TaskbarIcon;
+        private Storyboard CloseStoryboard;
+        private Storyboard OpenStoryboard = new Storyboard();
 
         public object ToReturn;
         public long WindowID; //This is so we can know that the window we look for is the window we are looking for
@@ -33,22 +35,22 @@ namespace MultiRPC.GUI
         private DateTime TimeWindowWasDeactivated;
 
         [DllImport("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        private static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
         [DllImport("user32.dll")]
-        public static extern bool ReleaseCapture();
+        private static extern bool ReleaseCapture();
 
         public MainWindow()
         {
             InitializeComponent();
-            if(this != App.Current.MainWindow)
+            ContentRendered += MainWindow_ContentRendered;
+            if (this != App.Current.MainWindow)
                 return;
 
             var mainPage = new MainPage();
             StartLogic(mainPage);
             MakeJumpList();
             mainPage.ContentFrame.Navigated += MainPageContentFrame_OnNavigated;
-            ContentRendered += MainWindow_ContentRendered;
 
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
             {
@@ -66,6 +68,7 @@ namespace MultiRPC.GUI
         public MainWindow(Page page, bool minButton = true)
         {
             InitializeComponent();
+            ContentRendered += MainWindow_ContentRendered;
             StartLogic(page);
             ShowInTaskbar = false;
             Title = "MultiRPC - " + page.Title;
@@ -75,7 +78,34 @@ namespace MultiRPC.GUI
                 btnMin.Visibility = Visibility.Collapsed;
         }
 
-        internal void StartLogic(Page page)
+        private void MakeWinAnimation(Storyboard storyboard, double from = 1, double to = 0, bool addEventHandler = true, object parameter = null, Duration lengthToRun = new Duration())
+        {
+            if (!lengthToRun.HasTimeSpan)
+                lengthToRun = new Duration(TimeSpan.FromSeconds(0.4));
+
+            if (parameter == null)
+                parameter = Window.OpacityProperty;
+
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                Name = "win" + DateTime.Now.Ticks;
+                RegisterName(this.Name, this);
+            }
+
+            DoubleAnimation winOpacityAnimation = new DoubleAnimation();
+            winOpacityAnimation.From = from;
+            winOpacityAnimation.To = to;
+            winOpacityAnimation.Duration = lengthToRun;
+            winOpacityAnimation.EasingFunction = new BackEase();
+
+            storyboard.Children.Add(winOpacityAnimation);
+            Storyboard.SetTargetName(winOpacityAnimation, Name);
+            Storyboard.SetTargetProperty(winOpacityAnimation, new PropertyPath(parameter));
+            if(addEventHandler)
+                storyboard.Completed += OpenCloseStoryboard_Completed;
+        }
+
+        private void StartLogic(Page page)
         {
             if (page.MinWidth > Width)
             {
@@ -90,7 +120,7 @@ namespace MultiRPC.GUI
             }
 
             MaxHeight = page.MaxHeight;
-            MaxWidth = page.MaxWidth;
+            MaxWidth = page.MaxWidth; 
             ContentFrame.Content = page;
         }
 
@@ -111,7 +141,10 @@ namespace MultiRPC.GUI
                 if (window is MainWindow mainWindow && ((MainWindow)window).WindowID == WindowID)
                 {
                     mainWindow.ToReturn = Return;
-                    mainWindow.Close();
+                    mainWindow.ShowInTaskbar = false;
+                    mainWindow.CloseStoryboard = new Storyboard();
+                    mainWindow.MakeWinAnimation(mainWindow.CloseStoryboard);
+                    mainWindow.CloseStoryboard.Begin(mainWindow);
                     break;
                 }
             }
@@ -119,6 +152,8 @@ namespace MultiRPC.GUI
 
         private async void MainWindow_ContentRendered(object sender, EventArgs e)
         {
+            MakeWinAnimation(OpenStoryboard, 0, 1);
+            OpenStoryboard.Begin(this);
             if (App.Current.MainWindow != this)
                 return;
 
@@ -187,7 +222,16 @@ namespace MultiRPC.GUI
 
         private void Close_OnClick(object sender, RoutedEventArgs e)
         {
-            Close();
+            ShowInTaskbar = false;
+            CloseStoryboard = new Storyboard();
+            MakeWinAnimation(CloseStoryboard);
+            CloseStoryboard.Begin(this);
+        }
+
+        private void OpenCloseStoryboard_Completed(object sender, EventArgs e)
+        {
+            if(CloseStoryboard != null)
+                Close();
         }
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)

@@ -16,6 +16,7 @@
         Closing="MainWindow_OnClosing"
         StateChanged="MainWindow_OnStateChanged"
         Icon="../MultiRPCIcon.ico"
+        Opacity="0"
         >
     <Window.Resources>
         <Style TargetType="Button" x:Key="TitleBarMin">
