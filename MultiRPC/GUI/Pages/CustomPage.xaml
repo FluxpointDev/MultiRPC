@@ -36,7 +36,7 @@
         </Grid.ColumnDefinitions>
 
         <Rectangle Grid.ColumnSpan="2" Grid.Row="1" Fill="{DynamicResource AccentColour1SCBrush}"/>
-        <Border Name="mask" CornerRadius="15,15,0,0" Grid.ColumnSpan="2" Grid.Row="1" Background="{DynamicResource AccentColour2SCBrush}"/>
+        <Border CornerRadius="15,15,0,0" Grid.ColumnSpan="2" Grid.Row="1" Background="{DynamicResource AccentColour2SCBrush}"/>
 
         <Grid Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Background="{DynamicResource AccentColour1SCBrush}">
             <Grid.RowDefinitions>

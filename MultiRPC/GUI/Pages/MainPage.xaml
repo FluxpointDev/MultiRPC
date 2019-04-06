@@ -66,8 +66,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
     </Page.Resources>
+
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -83,34 +83,34 @@
             <ScrollViewer Grid.RowSpan="2" VerticalScrollBarVisibility="Hidden">
                 <Grid Background="{DynamicResource AccentColour1SCBrush}">
                     <StackPanel Margin="5,10,5,0">
-                        <Button Style="{DynamicResource NavButton}" Name="butMuiltiRPC" Click="ChangePage_OnClick">
+                        <Button Style="{DynamicResource NavButton}" Name="btnMuiltiRPC" Click="ChangePage_OnClick">
                             <Button.Content>
-                                <Image Name="imgDiscordIcon" Source="{DynamicResource DiscordIconDrawingImage}"/>
+                                <Image Source="{DynamicResource DiscordIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
-                        <Button Style="{DynamicResource NavButton}" Name="butCustom" Click="ChangePage_OnClick">
+                        <Button Style="{DynamicResource NavButton}" Name="btnCustom" Click="ChangePage_OnClick">
                             <Button.Content>
-                                <Image Name="imgCustomIcon" Source="{DynamicResource CustomIconDrawingImage}"/>
+                                <Image Source="{DynamicResource CustomIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
-                        <Button Style="{DynamicResource NavButton}" Name="butSettings" Click="ChangePage_OnClick">
+                        <Button Style="{DynamicResource NavButton}" Name="btnSettings" Click="ChangePage_OnClick">
                             <Button.Content>
-                                <Image Name="imgSettingsIcon" Source="{DynamicResource SettingsIconDrawingImage}"/>
+                                <Image Source="{DynamicResource SettingsIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
-                        <Button Style="{DynamicResource NavButton}" Name="butLogs" Click="ChangePage_OnClick">
+                        <Button Style="{DynamicResource NavButton}" Name="btnLogs" Click="ChangePage_OnClick">
                             <Button.Content>
-                                <Image Name="imgLogsIcon" Source="{DynamicResource LogsIconDrawingImage}"/>
+                                <Image Source="{DynamicResource LogsIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
-                        <Button Style="{DynamicResource NavButton}" Name="butCredits" Click="ChangePage_OnClick">
+                        <Button Style="{DynamicResource NavButton}" Name="btnCredits" Click="ChangePage_OnClick">
                             <Button.Content>
-                                <Image Name="imgCreditsIcon" Source="{DynamicResource CreditsIconDrawingImage}"/>
+                                <Image Source="{DynamicResource CreditsIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
-                        <Button Visibility="Collapsed" Style="{DynamicResource NavButton}" Name="butDebug" Click="ChangePage_OnClick">
+                        <Button Visibility="Collapsed" Style="{DynamicResource NavButton}" Name="btnDebug" Click="ChangePage_OnClick">
                             <Button.Content>
-                                <Image Name="imgDebugIcon" Source="{DynamicResource DebugIconDrawingImage}"/>
+                                <Image Source="{DynamicResource DebugIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
                     </StackPanel>
@@ -119,7 +119,7 @@
             <Grid Grid.Row="1" VerticalAlignment="Bottom">
                 <Rectangle Opacity="0.55" Fill="{DynamicResource AccentColour1SCBrush}"/>
                 <StackPanel VerticalAlignment="Bottom">
-                <TextBlock Name="tbVersion" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <TextBlock Name="tblVersion" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                 <ProgressBar Name="pbUpdateProgress" Height="4"/>
                 </StackPanel>
             </Grid>
@@ -128,8 +128,8 @@
             <Grid Grid.Column="1" Background="{DynamicResource AccentColour1SCBrush}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0">
-                        <Button Height="40" Width="110" Name="butStart" FontSize="11" Style="{DynamicResource ButtonGreen}" Margin="0,0,0,10"/>
-                        <Button IsEnabled="False" Height="40" Width="110" Name="butUpdate" FontSize="11" Style="{DynamicResource ButtonPurple}" Click="ButUpdate_OnClick"/>
+                        <Button Height="40" Width="110" Name="btnStart" FontSize="11" Style="{DynamicResource ButtonGreen}" Margin="0,0,0,10"/>
+                        <Button IsEnabled="False" Height="40" Width="110" Name="btnUpdate" FontSize="11" Style="{DynamicResource ButtonPurple}" Click="ButUpdate_OnClick"/>
                     </StackPanel>
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,0,0,0">
                         <TextBlock><Run Name="rStatus"/><Run Name="rCon"/></TextBlock>
@@ -140,14 +140,14 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Name="tblAfkText" VerticalAlignment="Center"/>
-                            <TextBox Background="{DynamicResource AccentColour2SCBrush}" MaxLength="25" Name="tblAfkReason" TextChanged="TblAfkReason_OnTextChanged" Width="150" Grid.Column="1"/>
+                            <TextBox Background="{DynamicResource AccentColour2SCBrush}" MaxLength="25" Name="tbAfkReason" TextChanged="TblAfkReason_OnTextChanged" Width="150" Grid.Column="1"/>
                         </Grid>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0" Orientation="Horizontal">
                     <StackPanel>
-                        <Button IsEnabled="False" Height="40" Width="50" Name="butAuto" FontSize="11" Style="{DynamicResource ButtonPurple}" Margin="0,0,0,10"/>
-                        <Button Height="40" Width="50" Name="butAfk" FontSize="11" Style="{DynamicResource ButtonPurple}" Click="ButAfk_OnClick"/>
+                        <Button IsEnabled="False" Height="40" Width="50" Name="btnAuto" FontSize="11" Style="{DynamicResource ButtonPurple}" Margin="0,0,0,10"/>
+                        <Button Height="40" Width="50" Name="btnAfk" FontSize="11" Style="{DynamicResource ButtonPurple}" Click="ButAfk_OnClick"/>
                     </StackPanel>
                     <Frame Name="frameRPCPreview" Margin="10,0,0,0"/>
                 </StackPanel>
@@ -162,7 +162,7 @@
                 </Frame.OpacityMask>
             </Frame>
         </Grid>
-        <Grid Background="{DynamicResource AccentColour2SCBrush}" Name="spCheckForDiscord" HorizontalAlignment="Stretch">
+        <Grid Background="{DynamicResource AccentColour2SCBrush}" Name="gridCheckForDiscord" HorizontalAlignment="Stretch">
             <StackPanel HorizontalAlignment="Center" Margin="10">
                 <Grid>
                     <Grid.ColumnDefinitions>

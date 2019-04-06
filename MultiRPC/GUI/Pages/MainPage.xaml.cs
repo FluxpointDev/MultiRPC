@@ -24,18 +24,18 @@ namespace MultiRPC.GUI.Pages
         {
             InitializeComponent();
             Loaded += MainPage_Loaded;
-            butStart.Click += ButStart_OnClick;
+            btnStart.Click += ButStart_OnClick;
 
             rUsername.Text = App.Config.LastUser;
             mainPage = this;
 
-            butMuiltiRPC.Tag = new MultiRPCPage();
-            butCustom.Tag = new CustomPage();
-            butLogs.Tag = new LogsPage();
-            butCredits.Tag = new CreditsPage();
-            butSettings.Tag = new SettingsPage();
-            butDebug.Tag = new DebugPage();
-            butMuiltiRPC.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            btnMuiltiRPC.Tag = new MultiRPCPage();
+            btnCustom.Tag = new CustomPage();
+            btnLogs.Tag = new LogsPage();
+            btnCredits.Tag = new CreditsPage();
+            btnSettings.Tag = new SettingsPage();
+            btnDebug.Tag = new DebugPage();
+            btnMuiltiRPC.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             frameRPCPreview.Content = new RPCPreview(RPCPreview.ViewType.Default);
         }
 
@@ -44,11 +44,11 @@ namespace MultiRPC.GUI.Pages
             UpdateText();
             if (!App.Config.DiscordCheck)
             {
-                spCheckForDiscord.Visibility = Visibility.Collapsed;
+                gridCheckForDiscord.Visibility = Visibility.Collapsed;
             }
             else
             {
-                tbVersion.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                tblVersion.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 tblMadeBy.Text = $"{App.Text.MadeBy}: {App.AppDev}";
                 rDiscordServer.Text = App.Text.DiscordServer + ": ";
                 rServerLink.Text = App.ServerInviteCode;
@@ -97,7 +97,7 @@ namespace MultiRPC.GUI.Pages
                         goto FindClient;
                     }
                     else
-                        spCheckForDiscord.Visibility = Visibility.Collapsed;
+                        gridCheckForDiscord.Visibility = Visibility.Collapsed;
                 }
                 catch { }
                 Updater.Check();
@@ -110,16 +110,16 @@ namespace MultiRPC.GUI.Pages
         public async Task UpdateText()
         {
             if (ContentFrame.Content is MultiRPCPage)
-                butStart.Content = $"{App.Text.Start} MuiltiRPC";
+                btnStart.Content = $"{App.Text.Start} MuiltiRPC";
             else if (ContentFrame.Content is CustomPage)
-                butStart.Content = App.Text.StartCustom;
+                btnStart.Content = App.Text.StartCustom;
             
-            butUpdate.Content = App.Text.UpdatePresence;
+            btnUpdate.Content = App.Text.UpdatePresence;
             rStatus.Text = App.Text.Status + ": ";
             rCon.Text = App.Text.Disconnected;
             rUser.Text = App.Text.User + ": ";
-            butAuto.Content = App.Text.Auto;
-            butAfk.Content = App.Text.Afk;
+            btnAuto.Content = App.Text.Auto;
+            btnAfk.Content = App.Text.Afk;
             tblAfkText.Text = App.Text.AfkText + ": ";
         }
 
@@ -151,27 +151,27 @@ namespace MultiRPC.GUI.Pages
                 return s;
             }
 
-            ((Image)butMuiltiRPC.Content).Source = (DrawingImage)App.Current.Resources[ImageName(butMuiltiRPC)];
-            ((Image)butCustom.Content).Source = (DrawingImage)App.Current.Resources[ImageName(butCustom)];
-            ((Image)butLogs.Content).Source = (DrawingImage)App.Current.Resources[ImageName(butLogs)];
-            ((Image)butSettings.Content).Source = (DrawingImage)App.Current.Resources[ImageName(butSettings)];
-            ((Image)butCredits.Content).Source = (DrawingImage)App.Current.Resources[ImageName(butCredits)];
-            ((Image)butDebug.Content).Source = (DrawingImage)App.Current.Resources[ImageName(butDebug)];
+            ((Image)btnMuiltiRPC.Content).Source = (DrawingImage)App.Current.Resources[ImageName(btnMuiltiRPC)];
+            ((Image)btnCustom.Content).Source = (DrawingImage)App.Current.Resources[ImageName(btnCustom)];
+            ((Image)btnLogs.Content).Source = (DrawingImage)App.Current.Resources[ImageName(btnLogs)];
+            ((Image)btnSettings.Content).Source = (DrawingImage)App.Current.Resources[ImageName(btnSettings)];
+            ((Image)btnCredits.Content).Source = (DrawingImage)App.Current.Resources[ImageName(btnCredits)];
+            ((Image)btnDebug.Content).Source = (DrawingImage)App.Current.Resources[ImageName(btnDebug)];
         }
 
         public async Task CanRunRPC()
         {
-            if (tblAfkReason.Text.Length == 1)
+            if (tbAfkReason.Text.Length == 1)
             {
-                tblAfkReason.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
-                tblAfkReason.ToolTip = new ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
-                butAfk.IsEnabled = false;
+                tbAfkReason.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
+                tbAfkReason.ToolTip = new ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
+                btnAfk.IsEnabled = false;
             }
             else
             {
-                tblAfkReason.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
-                tblAfkReason.ToolTip = null;
-                butAfk.IsEnabled = true;
+                tbAfkReason.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+                tbAfkReason.ToolTip = null;
+                btnAfk.IsEnabled = true;
             }
         }
 
@@ -180,14 +180,14 @@ namespace MultiRPC.GUI.Pages
             if (((Button) sender).Content.ToString() != App.Text.Shutdown)
             {
                 RPC.Start();
-                ThisPage.butAfk.IsEnabled = false;
+                ThisPage.btnAfk.IsEnabled = false;
             }
             else
             {
                 RPC.Shutdown();
                 if(PresenceBeforeAfk != null)
                     RPC.Presence = PresenceBeforeAfk;
-                ThisPage.butAfk.IsEnabled = true;
+                ThisPage.btnAfk.IsEnabled = true;
             }
         }
 
@@ -198,15 +198,15 @@ namespace MultiRPC.GUI.Pages
 
         private async void ButAfk_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(tblAfkReason.Text))
+            if (!string.IsNullOrWhiteSpace(tbAfkReason.Text))
             {
                 if (PresenceBeforeAfk == null)
                     PresenceBeforeAfk = RPC.Presence.Clone();
-                RPC.SetPresence(tblAfkReason.Text, "", "cat", App.Text.SleepyCat, "", "", App.Config.AFKTime);
+                RPC.SetPresence(tbAfkReason.Text, "", "cat", App.Text.SleepyCat, "", "", App.Config.AFKTime);
                 RPC.AFK = true;
                 var tmp = RPC.IDToUse;
                 RPC.IDToUse = 469643793851744257;
-                tblAfkReason.Text = "";
+                tbAfkReason.Text = "";
                 RPC.Update();
                 RPC.IDToUse = tmp;
                 RPC.Presence = PresenceBeforeAfk.Clone();

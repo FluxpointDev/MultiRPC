@@ -23,13 +23,13 @@ namespace MultiRPC.GUI.Pages
             InitializeComponent();
             if (App.Config.AutoUpdate)
             {
-                butSkip.Content = App.Text.DontRestartProgram;
-                butUpdateNow.Content = App.Text.RestartProgram;
+                btnSkip.Content = App.Text.DontRestartProgram;
+                btnUpdateNow.Content = App.Text.RestartProgram;
             }
             else
             {
-                butSkip.Content = App.Text.Skip;
-                butUpdateNow.Content = App.Text.UpdateNow;
+                btnSkip.Content = App.Text.Skip;
+                btnUpdateNow.Content = App.Text.UpdateNow;
             }
 
             tblCurrentVersion.Text =

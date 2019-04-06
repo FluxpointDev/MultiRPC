@@ -36,14 +36,14 @@ namespace MultiRPC.GUI.Pages
 
         public async Task UpdateText()
         {
-            butDebugStartRPC.Content = App.Text.DebugRPCStart;
-            butDebugStopRPC.Content = App.Text.DebugRPCStop;
-            butDebugStartRPC.ToolTip = new ToolTip(App.Text.DebugStartRPCTooltip);
-            butDebugStopRPC.ToolTip = new ToolTip(App.Text.DebugStopRPCTooltip);
-            butDebugSteam.Content = App.Text.RPCSteam;
-            butDebugSteam.ToolTip = new ToolTip(App.Text.RPCSteamTooltip);
-            butTestUpdate.Content = App.Text.TestUpdateWindow;
-            butTestUpdate.ToolTip = new ToolTip(App.Text.TestUpdateWindowTooltip);
+            btnDebugStartRPC.Content = App.Text.DebugRPCStart;
+            btnDebugStopRPC.Content = App.Text.DebugRPCStop;
+            btnDebugStartRPC.ToolTip = new ToolTip(App.Text.DebugStartRPCTooltip);
+            btnDebugStopRPC.ToolTip = new ToolTip(App.Text.DebugStopRPCTooltip);
+            btnDebugSteam.Content = App.Text.RPCSteam;
+            btnDebugSteam.ToolTip = new ToolTip(App.Text.RPCSteamTooltip);
+            btnTestUpdate.Content = App.Text.TestUpdateWindow;
+            btnTestUpdate.ToolTip = new ToolTip(App.Text.TestUpdateWindowTooltip);
 
         }
 

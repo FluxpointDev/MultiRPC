@@ -171,7 +171,7 @@ namespace MultiRPC.GUI.Pages
         {
             if (fromStartUp)
             {
-                while (MainPage.mainPage == null || MainPage.mainPage == null || MainPage.mainPage.spCheckForDiscord.Visibility == Visibility.Visible)
+                while (MainPage.mainPage == null || MainPage.mainPage == null || MainPage.mainPage.gridCheckForDiscord.Visibility == Visibility.Visible)
                 {
                     await Task.Delay(250);
                 }
@@ -179,13 +179,13 @@ namespace MultiRPC.GUI.Pages
 
             await MainPage.mainPage.Dispatcher.InvokeAsync(() =>
             {
-                MainPage.mainPage.butCustom.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                MainPage.mainPage.btnCustom.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             });
-            if (MainPage.mainPage.butStart.Content.ToString() == App.Text.Shutdown)
+            if (MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
             {
                 await MainPage.mainPage.Dispatcher.InvokeAsync(() =>
                 {
-                    MainPage.mainPage.butStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    MainPage.mainPage.btnStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                 });
             }
 
@@ -198,7 +198,7 @@ namespace MultiRPC.GUI.Pages
                     {
                         await MainPage.mainPage.Dispatcher.InvokeAsync(() =>
                         {
-                            MainPage.mainPage.butStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                            MainPage.mainPage.btnStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                         });
                     }
 
@@ -324,8 +324,8 @@ namespace MultiRPC.GUI.Pages
             }
 
             if (Profiles[CurrentButton.Content.ToString()].ClientID == (ID != 0 ? ID.ToString() : "") && 
-                MainPage.mainPage.ContentFrame.Content is CustomPage && MainPage.mainPage.butStart.Content != App.Text.Shutdown)
-                MainPage.mainPage.butStart.IsEnabled = isEnabled;
+                MainPage.mainPage.ContentFrame.Content is CustomPage && MainPage.mainPage.btnStart.Content != App.Text.Shutdown)
+                MainPage.mainPage.btnStart.IsEnabled = isEnabled;
             return isEnabled;
         }
 

@@ -60,7 +60,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Image Name="imgPatreonDonators" Source="{DynamicResource HeartIconDrawingImage}"/>
+                <Image Source="{DynamicResource HeartIconDrawingImage}"/>
                 <TextBlock Name="tblPatreonDonatorsTitle" Style="{DynamicResource Title}"/>
             </StackPanel>
             <Rectangle RadiusX="15" RadiusY="15" Grid.Row="2" Fill="{DynamicResource AccentColour1SCBrush}"/>
@@ -75,7 +75,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Image Name="imgPaypalDonators" Source="{DynamicResource HeartIconDrawingImage}"/>
+                <Image Source="{DynamicResource HeartIconDrawingImage}"/>
                 <TextBlock Name="tblPaypalDonatorsTitle" Style="{DynamicResource Title}"/>
             </StackPanel>
             <Rectangle RadiusX="15" RadiusY="15" Grid.Row="2" Fill="{DynamicResource AccentColour1SCBrush}"/>

@@ -22,7 +22,7 @@ namespace MultiRPC.GUI.Pages
             WindowID = windowID;
             Profiles = profiles;
             OldName = oldName;
-            butDone.Content = App.Text.Done;
+            btnDone.Content = App.Text.Done;
             Title = App.Text.ProfileEdit;
         }
 

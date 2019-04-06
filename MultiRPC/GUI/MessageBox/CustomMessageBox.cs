@@ -18,7 +18,7 @@ namespace MultiRPC.GUI
             MinHeight = page.MinHeight + 30;
             MinWidth = page.MinWidth;
             tblTitle.Text = title;
-            butMin.Visibility = Visibility.Collapsed;
+            btnMin.Visibility = Visibility.Collapsed;
             ShowInTaskbar = false;
         }
 
@@ -31,7 +31,7 @@ namespace MultiRPC.GUI
                 var window = new CustomMessageBox(page, messageBoxTitle);
                 window.WindowID = tick;
                 if (messageBoxButton == MessageBoxButton.YesNo)
-                    window.butClose.IsEnabled = false;
+                    window.btnClose.IsEnabled = false;
                 window.ShowDialog();
                 return window.ToReturn ?? DefaultReturn(messageBoxButton, messageBoxResult);
             });

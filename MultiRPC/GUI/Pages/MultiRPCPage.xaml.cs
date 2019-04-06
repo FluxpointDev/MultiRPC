@@ -188,7 +188,7 @@ namespace MultiRPC.GUI.Pages
                 tbLargeText.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
                 tbLargeText.ToolTip = null;
             }
-            MainPage.mainPage.butStart.IsEnabled = isEnabled;
+            MainPage.mainPage.btnStart.IsEnabled = isEnabled;
         }
 
         private void TbText2_OnSizeChanged(object sender, TextChangedEventArgs e)

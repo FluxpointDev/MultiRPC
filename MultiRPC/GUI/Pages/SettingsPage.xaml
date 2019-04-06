@@ -204,9 +204,9 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Name="tblPaypal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                        <Button HorizontalAlignment="Left" Grid.Column="1" Name="butPaypal" Click="ButPaypal_OnClick" />
+                        <Button HorizontalAlignment="Left" Grid.Column="1" Name="btnPaypal" Click="ButPaypal_OnClick" />
                         <TextBlock Name="tblPatreon" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                        <Button HorizontalAlignment="Left" Grid.Column="1" Grid.Row="2" Name="butPatreon" Click="ButPatreon_OnClick" />
+                        <Button HorizontalAlignment="Left" Grid.Column="1" Grid.Row="2" Name="btnPatreon" Click="ButPatreon_OnClick" />
                     </Grid>
                 </StackPanel>
                 <Rectangle Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Fill="{DynamicResource AccentColour1SCBrush}"/>
@@ -219,11 +219,11 @@
 
             <StackPanel Grid.Row="2" Grid.Column="1">
                 <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Left">
-                    <Button Width="100" Name="butChangelog" Margin="0,0,5,0" Click="ButChangelog_OnClick" />
-                    <Button Width="100" Name="butCheckUpdates" IsEnabled="False"  Margin="0,0,5,0" Click="ButCheckUpdates_OnClick" />
+                    <Button Width="100" Name="btnChangelog" Margin="0,0,5,0" Click="ButChangelog_OnClick" />
+                    <Button Width="100" Name="btnCheckUpdates" IsEnabled="False"  Margin="0,0,5,0" Click="ButCheckUpdates_OnClick" />
                 </StackPanel>
                 <StackPanel Margin="0,5,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button Width="100" Name="butDebug" Click="ButDebug_OnClick" />
+                    <Button Width="100" Name="btnDebug" Click="ButDebug_OnClick" />
                 </StackPanel>     
             </StackPanel>
         </Grid>

@@ -51,10 +51,10 @@
         </StackPanel>
 
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-            <Button Name="butMin" Click="Min_OnClick" Width="57" Style="{DynamicResource TitleBarMin}">
+            <Button Name="btnMin" Click="Min_OnClick" Width="57" Style="{DynamicResource TitleBarMin}">
                 <Rectangle HorizontalAlignment="Center" VerticalAlignment="Center" Width="10" Height="1" Margin="0,5,0,0" Fill="{DynamicResource TextColourSCBrush}"/>
             </Button>
-            <Button Name="butClose" Background="Transparent" Click="Close_OnClick" Width="57" Style="{DynamicResource ButtonRed}" MouseLeave="Close_OnMouseLeave" MouseEnter="Close_OnMouseEnter">
+            <Button Name="btnClose" Background="Transparent" Click="Close_OnClick" Width="57" Style="{DynamicResource ButtonRed}" MouseLeave="Close_OnMouseLeave" MouseEnter="Close_OnMouseEnter">
                 <Button.Template>
                     <ControlTemplate TargetType="{x:Type ButtonBase}">
                         <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" UseLayoutRounding="True" d:DesignUseLayoutRounding="True">
@@ -75,11 +75,11 @@
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Button.Template>
-                <Polygon Name="CloseIcon" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{DynamicResource TextColourSCBrush}" Points="11,1.576 6.583,6 11,10.424 10.424,11 6,6.583 1.576,11 1,10.424 5.417,6 1,1.576 1.576,1 6,5.417 10.424,1"/>
+                <Polygon Name="plgCloseIcon" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{DynamicResource TextColourSCBrush}" Points="11,1.576 6.583,6 11,10.424 10.424,11 6,6.583 1.576,11 1,10.424 5.417,6 1,1.576 1.576,1 6,5.417 10.424,1"/>
             </Button>
         </StackPanel>
 
-            <Frame Grid.Row="1" Navigated="MainPageContentFrame_OnNavigated" Name="ContentFrame" Background="{DynamicResource AccentColour2SCBrush}"/>
+        <Frame Grid.Row="1" Navigated="MainPageContentFrame_OnNavigated" Name="ContentFrame" Background="{DynamicResource AccentColour2SCBrush}"/>
         </Grid>
     </Border>
 </Window>

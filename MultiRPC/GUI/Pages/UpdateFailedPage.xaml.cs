@@ -17,8 +17,8 @@ namespace MultiRPC.GUI.Pages
             WindowID = windowID;
             tblUpdateFailed.Text = App.Text.UpdateFailed;
             tblUpdateFailedMessage.Text = App.Text.UpdateFailedMessage;
-            butRetryUpdate.Content = App.Text.RetryUpdate;
-            butRetryOnNextStartUp.Content = App.Text.RetryOnNextStartUp;
+            btnRetryUpdate.Content = App.Text.RetryUpdate;
+            btnRetryOnNextStartUp.Content = App.Text.RetryOnNextStartUp;
             tbUpdateError.Text = e.Message;
             Title = App.Text.UpdateFailed;
         }

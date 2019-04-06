@@ -21,15 +21,15 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Image Name="imgmessageBoxImage" Margin="21,18,0,0" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBlock Grid.Column="1" Margin="11,26,31,23" TextWrapping="Wrap" Name="tblmessageBoxText"/>
+        <Image Name="imgMessageBoxImage" Margin="21,18,0,0" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Grid.Column="1" Margin="11,26,31,23" TextWrapping="Wrap" Name="tblMessageBoxText"/>
         
         <Rectangle Grid.ColumnSpan="2" Grid.Row="1" Fill="{DynamicResource AccentColour1SCBrush}"/>
         <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1" Margin="15,9">
-            <Button Name="butOk" Visibility="Collapsed" Click="ButOk_OnClick"/>
-            <Button Name="butYes" Visibility="Collapsed" Click="ButYes_OnClick"/>
-            <Button Name="butNo" Visibility="Collapsed" Click="ButNo_OnClick"/>
-            <Button Name="butCancel" Visibility="Collapsed" Click="ButCancel_OnClick"/>
+            <Button Name="btnOk" Visibility="Collapsed" Click="ButOk_OnClick"/>
+            <Button Name="btnYes" Visibility="Collapsed" Click="ButYes_OnClick"/>
+            <Button Name="btnNo" Visibility="Collapsed" Click="ButNo_OnClick"/>
+            <Button Name="btnCancel" Visibility="Collapsed" Click="ButCancel_OnClick"/>
         </StackPanel>
     </Grid>
 </Page>

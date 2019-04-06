@@ -16,13 +16,13 @@ namespace MultiRPC.GUI.Pages
         public ShareProfilePage(CustomProfile profile, long windowID)
         {
             InitializeComponent();
-            butExport.Content = App.Text.Export;
-            butImport.Content = App.Text.Import;
+            btnExport.Content = App.Text.Export;
+            btnImport.Content = App.Text.Import;
             Profile = profile;
             WindowID = windowID;
             Title = App.Text.ProfileShare;
             if (RPC.RPCClient != null && RPC.RPCClient.IsInitialized && !RPC.RPCClient.Disposed)
-                butImport.IsEnabled = false;
+                btnImport.IsEnabled = false;
         }
 
         private void ButImport_OnClick(object sender, RoutedEventArgs e)

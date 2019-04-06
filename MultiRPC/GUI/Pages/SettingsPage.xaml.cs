@@ -45,6 +45,7 @@ namespace MultiRPC.GUI.Pages
             cbProgramsTab.IsChecked = App.Config.Disabled.ProgramsTab;
             cbHelpIcons.IsChecked = App.Config.Disabled.HelpIcons;
             cbAutoUpdating.IsChecked = !App.Config.AutoUpdate;
+            cbHideTaskbarIcon.IsEnabled = !App.Config.HideTaskbarIconWhenMin;
             rAppDev.Text = App.AppDev;
             cbTheme.SelectedIndex = (int)App.Config.ActiveTheme;
 
@@ -62,13 +63,13 @@ namespace MultiRPC.GUI.Pages
 
         private async void SettingsPage_Loaded(object sender, RoutedEventArgs e)
         {
-            butChangelog.IsEnabled = File.Exists(FileLocations.ChangelogFileLocalLocation);
+            btnChangelog.IsEnabled = File.Exists(FileLocations.ChangelogFileLocalLocation);
             UpdateButtonCheckLogic();
         }
 
         public async Task UpdateButtonCheckLogic()
         {
-            butCheckUpdates.IsEnabled = false;
+            btnCheckUpdates.IsEnabled = false;
             if (Updater.BeenUpdated || Updater.IsUpdating)
                 return;
 
@@ -76,7 +77,7 @@ namespace MultiRPC.GUI.Pages
             while (Updater.IsChecking)
                 await Task.Delay(250);
 
-            butCheckUpdates.IsEnabled = true;
+            btnCheckUpdates.IsEnabled = true;
         }
 
         public async Task UpdateText()
@@ -102,13 +103,13 @@ namespace MultiRPC.GUI.Pages
             tblAutoUpdating.Text = App.Text.AutomaticUpdates + ":";
             tblPaypal.Text = App.Text.PaypalMin1;
             tblPatreon.Text = App.Text.PatreonMonthly;
-            butPaypal.Content = App.Text.ClickHere;
-            butPatreon.Content = App.Text.ClickHere;
+            btnPaypal.Content = App.Text.ClickHere;
+            btnPatreon.Content = App.Text.ClickHere;
             tblDonations.Text = App.Text.Donations;
             tblDonateMessage.Text = App.Text.DonateMessage;
-            butChangelog.Content = App.Text.Changelog;
-            butCheckUpdates.Content = App.Text.CheckForUpdates;
-            butDebug.Content = App.Text.Debug;
+            btnChangelog.Content = App.Text.Changelog;
+            btnCheckUpdates.Content = App.Text.CheckForUpdates;
+            btnDebug.Content = App.Text.Debug;
             tblTheme.Text = App.Text.Theme;
             cbiDark.Content = App.Text.Dark;
             cbiLight.Content = App.Text.Light;
@@ -229,8 +230,8 @@ namespace MultiRPC.GUI.Pages
 
         private void ButDebug_OnClick(object sender, RoutedEventArgs e)
         {
-            MainPage.mainPage.butDebug.Visibility = Visibility.Visible;
-            butDebug.IsEnabled = false;
+            MainPage.mainPage.btnDebug.Visibility = Visibility.Visible;
+            btnDebug.IsEnabled = false;
         }
 
         private void RAppDev_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

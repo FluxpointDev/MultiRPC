@@ -32,6 +32,6 @@
             <TextBlock Name="tblText2" />
             <TextBlock Name="tblTime" Visibility="Hidden"/>
         </StackPanel>
-            </Grid>
+        </Grid>
     </Border>
 </UserControl>

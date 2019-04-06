@@ -14,7 +14,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBox TextWrapping="Wrap" Name="tbShare" Height="NaN" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource AccentColour1SCBrush}" Margin="0,0,0,10"/>
-        <Button Name="butImport" Click="ButImport_OnClick" Style="{DynamicResource ButtonGreen}" Grid.Row="1" HorizontalAlignment="Left"/>
-        <Button Name="butExport" Click="ButExport_OnClick" Style="{DynamicResource ButtonGreen}" Grid.Row="1" HorizontalAlignment="Right"/>
+        <Button Name="btnImport" Click="ButImport_OnClick" Style="{DynamicResource ButtonGreen}" Grid.Row="1" HorizontalAlignment="Left"/>
+        <Button Name="btnExport" Click="ButExport_OnClick" Style="{DynamicResource ButtonGreen}" Grid.Row="1" HorizontalAlignment="Right"/>
     </Grid>
 </Page>

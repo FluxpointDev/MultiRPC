@@ -27,44 +27,44 @@ namespace MultiRPC.GUI
             InitializeComponent();
 
             WindowID = windowID;
-            butNo.Content = App.Text.No;
-            butYes.Content = App.Text.Yes;
-            butOk.Content = App.Text.Ok;
-            butCancel.Content = App.Text.Cancel;
-            tblmessageBoxText.Text = messageBoxText;
+            btnNo.Content = App.Text.No;
+            btnYes.Content = App.Text.Yes;
+            btnOk.Content = App.Text.Ok;
+            btnCancel.Content = App.Text.Cancel;
+            tblMessageBoxText.Text = messageBoxText;
 
             if (messageBoxButton == MessageBoxButton.OK)
             {
-                butOk.Visibility = Visibility.Visible;
+                btnOk.Visibility = Visibility.Visible;
             }
             if (messageBoxButton == MessageBoxButton.OKCancel)
             {
-                butOk.Visibility = Visibility.Visible;
-                butCancel.Visibility = Visibility.Visible;
+                btnOk.Visibility = Visibility.Visible;
+                btnCancel.Visibility = Visibility.Visible;
             }
             if (messageBoxButton == MessageBoxButton.YesNo)
             {
-                butYes.Visibility = Visibility.Visible;
-                butNo.Visibility = Visibility.Visible;
+                btnYes.Visibility = Visibility.Visible;
+                btnNo.Visibility = Visibility.Visible;
             }
             if (messageBoxButton == MessageBoxButton.YesNoCancel)
             {
-                butYes.Visibility = Visibility.Visible;
-                butNo.Visibility = Visibility.Visible;
-                butCancel.Visibility = Visibility.Visible;
+                btnYes.Visibility = Visibility.Visible;
+                btnNo.Visibility = Visibility.Visible;
+                btnCancel.Visibility = Visibility.Visible;
             }
 
             if ((int)messageBoxImage == 0)
-                imgmessageBoxImage.Visibility = Visibility.Collapsed;
+                imgMessageBoxImage.Visibility = Visibility.Collapsed;
 
             if ((int)messageBoxImage == 64)
-                imgmessageBoxImage.Source = (ImageSource)App.Current.Resources["InfoIconDrawingImage"];
+                imgMessageBoxImage.Source = (ImageSource)App.Current.Resources["InfoIconDrawingImage"];
             else if ((int)messageBoxImage == 48)
-                imgmessageBoxImage.Source = (ImageSource)App.Current.Resources["WarningIconDrawingImage"];
+                imgMessageBoxImage.Source = (ImageSource)App.Current.Resources["WarningIconDrawingImage"];
             else if ((int)messageBoxImage == 16)
-                imgmessageBoxImage.Source = (ImageSource)App.Current.Resources["AlertIconDrawingImage"];
+                imgMessageBoxImage.Source = (ImageSource)App.Current.Resources["AlertIconDrawingImage"];
             else if ((int)messageBoxImage == 32)
-                imgmessageBoxImage.Source = (ImageSource)App.Current.Resources["HelpIconDrawingImage"];
+                imgMessageBoxImage.Source = (ImageSource)App.Current.Resources["HelpIconDrawingImage"];
         }
 
         private void ButOk_OnClick(object sender, RoutedEventArgs e)

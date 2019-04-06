@@ -131,16 +131,16 @@ namespace MultiRPC
             RPCClient.OnReady += Client_OnReady;
 
             if (!AFK)
-                MainPage.mainPage.butUpdate.IsEnabled = true;
+                MainPage.mainPage.btnUpdate.IsEnabled = true;
 
             //Show that we are going to load things™
             await MainPage.mainPage.frameRPCPreview.Dispatcher.InvokeAsync(async () =>
             {
                 await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Loading);
                 MainPage.mainPage.rCon.Text = App.Text.Loading;
-                MainPage.mainPage.butStart.Style = (Style)MainPage.mainPage.Resources["ButtonRed"];
-                PageUserWasOnWhenStarted = MainPage.mainPage.butStart.Content.ToString();
-                MainPage.mainPage.butStart.Content = App.Text.Shutdown;
+                MainPage.mainPage.btnStart.Style = (Style)MainPage.mainPage.Resources["ButtonRed"];
+                PageUserWasOnWhenStarted = MainPage.mainPage.btnStart.Content.ToString();
+                MainPage.mainPage.btnStart.Content = App.Text.Shutdown;
             });
 
             //Create a timer that will regularly call invoke
@@ -284,15 +284,15 @@ namespace MultiRPC
                 await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Default);
             });
 
-            MainPage.mainPage.butStart.Style = (Style)App.Current.Resources["ButtonGreen"];
+            MainPage.mainPage.btnStart.Style = (Style)App.Current.Resources["ButtonGreen"];
             if (MainPage.mainPage.ContentFrame.Content is MultiRPCPage)
-                MainPage.mainPage.butStart.Content = App.Text.Start + " MuiltiRPC";
+                MainPage.mainPage.btnStart.Content = App.Text.Start + " MuiltiRPC";
             else if (MainPage.mainPage.ContentFrame.Content is CustomPage)
-                MainPage.mainPage.butStart.Content = App.Text.StartCustom;
+                MainPage.mainPage.btnStart.Content = App.Text.StartCustom;
             else
-                MainPage.mainPage.butStart.Content = PageUserWasOnWhenStarted;
+                MainPage.mainPage.btnStart.Content = PageUserWasOnWhenStarted;
 
-            MainPage.mainPage.butUpdate.IsEnabled = false;
+            MainPage.mainPage.btnUpdate.IsEnabled = false;
             MainPage.mainPage.rCon.Text = App.Text.Disconnected;
 
             foreach (var button in CustomPage.ProfileButtons)

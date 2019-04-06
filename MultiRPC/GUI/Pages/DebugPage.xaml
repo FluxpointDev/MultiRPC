@@ -11,14 +11,14 @@
         <StackPanel Orientation="Horizontal">
             <StackPanel>
                 <TextBlock Text="RPC" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                <Button Name="butDebugStartRPC" Style="{DynamicResource ButtonPurple}" Margin="0,0,0,10" Click="ButDebugStartRPC_OnClick"/>
-                <Button Name="butDebugStopRPC" Style="{DynamicResource ButtonPurple}" Margin="0,0,0,10" Click="ButDebugStopRPC_OnClick"/>
-                <Button Name="butDebugSteam" Style="{DynamicResource ButtonPurple}" Margin="0,0,0,10" Click="ButDebugSteam_OnClick"/>
+                <Button Name="btnDebugStartRPC" Style="{DynamicResource ButtonPurple}" Margin="0,0,0,10" Click="ButDebugStartRPC_OnClick"/>
+                <Button Name="btnDebugStopRPC" Style="{DynamicResource ButtonPurple}" Margin="0,0,0,10" Click="ButDebugStopRPC_OnClick"/>
+                <Button Name="btnDebugSteam" Style="{DynamicResource ButtonPurple}" Margin="0,0,0,10" Click="ButDebugSteam_OnClick"/>
                 <TextBox Name="tbDebugSteamID" MaxLength="25" HorizontalAlignment="Left" Width="150" />
             </StackPanel>
             <StackPanel Margin="10,0,0,0">
                 <TextBlock Text="GUI" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                <Button Name="butTestUpdate" Style="{DynamicResource ButtonPurple}" Click="ButTestUpdate_OnClick"/>
+                <Button Name="btnTestUpdate" Style="{DynamicResource ButtonPurple}" Click="ButTestUpdate_OnClick"/>
             </StackPanel>
         </StackPanel>
     </Grid>

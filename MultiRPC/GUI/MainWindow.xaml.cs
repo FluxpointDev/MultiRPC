@@ -72,7 +72,7 @@ namespace MultiRPC.GUI
             tblTitle.Text = Title;
 
             if (!minButton)
-                butMin.Visibility = Visibility.Collapsed;
+                btnMin.Visibility = Visibility.Collapsed;
         }
 
         internal void StartLogic(Page page)
@@ -124,18 +124,18 @@ namespace MultiRPC.GUI
 
             if (App.Config.DiscordCheck)
             {
-                while (MainPage.mainPage.spCheckForDiscord.Visibility == Visibility.Visible)
+                while (MainPage.mainPage.gridCheckForDiscord.Visibility == Visibility.Visible)
                     await Task.Delay(760);
                 await Task.Delay(250);
             }
             if (App.Config.AutoStart == "MultiRPC")
             {
-                MainPage.mainPage.butStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                MainPage.mainPage.btnStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             }
             else if (App.Config.AutoStart == App.Text.Custom)
             {
-                MainPage.mainPage.butCustom.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                MainPage.mainPage.butStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                MainPage.mainPage.btnCustom.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                MainPage.mainPage.btnStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             }
         }
 
@@ -197,12 +197,12 @@ namespace MultiRPC.GUI
 
         private void Close_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            CloseIcon.Fill = Brushes.White;
+            plgCloseIcon.Fill = Brushes.White;
         }
 
         private void Close_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            CloseIcon.Fill = (Brush)App.Current.Resources["TextColourSCBrush"];
+            plgCloseIcon.Fill = (Brush)App.Current.Resources["TextColourSCBrush"];
         }
 
         private void MainPageContentFrame_OnNavigated(object sender, NavigationEventArgs e)
@@ -218,19 +218,19 @@ namespace MultiRPC.GUI
                 if (runCode)
                 {
                     if (content is MultiRPCPage)
-                        ((MainPage) ContentFrame.Content).butStart.Content = $"{App.Text.Start} MuiltiRPC";
+                        ((MainPage) ContentFrame.Content).btnStart.Content = $"{App.Text.Start} MuiltiRPC";
                     else if (content is CustomPage)
-                        ((MainPage) ContentFrame.Content).butStart.Content = App.Text.StartCustom;
+                        ((MainPage) ContentFrame.Content).btnStart.Content = App.Text.StartCustom;
                 }
                 else
                 {
-                    ((MainPage) ContentFrame.Content).butUpdate.IsEnabled = true;
+                    ((MainPage) ContentFrame.Content).btnUpdate.IsEnabled = true;
                     if (content is MultiRPCPage && RPC.Type != RPC.RPCType.MultiRPC)
-                        ((MainPage)ContentFrame.Content).butUpdate.IsEnabled = false;
+                        ((MainPage)ContentFrame.Content).btnUpdate.IsEnabled = false;
                     else if (content is CustomPage && RPC.Type != RPC.RPCType.Custom)
-                        ((MainPage)ContentFrame.Content).butUpdate.IsEnabled = false;
+                        ((MainPage)ContentFrame.Content).btnUpdate.IsEnabled = false;
                     else if (!(content is CustomPage) && !(content is MultiRPCPage))
-                        ((MainPage)ContentFrame.Content).butUpdate.IsEnabled = false;
+                        ((MainPage)ContentFrame.Content).btnUpdate.IsEnabled = false;
                 }
             }
         }

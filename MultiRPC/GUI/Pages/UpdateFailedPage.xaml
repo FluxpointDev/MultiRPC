@@ -17,8 +17,8 @@
         <TextBlock Name="tblUpdateFailed" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,5"/>
         <TextBlock Name="tblUpdateFailedMessage"/>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,10">
-                <Button Name="butRetryUpdate" Style="{DynamicResource ButtonGreen}" Click="ButRetryUpdate_OnClick"/>
-                <Button Name="butRetryOnNextStartUp" Margin="5,0,0,0" Style="{DynamicResource ButtonRed}" BorderThickness="0" Click="ButRetryOnNextStartUp_OnClick"/>
+                <Button Name="btnRetryUpdate" Style="{DynamicResource ButtonGreen}" Click="ButRetryUpdate_OnClick"/>
+                <Button Name="btnRetryOnNextStartUp" Margin="5,0,0,0" Style="{DynamicResource ButtonRed}" BorderThickness="0" Click="ButRetryOnNextStartUp_OnClick"/>
             </StackPanel>
         </StackPanel>
         <TextBox TextWrapping="Wrap" IsReadOnly="True" Name="tbUpdateError" Grid.Row="1" Height="NaN"/>
