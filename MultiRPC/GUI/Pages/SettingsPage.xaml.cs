@@ -45,7 +45,7 @@ namespace MultiRPC.GUI.Pages
             cbProgramsTab.IsChecked = App.Config.Disabled.ProgramsTab;
             cbHelpIcons.IsChecked = App.Config.Disabled.HelpIcons;
             cbAutoUpdating.IsChecked = !App.Config.AutoUpdate;
-            cbHideTaskbarIcon.IsEnabled = !App.Config.HideTaskbarIconWhenMin;
+            cbHideTaskbarIcon.IsChecked = !App.Config.HideTaskbarIconWhenMin;
             rAppDev.Text = App.AppDev;
             cbTheme.SelectedIndex = (int)App.Config.ActiveTheme;
 

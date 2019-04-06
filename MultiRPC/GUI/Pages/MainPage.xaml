@@ -85,36 +85,36 @@
                     <StackPanel Margin="5,10,5,0">
                         <Button Style="{DynamicResource NavButton}" Name="btnMuiltiRPC" Click="ChangePage_OnClick">
                             <Button.Content>
-                                <Image Source="{DynamicResource DiscordIconDrawingImage}"/>
+                                <Image Name="imgDiscordIcon" Source="{DynamicResource DiscordIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
                         <Button Style="{DynamicResource NavButton}" Name="btnCustom" Click="ChangePage_OnClick">
                             <Button.Content>
-                                <Image Source="{DynamicResource CustomIconDrawingImage}"/>
+                                <Image Name="imgCustomIcon" Source="{DynamicResource CustomIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
                         <Button Style="{DynamicResource NavButton}" Name="btnSettings" Click="ChangePage_OnClick">
                             <Button.Content>
-                                <Image Source="{DynamicResource SettingsIconDrawingImage}"/>
+                                <Image Name="imgSettingsIcon" Source="{DynamicResource SettingsIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
                         <Button Style="{DynamicResource NavButton}" Name="btnLogs" Click="ChangePage_OnClick">
                             <Button.Content>
-                                <Image Source="{DynamicResource LogsIconDrawingImage}"/>
+                                <Image Name="imgLogsIcon" Source="{DynamicResource LogsIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
                         <Button Style="{DynamicResource NavButton}" Name="btnCredits" Click="ChangePage_OnClick">
                             <Button.Content>
-                                <Image Source="{DynamicResource CreditsIconDrawingImage}"/>
+                                <Image Name="imgCreditsIcon" Source="{DynamicResource CreditsIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
                         <Button Visibility="Collapsed" Style="{DynamicResource NavButton}" Name="btnDebug" Click="ChangePage_OnClick">
                             <Button.Content>
-                                <Image Source="{DynamicResource DebugIconDrawingImage}"/>
+                                <Image Name="imgDebugIcon" Source="{DynamicResource DebugIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
                     </StackPanel>
-                 </Grid>
+                </Grid>
             </ScrollViewer>
             <Grid Grid.Row="1" VerticalAlignment="Bottom">
                 <Rectangle Opacity="0.55" Fill="{DynamicResource AccentColour1SCBrush}"/>
