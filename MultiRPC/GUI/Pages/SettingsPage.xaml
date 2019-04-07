@@ -58,15 +58,15 @@
                 <StackPanel Style="{DynamicResource Content}">
                     <StackPanel>
                         <TextBlock Name="tblWebsiteMultiRPC"/>
-                        <Image Tag="https://stats.blazedev.me" Source="{DynamicResource BrowserIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
+                        <Image Name="imgWebsiteMultiRPC" Tag="https://stats.blazedev.me" Source="{DynamicResource BrowserIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Margin="10,0">
                         <TextBlock Name="tblDownload"/>
-                        <Image Tag="https://multirpc.blazedev.me/" Source="{DynamicResource DownloadIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
+                        <Image Name="imgDownloadRPC" Tag="https://multirpc.blazedev.me/" Source="{DynamicResource DownloadIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
                     </StackPanel>
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Github"/>
-                        <Image Tag="https://github.com/xXBuilderBXx/MultiRPC" Source="{DynamicResource GithubIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
+                        <Image Name="imgGithubRPC" Tag="https://github.com/xXBuilderBXx/MultiRPC" Source="{DynamicResource GithubIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
@@ -76,7 +76,7 @@
                 <StackPanel Style="{DynamicResource Content}">
                     <StackPanel>
                         <TextBlock Name="tblJoinForFunBotsAndSupport"/>
-                        <Image Source="../../Assets/ServerIcon.jpg" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Server_OnMouseDown"/>
+                        <Image Name="imgJoinForFunBotsAndSupport" Source="../../Assets/ServerIcon.jpg" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Server_OnMouseDown"/>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
@@ -86,15 +86,15 @@
                 <StackPanel Style="{DynamicResource Content}">
                     <StackPanel>
                         <TextBlock Name="tblWebsiteDiscord"/>
-                        <Image Tag="https://discordapp.com/" Source="{DynamicResource DiscordColourIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
+                        <Image Name="imgWebsiteDiscord" Tag="https://discordapp.com/" Source="{DynamicResource DiscordColourIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Margin="10,0">
                         <TextBlock Name="tblStatus"/>
-                        <Image Tag="https://status.discordapp.com/" Source="{DynamicResource DiscordColourIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
+                        <Image Name="imgStatusDiscord" Tag="https://status.discordapp.com/" Source="{DynamicResource DiscordColourIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
                     </StackPanel>
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="C# Github"/>
-                        <Image Tag="https://github.com/discord-net/Discord.Net" Source="{DynamicResource GithubIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
+                        <Image Name="imgGithubDiscord" Tag="https://github.com/discord-net/Discord.Net" Source="{DynamicResource GithubIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

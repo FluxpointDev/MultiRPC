@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows;
 using MultiRPC.Functions;
 using MultiRPC.GUI.Views;
@@ -10,6 +11,7 @@ using System.Windows.Markup;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Collections.Generic;
+using System.Windows.Media.Animation;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI.Pages
@@ -118,14 +120,30 @@ namespace MultiRPC.GUI.Pages
             tblHideTaskbarIcon.Text = App.Text.HideTaskbarIcon;
         }
 
+        public static void ImageAnimation(Image image, double to, Storyboard storyboard = null, Duration duration = new Duration())
+        {
+            if(storyboard == null)
+                storyboard = new Storyboard();
+            DoubleAnimation winOpacityAnimation = new DoubleAnimation();
+            winOpacityAnimation.From = image.Opacity;
+            winOpacityAnimation.To = to;
+            winOpacityAnimation.Duration = !duration.HasTimeSpan ? new Duration(TimeSpan.FromSeconds(0.5)) : duration;
+            winOpacityAnimation.EasingFunction = new QuinticEase();
+
+            storyboard.Children.Add(winOpacityAnimation);
+            Storyboard.SetTargetName(winOpacityAnimation, image.Name);
+            Storyboard.SetTargetProperty(winOpacityAnimation, new PropertyPath(Image.OpacityProperty));
+            storyboard.Begin(image);
+        }
+
         private void Image_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            ((Image) sender).Opacity = 1;
+            ImageAnimation(((Image) sender), 1);
         }
 
         private void Image_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            ((Image)sender).Opacity = 0.6;
+            ImageAnimation(((Image)sender), 0.6);
         }
 
         private void Image_OnMouseDown(object sender, MouseButtonEventArgs e)

@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Animation;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI.Pages
@@ -427,28 +428,42 @@ namespace MultiRPC.GUI.Pages
 
         private void Image_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            Storyboard storyboard = new Storyboard();
+
             if (SelectedHelpImage != null)
             {
                 if (SelectedHelpImage == (Image)sender)
                 {
                     imgHelpImage.Source = null;
-                    SelectedHelpImage.Opacity = 0.6;
+                    imgHelpImageBehind.Source = null;
+                    SettingsPage.ImageAnimation(SelectedHelpImage, 0.6);
                     SelectedHelpImage = null;
                 }
                 else
                 {
-                    SelectedHelpImage.Opacity = 0.6;
-                    imgHelpImage.Source = ((Image)((Image)sender).Tag).Source;
-                    SelectedHelpImage = (Image) sender;
-                    SelectedHelpImage.Opacity = 1;
+                    storyboard.Completed += ImageFade;
+                    SettingsPage.ImageAnimation(SelectedHelpImage, 0.6);
+
+                    imgHelpImageBehind.Source = ((Image)((Image)sender).Tag).Source;
+                    SettingsPage.ImageAnimation(imgHelpImage, 0, storyboard);
+
+                    SelectedHelpImage = (Image)sender;
+                    SettingsPage.ImageAnimation(SelectedHelpImage, 1);
                 }
             }
             else
             {
                 imgHelpImage.Source = ((Image)((Image)sender).Tag).Source;
                 SelectedHelpImage = (Image)sender;
-                SelectedHelpImage.Opacity = 1;
+                SettingsPage.ImageAnimation(SelectedHelpImage, 1);
             }
+        }
+
+        private void ImageFade(object sender, EventArgs e)
+        {
+            SettingsPage.ImageAnimation(imgHelpImage, 1, duration: new Duration(TimeSpan.Zero));
+            imgHelpImage.Source = imgHelpImageBehind.Source;
+            imgHelpImageBehind.Source = null;
         }
 
         private async Task ShowHelpImages()
@@ -623,12 +638,12 @@ namespace MultiRPC.GUI.Pages
 
         private void Img_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            ((Image) sender).Opacity = 1;
+            SettingsPage.ImageAnimation(((Image)sender), 1);
         }
 
         private void Img_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            ((Image)sender).Opacity = 0.6;
+            SettingsPage.ImageAnimation(((Image)sender), 0.6);
         }
     }
 }
