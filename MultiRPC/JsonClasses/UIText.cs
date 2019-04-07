@@ -147,5 +147,6 @@
         public string Cancel;
         public string Load;
         public string CustomProfiles;
+        public string ErrorsFrom;
     }
 }

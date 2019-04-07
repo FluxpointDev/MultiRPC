@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using Newtonsoft.Json;
+using System.Diagnostics;
 using MultiRPC.Functions;
-using MultiRPC.JsonClasses;
-using System.Windows.Threading;
 using MultiRPC.GUI.Pages;
+using MultiRPC.JsonClasses;
+using System.Threading.Tasks;
+using System.Windows.Threading;
+using System.Collections.Generic;
 
 namespace MultiRPC
 {
@@ -74,6 +73,7 @@ namespace MultiRPC
             Config = Config.Load().Result;
             UITextUpdate().ConfigureAwait(false).GetAwaiter().GetResult();
             Logging = new Logging();
+            File.AppendAllText(FileLocations.ErrorFileLocalLocation, $"\r\n------------------------------------------------------------------------------------------------\r\n{App.Text.ErrorsFrom} {DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}");
             DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
 
@@ -117,6 +117,7 @@ namespace MultiRPC
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
+            File.AppendAllText(FileLocations.ErrorFileLocalLocation, "\r\n\r\nMessage\r\n" + e.Exception.Message + "\r\n\r\nSource\r\n" + e.Exception.Source + "\r\n\r\nStackTrace\r\n" + e.Exception.StackTrace);
             Logging.Error(Text.UnhandledException, e.Exception);
         }
     }

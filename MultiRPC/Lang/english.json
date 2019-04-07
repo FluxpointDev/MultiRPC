@@ -143,5 +143,6 @@
   "Yes": "Yes",
   "Cancel": "Cancel",
   "CustomProfiles": "Custom Profiles",
-  "Load": "Load" 
+  "Load": "Load",
+  "ErrorsFrom": "Errors from"
 }

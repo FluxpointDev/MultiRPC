@@ -26,6 +26,9 @@ namespace MultiRPC.JsonClasses
         public static string ChangelogFileName = "Changelog.txt";
         public static string ChangelogFileLocalLocation = Path.Combine(ConfigFolder, ChangelogFileName);
 
+        public static string ErrorFileName = "Error.txt";
+        public static string ErrorFileLocalLocation = Path.Combine(ConfigFolder, ErrorFileName);
+
         public static string OpenFileName = "Open.rpc";
         public static string OpenFileLocalLocation = Path.Combine(ConfigFolder, OpenFileName);
         public static string MultiRPCStartLink = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), "Programs", "Discord Universe", "MultiRPC.appref-ms");
