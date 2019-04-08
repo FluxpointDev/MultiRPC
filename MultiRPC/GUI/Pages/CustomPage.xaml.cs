@@ -610,13 +610,11 @@ namespace MultiRPC.GUI.Pages
         {
             string currentKey = CurrentButton.Content.ToString();
             string lastKey = "";
-            foreach (var profile in ProfileButtons)
-            {
-                if (profile.Content.ToString() == currentKey)
-                    break;
-                else
-                    lastKey = profile.Content.ToString();
-            }
+
+            lastKey = Profiles.Count - 2 >= App.Config.SelectedCustom 
+                ? Profiles.ElementAt(App.Config.SelectedCustom + 1).Key 
+                : Profiles.ElementAt(Profiles.Count - 2).Key;
+
             Profiles.Remove(currentKey);
             ProfileButtons.Remove(CurrentButton);
             using (var writer = new StreamWriter(FileLocations.ProfilesFileLocalLocation))
