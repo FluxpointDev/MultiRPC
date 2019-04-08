@@ -126,7 +126,7 @@ namespace MultiRPC.GUI.Pages
             tbProfiles.Visibility = tbProfiles.Items.Count == 1 ? Visibility.Collapsed : Visibility.Visible;
 
             UpdateText();
-            CanRunRPC();
+            CanRunRPC(true);
         }
 
         private async void TbLargeText_OnTextChanged(object sender, TextChangedEventArgs e)
@@ -266,14 +266,12 @@ namespace MultiRPC.GUI.Pages
             }
 
             ulong ID = 0;
+            var profile = Profiles[CurrentButton.Content.ToString()];
+
             if (App.Config.CheckToken && TokenTextChanged)
             {
-                //Want this is check we are still on the profile we was checking because internet speeds and api response time are a thing 🙃
-                var profile = Profiles[tblProfileName.Text];
                 var isValidCode =
                     ulong.TryParse(tbClientID.Text, NumberStyles.Any, new NumberFormatInfo(), out ID);
-                if (!isValidCode && tbClientID.Text.Length == 0)
-                    isValidCode = true;
 
                 if ((ID.ToString().Length != tbClientID.MaxLength || !isValidCode))
                 {
@@ -301,16 +299,13 @@ namespace MultiRPC.GUI.Pages
                     }
                     catch
                     {
-                        if (Profiles[CurrentButton.Content.ToString()].ClientID == ID.ToString() && MainPage.mainPage.ContentFrame.Content is CustomPage)
-                        {
-                            App.Logging.Error("API", App.Text.DiscordAPIDown);
-                            tbClientID.ToolTip = new ToolTip($"{App.Text.NetworkIssue}!");
-                            tbClientID.BorderBrush = (SolidColorBrush) App.Current.Resources["Red"];
-                            isEnabled = false;
-                        }
+                        App.Logging.Error("API", App.Text.DiscordAPIDown);
+                        tbClientID.ToolTip = new ToolTip($"{App.Text.NetworkIssue}!");
+                        tbClientID.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
+                        isEnabled = false;
                     }
                     
-                    if (T != null)
+                    if (T != null && profile == Profiles[CurrentButton.Content.ToString()])
                     {
                         if (T.StatusCode == HttpStatusCode.BadRequest)
                         {
@@ -336,16 +331,6 @@ namespace MultiRPC.GUI.Pages
                         }
                     }
                 }
-
-                if (Profiles.ContainsValue(profile))
-                {
-                    if (Profiles[CurrentButton.Content.ToString()].ClientID != profile.ClientID)
-                        return isEnabled;
-                }
-                else
-                {
-                    return isEnabled;
-                }
             }
             else
             {
@@ -354,24 +339,28 @@ namespace MultiRPC.GUI.Pages
             }
 
 
-            if (MainPage.mainPage.ContentFrame.Content is CustomPage && RPC.Type == RPC.RPCType.Custom)
+            if (Profiles[CurrentButton.Content.ToString()] == profile)
             {
-                if (MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
+                if (MainPage.mainPage.ContentFrame.Content is CustomPage && RPC.Type == RPC.RPCType.Custom)
                 {
-                    MainPage.mainPage.btnUpdate.IsEnabled = isEnabled;
-                    MainPage.mainPage.btnStart.IsEnabled = true;
+                    if (MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
+                    {
+                        MainPage.mainPage.btnUpdate.IsEnabled = isEnabled;
+                        MainPage.mainPage.btnStart.IsEnabled = true;
+                    }
+                    else
+                    {
+                        MainPage.mainPage.btnUpdate.IsEnabled = false;
+                        MainPage.mainPage.btnStart.IsEnabled = isEnabled;
+                    }
                 }
-                else
+                else if (MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
                 {
                     MainPage.mainPage.btnUpdate.IsEnabled = false;
-                    MainPage.mainPage.btnStart.IsEnabled = isEnabled;
+                    MainPage.mainPage.btnStart.IsEnabled = true;
                 }
             }
-            else if (MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
-            {
-                MainPage.mainPage.btnUpdate.IsEnabled = false;
-                MainPage.mainPage.btnStart.IsEnabled = true;
-            }
+
             return isEnabled;
         }
 
