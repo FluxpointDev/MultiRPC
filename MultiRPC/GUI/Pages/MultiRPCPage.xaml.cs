@@ -125,6 +125,9 @@ namespace MultiRPC.GUI.Pages
 
         private void TbText1_OnSizeChanged(object sender, TextChangedEventArgs e)
         {
+            MainPage.mainPage.btnUpdate.IsEnabled = false;
+            MainPage.mainPage.btnStart.IsEnabled = false;
+
             string text = ((TextBox)sender).Text;
 
             if (!Checks.UnderAmountOfBytes(text, 128))
@@ -188,7 +191,25 @@ namespace MultiRPC.GUI.Pages
                 tbLargeText.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
                 tbLargeText.ToolTip = null;
             }
-            MainPage.mainPage.btnStart.IsEnabled = isEnabled;
+
+            if (MainPage.mainPage.ContentFrame.Content is MultiRPCPage && RPC.Type == RPC.RPCType.MultiRPC)
+            {
+                if (MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
+                {
+                    MainPage.mainPage.btnUpdate.IsEnabled = isEnabled;
+                    MainPage.mainPage.btnStart.IsEnabled = true;
+                }
+                else
+                {
+                    MainPage.mainPage.btnUpdate.IsEnabled = false;
+                    MainPage.mainPage.btnStart.IsEnabled = isEnabled;
+                }
+            }
+            else if (MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
+            {
+                MainPage.mainPage.btnUpdate.IsEnabled = false;
+                MainPage.mainPage.btnStart.IsEnabled = true;
+            }
         }
 
         private void TbText2_OnSizeChanged(object sender, TextChangedEventArgs e)

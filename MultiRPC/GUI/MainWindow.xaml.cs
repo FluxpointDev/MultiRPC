@@ -270,11 +270,17 @@ namespace MultiRPC.GUI
                 {
                     ((MainPage) ContentFrame.Content).btnUpdate.IsEnabled = true;
                     if (content is MultiRPCPage && RPC.Type != RPC.RPCType.MultiRPC)
+                    {
                         ((MainPage)ContentFrame.Content).btnUpdate.IsEnabled = false;
+                    }
                     else if (content is CustomPage && RPC.Type != RPC.RPCType.Custom)
+                    {
                         ((MainPage)ContentFrame.Content).btnUpdate.IsEnabled = false;
+                    }
                     else if (!(content is CustomPage) && !(content is MultiRPCPage))
+                    {
                         ((MainPage)ContentFrame.Content).btnUpdate.IsEnabled = false;
+                    }
                 }
             }
         }

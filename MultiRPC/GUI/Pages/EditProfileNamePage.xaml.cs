@@ -23,6 +23,7 @@ namespace MultiRPC.GUI.Pages
             OldName = oldName;
             btnDone.Content = App.Text.Done;
             Title = App.Text.ProfileEdit;
+            tbNewProfileName.Text = oldName;
         }
 
         private async void ButDone_OnClick(object sender, RoutedEventArgs e)

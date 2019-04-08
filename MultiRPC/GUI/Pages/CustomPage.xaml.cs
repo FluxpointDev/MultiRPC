@@ -215,7 +215,9 @@ namespace MultiRPC.GUI.Pages
         /// <returns></returns>
         public async Task<bool> CanRunRPC(bool TokenTextChanged = false)
         {
+            MainPage.mainPage.btnUpdate.IsEnabled = false;
             MainPage.mainPage.btnStart.IsEnabled = false;
+
             bool isEnabled = true;
             if (tbText2.Text.Length == 1)
             {
@@ -308,7 +310,7 @@ namespace MultiRPC.GUI.Pages
                         }
                     }
                     
-                    if (T != null && Profiles[CurrentButton.Content.ToString()].ClientID == ID.ToString() && MainPage.mainPage.ContentFrame.Content is CustomPage)
+                    if (T != null)
                     {
                         if (T.StatusCode == HttpStatusCode.BadRequest)
                         {
@@ -327,7 +329,8 @@ namespace MultiRPC.GUI.Pages
                         }
                         else
                         {
-                            RPC.IDToUse = ID;
+                            if(MainPage.mainPage.ContentFrame.Content is CustomPage)
+                                RPC.IDToUse = ID;
                             tbClientID.BorderBrush = (SolidColorBrush) App.Current.Resources["AccentColour4SCBrush"];
                             tbClientID.ToolTip = null;
                         }
@@ -350,8 +353,25 @@ namespace MultiRPC.GUI.Pages
                     isEnabled = false;
             }
 
-            if (MainPage.mainPage.ContentFrame.Content is CustomPage && MainPage.mainPage.btnStart.Content.ToString() != App.Text.Shutdown)
-                MainPage.mainPage.btnStart.IsEnabled = isEnabled;
+
+            if (MainPage.mainPage.ContentFrame.Content is CustomPage && RPC.Type == RPC.RPCType.Custom)
+            {
+                if (MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
+                {
+                    MainPage.mainPage.btnUpdate.IsEnabled = isEnabled;
+                    MainPage.mainPage.btnStart.IsEnabled = true;
+                }
+                else
+                {
+                    MainPage.mainPage.btnUpdate.IsEnabled = false;
+                    MainPage.mainPage.btnStart.IsEnabled = isEnabled;
+                }
+            }
+            else if (MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
+            {
+                MainPage.mainPage.btnUpdate.IsEnabled = false;
+                MainPage.mainPage.btnStart.IsEnabled = true;
+            }
             return isEnabled;
         }
 
@@ -434,14 +454,15 @@ namespace MultiRPC.GUI.Pages
             {
                 if (SelectedHelpImage == (Image)sender)
                 {
-                    imgHelpImage.Source = null;
                     imgHelpImageBehind.Source = null;
+                    storyboard.Completed += Storyboard_Completed;
+                    SettingsPage.ImageAnimation(imgHelpImage, 0, storyboard);
                     SettingsPage.ImageAnimation(SelectedHelpImage, 0.6);
                     SelectedHelpImage = null;
                 }
                 else
                 {
-                    storyboard.Completed += ImageFade;
+                    storyboard.Completed += ImageFaded;
                     SettingsPage.ImageAnimation(SelectedHelpImage, 0.6);
 
                     imgHelpImageBehind.Source = ((Image)((Image)sender).Tag).Source;
@@ -454,16 +475,26 @@ namespace MultiRPC.GUI.Pages
             else
             {
                 imgHelpImage.Source = ((Image)((Image)sender).Tag).Source;
+                SettingsPage.ImageAnimation(imgHelpImage, 1);
                 SelectedHelpImage = (Image)sender;
                 SettingsPage.ImageAnimation(SelectedHelpImage, 1);
             }
         }
 
-        private void ImageFade(object sender, EventArgs e)
+        private void Storyboard_Completed(object sender, EventArgs e)
+        {
+            if(SelectedHelpImage == null)
+                imgHelpImage.Source = null;
+        }
+
+        private void ImageFaded(object sender, EventArgs e)
         {
             SettingsPage.ImageAnimation(imgHelpImage, 1, duration: new Duration(TimeSpan.Zero));
-            imgHelpImage.Source = imgHelpImageBehind.Source;
-            imgHelpImageBehind.Source = null;
+            if (imgHelpImageBehind.Source != null)
+            {
+                imgHelpImage.Source = imgHelpImageBehind.Source;
+                imgHelpImageBehind.Source = null;
+            }
         }
 
         private async Task ShowHelpImages()

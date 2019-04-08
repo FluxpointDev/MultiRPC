@@ -164,6 +164,7 @@ namespace MultiRPC
 
             CustomPage.customPage.imgProfileAdd.IsEnabled = false;
             CustomPage.customPage.imgProfileDelete.IsEnabled = false;
+            CustomPage.customPage.tbClientID.IsEnabled = false;
         }
 
         public static void SetPresence(string text1, string text2, string largeKey, string largeText, string smallKey, string smallText, bool showTime)
@@ -285,12 +286,20 @@ namespace MultiRPC
             });
 
             MainPage.mainPage.btnStart.Style = (Style)App.Current.Resources["ButtonGreen"];
-            if (MainPage.mainPage.ContentFrame.Content is MultiRPCPage)
+            if (MainPage.mainPage.ContentFrame.Content is MultiRPCPage multiRpcPage)
+            {
                 MainPage.mainPage.btnStart.Content = App.Text.Start + " MuiltiRPC";
-            else if (MainPage.mainPage.ContentFrame.Content is CustomPage)
+                multiRpcPage.CanRunRPC();
+            }
+            else if (MainPage.mainPage.ContentFrame.Content is CustomPage customPage)
+            {
                 MainPage.mainPage.btnStart.Content = App.Text.StartCustom;
+                customPage.CanRunRPC();
+            }
             else
+            {
                 MainPage.mainPage.btnStart.Content = PageUserWasOnWhenStarted;
+            }
 
             MainPage.mainPage.btnUpdate.IsEnabled = false;
             MainPage.mainPage.rCon.Text = App.Text.Disconnected;
@@ -299,6 +308,7 @@ namespace MultiRPC
                 button.IsEnabled = true;
             CustomPage.customPage.imgProfileAdd.IsEnabled = true;
             CustomPage.customPage.imgProfileDelete.IsEnabled = true;
+            CustomPage.customPage.tbClientID.IsEnabled = true;
         }
     }
 }
