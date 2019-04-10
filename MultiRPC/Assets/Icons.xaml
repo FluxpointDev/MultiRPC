@@ -138,28 +138,28 @@
             <TranslateTransform X="0" Y="0.0040000001899898052" />
         </DrawingGroup.Transform>
         <DrawingGroup Transform="1,0,0,1,0,0.004">
-            <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource DiscordIconGeometry}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource DiscordIconGeometry}" />
         </DrawingGroup>
     </DrawingGroup>
     <DrawingImage x:Key="DiscordIconSelectedDrawingImage" Drawing="{StaticResource DiscordIconSelectedDrawingGroup}" />
     <DrawingGroup x:Key="CustomIconSelectedDrawingGroup" ClipGeometry="M0,0 V26.208 H17.496 V0 H0 Z">
         <DrawingGroup Opacity="1" Transform="1,0,0,1,-28,-139">
             <DrawingGroup Transform="1,0,0,1,28,148.623">
-                <GeometryDrawing Brush="White">
+                <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}">
                     <GeometryDrawing.Geometry>
                         <EllipseGeometry RadiusX="3.481" RadiusY="3.481" Center="3.481,3.481" />
                     </GeometryDrawing.Geometry>
                 </GeometryDrawing>
             </DrawingGroup>
             <DrawingGroup Transform="1,0,0,1,28,158.245">
-                <GeometryDrawing Brush="White">
+                <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}">
                     <GeometryDrawing.Geometry>
                         <EllipseGeometry RadiusX="3.481" RadiusY="3.481" Center="3.481,3.481" />
                     </GeometryDrawing.Geometry>
                 </GeometryDrawing>
             </DrawingGroup>
             <DrawingGroup Transform="1,0,0,1,28,139">
-                <GeometryDrawing Brush="White">
+                <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}">
                     <GeometryDrawing.Geometry>
                         <RectangleGeometry RadiusX="3.499" RadiusY="3.499" Rect="0,0,17.496,6.998" />
                     </GeometryDrawing.Geometry>
@@ -262,7 +262,7 @@
               </DrawingGroup.ClipGeometry>
               <DrawingGroup Opacity="1" Transform="1,0,0,1,-28,-139">
                   <DrawingGroup Transform="1,0,0,1,28,139">
-                        <GeometryDrawing Brush="White">
+                        <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}">
                           <GeometryDrawing.Geometry>
                               <RectangleGeometry RadiusX="3.499" RadiusY="3.499" Rect="0,0,25.496,6.998" />
                           </GeometryDrawing.Geometry>
@@ -271,7 +271,7 @@
               </DrawingGroup>
               <DrawingGroup Opacity="1" Transform="1,0,0,1,-28,-129">
                   <DrawingGroup Transform="1,0,0,1,28,139">
-                        <GeometryDrawing Brush="White">
+                        <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}">
                           <GeometryDrawing.Geometry>
                               <RectangleGeometry RadiusX="3.499" RadiusY="3.499" Rect="0,0,25.496,6.998" />
                           </GeometryDrawing.Geometry>
@@ -280,7 +280,7 @@
               </DrawingGroup>
               <DrawingGroup Opacity="1" Transform="1,0,0,1,-28,-119">
                   <DrawingGroup Transform="1,0,0,1,28,139">
-                      <GeometryDrawing Brush="White">
+                      <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}">
                           <GeometryDrawing.Geometry>
                               <RectangleGeometry RadiusX="3.499" RadiusY="3.499" Rect="0,0,25.496,6.998" />
                           </GeometryDrawing.Geometry>
@@ -346,7 +346,7 @@
           <TranslateTransform X="0.0025553824380040169" Y="0.0010948204435408115" />
       </DrawingGroup.Transform>
       <DrawingGroup Opacity="1" Transform="1,0,0,1,0.008,0">
-          <GeometryDrawing Brush="White" Geometry="{StaticResource SettingsIconSelectedGeometry}" />
+          <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource SettingsIconSelectedGeometry}" />
       </DrawingGroup>
   </DrawingGroup>
 <DrawingImage x:Key="SettingsIconSelectedDrawingImage" Drawing="{StaticResource SettingsIconSelectedDrawingGroup}" />
@@ -394,14 +394,14 @@
 
   <DrawingGroup x:Key="LogsIconSelectedDrawingGroup" ClipGeometry="M0,0 V1000 H1000 V0 H0 Z">
         <DrawingGroup Opacity="1">
-            <GeometryDrawing Brush="White" Geometry="{StaticResource LogsIconGeometry1}" />
-            <GeometryDrawing Brush="White" Geometry="{StaticResource LogsIconGeometry2}" />
-            <GeometryDrawing Brush="White" Geometry="{StaticResource LogsIconGeometry3}" />
-            <GeometryDrawing Brush="White" Geometry="{StaticResource LogsIconGeometry4}" />
-            <GeometryDrawing Brush="White" Geometry="{StaticResource LogsIconGeometry5}" />
-            <GeometryDrawing Brush="White" Geometry="{StaticResource LogsIconGeometry6}" />
-            <GeometryDrawing Brush="White" Geometry="{StaticResource LogsIconGeometry7}" />
-            <GeometryDrawing Brush="White" Geometry="{StaticResource LogsIconGeometry8}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource LogsIconGeometry1}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource LogsIconGeometry2}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource LogsIconGeometry3}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource LogsIconGeometry4}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource LogsIconGeometry5}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource LogsIconGeometry6}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource LogsIconGeometry7}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource LogsIconGeometry8}" />
         </DrawingGroup>
     </DrawingGroup>
     <DrawingImage x:Key="LogsIconSelectedDrawingImage" Drawing="{StaticResource LogsIconSelectedDrawingGroup}" />
@@ -426,12 +426,12 @@
 
     <DrawingGroup x:Key="DebugIconSelectedDrawingGroup" ClipGeometry="M0,0 V512 H512 V0 H0 Z">
         <DrawingGroup Opacity="1">
-            <GeometryDrawing Brush="White" Geometry="{StaticResource DebugIconGeometry1}" />
-            <GeometryDrawing Brush="White" Geometry="{StaticResource DebugIconGeometry2}" />
-            <GeometryDrawing Brush="White" Geometry="{StaticResource DebugIconGeometry3}" />
-            <GeometryDrawing Brush="White" Geometry="{StaticResource DebugIconGeometry4}" />
-            <GeometryDrawing Brush="White" Geometry="{StaticResource DebugIconGeometry5}" />
-            <GeometryDrawing Brush="White" Geometry="{StaticResource DebugIconGeometry6}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource DebugIconGeometry1}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource DebugIconGeometry2}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource DebugIconGeometry3}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource DebugIconGeometry4}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource DebugIconGeometry5}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource DebugIconGeometry6}" />
         </DrawingGroup>
     </DrawingGroup>
     <DrawingImage x:Key="DebugIconSelectedDrawingImage" Drawing="{StaticResource DebugIconSelectedDrawingGroup}" />

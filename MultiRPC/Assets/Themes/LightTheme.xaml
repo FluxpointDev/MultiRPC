@@ -12,6 +12,7 @@
     <SolidColorBrush Color="#505050" x:Key="DisabledButtonColour"/>
     <SolidColorBrush Color="White" x:Key="DisabledButtonTextColour"/>
     <SolidColorBrush Color="#FF00ABEB" x:Key="NavButtonBackgroundSelected"/>
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="NavButtonIconColourSelected"/>
     <system:String x:Key="ThemeName">Light</system:String>
 
     <Color A="255" R="255" G="255" B="255" x:Key="AccentColour1" />

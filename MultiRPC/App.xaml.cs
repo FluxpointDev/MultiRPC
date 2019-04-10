@@ -117,7 +117,7 @@ namespace MultiRPC
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            File.AppendAllText(FileLocations.ErrorFileLocalLocation, "\r\n\r\nMessage\r\n" + e.Exception.Message + "\r\n\r\nSource\r\n" + e.Exception.Source + "\r\n\r\nStackTrace\r\n" + e.Exception.StackTrace);
+            File.AppendAllText(FileLocations.ErrorFileLocalLocation, $"\r\n\r\n{App.Text.Message}\r\n{e.Exception.Message}\r\n\r\n{App.Text.Source}\r\n{e.Exception.Source}\r\n\r\nStackTrace\r\n{e.Exception.StackTrace}");
             Logging.Error(Text.UnhandledException, e.Exception);
         }
     }

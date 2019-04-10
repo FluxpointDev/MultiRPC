@@ -58,8 +58,8 @@ namespace MultiRPC.GUI.Pages
             RPC.SetPresence(tbText1.Text, tbText2.Text, cbLargeKey.Text.ToLower(), tbLargeText.Text, cbSmallKey.Text.ToLower(), tbSmallText.Text, cbElapasedTime.IsChecked.Value);
             UpdatePreviewImage(false);
             UpdatePreviewImage(true);
+            await UpdateText();
             CanRunRPC();
-            UpdateText();
         }
 
         public async Task UpdatePreviewImage(bool updateSmall, string key = "")
@@ -205,7 +205,7 @@ namespace MultiRPC.GUI.Pages
                     MainPage.mainPage.btnStart.IsEnabled = isEnabled;
                 }
             }
-            else if (MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
+            else if (MainPage.mainPage.btnStart.Content != null && MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
             {
                 MainPage.mainPage.btnUpdate.IsEnabled = false;
                 MainPage.mainPage.btnStart.IsEnabled = true;

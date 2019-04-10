@@ -6,10 +6,11 @@
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="850" d:DesignWidth="800"
+      Loaded="ThemeEditorPage_OnLoaded"
       Title="ThemeEditorPage">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -17,14 +18,19 @@
             </Grid.RowDefinitions>
 
             <StackPanel>
-                <TextBlock Margin="0,0,0,15" Text="Let's make a Theme!" HorizontalAlignment="Center" FontWeight="Bold" FontSize="25"/>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <StackPanel HorizontalAlignment="Stretch">
+                    <TextBlock Name="tblMakeTheme" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="25"/>
+                    <StackPanel Margin="0,0,0,10" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Button Name="btnAddTheme" Click="BtnAddTheme_OnClick"/>
+                        <Button Margin="0,5,0,0" Name="btnAddAndApplyTheme" Click="BtnAddAndApplyTheme_OnClick"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" HorizontalAlignment="Stretch">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <xctk:ColorCanvas Name="colourPicker" SelectedColorChanged="ColourPicker_OnSelectedColorChanged" IsEnabled="False" UsingAlphaChannel="False" SelectedColor="Black">
                                 <xctk:ColorCanvas.Template>
@@ -219,75 +225,80 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock VerticalAlignment="Center" Text="Theme Name: "/>
+                            <TextBlock  Name="tblThemeName" VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1" Name="tbCurrentThemeName" TextChanged="TbCurrentThemeName_OnTextChanged"/>
                         </Grid>
                     </StackPanel>
 
-                    <StackPanel Grid.Row="1">
+                    <StackPanel Grid.Row="2">
                         <StackPanel Margin="0,10,0,0" HorizontalAlignment="Center" Orientation="Horizontal">
                             <StackPanel Margin="0,0,10,10">
-                                <TextBlock HorizontalAlignment="Center" Name="tblColour1" Text="Colour 1: " VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock HorizontalAlignment="Center" Name="tblColour1" VerticalAlignment="Center" Margin="0,0,0,5"/>
                                 <Border Name="borderColour1" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource AccentColour4SCBrush}" Background="White" Width="30" Height="30" MouseDown="Colour_OnMouseDown"/>
                             </StackPanel>
 
                             <StackPanel Margin="0,0,10,10">
-                                <TextBlock HorizontalAlignment="Center" Name="tblColour2" Text="Colour 2: " VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock HorizontalAlignment="Center" Name="tblColour2" VerticalAlignment="Center" Margin="0,0,0,5"/>
                                 <Border Name="borderColour2" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource AccentColour4SCBrush}" Background="White" Width="30" Height="30" MouseDown="Colour_OnMouseDown" />
                             </StackPanel>
 
                             <StackPanel Margin="0,0,10,10">
-                                <TextBlock HorizontalAlignment="Center" Name="tblColour2Hover" Text="Colour 2 (Hover): " VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock HorizontalAlignment="Center" Name="tblColour2Hover" VerticalAlignment="Center" Margin="0,0,0,5"/>
                                 <Border Name="borderColour2Hover" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource AccentColour4SCBrush}" Background="White" Width="30" Height="30" MouseDown="Colour_OnMouseDown" />
                             </StackPanel>
 
                             <StackPanel Margin="0,0,10,10">
-                                <TextBlock HorizontalAlignment="Center" Name="tblColour3" Text="Colour 3: " VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock HorizontalAlignment="Center" Name="tblColour3" VerticalAlignment="Center" Margin="0,0,0,5"/>
                                 <Border Name="borderColour3" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource AccentColour4SCBrush}" Background="White" Width="30" Height="30" MouseDown="Colour_OnMouseDown" />
                             </StackPanel>
 
                             <StackPanel Margin="0,0,10,10">
-                                <TextBlock HorizontalAlignment="Center" Name="tblColour4" Text="Colour 4: " VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock HorizontalAlignment="Center" Name="tblColour4" VerticalAlignment="Center" Margin="0,0,0,5"/>
                                 <Border Name="borderColour4" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource AccentColour4SCBrush}" Background="White" Width="30" Height="30" MouseDown="Colour_OnMouseDown" />
                             </StackPanel>
 
                             <StackPanel Margin="0,0,10,10">
-                                <TextBlock HorizontalAlignment="Center" Name="tblColour5" Text="Colour 5: " VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock HorizontalAlignment="Center" Name="tblColour5" VerticalAlignment="Center" Margin="0,0,0,5"/>
                                 <Border Name="borderColour5" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource AccentColour4SCBrush}" Background="White" Width="30" Height="30" MouseDown="Colour_OnMouseDown" />
                             </StackPanel>
 
                             <StackPanel Margin="0,0,10,10">
-                                <TextBlock HorizontalAlignment="Center" Name="tblTextColour" Text="Text Colour: " VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock HorizontalAlignment="Center" Name="tblTextColour" VerticalAlignment="Center" Margin="0,0,0,5"/>
                                 <Border Name="borderTextColour" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource AccentColour4SCBrush}" Background="White" Width="30" Height="30" MouseDown="Colour_OnMouseDown" />
                             </StackPanel>
                         </StackPanel>
                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                             <StackPanel Margin="0,0,10,10">
-                                <TextBlock HorizontalAlignment="Center" Name="tblDiscordButtonColour" Text="Disabled Button Colour: " VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock HorizontalAlignment="Center" Name="tblDiscordButtonColour" VerticalAlignment="Center" Margin="0,0,0,5"/>
                                 <Border Name="borderDiscordButtonColour" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource AccentColour4SCBrush}" Background="White" Width="30" Height="30" MouseDown="Colour_OnMouseDown" />
                             </StackPanel>
 
                             <StackPanel Margin="0,0,10,10">
-                                <TextBlock HorizontalAlignment="Center" Name="tblDiscordButtonTextColour" Text="Disabled Button Text Colour: " VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock HorizontalAlignment="Center" Name="tblDiscordButtonTextColour" VerticalAlignment="Center" Margin="0,0,0,5"/>
                                 <Border Name="borderDiscordButtonTextColour" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource AccentColour4SCBrush}" Background="White" Width="30" Height="30" MouseDown="Colour_OnMouseDown" />
                             </StackPanel>
 
                             <StackPanel Margin="0,0,10,10">
-                                <TextBlock HorizontalAlignment="Center" Name="tblSelectedPageColour" Text="Selected Page Colour: " VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock HorizontalAlignment="Center" Name="tblSelectedPageColour" VerticalAlignment="Center" Margin="0,0,0,5"/>
                                 <Border Name="borderSelectedPageColour" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource AccentColour4SCBrush}" Background="White" Width="30" Height="30" MouseDown="Colour_OnMouseDown" />
+                            </StackPanel>
+
+                            <StackPanel Margin="0,0,10,10">
+                                <TextBlock HorizontalAlignment="Center" Name="tblSelectedPageIconColour" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <Border Name="borderSelectedPageIconColour" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource AccentColour4SCBrush}" Background="White" Width="30" Height="30" MouseDown="Colour_OnMouseDown" />
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </Grid>
 
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                    <Button Content="Save Theme" Name="btnSaveTheme" Click="BtnSaveTheme_OnClick" IsEnabled="False"/>
-                    <Button Content="Save and Apply Theme" Margin="5,0,0,0" Name="btnSaveAndApplyTheme" Click="BtnSaveAndApplyTheme_OnClick" IsEnabled="False"/>
+                    <Button Name="btnSaveTheme" Click="BtnSaveTheme_OnClick" IsEnabled="False"/>
+                    <Button Margin="5,0,0,0" Name="btnSaveAndApplyTheme" Click="BtnSaveAndApplyTheme_OnClick" IsEnabled="False"/>
                 </StackPanel>
             </StackPanel>
 
-            <StackPanel Grid.Row="1" Margin="0,10" Name="spInstalledThemes" HorizontalAlignment="Left">
-                <TextBlock FontWeight="SemiBold" FontSize="18" Text="Installed Themes" Margin="0,0,0,15"/>
+            <StackPanel Grid.Row="3" Margin="0,10" Name="spInstalledThemes" HorizontalAlignment="Left">
+                <TextBlock Name="tblInstalledThemes" FontWeight="SemiBold" FontSize="18" Margin="0,0,0,15"/>
             </StackPanel>
         </Grid>
     </ScrollViewer>

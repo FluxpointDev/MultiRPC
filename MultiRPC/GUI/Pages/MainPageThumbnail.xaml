@@ -59,7 +59,7 @@
 
             <Grid Grid.RowSpan="2" Background="{DynamicResource AccentColour1SCBrush}"/>
             <Grid Grid.Column="1" Background="{DynamicResource AccentColour1SCBrush}"/>
-            <StackPanel Grid.RowSpan="2" Margin="5 ,10 ,5 ,0">
+            <StackPanel Grid.RowSpan="2" Margin="5,10,5,0">
                 <Button Name="btnNavButton" Style="{DynamicResource NavButton}">
                     <Button.Content>
                         <Image Source="{DynamicResource DiscordIconDrawingImage}"/>
@@ -72,20 +72,20 @@
                 </Button>
             </StackPanel>
 
-                    <!--C O N T E N T-->
+            <!--C O N T E N T-->
             <Rectangle Grid.Column="1" Grid.Row="1" Fill="{DynamicResource AccentColour1SCBrush}" Margin="0,-1,0,0"/>
             <Border Name="mask" CornerRadius="15,15,0,0" Grid.Column="1" Grid.Row="1" Background="{DynamicResource AccentColour2SCBrush}"/>
 
             <StackPanel Grid.Row="1" Grid.Column="1" Margin="10">
-                <TextBox Width="200" Margin="0,0,0,5" Text="Wew I'm a textbox"/>
+                <TextBox Width="200" Margin="0,0,0,5" Name="tbExample"/>
                 <ComboBox Width="200" Margin="0,0,0,5" SelectedIndex="0">
-                    <ComboBoxItem Content="Wew I'm content"/>
-                    <ComboBoxItem Content="Wew I'm more content"/>
+                    <ComboBoxItem Name="cbiExample"/>
+                    <ComboBoxItem Name="cbiExample2"/>
                 </ComboBox>
-                <TextBlock Width="200" Margin="0,0,0,5" Text="Wew I'm text" HorizontalAlignment="Center"/>
+                <TextBlock Width="200" Margin="0,0,0,5" HorizontalAlignment="Center" Name="tblExample"/>
                 <CheckBox Width="200" Margin="0,0,0,5" HorizontalAlignment="Center"/>
-                <Button Width="200" Margin="0,0,0,5" Content="Wew I'm a button"/>
-                <Button Width="200" Margin="0,0,0,5" Content="Wew I'm a disabled button" IsEnabled="False"/>
+                <Button Width="200" Margin="0,0,0,5" Name="btnExample"/>
+                <Button Width="200" Margin="0,0,0,5" Name="btnDisabledExample" IsEnabled="False"/>
             </StackPanel>
         </Grid>
     </Grid>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using MultiRPC.GUI.Pages;
@@ -7,8 +8,6 @@ using System.Windows.Media;
 using System.Windows.Shell;
 using MultiRPC.JsonClasses;
 using System.ComponentModel;
-using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Interop;
 using System.Windows.Controls;

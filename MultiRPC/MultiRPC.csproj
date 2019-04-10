@@ -164,7 +164,6 @@
     <Compile Include="JsonClasses\CreditsList.cs" />
     <Compile Include="JsonClasses\CustomProfile.cs" />
     <Compile Include="JsonClasses\FileLocations.cs" />
-    <Compile Include="JsonClasses\Theme.cs" />
     <Compile Include="JsonClasses\UIText.cs" />
     <Compile Include="RPC.cs" />
   </ItemGroup>

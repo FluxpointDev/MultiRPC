@@ -1,16 +1,9 @@
-﻿using System;
+﻿using System.IO;
 using System.Windows;
-using System.Reflection;
-using System.Diagnostics;
-using System.IO;
-using MultiRPC.Functions;
-using MultiRPC.GUI.Views;
 using System.Windows.Media;
+using System.Windows.Markup;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Markup;
-using System.Windows.Navigation;
-using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI.Pages
 {
@@ -25,6 +18,16 @@ namespace MultiRPC.GUI.Pages
             this.Resources.MergedDictionaries.Add(resource);
             this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText($"Assets/Icons.xaml")));
             Loaded += MainPageThumbnail_Loaded;
+        }
+
+        public async Task UpdateText()
+        {
+            tbExample.Text = App.Text.WewTextbox;
+            cbiExample.Content = App.Text.WewComboboxItem;
+            cbiExample2.Content = App.Text.WewComboboxItem2;
+            tblExample.Text = App.Text.WewTextBlock;
+            btnExample.Content = App.Text.WewButton;
+            btnDisabledExample.Content = App.Text.WewDisabledButton;
         }
 
         private void MainPageThumbnail_Loaded(object sender, RoutedEventArgs e)
@@ -46,10 +49,8 @@ namespace MultiRPC.GUI.Pages
             }
 
             UpdateButton(btnNavButton, (SolidColorBrush)this.Resources["AccentColour3SCBrush"]);
-            UpdateButton(btnNavButtonSelected, new SolidColorBrush(Colors.White));
-
-            //((Image)btnNavButton.Content).Source = (DrawingImage)this.Resources.MergedDictionaries[1][ImageName("DiscordIcon", false)];
-            //((Image)btnNavButtonSelected.Content).Source = (DrawingImage)this.Resources.MergedDictionaries[1][ImageName("DiscordIcon", true)];
+            UpdateButton(btnNavButtonSelected, (SolidColorBrush)this.Resources["NavButtonIconColourSelected"]);
+            UpdateText();
         }
     }
 }

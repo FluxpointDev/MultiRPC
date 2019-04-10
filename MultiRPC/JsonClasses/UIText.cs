@@ -148,5 +148,36 @@
         public string Load;
         public string CustomProfiles;
         public string ErrorsFrom;
+        public string Message;
+        public string Source;
+        public string AddTheme;
+        public string AddAndApplyTheme;
+        public string LetMakeTheme;
+        public string ShareThemePart1;
+        public string ShareThemePart2;
+        public string ThemeName;
+        public string Colour1;
+        public string Colour2;
+        public string Colour2Hover;
+        public string Colour3;
+        public string Colour4;
+        public string Colour5;
+        public string TextColour;
+        public string DisabledButtonColour;
+        public string DisabledButtonTextColour;
+        public string SelectedPageColour;
+        public string SaveTheme;
+        public string SaveAndApplyTheme;
+        public string InstalledThemes;
+        public string Edit;
+        public string Remove;
+        public string Clone;
+        public string SelectedPageIconColour;
+        public string WewTextbox;
+        public string WewComboboxItem;
+        public string WewComboboxItem2;
+        public string WewTextBlock;
+        public string WewButton;
+        public string WewDisabledButton;
     }
 }
