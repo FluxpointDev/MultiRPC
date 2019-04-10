@@ -17,7 +17,7 @@ namespace MultiRPC
         public string ActiveLanguage = "English";
 
         /// <summary> What theme to use </summary>
-        public Theme.ActiveTheme ActiveTheme = Theme.ActiveTheme.Dark;
+        public string ActiveTheme = "Assets/Themes/DarkTheme.xaml";
 
         /// <summary> If to auto update the app </summary>
         public bool AutoUpdate = false;

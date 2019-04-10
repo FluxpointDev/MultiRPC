@@ -2,12 +2,9 @@
 using System.IO;
 using System.Windows;
 using MultiRPC.Functions;
-using MultiRPC.GUI.Views;
 using System.Diagnostics;
 using System.Windows.Input;
-using System.Windows.Media;
 using MultiRPC.JsonClasses;
-using System.Windows.Markup;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Collections.Generic;
@@ -22,11 +19,14 @@ namespace MultiRPC.GUI.Pages
     public partial class SettingsPage : Page
     {
         public static List<UIText> UIText;
+        private static SettingsPage _settingsPage;
+        public static SettingsPage settingsPage => _settingsPage;
 
         public SettingsPage()
         {
             InitializeComponent();
             Loaded += SettingsPage_Loaded;
+            _settingsPage = this;
             UpdateText();
             cbClient.SelectedIndex = App.Config.ClientToUse;
             ComboBoxItem item = null;
@@ -48,7 +48,6 @@ namespace MultiRPC.GUI.Pages
             cbAutoUpdating.IsChecked = !App.Config.AutoUpdate;
             cbHideTaskbarIcon.IsChecked = !App.Config.HideTaskbarIconWhenMin;
             rAppDev.Text = App.AppDev;
-            cbTheme.SelectedIndex = (int)App.Config.ActiveTheme;
 
             int ActiveLangInt = 0;
             string[] langs = new string[UIText.Count];
@@ -111,9 +110,6 @@ namespace MultiRPC.GUI.Pages
             btnChangelog.Content = App.Text.Changelog;
             btnCheckUpdates.Content = App.Text.CheckForUpdates;
             btnDebug.Content = App.Text.Debug;
-            tblTheme.Text = App.Text.Theme;
-            cbiDark.Content = App.Text.Dark;
-            cbiLight.Content = App.Text.Light;
             rMadeBy.Text = App.Text.MadeBy + ": ";
             tblLanguage.Text = App.Text.Language;
             rAppDev.ToolTip = new ToolTip(App.Text.ClickToCopy);
@@ -262,72 +258,6 @@ namespace MultiRPC.GUI.Pages
             {
                 App.Config.AutoUpdate = !((CheckBox)sender).IsChecked.Value;
                 App.Config.Save();
-            }
-        }
-
-        private async void CbTheme_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsInitialized)
-            {
-                string reName = null;
-                var active = ((ComboBoxItem)e.AddedItems[0]).Content.ToString();
-                if (active == App.Text.Light)
-                {
-                    App.Config.ActiveTheme = Theme.ActiveTheme.Light;
-                    reName = "Light";
-                }
-                else if (active == App.Text.Dark)
-                {
-                    App.Config.ActiveTheme = Theme.ActiveTheme.Dark;
-                    reName = "Dark";
-                }
-                //else if (active == App.Text.Dark)
-                //{
-                //    App.Config.ActiveTheme = Theme.ActiveTheme.Custom;
-                //}
-                App.Config.Save();
-
-                while (MainPage.mainPage.frameRPCPreview.Content == null)
-                    await Task.Delay(250);
-
-                App.Current.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText($"Assets/{reName}Theme.xaml")));
-                App.Current.Resources.MergedDictionaries.Remove(App.Current.Resources.MergedDictionaries[1]);
-                App.Current.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText($"Assets/Icons.xaml")));
-                App.Current.Resources.MergedDictionaries.Remove(App.Current.Resources.MergedDictionaries[0]);
-
-                var frameRPCPreviewBG = MainPage.mainPage.frameRPCPreview.Content != null ? ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).gridBackground.Background : ((SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]);
-                if (((SolidColorBrush)frameRPCPreviewBG).Color != ((SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]).Color && ((SolidColorBrush)frameRPCPreviewBG).Color != ((SolidColorBrush)Application.Current.Resources["Red"]).Color && ((SolidColorBrush)frameRPCPreviewBG).Color != ((SolidColorBrush)Application.Current.Resources["Purple"]).Color)
-                {
-                    await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateBackground(
-                        (SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]);
-                    await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateForground(
-                        (SolidColorBrush)App.Current.Resources["TextColourSCBrush"]);
-                }                
-                MainPage.mainPage.RerenderButtons();
-
-                ((MainWindow)App.Current.MainWindow).TaskbarIcon.TrayToolTip = new ToolTip(App.Current.MainWindow.WindowState == WindowState.Minimized ? App.Text.ShowMultiRPC : App.Text.HideMultiRPC);
-                var preview = ((RPCPreview) MainPage.mainPage.frameRPCPreview.Content);
-                if (preview.ellSmallImage.ToolTip != null)
-                    preview.ellSmallImage.ToolTip = new ToolTip(((ToolTip)preview.ellSmallImage.ToolTip).Content.ToString());
-                if (preview.recLargeImage.ToolTip != null)
-                    preview.recLargeImage.ToolTip = new ToolTip(((ToolTip)preview.recLargeImage.ToolTip).Content.ToString());
-
-                preview = ((RPCPreview)MultiRPCPage.multiRpcPage.frameRPCPreview.Content);
-                if (preview.ellSmallImage.ToolTip != null)
-                    preview.ellSmallImage.ToolTip = new ToolTip(((ToolTip)preview.ellSmallImage.ToolTip).Content.ToString());
-                if (preview.recLargeImage.ToolTip != null)
-                    preview.recLargeImage.ToolTip = new ToolTip(((ToolTip)preview.recLargeImage.ToolTip).Content.ToString());
-                MainWindow.MakeJumpList();
-
-                if (CustomPage.ProfileButtons.Count > 0)
-                {
-                    foreach (var b in CustomPage.ProfileButtons)
-                    {
-                        b.Style = (Style)App.Current.Resources["DefaultButton"];
-                    }
-                    if (CustomPage.customPage.CurrentButton != null)
-                        CustomPage.customPage.CurrentButton.Background = (SolidColorBrush)App.Current.Resources["AccentColour2HoverSCBrush"];
-                }
             }
         }
 

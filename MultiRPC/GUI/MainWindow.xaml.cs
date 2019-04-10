@@ -7,6 +7,8 @@ using System.Windows.Media;
 using System.Windows.Shell;
 using MultiRPC.JsonClasses;
 using System.ComponentModel;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Interop;
 using System.Windows.Controls;
@@ -152,6 +154,13 @@ namespace MultiRPC.GUI
 
         private async void MainWindow_ContentRendered(object sender, EventArgs e)
         {
+            if (!File.Exists(App.Config.ActiveTheme))
+            {
+                App.Config.ActiveTheme = "Assets/Themes/DarkTheme.xaml";
+                App.Config.Save();
+            }
+
+            await ThemeEditorPage.UpdateGlobalUI();
             MakeWinAnimation(OpenStoryboard, 0, 1);
             OpenStoryboard.Begin(this);
             if (App.Current.MainWindow != this)

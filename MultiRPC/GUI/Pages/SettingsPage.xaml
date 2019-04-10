@@ -41,191 +41,184 @@
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
     </Page.Resources>
-    <ScrollViewer>
-        <Grid Margin="10" HorizontalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <StackPanel>
-                <TextBlock Style="{DynamicResource Title}" Text="MultiRPC"/>
-                <StackPanel Style="{DynamicResource Content}">
-                    <StackPanel>
-                        <TextBlock Name="tblWebsiteMultiRPC"/>
-                        <Image Name="imgWebsiteMultiRPC" Tag="https://stats.blazedev.me" Source="{DynamicResource BrowserIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" Margin="10,0">
-                        <TextBlock Name="tblDownload"/>
-                        <Image Name="imgDownloadRPC" Tag="https://multirpc.blazedev.me/" Source="{DynamicResource DownloadIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="2">
-                        <TextBlock Text="Github"/>
-                        <Image Name="imgGithubRPC" Tag="https://github.com/xXBuilderBXx/MultiRPC" Source="{DynamicResource GithubIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
-                    </StackPanel>
+    <Grid Margin="10" HorizontalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <TextBlock Style="{DynamicResource Title}" Text="MultiRPC"/>
+            <StackPanel Style="{DynamicResource Content}">
+                <StackPanel>
+                    <TextBlock Name="tblWebsiteMultiRPC"/>
+                    <Image Name="imgWebsiteMultiRPC" Tag="https://stats.blazedev.me" Source="{DynamicResource BrowserIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="10,0">
+                    <TextBlock Name="tblDownload"/>
+                    <Image Name="imgDownloadRPC" Tag="https://multirpc.blazedev.me/" Source="{DynamicResource DownloadIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Github"/>
+                    <Image Name="imgGithubRPC" Tag="https://github.com/xXBuilderBXx/MultiRPC" Source="{DynamicResource GithubIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
                 </StackPanel>
             </StackPanel>
+        </StackPanel>
 
-            <StackPanel Grid.Column="1">
-                <TextBlock Style="{DynamicResource Title}" Name="tblDiscordServer"/>
-                <StackPanel Style="{DynamicResource Content}">
-                    <StackPanel>
-                        <TextBlock Name="tblJoinForFunBotsAndSupport"/>
-                        <Image Name="imgJoinForFunBotsAndSupport" Source="../../Assets/ServerIcon.jpg" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Server_OnMouseDown"/>
-                    </StackPanel>
+        <StackPanel Grid.Column="1">
+            <TextBlock Style="{DynamicResource Title}" Name="tblDiscordServer"/>
+            <StackPanel Style="{DynamicResource Content}">
+                <StackPanel>
+                    <TextBlock Name="tblJoinForFunBotsAndSupport"/>
+                    <Image Name="imgJoinForFunBotsAndSupport" Source="../../Assets/ServerIcon.jpg" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Server_OnMouseDown"/>
                 </StackPanel>
             </StackPanel>
+        </StackPanel>
 
-            <StackPanel Grid.Column="2">
-                <TextBlock Style="{DynamicResource Title}" Text="Discord"/>
-                <StackPanel Style="{DynamicResource Content}">
-                    <StackPanel>
-                        <TextBlock Name="tblWebsiteDiscord"/>
-                        <Image Name="imgWebsiteDiscord" Tag="https://discordapp.com/" Source="{DynamicResource DiscordColourIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" Margin="10,0">
-                        <TextBlock Name="tblStatus"/>
-                        <Image Name="imgStatusDiscord" Tag="https://status.discordapp.com/" Source="{DynamicResource DiscordColourIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="2">
-                        <TextBlock Text="C# Github"/>
-                        <Image Name="imgGithubDiscord" Tag="https://github.com/discord-net/Discord.Net" Source="{DynamicResource GithubIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
-                    </StackPanel>
+        <StackPanel Grid.Column="2">
+            <TextBlock Style="{DynamicResource Title}" Text="Discord"/>
+            <StackPanel Style="{DynamicResource Content}">
+                <StackPanel>
+                    <TextBlock Name="tblWebsiteDiscord"/>
+                    <Image Name="imgWebsiteDiscord" Tag="https://discordapp.com/" Source="{DynamicResource DiscordColourIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="10,0">
+                    <TextBlock Name="tblStatus"/>
+                    <Image Name="imgStatusDiscord" Tag="https://status.discordapp.com/" Source="{DynamicResource DiscordColourIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="C# Github"/>
+                    <Image Name="imgGithubDiscord" Tag="https://github.com/discord-net/Discord.Net" Source="{DynamicResource GithubIconDrawingImage}" MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown"/>
                 </StackPanel>
             </StackPanel>
+        </StackPanel>
 
-            <StackPanel Grid.Row="1">
-                <TextBlock Style="{DynamicResource Title}" Name="tblSettings" />
-                <Grid Margin="0,10,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Name="tblClient" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <ComboBox Name="cbClient" Grid.Column="1" SelectedIndex="0" SelectionChanged="CbClient_OnSelectionChanged">
-                        <ComboBoxItem Name="cbiAuto"/>
-                        <ComboBoxItem Content="Discord"/>
-                        <ComboBoxItem Content="Discord PTB"/>
-                        <ComboBoxItem Content="Discord Canary"/>
-                    </ComboBox>
-                    <TextBlock Name="tblAutoStart" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <ComboBox SelectedIndex="0" Name="cbAutoStart" Grid.Row="2" Grid.Column="1" SelectionChanged="CbAutoStart_OnSelectionChanged">
-                        <ComboBoxItem Name="cbiNo"/>
-                        <ComboBoxItem Content="MultiRPC"/>
-                        <ComboBoxItem Name="cbiCustom"/>
-                    </ComboBox>
-                    <TextBlock Name="tblTheme" Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <ComboBox Name="cbTheme" Grid.Row="4" Grid.Column="1" SelectionChanged="CbTheme_OnSelectionChanged">
-                        <ComboBoxItem Name="cbiDark"/>
-                        <ComboBoxItem Name="cbiLight"/>
-                    </ComboBox>
-                    <TextBlock Name="tblLanguage" Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <ComboBox Name="cbLanguage" Grid.Row="6" Grid.Column="1" SelectionChanged="CbLanguage_OnSelectionChanged"/>
-                    <TextBlock Grid.Row="8" Name="tblAfkTime" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <CheckBox Name="cbAfkTime" Checked="CbAfkTime_OnChecked" Unchecked="CbAfkTime_OnChecked" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                </Grid>
-            </StackPanel>
-
-            <StackPanel Grid.Row="1" Grid.Column="1">
-                <TextBlock Style="{DynamicResource Title}" Name="tblDisable" />
-                <Grid Margin="0,10,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="0"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Name="tblDiscordCheck" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <CheckBox Name="cbDiscordCheck" Checked="CbDiscordCheck_OnChecked" Unchecked="CbDiscordCheck_OnChecked" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-
-                    <TextBlock Name="tblTokenCheck" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <CheckBox Name="cbTokenCheck" Checked="CbTokenCheck_OnChecked" Unchecked="CbTokenCheck_OnChecked" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-
-                    <TextBlock Visibility="Collapsed" Name="tblProgramsTab" Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <CheckBox Visibility="Collapsed" Name="cbProgramsTab" Checked="CbProgramsTab_OnChecked" Unchecked="CbProgramsTab_OnChecked" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-
-                    <TextBlock Name="tblHelpIcons" Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <CheckBox Name="cbHelpIcons" Checked="CbHelpIcons_OnChecked" Unchecked="CbHelpIcons_OnChecked" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-
-                    <TextBlock Name="tblAutoUpdating" Grid.Row="8" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <CheckBox Name="cbAutoUpdating" Checked="CbAutoUpdating_OnChecked" Unchecked="CbAutoUpdating_OnChecked" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-
-                    <TextBlock Name="tblHideTaskbarIcon" Grid.Row="10" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <CheckBox Name="cbHideTaskbarIcon" Checked="CbHideTaskbarIcon_OnChecked" Unchecked="CbHideTaskbarIcon_OnChecked" Grid.Row="10" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                </Grid>
-            </StackPanel>
-
-            <Grid Grid.Row="1" Grid.Column="2" Grid.RowSpan="2">
+        <StackPanel Grid.Row="1">
+            <TextBlock Style="{DynamicResource Title}" Name="tblSettings" />
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <StackPanel Margin="0">
-                    <TextBlock Style="{DynamicResource Title}" Name="tblDonations" />
-                    <Grid Margin="0,10,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="10"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="10"/>
-                        </Grid.RowDefinitions>
 
-                        <TextBlock Name="tblPaypal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                        <Button HorizontalAlignment="Left" Grid.Column="1" Name="btnPaypal" Click="ButPaypal_OnClick" />
-                        <TextBlock Name="tblPatreon" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                        <Button HorizontalAlignment="Left" Grid.Column="1" Grid.Row="2" Name="btnPatreon" Click="ButPatreon_OnClick" />
-                    </Grid>
-                </StackPanel>
-                <Rectangle Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Fill="{DynamicResource AccentColour1SCBrush}"/>
-                <TextBlock TextWrapping="Wrap" Name="tblDonateMessage" Margin="12" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1"/>
+                <TextBlock Name="tblClient" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox Name="cbClient" Grid.Column="1" SelectedIndex="0" SelectionChanged="CbClient_OnSelectionChanged">
+                    <ComboBoxItem Name="cbiAuto"/>
+                    <ComboBoxItem Content="Discord"/>
+                    <ComboBoxItem Content="Discord PTB"/>
+                    <ComboBoxItem Content="Discord Canary"/>
+                </ComboBox>
+                <TextBlock Name="tblAutoStart" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox SelectedIndex="0" Name="cbAutoStart" Grid.Row="2" Grid.Column="1" SelectionChanged="CbAutoStart_OnSelectionChanged">
+                    <ComboBoxItem Name="cbiNo"/>
+                    <ComboBoxItem Content="MultiRPC"/>
+                    <ComboBoxItem Name="cbiCustom"/>
+                </ComboBox>
+                <TextBlock Name="tblLanguage" Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox Name="cbLanguage" Grid.Row="6" Grid.Column="1" SelectionChanged="CbLanguage_OnSelectionChanged"/>
+                <TextBlock Grid.Row="8" Name="tblAfkTime" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <CheckBox Name="cbAfkTime" Checked="CbAfkTime_OnChecked" Unchecked="CbAfkTime_OnChecked" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             </Grid>
+        </StackPanel>
 
-            <StackPanel Margin="0" Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-                <TextBlock HorizontalAlignment="Left"><Run Name="rMadeBy"/><Run Name="rAppDev" MouseLeftButtonDown="RAppDev_OnMouseLeftButtonDown"/></TextBlock>
-            </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <TextBlock Style="{DynamicResource Title}" Name="tblDisable" />
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="0"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="2" Grid.Column="1">
-                <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Left">
-                    <Button Width="100" Name="btnChangelog" Margin="0,0,5,0" Click="ButChangelog_OnClick" />
-                    <Button Width="100" Name="btnCheckUpdates" IsEnabled="False"  Margin="0,0,5,0" Click="ButCheckUpdates_OnClick" />
-                </StackPanel>
-                <StackPanel Margin="0,5,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button Width="100" Name="btnDebug" Click="ButDebug_OnClick" />
-                </StackPanel>     
+                <TextBlock Name="tblDiscordCheck" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <CheckBox Name="cbDiscordCheck" Checked="CbDiscordCheck_OnChecked" Unchecked="CbDiscordCheck_OnChecked" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <TextBlock Name="tblTokenCheck" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <CheckBox Name="cbTokenCheck" Checked="CbTokenCheck_OnChecked" Unchecked="CbTokenCheck_OnChecked" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <TextBlock Visibility="Collapsed" Name="tblProgramsTab" Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <CheckBox Visibility="Collapsed" Name="cbProgramsTab" Checked="CbProgramsTab_OnChecked" Unchecked="CbProgramsTab_OnChecked" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <TextBlock Name="tblHelpIcons" Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <CheckBox Name="cbHelpIcons" Checked="CbHelpIcons_OnChecked" Unchecked="CbHelpIcons_OnChecked" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <TextBlock Name="tblAutoUpdating" Grid.Row="8" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <CheckBox Name="cbAutoUpdating" Checked="CbAutoUpdating_OnChecked" Unchecked="CbAutoUpdating_OnChecked" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <TextBlock Name="tblHideTaskbarIcon" Grid.Row="10" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <CheckBox Name="cbHideTaskbarIcon" Checked="CbHideTaskbarIcon_OnChecked" Unchecked="CbHideTaskbarIcon_OnChecked" Grid.Row="10" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            </Grid>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Grid.Column="2" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Margin="0">
+                <TextBlock Style="{DynamicResource Title}" Name="tblDonations" />
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Name="tblPaypal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <Button HorizontalAlignment="Left" Grid.Column="1" Name="btnPaypal" Click="ButPaypal_OnClick" />
+                    <TextBlock Name="tblPatreon" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <Button HorizontalAlignment="Left" Grid.Column="1" Grid.Row="2" Name="btnPatreon" Click="ButPatreon_OnClick" />
+                </Grid>
             </StackPanel>
+            <Rectangle Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Fill="{DynamicResource AccentColour1SCBrush}"/>
+            <TextBlock TextWrapping="Wrap" Name="tblDonateMessage" Margin="12" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1"/>
         </Grid>
-    </ScrollViewer>
+
+        <StackPanel Margin="0" Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+            <TextBlock HorizontalAlignment="Left"><Run Name="rMadeBy"/><Run Name="rAppDev" MouseLeftButtonDown="RAppDev_OnMouseLeftButtonDown"/></TextBlock>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="1">
+            <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Left">
+                <Button Width="100" Name="btnChangelog" Margin="0,0,5,0" Click="ButChangelog_OnClick" />
+                <Button Width="100" Name="btnCheckUpdates" IsEnabled="False"  Margin="0,0,5,0" Click="ButCheckUpdates_OnClick" />
+            </StackPanel>
+            <StackPanel Margin="0,5,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button Width="100" Name="btnDebug" Click="ButDebug_OnClick" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
 </Page>

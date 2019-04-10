@@ -1,14 +1,19 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:MultiRPC.Assets">
+                    xmlns:local="clr-namespace:MultiRPC.Assets"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-    <Color A="255" R="54" G="57" B="62" x:Key="AccentColour1" />
-    <Color A="255" R="44" G="46" B="48" x:Key="AccentColour2" />
-    <Color A="255" R="44" G="42" B="42" x:Key="AccentColour2Hover" />
+    <Color A="255" R="200" G="20" B="60" x:Key="AccentColour1" />
+    <Color A="255" R="178" G="34" B="34" x:Key="AccentColour2" />
+    <Color A="255" R="168" G="24" B="24" x:Key="AccentColour2Hover" />
     <Color A="255" R="255" G="255" B="255" x:Key="AccentColour3" />
-    <Color A="255" R="180" G="180" B="180" x:Key="AccentColour4" />
-    <Color A="255" R="112" G="112" B="112" x:Key="AccentColour5" />
+    <Color A="255" R="205" G="0" B="0" x:Key="AccentColour4" />
+    <Color A="255" R="150" G="0" B="0" x:Key="AccentColour5" />
     <Color A="255" R="255" G="255" B="255" x:Key="TextColour" />
+    <SolidColorBrush Color="#505050" x:Key="DisabledButtonColour"/>
+    <SolidColorBrush Color="White" x:Key="DisabledButtonTextColour"/>
+    <SolidColorBrush Color="#FF00ABEB" x:Key="NavButtonBackgroundSelected"/>
+    <system:String x:Key="ThemeName">Russia</system:String>
 
     <SolidColorBrush Color="{DynamicResource AccentColour1}" x:Key="AccentColour1SCBrush" />
     <SolidColorBrush Color="{DynamicResource AccentColour2}" x:Key="AccentColour2SCBrush" />

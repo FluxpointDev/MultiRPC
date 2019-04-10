@@ -417,7 +417,7 @@ namespace MultiRPC.GUI.Pages
                 : Visibility.Visible;
 
             if (CurrentButton != null)
-                CurrentButton.Background = (SolidColorBrush)App.Current.Resources["AccentColour1SCBrush"];
+                CurrentButton.Background = null;
             CurrentButton = (Button)sender;
             CurrentButton.Background = (SolidColorBrush)App.Current.Resources["AccentColour2HoverSCBrush"];
             var profile = Profiles[CurrentButton.Content.ToString()];
@@ -629,9 +629,8 @@ namespace MultiRPC.GUI.Pages
         private void ImgProfileDelete_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             string currentKey = CurrentButton.Content.ToString();
-            string lastKey = "";
 
-            lastKey = Profiles.Count - 2 >= App.Config.SelectedCustom 
+            var lastKey = Profiles.Count - 2 >= App.Config.SelectedCustom 
                 ? Profiles.ElementAt(App.Config.SelectedCustom + 1).Key 
                 : Profiles.ElementAt(Profiles.Count - 2).Key;
 

@@ -440,6 +440,79 @@
       <GradientStop Color="#FF00FFED" Offset="0" />
       <GradientStop Color="#FF0077E9" Offset="1" />
   </LinearGradientBrush>
+
+    <DrawingGroup x:Key="ThemeIconSelectedDrawingGroup" ClipGeometry="M0,0 V1000 H1000 V0 H0 Z">
+        <GeometryDrawing Brush="White">
+            <GeometryDrawing.Geometry>
+                <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="405.7,594.3" />
+            </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+        <GeometryDrawing Brush="#FFEBEBEB">
+            <GeometryDrawing.Geometry>
+                <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="468.6,531.4" />
+            </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+        <GeometryDrawing Brush="#FFD7D7D7">
+            <GeometryDrawing.Geometry>
+                <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="531.4,468.6" />
+            </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+        <GeometryDrawing Brush="#FFC3C3C3">
+            <GeometryDrawing.Geometry>
+                <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="594.3,405.7" />
+            </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+    </DrawingGroup>
+    <DrawingImage x:Key="ThemeIconSelectedDrawingImage" Drawing="{StaticResource ThemeIconSelectedDrawingGroup}" />
+
+    <DrawingGroup x:Key="ThemeIconDrawingGroup" ClipGeometry="M0,0 V1000 H1000 V0 H0 Z">
+        <GeometryDrawing>
+            <GeometryDrawing.Brush>
+                <LinearGradientBrush StartPoint="0,405.6599" EndPoint="811.3198,405.6599" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1" Transform="1,0,0,-1,0,1000">
+                    <GradientStop Color="#FF3F3F3F" Offset="0" />
+                    <GradientStop Color="#FF000000" Offset="1" />
+                </LinearGradientBrush>
+            </GeometryDrawing.Brush>
+            <GeometryDrawing.Geometry>
+                <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="405.7,594.3" />
+            </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+        <GeometryDrawing>
+            <GeometryDrawing.Brush>
+                <LinearGradientBrush StartPoint="62.8934,468.5533" EndPoint="874.2133,468.5533" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1" Transform="1,0,0,-1,0,1000">
+                    <GradientStop Color="#FF575757" Offset="0" />
+                    <GradientStop Color="#FF000000" Offset="1" />
+                </LinearGradientBrush>
+            </GeometryDrawing.Brush>
+            <GeometryDrawing.Geometry>
+                <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="468.6,531.4" />
+            </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+        <GeometryDrawing>
+            <GeometryDrawing.Brush>
+                <LinearGradientBrush StartPoint="125.7868,531.4467" EndPoint="937.1066,531.4467" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1" Transform="1,0,0,-1,0,1000">
+                    <GradientStop Color="#FF686868" Offset="0" />
+                    <GradientStop Color="#FF000000" Offset="1" />
+                </LinearGradientBrush>
+            </GeometryDrawing.Brush>
+            <GeometryDrawing.Geometry>
+                <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="531.4,468.6" />
+            </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+        <GeometryDrawing>
+            <GeometryDrawing.Brush>
+                <LinearGradientBrush StartPoint="188.6802,594.3401" EndPoint="1000,594.3401" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1" Transform="1,0,0,-1,0,1000">
+                    <GradientStop Color="#FF7F7F7F" Offset="0" />
+                    <GradientStop Color="#FF000000" Offset="1" />
+                </LinearGradientBrush>
+            </GeometryDrawing.Brush>
+            <GeometryDrawing.Geometry>
+                <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="594.3,405.7" />
+            </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+    </DrawingGroup>
+    <DrawingImage x:Key="ThemeIconDrawingImage" Drawing="{StaticResource ThemeIconDrawingGroup}" />
+
     <Geometry x:Key="AlertIconGeometry1">F1 M48,48z M0,0z M4,24C4,13 13,4 24,4 35,4 44,13 44,24 44,35 35,44 24,44 13,44 4,35 4,24z</Geometry>
     <Geometry x:Key="AlertIconGeometry2">F1 M48,48z M0,0z M26,26L22,26 22,15 26,15 26,26z</Geometry>
     <Geometry x:Key="AlertIconGeometry3">F1 M48,48z M0,0z M21.5,31.5C21.5,30.1 22.6,29 24,29 25.4,29 26.5,30.1 26.5,31.5 26.5,32.9 25.4,34 24,34 22.6,34 21.5,32.9 21.5,31.5z</Geometry>

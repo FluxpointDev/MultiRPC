@@ -7,13 +7,12 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary x:Name="Theme" Source="Assets/DarkTheme.xaml"/>
+                <ResourceDictionary x:Name="Theme" Source="Assets/Themes/DarkTheme.xaml"/>
                 <ResourceDictionary x:Name="Icons" Source="Assets/Icons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <SolidColorBrush Color="#FFF13333" x:Key="Red"/>
             <SolidColorBrush Color="#6A7EC4" x:Key="Purple"/>
-            <SolidColorBrush Color="#505050" x:Key="DisabledButtonColour"/>
             <SolidColorBrush Color="#FFEEAD37" x:Key="Orange"/>
 
             <Style TargetType="Hyperlink">
@@ -38,8 +37,7 @@
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter Property="Background" TargetName="border" Value="{DynamicResource DisabledButtonColour}"/>
-                                    <Setter Property="BorderThickness" TargetName="border" Value="0"/>
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource DisabledButtonTextColour}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -51,6 +49,7 @@
                 <!--For some reason making buttons in code doesn't use the default button style in this file :/-->
                 <Setter Property="Background" Value="{DynamicResource AccentColour1SCBrush}"/>
                 <Setter Property="Foreground" Value="{DynamicResource TextColourSCBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentColour4SCBrush}"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="Template">
                     <Setter.Value>
@@ -68,7 +67,7 @@
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter Property="Background" TargetName="border" Value="{DynamicResource DisabledButtonColour}"/>
                                     <Setter Property="BorderThickness" TargetName="border" Value="0"/>
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource DisabledButtonTextColour}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -79,6 +78,7 @@
             <Style TargetType="Button">
                 <Setter Property="Background" Value="{DynamicResource AccentColour1SCBrush}"/>
                 <Setter Property="Foreground" Value="{DynamicResource TextColourSCBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentColour4SCBrush}"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="Template">
                     <Setter.Value>
@@ -96,7 +96,7 @@
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter Property="Background" TargetName="border" Value="{DynamicResource DisabledButtonColour}"/>
                                     <Setter Property="BorderThickness" TargetName="border" Value="0"/>
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource DisabledButtonTextColour}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -122,8 +122,7 @@
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter Property="Background" TargetName="border" Value="{DynamicResource DisabledButtonColour}"/>
-                                    <Setter Property="BorderThickness" TargetName="border" Value="0"/>
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource DisabledButtonTextColour}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -149,8 +148,7 @@
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter Property="Background" TargetName="border" Value="{DynamicResource DisabledButtonColour}"/>
-                                    <Setter Property="BorderThickness" TargetName="border" Value="0"/>
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource DisabledButtonTextColour}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -245,9 +243,6 @@
                                     <Setter Property="Placement" TargetName="OverflowPopup" Value="Right"/>
                                     <Setter Property="Margin" TargetName="MainPanelBorder" Value="0,0,0,11"/>
                                 </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                                </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
@@ -338,7 +333,7 @@
                                     <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
                                 </Grid.ColumnDefinitions>
                                 <Popup x:Name="PART_Popup" AllowsTransparency="True" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
-                                    <Border MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=templateRoot}" x:Name="DropDownBorder" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="1" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                                    <Border MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=templateRoot}" x:Name="DropDownBorder" BorderBrush="{DynamicResource AccentColour4SCBrush}" BorderThickness="1" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
                                         <ScrollViewer x:Name="DropDownScrollViewer">
                                             <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
                                                 <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">

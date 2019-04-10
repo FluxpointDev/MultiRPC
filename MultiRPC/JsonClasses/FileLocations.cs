@@ -8,12 +8,15 @@ namespace MultiRPC.JsonClasses
         static FileLocations()
         {
             if (!Directory.Exists(ConfigFolder))
-            {
                 Directory.CreateDirectory(ConfigFolder);
-            }
+
+            if (!Directory.Exists(ThemesFolder))
+                Directory.CreateDirectory(ThemesFolder);
         }
 
         public static string ConfigFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MultiRPC");
+        public static string ThemesFolder = Path.Combine(ConfigFolder, "Themes");
+
         public static string ConfigFileName = "Config.json";
         public static string ConfigFileLocalLocation = Path.Combine(ConfigFolder, ConfigFileName);
 

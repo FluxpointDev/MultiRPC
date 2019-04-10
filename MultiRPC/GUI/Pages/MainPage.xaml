@@ -6,7 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d" 
-      MinHeight="516" MinWidth="735"
+      MinHeight="526" MinWidth="735"
       Title="MainPage"
       >
     <Page.Resources>
@@ -59,7 +59,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ButtonBase}">
-                        <Border Margin="0,0,0,25" CornerRadius="100" x:Name="border" Height="{TemplateBinding ActualWidth}" BorderBrush="Transparent" BorderThickness="0" Background="{DynamicResource BackgroundGradient}" SnapsToDevicePixels="True">
+                        <Border Margin="0,0,0,25" CornerRadius="100" x:Name="border" Height="{TemplateBinding ActualWidth}" BorderBrush="Transparent" BorderThickness="0" Background="{DynamicResource NavButtonBackgroundSelected}" SnapsToDevicePixels="True">
                             <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="15" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
                     </ControlTemplate>
@@ -106,6 +106,11 @@
                         <Button Style="{DynamicResource NavButton}" Name="btnCredits" Click="ChangePage_OnClick">
                             <Button.Content>
                                 <Image Name="imgCreditsIcon" Source="{DynamicResource CreditsIconDrawingImage}"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Style="{DynamicResource NavButton}" Name="btnThemeEditor" Click="ChangePage_OnClick">
+                            <Button.Content>
+                                <Image Name="imgThemeIcon" Source="{DynamicResource ThemeIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
                         <Button Visibility="Collapsed" Style="{DynamicResource NavButton}" Name="btnDebug" Click="ChangePage_OnClick">

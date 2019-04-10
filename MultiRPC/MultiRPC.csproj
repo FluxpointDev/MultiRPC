@@ -141,8 +141,14 @@
     <Compile Include="GUI\Pages\EditProfileNamePage.xaml.cs">
       <DependentUpon>EditProfileNamePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Pages\MainPageThumbnail.xaml.cs">
+      <DependentUpon>MainPageThumbnail.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Pages\ShareProfilePage.xaml.cs">
       <DependentUpon>ShareProfilePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\ThemeEditorPage.xaml.cs">
+      <DependentUpon>ThemeEditorPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Pages\UpdateFailedPage.xaml.cs">
       <DependentUpon>UpdateFailedPage.xaml</DependentUpon>
@@ -249,7 +255,7 @@
     </PublishFile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\DarkTheme.xaml">
+    <Content Include="Assets\Themes\DarkTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -257,7 +263,12 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\LightTheme.xaml">
+    <Content Include="Assets\Themes\LightTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Themes\RussiaTheme.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -288,6 +299,10 @@
     <Page Include="GUI\Pages\LogsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GUI\Pages\MainPageThumbnail.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="GUI\Pages\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -298,6 +313,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Pages\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\ThemeEditorPage.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Pages\UpdateFailedPage.xaml">
@@ -313,6 +332,9 @@
   <ItemGroup>
     <PackageReference Include="DiscordRichPresence">
       <Version>1.0.95</Version>
+    </PackageReference>
+    <PackageReference Include="Extended.Wpf.Toolkit">
+      <Version>3.5.0</Version>
     </PackageReference>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf">
       <Version>1.0.8</Version>

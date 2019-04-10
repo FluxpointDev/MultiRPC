@@ -6,7 +6,8 @@
         {
             Dark = 0,
             Light = 1,
-            Custom = 2
+            Russia = 2,
+            Custom = 3
         }
     }
 }

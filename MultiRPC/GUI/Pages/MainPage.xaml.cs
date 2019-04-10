@@ -35,6 +35,7 @@ namespace MultiRPC.GUI.Pages
             btnCredits.Tag = new CreditsPage();
             btnSettings.Tag = new SettingsPage();
             btnDebug.Tag = new DebugPage();
+            btnThemeEditor.Tag = new ThemeEditorPage();
             btnMuiltiRPC.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             frameRPCPreview.Content = new RPCPreview(RPCPreview.ViewType.Default);
         }
