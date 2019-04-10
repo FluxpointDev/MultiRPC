@@ -442,22 +442,22 @@
   </LinearGradientBrush>
 
     <DrawingGroup x:Key="ThemeIconSelectedDrawingGroup" ClipGeometry="M0,0 V1000 H1000 V0 H0 Z">
-        <GeometryDrawing Brush="White">
+        <GeometryDrawing Brush="{DynamicResource AccentColour5SCBrush}">
             <GeometryDrawing.Geometry>
                 <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="405.7,594.3" />
             </GeometryDrawing.Geometry>
         </GeometryDrawing>
-        <GeometryDrawing Brush="#FFEBEBEB">
+        <GeometryDrawing Brush="{DynamicResource DisabledButtonTextColour}">
             <GeometryDrawing.Geometry>
                 <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="468.6,531.4" />
             </GeometryDrawing.Geometry>
         </GeometryDrawing>
-        <GeometryDrawing Brush="#FFD7D7D7">
+        <GeometryDrawing Brush="{DynamicResource DisabledButtonColour}">
             <GeometryDrawing.Geometry>
                 <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="531.4,468.6" />
             </GeometryDrawing.Geometry>
         </GeometryDrawing>
-        <GeometryDrawing Brush="#FFC3C3C3">
+        <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}">
             <GeometryDrawing.Geometry>
                 <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="594.3,405.7" />
             </GeometryDrawing.Geometry>
@@ -466,46 +466,22 @@
     <DrawingImage x:Key="ThemeIconSelectedDrawingImage" Drawing="{StaticResource ThemeIconSelectedDrawingGroup}" />
 
     <DrawingGroup x:Key="ThemeIconDrawingGroup" ClipGeometry="M0,0 V1000 H1000 V0 H0 Z">
-        <GeometryDrawing>
-            <GeometryDrawing.Brush>
-                <LinearGradientBrush StartPoint="0,405.6599" EndPoint="811.3198,405.6599" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1" Transform="1,0,0,-1,0,1000">
-                    <GradientStop Color="#FF3F3F3F" Offset="0" />
-                    <GradientStop Color="#FF000000" Offset="1" />
-                </LinearGradientBrush>
-            </GeometryDrawing.Brush>
+        <GeometryDrawing Brush="{DynamicResource AccentColour1SCBrush}">
             <GeometryDrawing.Geometry>
                 <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="405.7,594.3" />
             </GeometryDrawing.Geometry>
         </GeometryDrawing>
-        <GeometryDrawing>
-            <GeometryDrawing.Brush>
-                <LinearGradientBrush StartPoint="62.8934,468.5533" EndPoint="874.2133,468.5533" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1" Transform="1,0,0,-1,0,1000">
-                    <GradientStop Color="#FF575757" Offset="0" />
-                    <GradientStop Color="#FF000000" Offset="1" />
-                </LinearGradientBrush>
-            </GeometryDrawing.Brush>
+        <GeometryDrawing Brush="{DynamicResource AccentColour4SCBrush}">
             <GeometryDrawing.Geometry>
                 <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="468.6,531.4" />
             </GeometryDrawing.Geometry>
         </GeometryDrawing>
-        <GeometryDrawing>
-            <GeometryDrawing.Brush>
-                <LinearGradientBrush StartPoint="125.7868,531.4467" EndPoint="937.1066,531.4467" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1" Transform="1,0,0,-1,0,1000">
-                    <GradientStop Color="#FF686868" Offset="0" />
-                    <GradientStop Color="#FF000000" Offset="1" />
-                </LinearGradientBrush>
-            </GeometryDrawing.Brush>
+        <GeometryDrawing Brush="{DynamicResource AccentColour3SCBrush}">
             <GeometryDrawing.Geometry>
                 <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="531.4,468.6" />
             </GeometryDrawing.Geometry>
         </GeometryDrawing>
-        <GeometryDrawing>
-            <GeometryDrawing.Brush>
-                <LinearGradientBrush StartPoint="188.6802,594.3401" EndPoint="1000,594.3401" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1" Transform="1,0,0,-1,0,1000">
-                    <GradientStop Color="#FF7F7F7F" Offset="0" />
-                    <GradientStop Color="#FF000000" Offset="1" />
-                </LinearGradientBrush>
-            </GeometryDrawing.Brush>
+        <GeometryDrawing Brush="{DynamicResource AccentColour2SCBrush}">
             <GeometryDrawing.Geometry>
                 <EllipseGeometry RadiusX="405.7" RadiusY="405.7" Center="594.3,405.7" />
             </GeometryDrawing.Geometry>
