@@ -175,5 +175,12 @@
   "WewComboboxItem2": "Wew I'm more combobox item content",
   "WewTextBlock": "Wew I'm text",
   "WewButton": "I'm a button",
-  "WewDisabledButton": "I'm a disabled button"
+  "WewDisabledButton": "I'm a disabled button",
+  "Active": "Active",
+  "Showing": "Showing",
+  "ThemeNeedName": "The theme needs a name",
+  "ThemeWithSameName": "There is a theme already called that",
+  "InvalidThemeName": "This is a invalid name",
+  "Editing": "Editing",
+  "ResetTheme": "Reset Theme"
 }

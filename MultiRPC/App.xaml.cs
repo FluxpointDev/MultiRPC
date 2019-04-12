@@ -3,7 +3,6 @@ using System.IO;
 using System.Net;
 using System.Windows;
 using Newtonsoft.Json;
-using System.Diagnostics;
 using MultiRPC.Functions;
 using MultiRPC.GUI.Pages;
 using MultiRPC.JsonClasses;
@@ -38,6 +37,7 @@ namespace MultiRPC
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
+#if !DEBUG
             if (Process.GetProcessesByName("MultiRPC").Length > 1)
             {
                 if (File.Exists(FileLocations.OpenFileLocalLocation))
@@ -65,6 +65,7 @@ namespace MultiRPC
             {
                 CustomPage.JumpListLogic(e.Args[1], true);
             }
+#endif
 
             FileWatch.Create();
             SettingsPage.UIText = new List<UIText>();
@@ -109,8 +110,7 @@ namespace MultiRPC
                     SettingsPage.UIText.Add((UIText) JsonSerializer.Deserialize(reader, typeof(UIText)));
                 }
             }
-
-            string s = "";
+            
             using (var reader = File.OpenText("Lang/english.json"))
                 Text = (UIText)JsonSerializer.Deserialize(reader, typeof(UIText));
         }

@@ -12,12 +12,26 @@ namespace MultiRPC.GUI.Pages
     /// </summary>
     public partial class MainPageThumbnail : Page
     {
+        private bool runningUpdateMergedDictionaries;
+
         public MainPageThumbnail(ResourceDictionary resource)
         {
             InitializeComponent();
             this.Resources.MergedDictionaries.Add(resource);
             this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText($"Assets/Icons.xaml")));
             Loaded += MainPageThumbnail_Loaded;
+        }
+
+        public async Task UpdateMergedDictionaries(ResourceDictionary resource)
+        {
+            while (runningUpdateMergedDictionaries)
+                await Task.Delay(250);
+
+            runningUpdateMergedDictionaries = true;
+            //this.Resources.MergedDictionaries.Clear();
+            //this.Resources.MergedDictionaries.Add(resource);
+            //this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText($"Assets/Icons.xaml")));
+            runningUpdateMergedDictionaries = false;
         }
 
         public async Task UpdateText()

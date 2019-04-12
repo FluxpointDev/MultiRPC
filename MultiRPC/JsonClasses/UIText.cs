@@ -179,5 +179,12 @@
         public string WewTextBlock;
         public string WewButton;
         public string WewDisabledButton;
+        public string Active;
+        public string Showing;
+        public string ThemeNeedName;
+        public string ThemeWithSameName;
+        public string InvalidThemeName;
+        public string Editing;
+        public string ResetTheme;
     }
 }

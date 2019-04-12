@@ -294,6 +294,7 @@
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button Name="btnSaveTheme" Click="BtnSaveTheme_OnClick" IsEnabled="False"/>
                     <Button Margin="5,0,0,0" Name="btnSaveAndApplyTheme" Click="BtnSaveAndApplyTheme_OnClick" IsEnabled="False"/>
+                    <Button Margin="5,0,0,0" Name="btnResetTheme" Click="BtnResetTheme_OnClick"/>
                 </StackPanel>
             </StackPanel>
 

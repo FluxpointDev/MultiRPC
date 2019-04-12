@@ -4,17 +4,17 @@
     xmlns:s="clr-namespace:System;assembly=mscorlib"
     >
 
-    <SolidColorBrush x:Key="AccentColour1SCBrush">#FFCD0000</SolidColorBrush>
-    <SolidColorBrush x:Key="AccentColour2SCBrush">#FFD62718</SolidColorBrush>
-    <SolidColorBrush x:Key="AccentColour2HoverSCBrush">#FFE53627</SolidColorBrush>
-    <SolidColorBrush x:Key="AccentColour3SCBrush">#FFFFFFFF</SolidColorBrush>
-    <SolidColorBrush x:Key="AccentColour4SCBrush">#FF0036A7</SolidColorBrush>
-    <SolidColorBrush x:Key="AccentColour5SCBrush">#FF00194C</SolidColorBrush>
+    <SolidColorBrush Color="{DynamicResource AccentColour1}" x:Key="AccentColour1SCBrush"/>
+    <SolidColorBrush Color="{DynamicResource AccentColour2}" x:Key="AccentColour2SCBrush"/>
+    <SolidColorBrush Color="{DynamicResource AccentColour2Hover}" x:Key="AccentColour2HoverSCBrush"/>
+    <SolidColorBrush Color="{DynamicResource AccentColour3}" x:Key="AccentColour3SCBrush"/>
+    <SolidColorBrush Color="{DynamicResource AccentColour4}" x:Key="AccentColour4SCBrush"/>
+    <SolidColorBrush Color="{DynamicResource AccentColour5}" x:Key="AccentColour5SCBrush"/>
     <SolidColorBrush Color="{DynamicResource TextColour}" x:Key="TextColourSCBrush" />
-    <SolidColorBrush x:Key="DisabledButtonColour">#FF0036A7</SolidColorBrush>
-    <SolidColorBrush x:Key="DisabledButtonTextColour">#FFFFFFFF</SolidColorBrush>
-    <SolidColorBrush x:Key="NavButtonBackgroundSelected">#FFFFD800</SolidColorBrush>
-    <SolidColorBrush x:Key="NavButtonIconColourSelected">#FFCD0000</SolidColorBrush>
+    <SolidColorBrush Color="#FF0036A7" x:Key="DisabledButtonColour"/>
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="DisabledButtonTextColour"/>
+    <SolidColorBrush Color="#FFFFD800" x:Key="NavButtonBackgroundSelected"/>
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="NavButtonIconColourSelected"/>
     <s:String x:Key="ThemeName">Russia</s:String>
 
     <Color x:Key="AccentColour1">#FFCD0000</Color>

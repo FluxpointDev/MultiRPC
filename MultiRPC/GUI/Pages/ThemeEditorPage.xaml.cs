@@ -22,20 +22,34 @@ namespace MultiRPC.GUI.Pages
     /// </summary>
     public partial class ThemeEditorPage : Page
     {
-        ResourceDictionary ThemeDictionary = new ResourceDictionary();
-        List<string> ThemeNames = new List<string>();
-        private Border SelectedBorder = null;
+        public const string ThemeExtension = ".multirpctheme";
+
+        //ThemeDictionary for the theme being made/edited and the ThemeNames for all the theme names (so we don't need to go into 100000 StackPanel layers lol)
+        private ResourceDictionary ThemeDictionary = new ResourceDictionary();
+        private List<string> ThemeNames = new List<string>();
+
+        //Border that has the colour we are editing
+        private Border SelectedBorder;
+
+        //This is for when someone is editing a theme, we need to know their remove button to remove and add the theme and
+        //We need the theme name to allow the theme name TextBox to not disable when that is inputted while editing that theme
         private Button RemoveButtonForThemeBeingEdited;
         private string ThemeNameThatBeingEdited;
 
+        //This page as a static so when we update the UI with the new theme the static Task can do it from anywhere in the program
         private static ThemeEditorPage themeEditor;
+
+        //For checking previewing the theme everywhere
+        private string LastFrameMouseWasIn;
+
+        private static bool globalThemeBeingUpdated;
 
         public ThemeEditorPage()
         {
             InitializeComponent();
             themeEditor = this;
 
-            MakeThemeUIThatGoingToBeEdited();
+            MakeThemeUIEditable();
 
             StackPanel stackPanelToAddTo = new StackPanel
             {
@@ -47,6 +61,7 @@ namespace MultiRPC.GUI.Pages
             {
                 MakeThemeUI(onSecondTheme, themeFile, stackPanelToAddTo).ConfigureAwait(false).GetAwaiter().GetResult();
 
+                //We want to add it to the StackPanel showing installed Themes if we got two because space is a thing ;P
                 if (onSecondTheme)
                 {
                     spInstalledThemes.Children.Add(stackPanelToAddTo);
@@ -60,32 +75,70 @@ namespace MultiRPC.GUI.Pages
                 onSecondTheme = !onSecondTheme;
             }
 
+            //Add any theme that hasn't been added yet
             if (stackPanelToAddTo.Children.Count > 0)
                 spInstalledThemes.Children.Add(stackPanelToAddTo);
 
-            UpdateText();
-
-            MouseButtonEventArgs doubleClickEvent = new MouseButtonEventArgs(Mouse.PrimaryDevice, (int)DateTime.Now.Ticks, MouseButton.Left);
-            doubleClickEvent.RoutedEvent = Control.MouseDownEvent;
-            doubleClickEvent.Source = this;
-            borderColour1.RaiseEvent(doubleClickEvent);
+            //Trigger the first border mouse down event to make it the selected border
+            MouseButtonEventArgs mouseDownEvent = new MouseButtonEventArgs(Mouse.PrimaryDevice, (int)DateTime.Now.Ticks, MouseButton.Left)
+            {
+                RoutedEvent = Control.MouseDownEvent,
+                Source = this
+            };
+            borderColour1.RaiseEvent(mouseDownEvent);
         }
 
         private void ThemeEditorPage_OnLoaded(object sender, RoutedEventArgs e)
         {
+            //Give the theme a name if it doesn't have one 
             if (string.IsNullOrWhiteSpace(tbCurrentThemeName.Text))
-                tbCurrentThemeName.Text = (string)ThemeDictionary["ThemeName"] + " " + ThemeNames.Count;
+                tbCurrentThemeName.Text = "Theme " + ThemeNames.Count;
 
+#pragma warning disable 4014
+            EditInstalledTheme((stackpanel) =>
+#pragma warning restore 4014
+            {
+                TextBlock themeName = (TextBlock)((StackPanel)stackpanel.Children[0]).Children[0];
+                int bracketIndex = themeName.Text.IndexOf("(");
+                string text;
+
+                if (themeName.Text.StartsWith(App.Current.Resources["ThemeName"].ToString()))
+                {
+                    text = bracketIndex != -1
+                        ? themeName.Text.Remove(bracketIndex).Trim() + $" ({App.Text.Active})"
+                        : themeName.Text.Trim() + $" ({App.Text.Active})";
+                }
+                else if (!string.IsNullOrWhiteSpace(ThemeNameThatBeingEdited) && themeName.Text.StartsWith(ThemeNameThatBeingEdited))
+                {
+                    text = bracketIndex != -1
+                        ? themeName.Text.Remove(bracketIndex).Trim() + $" ({App.Text.Editing})"
+                        : themeName.Text.Trim() + $" ({App.Text.Editing})";
+                }
+                else
+                {
+                    text = bracketIndex != -1
+                        ? themeName.Text.Remove(bracketIndex).Trim()
+                        : themeName.Text.Trim();
+                }
+                themeName.Text = text;
+            });
+
+            //Update the UI Text in case there was a lang change
             UpdateText();
         }
 
-        public async Task UpdateText()
+        private Task UpdateText()
         {
+            //No point in updating the text if there was no lang change (used this because I know colour is color in some places)
+            if (tblColour1.Text == $"{App.Text.Colour1}:")
+                return Task.CompletedTask;
+
             btnAddTheme.Content = App.Text.AddTheme;
             btnAddAndApplyTheme.Content = App.Text.AddAndApplyTheme;
 
             tblMakeTheme.Text = $"{App.Text.LetMakeTheme}!";
             tblMakeTheme.ToolTip = new ToolTip($"{App.Text.ShareThemePart1}\r\n{FileLocations.ThemesFolder} {App.Text.ShareThemePart2}!");
+
             tblThemeName.Text = $"{App.Text.ThemeName}: ";
             tblColour1.Text = $"{App.Text.Colour1}:";
             tblColour2.Text = $"{App.Text.Colour2}:";
@@ -98,64 +151,69 @@ namespace MultiRPC.GUI.Pages
             tblDiscordButtonTextColour.Text = $"{App.Text.DisabledButtonTextColour}:";
             tblSelectedPageColour.Text = $"{App.Text.SelectedPageColour}:";
             tblSelectedPageIconColour.Text = $"{App.Text.SelectedPageIconColour}:";
+            btnResetTheme.Content = App.Text.ResetTheme;
 
             btnSaveTheme.Content = App.Text.SaveTheme;
             btnSaveAndApplyTheme.Content = App.Text.SaveAndApplyTheme;
             tblInstalledThemes.Text = App.Text.InstalledThemes;
 
-            foreach (var content in spInstalledThemes.Children)
+            //Go in each themeStackPanel and update the buttons text            
+            EditInstalledTheme((stackpanel) =>
             {
-                if (!(content is StackPanel stackPanel))
-                    return;
-
-                foreach (StackPanel themeStackpanel in stackPanel.Children)
+                StackPanel themeTopControls = (StackPanel)stackpanel.Children[0];
+                foreach (var control in themeTopControls.Children)
                 {
-                    StackPanel themeTopControls = (StackPanel)themeStackpanel.Children[0];
-                    foreach (var control in themeTopControls.Children)
+                    if (!(control is Button button)) continue;
+                    switch (button.Name)
                     {
-                        if (control is Button button)
-                        {
-                            switch (button.Name)
-                            {
-                                case "btnEdit":
-                                    button.Content = App.Text.Edit;
-                                    break;
-                                case "btnRemove":
-                                    button.Content = App.Text.Remove;
-                                    break;
-                                case "btnClone":
-                                    button.Content = App.Text.Clone;
-                                    break;
-                            }
-                        }
+                        case "btnEdit":
+                            button.Content = App.Text.Edit;
+                            break;
+                        case "btnRemove":
+                            button.Content = App.Text.Remove;
+                            break;
+                        case "btnClone":
+                            button.Content = App.Text.Clone;
+                            break;
                     }
                 }
+            }).ConfigureAwait(false).GetAwaiter().GetResult();
+
+            return Task.CompletedTask;
+        }
+
+        private async Task EditInstalledTheme(Action<StackPanel> action)
+        {
+            for (int i = 0; i < spInstalledThemes.Children.Count; i++)
+            {
+                if (!(spInstalledThemes.Children[i] is StackPanel stackPanel)) continue;
+
+                for (int j = 0; j < stackPanel.Children.Count; j++)
+                    action((StackPanel)stackPanel.Children[j]);
             }
         }
 
         private async Task AddThemeButtonLogic(bool apply)
         {
             OpenFileDialog openFile = new OpenFileDialog();
-            openFile.Filter = "MultiRPC Theme | *.multirpctheme";
-            openFile.Title = "Add Theme";
-            openFile.Multiselect = !apply; //This is because we wouldn't know what theme to apply
+            openFile.Filter = $"MultiRPC {App.Text.Theme} | *{ThemeExtension}";
+            openFile.Title = App.Text.AddTheme;
+            openFile.Multiselect = !apply; //This is because we wouldn't know what theme to apply if we had multiple themes sent our way
+
             if (openFile.ShowDialog().Value)
             {
                 for (int i = 0; i < openFile.FileNames.Length; i++)
-                {
                     File.Move(openFile.FileNames[i], Path.Combine(FileLocations.ThemesFolder, openFile.SafeFileNames[i]));
-                }
 
                 List<string> themeFiles = new List<string>();
-                foreach (var ThemefileName in openFile.SafeFileNames)
-                {
-                    themeFiles.Add(Path.Combine(FileLocations.ThemesFolder, ThemefileName));
-                }
+                for (int i = 0; i < openFile.SafeFileNames.LongLength; i++)
+                    themeFiles.Add(Path.Combine(FileLocations.ThemesFolder, openFile.SafeFileNames[i]));
+
                 await AddExternalTheme(apply, themeFiles.ToArray());
             }
         }
 
-        private async Task<StackPanel> GetThemeStackpanel()
+        private Task<StackPanel> GetThemeStackpanel()
         {
             var stack = ((StackPanel)spInstalledThemes.Children[spInstalledThemes.Children.Count - 1]);
             if (stack.Children.Count == 2)
@@ -169,10 +227,10 @@ namespace MultiRPC.GUI.Pages
                 spInstalledThemes.Children.Add(stack);
             }
 
-            return stack;
+            return Task.FromResult(stack);
         }
 
-        public async Task AddExternalTheme(bool apply, string[] themeFiles)
+        private async Task AddExternalTheme(bool apply, string[] themeFiles)
         {
             if (apply)
             {
@@ -195,41 +253,65 @@ namespace MultiRPC.GUI.Pages
 
         private async Task<Frame> SaveTheme()
         {
+            //Null theme name because we don't need it anymore and trigger remove button to remove UI and file (if editing theme)
             ThemeNameThatBeingEdited = null;
             RemoveButtonForThemeBeingEdited?.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-            var themeFile = Path.Combine(FileLocations.ThemesFolder, tbCurrentThemeName.Text + ".multirpctheme");
-            var stack = await GetThemeStackpanel();
 
+            //Get theme file name and write theme
+            var themeFile = Path.Combine(FileLocations.ThemesFolder, tbCurrentThemeName.Text + ThemeExtension);
             File.WriteAllText(themeFile, XamlWriter.Save(ThemeDictionary));
-            var frame = await MakeThemeUI(stack.Children.Count == 1, themeFile, stack);
             ThemeDictionary = new ResourceDictionary();
+
+            //Get StackPanel and add new theme to Installed theme's UI
+            var stack = await GetThemeStackpanel();
+            var frame = await MakeThemeUI(stack.Children.Count == 1, themeFile, stack);
+
+            //Clear and reset the Theme UI that is shown when making a theme
             tbCurrentThemeName.Clear();
-            await MakeThemeUIThatGoingToBeEdited();
+            MakeThemeUIEditable();
             RemoveButtonForThemeBeingEdited = null;
+
+            //Return the frame for other functions that need it  
             return frame;
         }
 
-        public static async Task UpdateGlobalUI()
+        /// <summary>
+        /// This updates the UI everywhere with the theme
+        /// </summary>
+        /// <returns>A great looking MultiRPC (I hope anyway...)</returns>
+        public static async Task UpdateGlobalUI(string themeFile = null)
         {
+            while (globalThemeBeingUpdated)
+                await Task.Delay(250);
+
+            globalThemeBeingUpdated = true;
+            if (string.IsNullOrWhiteSpace(themeFile))
+                themeFile = App.Config.ActiveTheme;
+
+            //Sometimes that frame could be still not filled with C O N T E N T
             while (MainPage.mainPage.frameRPCPreview.Content == null)
                 await Task.Delay(250);
 
+            //Get rid of the old and in with the new ~~theme~~
             App.Current.Resources.MergedDictionaries.Clear();
-            App.Current.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText(App.Config.ActiveTheme)));
+            App.Current.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText(themeFile)));
             App.Current.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText($"Assets/Icons.xaml")));
 
-            var frameRPCPreviewBG = MainPage.mainPage.frameRPCPreview.Content != null ? ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).gridBackground.Background : ((SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]);
+            //Update the RPC Frame showing the current Rich presence
+            var preview = ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content);
+            var frameRPCPreviewBG = MainPage.mainPage.frameRPCPreview.Content != null ? preview.gridBackground.Background : ((SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]);
             if (((SolidColorBrush)frameRPCPreviewBG).Color != ((SolidColorBrush)Application.Current.Resources["Red"]).Color && ((SolidColorBrush)frameRPCPreviewBG).Color != ((SolidColorBrush)Application.Current.Resources["Purple"]).Color)
             {
-                await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateBackground(
-                    (SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]);
-                await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateForground(
-                    (SolidColorBrush)App.Current.Resources["TextColourSCBrush"]);
+                preview.UpdateBackground((SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"]);
+                preview.UpdateForground((SolidColorBrush)App.Current.Resources["TextColourSCBrush"]);
             }
+
+            //Rerender the main page buttons with new theme colours
             MainPage.mainPage.RerenderButtons();
 
             ((MainWindow)App.Current.MainWindow).TaskbarIcon.TrayToolTip = new ToolTip(App.Current.MainWindow.WindowState == WindowState.Minimized ? App.Text.ShowMultiRPC : App.Text.HideMultiRPC);
-            var preview = ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content);
+
+            //Update tooltips
             if (preview.ellSmallImage.ToolTip != null)
                 preview.ellSmallImage.ToolTip = new ToolTip(((ToolTip)preview.ellSmallImage.ToolTip).Content.ToString());
             if (preview.recLargeImage.ToolTip != null)
@@ -242,37 +324,65 @@ namespace MultiRPC.GUI.Pages
                 preview.recLargeImage.ToolTip = new ToolTip(((ToolTip)preview.recLargeImage.ToolTip).Content.ToString());
             SettingsPage.settingsPage.rAppDev.ToolTip = new ToolTip(((ToolTip)SettingsPage.settingsPage.rAppDev.ToolTip).Content.ToString());
 
+            //Update the current button which tell the custom page what profile to use
             if (CustomPage.customPage.CurrentButton != null)
                 CustomPage.customPage.CurrentButton.Background = (SolidColorBrush)App.Current.Resources["AccentColour2HoverSCBrush"];
 
+            //Update the Theme name TextBox by using ~~magic~~ itself
             string tmp = themeEditor.tbCurrentThemeName.Text;
-            themeEditor.tbCurrentThemeName.Text = "";
+            themeEditor.tbCurrentThemeName.Clear();
             themeEditor.tbCurrentThemeName.Text = tmp;
             themeEditor.tblMakeTheme.ToolTip = new ToolTip($"{App.Text.ShareThemePart1}\r\n{FileLocations.ThemesFolder} {App.Text.ShareThemePart2}!");
+
+            //Update the borders border (10/10 logic azy...)
+            await themeEditor.UpdateBordersColour(App.Current.Resources.MergedDictionaries[0]);
+            if (themeEditor.SelectedBorder != null)
+                themeEditor.SelectedBorder.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour5SCBrush"];
+
+            globalThemeBeingUpdated = false;
         }
 
-        private Task MakeThemeUIThatGoingToBeEdited(string themeFile = "Assets/Themes/DarkTheme.xaml")
+        private Task UpdateBordersColour(ResourceDictionary theme)
+        {
+            borderColour1.Background = ((SolidColorBrush)theme["AccentColour1SCBrush"]);
+            borderColour1.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderColour2.Background = ((SolidColorBrush)theme["AccentColour2SCBrush"]);
+            borderColour2.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderColour2Hover.Background = ((SolidColorBrush)theme["AccentColour2HoverSCBrush"]);
+            borderColour2Hover.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderColour3.Background = ((SolidColorBrush)theme["AccentColour3SCBrush"]);
+            borderColour3.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderColour4.Background = ((SolidColorBrush)theme["AccentColour4SCBrush"]);
+            borderColour4.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderColour5.Background = ((SolidColorBrush)theme["AccentColour5SCBrush"]);
+            borderColour5.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderTextColour.Background = ((SolidColorBrush)theme["TextColourSCBrush"]);
+            borderTextColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderDiscordButtonColour.Background = ((SolidColorBrush)theme["DisabledButtonColour"]);
+            borderDiscordButtonColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderDiscordButtonTextColour.Background = ((SolidColorBrush)theme["DisabledButtonTextColour"]);
+            borderDiscordButtonTextColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderSelectedPageColour.Background = ((SolidColorBrush)theme["NavButtonBackgroundSelected"]);
+            borderSelectedPageColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderSelectedPageIconColour.Background = (SolidColorBrush)theme["NavButtonIconColourSelected"];
+            borderSelectedPageIconColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            return Task.CompletedTask;
+        }
+
+        private Task MakeThemeUIEditable(string themeFile = "Assets/Themes/DarkTheme.xaml")
         {
             Color getColor(Brush brush)
             {
                 return ((SolidColorBrush) brush).Color;
             }
 
+            //Get the theme's C O N T E N T and slap it onto the screen
             var theme = (ResourceDictionary) XamlReader.Parse(File.ReadAllText(themeFile));
             frameThemeBeingMade.Content = new MainPageThumbnail(theme);
 
-            borderColour1.Background = ((SolidColorBrush)theme["AccentColour1SCBrush"]);
-            borderColour2.Background = ((SolidColorBrush)theme["AccentColour2SCBrush"]);
-            borderColour2Hover.Background = ((SolidColorBrush)theme["AccentColour2HoverSCBrush"]);
-            borderColour3.Background = ((SolidColorBrush)theme["AccentColour3SCBrush"]);
-            borderColour4.Background = ((SolidColorBrush)theme["AccentColour4SCBrush"]);
-            borderColour5.Background = ((SolidColorBrush)theme["AccentColour5SCBrush"]);
-            borderTextColour.Background = ((SolidColorBrush)theme["TextColourSCBrush"]);
-            borderDiscordButtonColour.Background = ((SolidColorBrush)theme["DisabledButtonColour"]);
-            borderDiscordButtonTextColour.Background = ((SolidColorBrush)theme["DisabledButtonTextColour"]);
-            borderSelectedPageColour.Background = ((SolidColorBrush)theme["NavButtonBackgroundSelected"]);
-            borderSelectedPageIconColour.Background = (SolidColorBrush)theme["NavButtonIconColourSelected"];
+            UpdateBordersColour(theme);
 
+            //Add theme's colours to ThemeDictionary
             ThemeDictionary.Add("AccentColour1SCBrush", borderColour1.Background);
             ThemeDictionary.Add("AccentColour2SCBrush", borderColour2.Background);
             ThemeDictionary.Add("AccentColour2HoverSCBrush", borderColour2Hover.Background);
@@ -284,6 +394,7 @@ namespace MultiRPC.GUI.Pages
             ThemeDictionary.Add("DisabledButtonTextColour", borderDiscordButtonTextColour.Background);
             ThemeDictionary.Add("NavButtonBackgroundSelected", borderSelectedPageColour.Background);
             ThemeDictionary.Add("NavButtonIconColourSelected", borderSelectedPageIconColour.Background);
+
             ThemeDictionary.Add("AccentColour1", getColor(borderColour1.Background));
             ThemeDictionary.Add("AccentColour2", getColor(borderColour2.Background));
             ThemeDictionary.Add("AccentColour2Hover", getColor(borderColour2Hover.Background));
@@ -293,7 +404,8 @@ namespace MultiRPC.GUI.Pages
             ThemeDictionary.Add("TextColour", getColor(borderTextColour.Background));
             ThemeDictionary.Add("ThemeName", theme["ThemeName"]);
 
-            tbCurrentThemeName.Text = "";
+            //Set the theme's name
+            tbCurrentThemeName.Clear();
             if (themeFile != "Assets/Themes/DarkTheme.xaml")
             {
                 ThemeNameThatBeingEdited = (string) theme["ThemeName"];
@@ -308,14 +420,65 @@ namespace MultiRPC.GUI.Pages
             return Task.CompletedTask;
         }
 
-        public async Task<Frame> MakeThemeUI(bool onSecondTheme, string themeFile, StackPanel stackPanelToAddTo)
+        private async Task SetThemeStatusInUI(string status, StackPanel themesStackPanel = null, Frame themesFrame = null, string[] dontSetIfContains = null, bool removeActiveOnOtherTextBoxes = false, bool removeEditOnOtherTextBoxes = false)
         {
+            //Go in each themeStackPanel and update the buttons text            
+            await EditInstalledTheme((stackpanel) =>
+            {
+                if ((themesStackPanel != null && themesStackPanel == stackpanel) ||
+                    (themesFrame != null && themesFrame == stackpanel.Children[1]))
+                {
+                    TextBlock themeName = (TextBlock)((StackPanel) stackpanel.Children[0]).Children[0];
+                    if (dontSetIfContains != null && dontSetIfContains.Contains(themeName.Text.Split(' ').Last().Replace("(","").Replace(")", "")))
+                        return;
+
+                    int bracketIndex = themeName.Text.IndexOf("(");
+                    string text = bracketIndex != -1
+                        ? themeName.Text.Remove(bracketIndex).Trim() + $" ({status})"
+                        : themeName.Text.Trim() + $" ({status})";
+
+                    text = text.Replace(" ()", "");
+                    themeName.Text = text;
+                }
+                else if (removeActiveOnOtherTextBoxes)
+                {
+                    TextBlock themeName = (TextBlock)((StackPanel)stackpanel.Children[0]).Children[0];
+                    if (themeName.Text.Split(' ').Last().Replace("(", "").Replace(")", "") == App.Text.Active)
+                    {
+                        int bracketIndex = themeName.Text.IndexOf("(");
+                        string text = bracketIndex != -1
+                            ? themeName.Text.Remove(bracketIndex).Trim()
+                            : themeName.Text.Trim();
+
+                        themeName.Text = text;
+                    }
+                }
+                else if (removeEditOnOtherTextBoxes)
+                {
+                    TextBlock themeName = (TextBlock)((StackPanel)stackpanel.Children[0]).Children[0];
+                    if (themeName.Text.Split(' ').Last().Replace("(", "").Replace(")", "") == App.Text.Editing)
+                    {
+                        int bracketIndex = themeName.Text.IndexOf("(");
+                        string text = bracketIndex != -1
+                            ? themeName.Text.Remove(bracketIndex).Trim()
+                            : themeName.Text.Trim();
+
+                        themeName.Text = text;
+                    }
+                }
+            });
+        }
+
+        private Task<Frame> MakeThemeUI(bool onSecondTheme, string themeFile, StackPanel stackPanelToAddTo)
+        {
+            //Make the StackPanel and frame the theme's UI will be in
             StackPanel themeStackPanel = new StackPanel();
             var frame = new Frame
             {
                 Margin = !onSecondTheme ? new Thickness(0, 0, 5, 0) : new Thickness(0)
             };
 
+            //Add theme to frame and make it look nice OwO
             var theme = new MainPageThumbnail((ResourceDictionary)XamlReader.Parse(File.ReadAllText(themeFile)));
             frame.Content = theme;
             DropShadowEffect dropShadow = new DropShadowEffect
@@ -327,18 +490,22 @@ namespace MultiRPC.GUI.Pages
             frame.Effect = dropShadow;
             frame.Tag = themeFile;
             frame.MouseDoubleClick += Theme_MouseDoubleClick;
+            frame.MouseEnter += Frame_MouseEnter;
+            frame.MouseLeave += Frame_MouseLeave;
 
             TextBlock tblThemeName = new TextBlock
             {
-                Text = (string)theme.Resources["ThemeName"],
+                Text = theme.Resources["ThemeName"].ToString(),
                 Margin = new Thickness(0, 0, 0, 5),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 FontWeight = FontWeight.FromOpenTypeWeight(2),
                 FontSize = 16
             };
+            //Add it to the list of theme names if it somehow isn't
             if (!ThemeNames.Contains(tblThemeName.Text))
                 ThemeNames.Add(tblThemeName.Text);
 
+            //Make buttons and see if it allowed to be edited (if made by us then that would be a big fat nope)
             var isEnabled = !themeFile.StartsWith(@"Assets\Themes");
             Button editButton = new Button
             {
@@ -365,98 +532,133 @@ namespace MultiRPC.GUI.Pages
             removeButton.Tag = themeStackPanel;
             editButton.Tag = new Tuple<Button, string>(removeButton, themeFile);
             cloneButton.Tag = themeFile;
-
-            StackPanel nameEditAndRemoveStackPanel = new StackPanel
+            
+            //Add buttons and name to it's own StackPanel
+            StackPanel buttonAndNameStackPanel = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
                 Margin = new Thickness(0, 0, 0, 5)
             };
-            nameEditAndRemoveStackPanel.Children.Add(tblThemeName);
-            nameEditAndRemoveStackPanel.Children.Add(editButton);
-            nameEditAndRemoveStackPanel.Children.Add(removeButton);
-            nameEditAndRemoveStackPanel.Children.Add(cloneButton);
+            buttonAndNameStackPanel.Children.Add(tblThemeName);
+            buttonAndNameStackPanel.Children.Add(editButton);
+            buttonAndNameStackPanel.Children.Add(removeButton);
+            buttonAndNameStackPanel.Children.Add(cloneButton);
 
-            themeStackPanel.Children.Add(nameEditAndRemoveStackPanel);
+            //Add everything to the themeStackPanel and then the one that shows all theme's 
+            themeStackPanel.Children.Add(buttonAndNameStackPanel);
             themeStackPanel.Children.Add(frame);
             stackPanelToAddTo.Children.Add(themeStackPanel);
 
-            return frame;
+            return Task.FromResult(frame);
+        }
+
+        private void Frame_MouseLeave(object sender, MouseEventArgs e)
+        {
+            LastFrameMouseWasIn = null;
+            UpdateGlobalUI();
+            SetThemeStatusInUI("", themesFrame: ((Frame) sender), dontSetIfContains: new [] { App.Text.Active, App.Text.Editing });
+        }
+
+        private async void Frame_MouseEnter(object sender, MouseEventArgs e)
+        {
+            var lastFrameMouseWasIn = LastFrameMouseWasIn = (string)((Frame) sender).Tag;
+            await Task.Delay(TimeSpan.FromSeconds(0.5));
+            if (lastFrameMouseWasIn == LastFrameMouseWasIn)
+            {
+                UpdateGlobalUI(lastFrameMouseWasIn);
+                SetThemeStatusInUI(App.Text.Showing, themesFrame: ((Frame)sender), dontSetIfContains: new[] { App.Text.Active, App.Text.Editing });
+            }
         }
 
         private async void CloneButton_Click(object sender, RoutedEventArgs e)
         {
             RemoveButtonForThemeBeingEdited = null;
 
-            ResourceDictionary ThemeDictionary = (ResourceDictionary)XamlReader.Parse(File.ReadAllText(((Button)sender).Tag.ToString()));
-            ThemeDictionary["ThemeName"] = ThemeDictionary["ThemeName"] + " Copy";
-            string themeName = Path.Combine(FileLocations.ThemesFolder, ThemeDictionary["ThemeName"].ToString());
-            File.WriteAllText(themeName + ".multirpctheme",XamlWriter.Save(ThemeDictionary));
+            //Get theme's C O N T E N T
+            ResourceDictionary themeDictionary = (ResourceDictionary)XamlReader.Parse(File.ReadAllText(((Button)sender).Tag.ToString()));
 
+            //Edit name to have copy so user's know it's the cloned one
+            themeDictionary["ThemeName"] = themeDictionary["ThemeName"] + " Copy";
+            string themeName = Path.Combine(FileLocations.ThemesFolder, themeDictionary["ThemeName"].ToString());
+            File.WriteAllText(themeName + ".multirpctheme",XamlWriter.Save(themeDictionary));
+
+            //Show it on the screen (that's always helpful)
             var stack = await GetThemeStackpanel();
-            await MakeThemeUI(stack.Children.Count == 1, themeName + ".multirpctheme", stack);
+            await MakeThemeUI(stack.Children.Count == 1, themeName + ThemeExtension, stack);
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
+            //Get content in edit button
             Tuple<Button, string> editContent = (Tuple<Button, string>) ((Button) sender).Tag;
+
+            //Remake ThemeDictionary, set the remove button and show it at the top (always helpful)
             ThemeDictionary = new ResourceDictionary();
             RemoveButtonForThemeBeingEdited = editContent.Item1;
-            MakeThemeUIThatGoingToBeEdited(editContent.Item2);
+            MakeThemeUIEditable(editContent.Item2);
+            SetThemeStatusInUI("", dontSetIfContains: new[] { App.Text.Active, App.Text.Editing }, removeEditOnOtherTextBoxes: true);
+            SetThemeStatusInUI(App.Text.Editing, themesStackPanel: (StackPanel)RemoveButtonForThemeBeingEdited.Tag, dontSetIfContains: new[] { App.Text.Active, App.Text.Editing });
         }
 
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
+            //StackPanel with more StackPanel's 🙃 
             StackPanel stackPanelToEdit = null;
             for (var i = 0; i < spInstalledThemes.Children.Count; i++)
             {
-                var child = spInstalledThemes.Children[i];
-                if (child is StackPanel stackPanel)
-                {
-                    if (stackPanelToEdit != null)
-                    {
-                        var theme = (StackPanel)stackPanel.Children[0];
-                        stackPanel.Children.Remove(theme);
-                        stackPanelToEdit.Children.Add(theme);
-                        ((StackPanel)stackPanelToEdit.Children[0]).Margin = new Thickness(0,0,5,0);
-                        if (stackPanelToEdit.Children.Count == 2)
-                            ((StackPanel)stackPanelToEdit.Children[0]).Margin = new Thickness(0);
+                if (!(spInstalledThemes.Children[i] is StackPanel stackPanel)) continue;
 
-                        if (stackPanel.Children.Count != 0)
-                        {
-                            stackPanelToEdit = stackPanel;
-                        }
-                        else
-                        {
-                            spInstalledThemes.Children.Remove(stackPanel);
-                            return;
-                        }
+                if (stackPanelToEdit != null)
+                {
+                    //Get theme and put it up one
+                    var theme = (StackPanel)stackPanel.Children[0];
+                    stackPanel.Children.Remove(theme);
+                    stackPanelToEdit.Children.Add(theme);
+
+                    //Make margin so they have their personal space
+                    ((StackPanel)stackPanelToEdit.Children[0]).Margin = stackPanelToEdit.Children.Count == 2 ? new Thickness(0) : new Thickness(0, 0, 5, 0);
+
+                    //See if we should continue with being magical
+                    if (stackPanel.Children.Count != 0)
+                    {
+                        stackPanelToEdit = stackPanel;
                     }
                     else
                     {
-                        for (var j = 0; j < stackPanel.Children.Count; j++)
+                        spInstalledThemes.Children.Remove(stackPanel);
+                        return;
+                    }
+                }
+                else
+                {
+                    for (var j = 0; j < stackPanel.Children.Count; j++)
+                    {
+                        var sp = stackPanel.Children[j];
+                        if (sp == ((Button) sender).Tag)
                         {
-                            var sp = stackPanel.Children[j];
-                            if (sp == ((Button) sender).Tag)
+                            //Remove it off this planet
+                            string themeName = ((TextBlock)((StackPanel)((StackPanel)stackPanel.Children[j]).Children[0]).Children[0]).Text;
+                            stackPanel.Children.Remove((StackPanel) sp);
+                            ThemeNames.Remove(themeName);
+
+                            //Delete it (tony stark i don't feel so good....)
+                            File.Delete(((Frame) ((StackPanel) sp).Children[1]).Tag.ToString());
+
+                            //Remove the StackPanel that was containing it if it's lonely
+                            if (stackPanel.Children.Count == 0)
                             {
-                                string themeName = ((TextBlock)((StackPanel)((StackPanel)stackPanel.Children[j]).Children[0]).Children[0]).Text;
-                                stackPanel.Children.Remove((StackPanel) sp);
-                                ThemeNames.Remove(themeName);
-
-                                File.Delete(((Frame) ((StackPanel) sp).Children[1]).Tag.ToString());
-
-                                if (stackPanel.Children.Count == 0)
-                                {
-                                    spInstalledThemes.Children.Remove(stackPanel);
-                                    return;
-                                }
-                                else
-                                {
-                                    stackPanelToEdit = stackPanel;
-                                }
-                            }
-                            if(i == spInstalledThemes.Children.Count - 1 && j == stackPanel.Children.Count - 1)
+                                spInstalledThemes.Children.Remove(stackPanel);
                                 return;
+                            }
+                            else
+                            {
+                                stackPanelToEdit = stackPanel;
+                            }
                         }
+
+                        //See if we are on the last StackPanels
+                        if(i == spInstalledThemes.Children.Count - 1 && j == stackPanel.Children.Count - 1)
+                            return;
                     }
                 }
             }
@@ -464,9 +666,12 @@ namespace MultiRPC.GUI.Pages
 
         private async void Theme_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+
             App.Config.ActiveTheme = ((Frame) sender).Tag.ToString();
             App.Config.Save();
             UpdateGlobalUI();
+            SetThemeStatusInUI("", removeActiveOnOtherTextBoxes: true);
+            SetThemeStatusInUI(App.Text.Active, themesFrame: ((Frame) sender));
         }
 
         private void Colour_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -486,6 +691,7 @@ namespace MultiRPC.GUI.Pages
             if(!IsInitialized)
                 return;
 
+            //Update the border with the colour the person wants
             switch (SelectedBorder.Name)
             {
                 case "borderColour1":
@@ -541,12 +747,23 @@ namespace MultiRPC.GUI.Pages
                     break;
             }
 
-            frameThemeBeingMade.Content = new MainPageThumbnail(ThemeDictionary);
+            //Update the test UI with the colour
+            if (frameThemeBeingMade.Content != null)
+            {
+                ((MainPageThumbnail) frameThemeBeingMade.Content)
+                    .UpdateMergedDictionaries(ThemeDictionary);
+            }
+            else
+            {
+                frameThemeBeingMade.Content = new MainPageThumbnail(ThemeDictionary);
+            }
         }
 
         private async void BtnSaveAndApplyTheme_OnClick(object sender, RoutedEventArgs e)
         {
             var frame = await SaveTheme();
+
+            //Click the frame programmatically
             MouseButtonEventArgs doubleClickEvent = new MouseButtonEventArgs(Mouse.PrimaryDevice, (int)DateTime.Now.Ticks, MouseButton.Left);
             doubleClickEvent.RoutedEvent = Control.MouseDoubleClickEvent;
             doubleClickEvent.Source = this;
@@ -555,15 +772,16 @@ namespace MultiRPC.GUI.Pages
 
         private async void BtnSaveTheme_OnClick(object sender, RoutedEventArgs e)
         {
-            await SaveTheme();
+            SaveTheme();
         }
 
         private void TbCurrentThemeName_OnTextChanged(object sender, TextChangedEventArgs e)
         {
+            //Check the theme name
             if (tbCurrentThemeName.Text.Length == 0)
             {
                 tbCurrentThemeName.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
-                tbCurrentThemeName.ToolTip = new ToolTip("The profile needs a name!!!");
+                tbCurrentThemeName.ToolTip = new ToolTip($"{App.Text.ThemeNeedName}!!!");
                 btnSaveAndApplyTheme.IsEnabled = false;
                 btnSaveTheme.IsEnabled = false;
                 return;
@@ -577,7 +795,7 @@ namespace MultiRPC.GUI.Pages
             if (ThemeNames.Contains(newThemeName) && sameThemeName)
             {
                 tbCurrentThemeName.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
-                tbCurrentThemeName.ToolTip = new ToolTip("There is a profile already called that!!!");
+                tbCurrentThemeName.ToolTip = new ToolTip($"{App.Text.ThemeWithSameName}!!!");
                 btnSaveAndApplyTheme.IsEnabled = false;
                 btnSaveTheme.IsEnabled = false;
                 return;
@@ -588,7 +806,7 @@ namespace MultiRPC.GUI.Pages
                 if (newThemeName.Contains(Path.GetInvalidFileNameChars()[i]))
                 {
                     tbCurrentThemeName.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
-                    tbCurrentThemeName.ToolTip = new ToolTip("This is a invalid name!!!");
+                    tbCurrentThemeName.ToolTip = new ToolTip($"{App.Text.InvalidThemeName}!!!");
                     btnSaveAndApplyTheme.IsEnabled = false;
                     btnSaveTheme.IsEnabled = false;
                     return;
@@ -610,6 +828,16 @@ namespace MultiRPC.GUI.Pages
         private void BtnAddAndApplyTheme_OnClick(object sender, RoutedEventArgs e)
         {
             AddThemeButtonLogic(true);
+        }
+
+        private void BtnResetTheme_OnClick(object sender, RoutedEventArgs e)
+        {
+            RemoveButtonForThemeBeingEdited = null;
+
+            //Get theme's C O N T E N T
+            ThemeDictionary = new ResourceDictionary();
+            SetThemeStatusInUI("", removeEditOnOtherTextBoxes: true);
+            MakeThemeUIEditable();
         }
     }
 }
