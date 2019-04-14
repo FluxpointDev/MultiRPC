@@ -5,6 +5,7 @@ using System.Windows;
 using Newtonsoft.Json;
 using MultiRPC.Functions;
 using MultiRPC.GUI.Pages;
+using System.Diagnostics;
 using MultiRPC.JsonClasses;
 using System.Threading.Tasks;
 using System.Windows.Threading;

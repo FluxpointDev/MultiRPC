@@ -53,13 +53,6 @@ namespace MultiRPC.GUI
             MakeJumpList();
             mainPage.ContentFrame.Navigated += MainPageContentFrame_OnNavigated;
 
-            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
-            {
-                TaskbarItemInfo = new TaskbarItemInfo();
-                TaskbarItemInfo.Description = "MultiRPC";
-                TaskbarItemInfo.ThumbnailClipMargin = new Thickness(471, 41, 9, 420);
-            }
-
             TaskbarIcon = new TaskbarIcon();
             TaskbarIcon.IconSource = Icon;
             TaskbarIcon.TrayLeftMouseDown += IconOnTrayLeftMouseDown;
@@ -245,6 +238,19 @@ namespace MultiRPC.GUI
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             WindowsContent.Margin = WindowState == WindowState.Maximized ? new Thickness(7) : new Thickness(0);
+
+            if (App.Current.MainWindow != this)
+                return;
+
+            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
+            {
+                //Not the best but it kind of keeps it where it should be
+                TaskbarItemInfo = new TaskbarItemInfo
+                {
+                    Description = "MultiRPC",
+                    ThumbnailClipMargin = new Thickness(this.ActualWidth - 265, 41, 9, this.ActualHeight - 126)
+                };
+            }
         }
 
         private void Close_OnMouseEnter(object sender, MouseEventArgs e)

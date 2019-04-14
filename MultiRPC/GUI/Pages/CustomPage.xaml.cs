@@ -195,7 +195,7 @@ namespace MultiRPC.GUI.Pages
                 if (button.Content.ToString() == buttonName)
                 {
                     button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                    if (await customPage.CanRunRPC())
+                    if (await customPage.CanRunRPC(true))
                     {
                         await MainPage.mainPage.Dispatcher.InvokeAsync(() =>
                         {

@@ -28,9 +28,10 @@ namespace MultiRPC.GUI.Pages
                 await Task.Delay(250);
 
             runningUpdateMergedDictionaries = true;
-            //this.Resources.MergedDictionaries.Clear();
-            //this.Resources.MergedDictionaries.Add(resource);
-            //this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText($"Assets/Icons.xaml")));
+            this.Resources.MergedDictionaries.Clear();
+            this.Resources.MergedDictionaries.Add(resource);
+            this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText($"Assets/Icons.xaml")));
+            UpdateButtons();
             runningUpdateMergedDictionaries = false;
         }
 
@@ -44,11 +45,11 @@ namespace MultiRPC.GUI.Pages
             btnDisabledExample.Content = App.Text.WewDisabledButton;
         }
 
-        private void MainPageThumbnail_Loaded(object sender, RoutedEventArgs e)
+        private Task UpdateButtons()
         {
             DrawingCollection ButtonDrawing(Button btn)
             {
-                return ((DrawingGroup) ((DrawingImage) ((Image) btn.Content).Source).Drawing).Children;
+                return ((DrawingGroup)((DrawingImage)((Image)btn.Content).Source).Drawing).Children;
             }
 
             void UpdateButton(Button btn, SolidColorBrush brushToUpdateTo)
@@ -64,6 +65,12 @@ namespace MultiRPC.GUI.Pages
 
             UpdateButton(btnNavButton, (SolidColorBrush)this.Resources["AccentColour3SCBrush"]);
             UpdateButton(btnNavButtonSelected, (SolidColorBrush)this.Resources["NavButtonIconColourSelected"]);
+            return Task.CompletedTask;
+        }
+
+        private void MainPageThumbnail_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateButtons();
             UpdateText();
         }
     }

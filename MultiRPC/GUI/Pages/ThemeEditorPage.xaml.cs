@@ -24,7 +24,7 @@ namespace MultiRPC.GUI.Pages
     {
         public const string ThemeExtension = ".multirpctheme";
 
-        //ThemeDictionary for the theme being made/edited and the ThemeNames for all the theme names (so we don't need to go into 100000 StackPanel layers lol)
+        //ThemeDictionary for the theme being made/edited and the ThemeNames for all the theme names (so we don't need to go into 100000 StackPanel layers every time we change  lol)
         private ResourceDictionary ThemeDictionary = new ResourceDictionary();
         private List<string> ThemeNames = new List<string>();
 
@@ -260,16 +260,16 @@ namespace MultiRPC.GUI.Pages
             //Get theme file name and write theme
             var themeFile = Path.Combine(FileLocations.ThemesFolder, tbCurrentThemeName.Text + ThemeExtension);
             File.WriteAllText(themeFile, XamlWriter.Save(ThemeDictionary));
-            ThemeDictionary = new ResourceDictionary();
 
             //Get StackPanel and add new theme to Installed theme's UI
             var stack = await GetThemeStackpanel();
             var frame = await MakeThemeUI(stack.Children.Count == 1, themeFile, stack);
 
             //Clear and reset the Theme UI that is shown when making a theme
-            tbCurrentThemeName.Clear();
-            MakeThemeUIEditable();
             RemoveButtonForThemeBeingEdited = null;
+            tbCurrentThemeName.Clear();
+            await MakeThemeUIEditable();
+            frameThemeBeingMade.Content = new MainPageThumbnail(ThemeDictionary);
 
             //Return the frame for other functions that need it  
             return frame;
@@ -286,7 +286,12 @@ namespace MultiRPC.GUI.Pages
 
             globalThemeBeingUpdated = true;
             if (string.IsNullOrWhiteSpace(themeFile))
-                themeFile = App.Config.ActiveTheme;
+            {
+                if (File.Exists(App.Config.ActiveTheme))
+                    themeFile = App.Config.ActiveTheme;
+                else
+                    themeFile = "Assets/Themes/DarkTheme.xaml"; //We want to at least have a theme so this doesn't happen: https://1drv.ms/u/s!AhwsT7MDO4OvgtsoUYv7Tmq7KWDleA
+            }
 
             //Sometimes that frame could be still not filled with C O N T E N T
             while (MainPage.mainPage.frameRPCPreview.Content == null)
@@ -335,73 +340,81 @@ namespace MultiRPC.GUI.Pages
             themeEditor.tblMakeTheme.ToolTip = new ToolTip($"{App.Text.ShareThemePart1}\r\n{FileLocations.ThemesFolder} {App.Text.ShareThemePart2}!");
 
             //Update the borders border (10/10 logic azy...)
-            await themeEditor.UpdateBordersColour(App.Current.Resources.MergedDictionaries[0]);
+            await themeEditor.UpdateBordersBorderBrush();
             if (themeEditor.SelectedBorder != null)
                 themeEditor.SelectedBorder.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour5SCBrush"];
+            GC.Collect();
 
             globalThemeBeingUpdated = false;
         }
 
-        private Task UpdateBordersColour(ResourceDictionary theme)
+        private Task UpdateBordersBorderBrush()
+        {
+            borderColour1.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderColour2.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderColour2Hover.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderColour3.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderColour4.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderColour5.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderTextColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderDiscordButtonColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderDiscordButtonTextColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderSelectedPageColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            borderSelectedPageIconColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+            return Task.CompletedTask;
+        }
+
+        private Task UpdateBordersBackground(ResourceDictionary theme)
         {
             borderColour1.Background = ((SolidColorBrush)theme["AccentColour1SCBrush"]);
-            borderColour1.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
             borderColour2.Background = ((SolidColorBrush)theme["AccentColour2SCBrush"]);
-            borderColour2.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
             borderColour2Hover.Background = ((SolidColorBrush)theme["AccentColour2HoverSCBrush"]);
-            borderColour2Hover.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
             borderColour3.Background = ((SolidColorBrush)theme["AccentColour3SCBrush"]);
-            borderColour3.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
             borderColour4.Background = ((SolidColorBrush)theme["AccentColour4SCBrush"]);
-            borderColour4.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
             borderColour5.Background = ((SolidColorBrush)theme["AccentColour5SCBrush"]);
-            borderColour5.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
             borderTextColour.Background = ((SolidColorBrush)theme["TextColourSCBrush"]);
-            borderTextColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
             borderDiscordButtonColour.Background = ((SolidColorBrush)theme["DisabledButtonColour"]);
-            borderDiscordButtonColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
             borderDiscordButtonTextColour.Background = ((SolidColorBrush)theme["DisabledButtonTextColour"]);
-            borderDiscordButtonTextColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
             borderSelectedPageColour.Background = ((SolidColorBrush)theme["NavButtonBackgroundSelected"]);
-            borderSelectedPageColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
             borderSelectedPageIconColour.Background = (SolidColorBrush)theme["NavButtonIconColourSelected"];
-            borderSelectedPageIconColour.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
             return Task.CompletedTask;
         }
 
         private Task MakeThemeUIEditable(string themeFile = "Assets/Themes/DarkTheme.xaml")
         {
-            Color getColor(Brush brush)
+            Color getColor(object brush)
             {
-                return ((SolidColorBrush) brush).Color;
+                return (Color)brush;
             }
 
             //Get the theme's C O N T E N T and slap it onto the screen
             var theme = (ResourceDictionary) XamlReader.Parse(File.ReadAllText(themeFile));
             frameThemeBeingMade.Content = new MainPageThumbnail(theme);
 
-            UpdateBordersColour(theme);
+            UpdateBordersBackground(theme);
+            UpdateBordersBorderBrush();
 
+            ThemeDictionary = new ResourceDictionary();
             //Add theme's colours to ThemeDictionary
-            ThemeDictionary.Add("AccentColour1SCBrush", borderColour1.Background);
-            ThemeDictionary.Add("AccentColour2SCBrush", borderColour2.Background);
-            ThemeDictionary.Add("AccentColour2HoverSCBrush", borderColour2Hover.Background);
-            ThemeDictionary.Add("AccentColour3SCBrush", borderColour3.Background);
-            ThemeDictionary.Add("AccentColour4SCBrush", borderColour4.Background);
-            ThemeDictionary.Add("AccentColour5SCBrush", borderColour5.Background);
-            ThemeDictionary.Add("TextColourSCBrush", borderTextColour.Background);
-            ThemeDictionary.Add("DisabledButtonColour", borderDiscordButtonColour.Background);
-            ThemeDictionary.Add("DisabledButtonTextColour", borderDiscordButtonTextColour.Background);
-            ThemeDictionary.Add("NavButtonBackgroundSelected", borderSelectedPageColour.Background);
-            ThemeDictionary.Add("NavButtonIconColourSelected", borderSelectedPageIconColour.Background);
+            ThemeDictionary.Add("AccentColour1SCBrush", theme["AccentColour1SCBrush"]);
+            ThemeDictionary.Add("AccentColour2SCBrush", theme["AccentColour2SCBrush"]);
+            ThemeDictionary.Add("AccentColour2HoverSCBrush", theme["AccentColour2HoverSCBrush"]);
+            ThemeDictionary.Add("AccentColour3SCBrush", theme["AccentColour3SCBrush"]);
+            ThemeDictionary.Add("AccentColour4SCBrush", theme["AccentColour4SCBrush"]);
+            ThemeDictionary.Add("AccentColour5SCBrush", theme["AccentColour5SCBrush"]);
+            ThemeDictionary.Add("TextColourSCBrush", theme["TextColourSCBrush"]);
+            ThemeDictionary.Add("DisabledButtonColour", theme["DisabledButtonColour"]);
+            ThemeDictionary.Add("DisabledButtonTextColour", theme["DisabledButtonTextColour"]);
+            ThemeDictionary.Add("NavButtonBackgroundSelected", theme["NavButtonBackgroundSelected"]);
+            ThemeDictionary.Add("NavButtonIconColourSelected", theme["NavButtonIconColourSelected"]);
 
-            ThemeDictionary.Add("AccentColour1", getColor(borderColour1.Background));
-            ThemeDictionary.Add("AccentColour2", getColor(borderColour2.Background));
-            ThemeDictionary.Add("AccentColour2Hover", getColor(borderColour2Hover.Background));
-            ThemeDictionary.Add("AccentColour3", getColor(borderColour3.Background));
-            ThemeDictionary.Add("AccentColour4", getColor(borderColour4.Background));
-            ThemeDictionary.Add("AccentColour5", getColor(borderColour5.Background));
-            ThemeDictionary.Add("TextColour", getColor(borderTextColour.Background));
+            ThemeDictionary.Add("AccentColour1", getColor(theme["AccentColour1"]));
+            ThemeDictionary.Add("AccentColour2", getColor(theme["AccentColour2"]));
+            ThemeDictionary.Add("AccentColour2Hover", getColor(theme["AccentColour2Hover"]));
+            ThemeDictionary.Add("AccentColour3", getColor(theme["AccentColour3"]));
+            ThemeDictionary.Add("AccentColour4", getColor(theme["AccentColour4"]));
+            ThemeDictionary.Add("AccentColour5", getColor(theme["AccentColour5"]));
+            ThemeDictionary.Add("TextColour", getColor(theme["TextColour"]));
             ThemeDictionary.Add("ThemeName", theme["ThemeName"]);
 
             //Set the theme's name
@@ -416,6 +429,7 @@ namespace MultiRPC.GUI.Pages
                 if(ThemeNames.Count != 0)
                     tbCurrentThemeName.Text = (string)theme["ThemeName"] + " " + ThemeNames.Count;
             }
+            GC.Collect();
 
             return Task.CompletedTask;
         }
@@ -593,7 +607,6 @@ namespace MultiRPC.GUI.Pages
             Tuple<Button, string> editContent = (Tuple<Button, string>) ((Button) sender).Tag;
 
             //Remake ThemeDictionary, set the remove button and show it at the top (always helpful)
-            ThemeDictionary = new ResourceDictionary();
             RemoveButtonForThemeBeingEdited = editContent.Item1;
             MakeThemeUIEditable(editContent.Item2);
             SetThemeStatusInUI("", dontSetIfContains: new[] { App.Text.Active, App.Text.Editing }, removeEditOnOtherTextBoxes: true);
@@ -683,12 +696,12 @@ namespace MultiRPC.GUI.Pages
             SelectedBorder.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour5SCBrush"];
 
             colourPicker.IsEnabled = true;
-            colourPicker.SelectedColor = ((SolidColorBrush) SelectedBorder.Background).Color;
+            colourPicker.SelectedColor = ((SolidColorBrush) ((Border)sender).Background).Color;
         }
 
         private void ColourPicker_OnSelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
-            if(!IsInitialized)
+            if (!IsInitialized)
                 return;
 
             //Update the border with the colour the person wants
@@ -749,14 +762,9 @@ namespace MultiRPC.GUI.Pages
 
             //Update the test UI with the colour
             if (frameThemeBeingMade.Content != null)
-            {
-                ((MainPageThumbnail) frameThemeBeingMade.Content)
-                    .UpdateMergedDictionaries(ThemeDictionary);
-            }
+                ((MainPageThumbnail)frameThemeBeingMade.Content).UpdateMergedDictionaries(ThemeDictionary);
             else
-            {
                 frameThemeBeingMade.Content = new MainPageThumbnail(ThemeDictionary);
-            }
         }
 
         private async void BtnSaveAndApplyTheme_OnClick(object sender, RoutedEventArgs e)
@@ -835,9 +843,9 @@ namespace MultiRPC.GUI.Pages
             RemoveButtonForThemeBeingEdited = null;
 
             //Get theme's C O N T E N T
-            ThemeDictionary = new ResourceDictionary();
             SetThemeStatusInUI("", removeEditOnOtherTextBoxes: true);
             MakeThemeUIEditable();
+            frameThemeBeingMade.Content = new MainPageThumbnail(ThemeDictionary);
         }
     }
 }
