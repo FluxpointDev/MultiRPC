@@ -651,8 +651,10 @@ namespace MultiRPC.GUI.Pages
                         {
                             //Remove it off this planet
                             string themeName = ((TextBlock)((StackPanel)((StackPanel)stackPanel.Children[j]).Children[0]).Children[0]).Text;
+                            if (themeName.IndexOf("(") != -1)
+                                themeName = themeName.Remove(themeName.IndexOf("("));
                             stackPanel.Children.Remove((StackPanel) sp);
-                            ThemeNames.Remove(themeName);
+                            ThemeNames.Remove(themeName.Trim());
 
                             //Delete it (tony stark i don't feel so good....)
                             File.Delete(((Frame) ((StackPanel) sp).Children[1]).Tag.ToString());
