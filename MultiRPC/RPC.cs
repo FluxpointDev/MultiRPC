@@ -211,7 +211,7 @@ namespace MultiRPC
 
         private static async void Client_OnReady(object sender, DiscordRPC.Message.ReadyMessage args)
         {
-            string user = $"{args.User.Username}#{args.User.Discriminator}";
+            string user = $"{args.User.Username}#{args.User.Discriminator.ToString("0000")}";
             if (App.Config.LastUser != user)
             {
                 App.Config.LastUser = user;
