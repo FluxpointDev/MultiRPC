@@ -24,7 +24,6 @@ namespace MultiRPC
         private static DateTime StartTime;
         public static DiscordRpcClient RPCClient;
         private static System.Timers.Timer Uptime;
-        private static System.Timers.Timer ClientTimer;
         private static string PageUserWasOnWhenStarted;
         public const ulong MuiltiRPCID = 450894077165043722;
         public static RichPresence Presence = new RichPresence();
@@ -142,11 +141,6 @@ namespace MultiRPC
                 PageUserWasOnWhenStarted = MainPage.mainPage.btnStart.Content.ToString();
                 MainPage.mainPage.btnStart.Content = App.Text.Shutdown;
             });
-
-            //Create a timer that will regularly call invoke
-            ClientTimer = new System.Timers.Timer(150);
-            ClientTimer.Elapsed += (sender, evt) => { RPCClient.Invoke(); };
-            ClientTimer.Start();
 
             //Connect
             RPCClient.Initialize();
@@ -277,7 +271,6 @@ namespace MultiRPC
         {
             App.Logging.LogEvent(App.Text.Client,App.Text.ShuttingDown);
 
-            ClientTimer?.Dispose();
             Uptime?.Dispose();
             RPCClient?.Dispose();
             MainPage.mainPage.frameRPCPreview.Dispatcher.Invoke( async () =>

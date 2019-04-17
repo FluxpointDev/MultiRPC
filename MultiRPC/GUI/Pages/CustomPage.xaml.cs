@@ -215,8 +215,11 @@ namespace MultiRPC.GUI.Pages
         /// <returns></returns>
         public async Task<bool> CanRunRPC(bool TokenTextChanged = false)
         {
-            MainPage.mainPage.btnUpdate.IsEnabled = false;
-            MainPage.mainPage.btnStart.IsEnabled = false;
+            if (RPC.RPCClient != null && RPC.RPCClient.Disposed)
+            {
+                MainPage.mainPage.btnUpdate.IsEnabled = false;
+                MainPage.mainPage.btnStart.IsEnabled = false;
+            }
 
             bool isEnabled = true;
             if (tbText2.Text.Length == 1)
@@ -353,11 +356,6 @@ namespace MultiRPC.GUI.Pages
                         MainPage.mainPage.btnUpdate.IsEnabled = false;
                         MainPage.mainPage.btnStart.IsEnabled = isEnabled;
                     }
-                }
-                else if (MainPage.mainPage.btnStart.Content != null && MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
-                {
-                    MainPage.mainPage.btnUpdate.IsEnabled = false;
-                    MainPage.mainPage.btnStart.IsEnabled = true;
                 }
             }
 

@@ -205,11 +205,6 @@ namespace MultiRPC.GUI.Pages
                     MainPage.mainPage.btnStart.IsEnabled = isEnabled;
                 }
             }
-            else if (MainPage.mainPage.btnStart.Content != null && MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
-            {
-                MainPage.mainPage.btnUpdate.IsEnabled = false;
-                MainPage.mainPage.btnStart.IsEnabled = true;
-            }
         }
 
         private void TbText2_OnSizeChanged(object sender, TextChangedEventArgs e)
