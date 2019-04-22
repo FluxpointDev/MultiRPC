@@ -115,7 +115,7 @@
                 <CheckBox Unchecked="CbElapasedTime_OnChecked" Checked="CbElapasedTime_OnChecked" x:Name="cbElapasedTime" Grid.Column="1" VerticalAlignment="Center" />
             </Grid>
         </StackPanel>
-        <Image Grid.Row="1" Margin="0" Height="200" Width="NaN" HorizontalAlignment="Stretch" VerticalAlignment="Center" x:Name="imgHelpImageBehind" Grid.Column="1"/>
+        <Image Grid.Row="1" Opacity="1" Margin="0" Height="200" Width="NaN" HorizontalAlignment="Stretch" VerticalAlignment="Center" x:Name="imgHelpImageBehind" Grid.Column="1"/>
         <Image Grid.Row="1" Margin="0" Height="200" Width="NaN" HorizontalAlignment="Stretch" VerticalAlignment="Center" x:Name="imgHelpImage" Grid.Column="1"/>
     </Grid>
 </Page>

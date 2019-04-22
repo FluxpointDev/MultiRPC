@@ -2,6 +2,7 @@
 using System.IO;
 using DiscordRPC;
 using System.Linq;
+using System.Runtime.InteropServices;
 using MultiRPC.GUI;
 using System.Windows;
 using MultiRPC.GUI.Pages;
@@ -153,8 +154,17 @@ namespace MultiRPC
             RPCClient.SetPresence(Presence);
 
             //Disable buttons
+            string profileClientID = "0";
+
+            if(CustomPage.customPage.CurrentButton != null)
+                profileClientID = CustomPage.customPage.Profiles[CustomPage.customPage.CurrentButton.Content.ToString()]
+                    .ClientID;
             foreach (var button in CustomPage.ProfileButtons)
-                button.IsEnabled = false;
+            {
+                if (profileClientID == "0" || CustomPage.customPage.Profiles[button.Content.ToString()]
+                        .ClientID != profileClientID)
+                    button.IsEnabled = false;
+            }
 
             CustomPage.customPage.imgProfileAdd.IsEnabled = false;
             CustomPage.customPage.imgProfileDelete.IsEnabled = false;

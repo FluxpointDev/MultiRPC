@@ -184,7 +184,7 @@
                                                                     <Setter Property="Background" TargetName="Bd" Value="{DynamicResource AccentColour2HoverSCBrush}"/>
                                                                 </Trigger>
                                                                 <Trigger Property="IsEnabled" Value="False">
-                                                                    <Setter Property="Foreground" Value="{DynamicResource DisabledButtonColour}"/>
+                                                                    <Setter Property="Foreground" Value="{DynamicResource DisabledButtonTextColour}"/> 
                                                                 </Trigger>
                                                             </ControlTemplate.Triggers>
                                                         </ControlTemplate>
@@ -307,7 +307,8 @@
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter Property="BorderBrush" TargetName="border" Value="Transparent"/>
-                                    <Setter Property="Background" TargetName="border" Value="{DynamicResource AccentColour4SCBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource DisabledButtonTextColour}"/>
+                                    <Setter Property="Background" TargetName="border" Value="{DynamicResource DisabledButtonColour}"/>
                                 </Trigger>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource AccentColour5SCBrush}"/>

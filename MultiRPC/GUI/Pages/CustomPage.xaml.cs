@@ -442,15 +442,16 @@ namespace MultiRPC.GUI.Pages
                 if (SelectedHelpImage == (Image)sender)
                 {
                     imgHelpImageBehind.Source = null;
-                    storyboard.Completed += Storyboard_Completed;
                     SettingsPage.ImageAnimation(imgHelpImage, 0, storyboard);
                     SettingsPage.ImageAnimation(SelectedHelpImage, 0.6);
+                    SettingsPage.ImageAnimation(imgHelpImageBehind, 0);
                     SelectedHelpImage = null;
                 }
                 else
                 {
                     storyboard.Completed += ImageFaded;
                     SettingsPage.ImageAnimation(SelectedHelpImage, 0.6);
+                    SettingsPage.ImageAnimation(imgHelpImageBehind, 1);
 
                     imgHelpImageBehind.Source = ((Image)((Image)sender).Tag).Source;
                     SettingsPage.ImageAnimation(imgHelpImage, 0, storyboard);
@@ -468,16 +469,10 @@ namespace MultiRPC.GUI.Pages
             }
         }
 
-        private void Storyboard_Completed(object sender, EventArgs e)
-        {
-            if(SelectedHelpImage == null)
-                imgHelpImage.Source = null;
-        }
-
         private void ImageFaded(object sender, EventArgs e)
         {
             SettingsPage.ImageAnimation(imgHelpImage, 1, duration: new Duration(TimeSpan.Zero));
-            if (imgHelpImageBehind.Source != null)
+            if (imgHelpImageBehind.Source != null || imgHelpImageBehind.Opacity < 1)
             {
                 imgHelpImage.Source = imgHelpImageBehind.Source;
                 imgHelpImageBehind.Source = null;
@@ -532,7 +527,9 @@ namespace MultiRPC.GUI.Pages
                 tblProfileName.Text = (string)window.ToReturn;
             }
             using (var writer = new StreamWriter(FileLocations.ProfilesFileLocalLocation))
+            {
                 App.JsonSerializer.Serialize(writer, Profiles);
+            }
 
             MainWindow.MakeJumpList();
         }

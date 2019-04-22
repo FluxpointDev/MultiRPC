@@ -27,7 +27,7 @@ namespace MultiRPC.GUI.Pages
             btnStart.Click += ButStart_OnClick;
 
             rUsername.Text = App.Config.LastUser;
-            mainPage = this;
+            _mainPage = this;
 
             btnMuiltiRPC.Tag = new MultiRPCPage();
             btnCustom.Tag = new CustomPage();
@@ -105,8 +105,8 @@ namespace MultiRPC.GUI.Pages
             }
         }
 
-        public static MainPage mainPage;
-        public static MainPage ThisPage => mainPage; 
+        public static MainPage _mainPage;
+        public static MainPage mainPage => _mainPage; 
 
         public async Task UpdateText()
         {
@@ -181,14 +181,25 @@ namespace MultiRPC.GUI.Pages
             if (((Button) sender).Content.ToString() != App.Text.Shutdown)
             {
                 RPC.Start();
-                ThisPage.btnAfk.IsEnabled = false;
+                mainPage.btnAfk.IsEnabled = false;
             }
             else
             {
                 RPC.Shutdown();
                 if(PresenceBeforeAfk != null)
                     RPC.Presence = PresenceBeforeAfk;
-                ThisPage.btnAfk.IsEnabled = true;
+                mainPage.btnAfk.IsEnabled = true;
+
+                if (mainPage.ContentFrame.Content is MultiRPCPage mainRpcPage)
+                {
+                    RPC.UpdateType(RPC.RPCType.MultiRPC);
+                    mainRpcPage.CanRunRPC();
+                }
+                else if (mainPage.ContentFrame.Content is CustomPage customPage)
+                {
+                    RPC.UpdateType(RPC.RPCType.Custom);
+                    customPage.CanRunRPC(true);
+                }
             }
         }
 

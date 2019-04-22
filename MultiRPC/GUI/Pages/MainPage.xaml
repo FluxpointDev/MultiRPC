@@ -133,7 +133,7 @@
             <Grid Grid.Column="1" Background="{DynamicResource AccentColour1SCBrush}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0">
-                        <Button Height="40" Width="110" Name="btnStart" FontSize="11" Style="{DynamicResource ButtonGreen}" Margin="0,0,0,10"/>
+                        <Button Height="40" Width="110" Name="btnStart" FontSize="11" Style="{DynamicResource ButtonGreen}" Margin="0,0,0,5"/>
                         <Button IsEnabled="False" Height="40" Width="110" Name="btnUpdate" FontSize="11" Style="{DynamicResource ButtonPurple}" Click="ButUpdate_OnClick"/>
                     </StackPanel>
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,0,0,0">
@@ -151,7 +151,7 @@
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0" Orientation="Horizontal">
                     <StackPanel>
-                        <Button IsEnabled="False" Height="40" Width="50" Name="btnAuto" FontSize="11" Style="{DynamicResource ButtonPurple}" Margin="0,0,0,10"/>
+                        <Button IsEnabled="False" Height="40" Width="50" Name="btnAuto" FontSize="11" Style="{DynamicResource ButtonPurple}" Margin="0,0,0,5"/>
                         <Button Height="40" Width="50" Name="btnAfk" FontSize="11" Style="{DynamicResource ButtonPurple}" Click="ButAfk_OnClick"/>
                     </StackPanel>
                     <Frame Name="frameRPCPreview" Margin="10,0,0,0"/>

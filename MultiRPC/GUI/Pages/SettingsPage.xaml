@@ -107,13 +107,11 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="5"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="5"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="10"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="5"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
@@ -130,10 +128,10 @@
                     <ComboBoxItem Content="MultiRPC"/>
                     <ComboBoxItem Name="cbiCustom"/>
                 </ComboBox>
-                <TextBlock Name="tblLanguage" Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                <ComboBox Name="cbLanguage" Grid.Row="6" Grid.Column="1" SelectionChanged="CbLanguage_OnSelectionChanged"/>
-                <TextBlock Grid.Row="8" Name="tblAfkTime" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                <CheckBox Name="cbAfkTime" Checked="CbAfkTime_OnChecked" Unchecked="CbAfkTime_OnChecked" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Name="tblLanguage" Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox Name="cbLanguage" Grid.Row="4" Grid.Column="1" SelectionChanged="CbLanguage_OnSelectionChanged"/>
+                <TextBlock Grid.Row="6" Name="tblAfkTime" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <CheckBox Name="cbAfkTime" Checked="CbAfkTime_OnChecked" Unchecked="CbAfkTime_OnChecked" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             </Grid>
         </StackPanel>
 
@@ -192,9 +190,9 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="5"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="5"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Name="tblPaypal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
@@ -213,11 +211,11 @@
 
         <StackPanel Grid.Row="2" Grid.Column="1">
             <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Left">
-                <Button Width="100" Name="btnChangelog" Margin="0,0,5,0" Click="ButChangelog_OnClick" />
-                <Button Width="100" Name="btnCheckUpdates" IsEnabled="False"  Margin="0,0,5,0" Click="ButCheckUpdates_OnClick" />
+                <Button Width="100" Style="{DynamicResource ButtonPurple}" Name="btnChangelog" Margin="0,0,5,0" Click="ButChangelog_OnClick" />
+                <Button Width="100" Style="{DynamicResource ButtonPurple}" Name="btnCheckUpdates" IsEnabled="False"  Margin="0,0,5,0" Click="ButCheckUpdates_OnClick" />
             </StackPanel>
             <StackPanel Margin="0,5,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button Width="100" Name="btnDebug" Click="ButDebug_OnClick" />
+                <Button Width="100" Style="{DynamicResource ButtonPurple}" Name="btnDebug" Click="ButDebug_OnClick" />
             </StackPanel>
         </StackPanel>
     </Grid>
