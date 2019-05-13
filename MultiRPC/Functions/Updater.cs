@@ -30,26 +30,26 @@ namespace MultiRPC.Functions
             {
                 try
                 {
-                    MainPage.mainPage.Dispatcher.Invoke(() =>
+                    MainPage._MainPage.Dispatcher.Invoke(() =>
                     {
-                        MainPage.mainPage.pbUpdateProgress.Visibility = Visibility.Visible;
-                        MainPage.mainPage.pbUpdateProgress.IsIndeterminate = true;
-                        MainPage.mainPage.pbUpdateProgress.ToolTip = new ToolTip($"{App.Text.CheckingForUpdates}...");
+                        MainPage._MainPage.pbUpdateProgress.Visibility = Visibility.Visible;
+                        MainPage._MainPage.pbUpdateProgress.IsIndeterminate = true;
+                        MainPage._MainPage.pbUpdateProgress.ToolTip = new ToolTip($"{App.Text.CheckingForUpdates}...");
                     });
                     if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
                         App.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
 
-                    UpdateCheckInfo Info = ApplicationDeployment.CurrentDeployment.CheckForDetailedUpdate(false);
+                    UpdateCheckInfo info = ApplicationDeployment.CurrentDeployment.CheckForDetailedUpdate(false);
 
-                    MainPage.mainPage.Dispatcher.Invoke(() =>
+                    MainPage._MainPage.Dispatcher.Invoke(() =>
                     {
-                        MainPage.mainPage.pbUpdateProgress.IsIndeterminate = false;
-                        MainPage.mainPage.pbUpdateProgress.ToolTip = null;
+                        MainPage._MainPage.pbUpdateProgress.IsIndeterminate = false;
+                        MainPage._MainPage.pbUpdateProgress.ToolTip = null;
                     });
                     if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
                         App.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
-                    if (Info.UpdateAvailable)
+                    if (info.UpdateAvailable)
                     {
                         try
                         {
@@ -65,13 +65,15 @@ namespace MultiRPC.Functions
                         }
 
                         if (App.Config.AutoUpdate)
+                        {
                             Start();
+                        }
                         else
                         {
                             var tick = DateTime.Now.Ticks;
                             await App.Current.Dispatcher.InvokeAsync(() =>
                             {
-                                var page = new UpdatePage(Info, tick);
+                                var page = new UpdatePage(info, tick);
                                 var window = new MainWindow(page, false);
                                 window.WindowID = tick;
                                 window.ShowDialog();
@@ -92,11 +94,11 @@ namespace MultiRPC.Functions
                 catch
                 {
                     App.Logging.Error("App",App.Text.UpdateCheckFailed);
-                    MainPage.mainPage.Dispatcher.Invoke(() =>
+                    MainPage._MainPage.Dispatcher.Invoke(() =>
                     {
-                        MainPage.mainPage.pbUpdateProgress.Visibility = Visibility.Collapsed;
-                        MainPage.mainPage.pbUpdateProgress.IsIndeterminate = false;
-                        MainPage.mainPage.pbUpdateProgress.ToolTip = null;
+                        MainPage._MainPage.pbUpdateProgress.Visibility = Visibility.Collapsed;
+                        MainPage._MainPage.pbUpdateProgress.IsIndeterminate = false;
+                        MainPage._MainPage.pbUpdateProgress.ToolTip = null;
                     });
                     if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
                         App.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
@@ -113,11 +115,11 @@ namespace MultiRPC.Functions
                 return;
 
             IsUpdating = true;
-            MainPage.mainPage.Dispatcher.Invoke(() =>
+            MainPage._MainPage.Dispatcher.Invoke(() =>
             {
-                MainPage.mainPage.pbUpdateProgress.Visibility = Visibility.Visible;
-                MainPage.mainPage.pbUpdateProgress.IsIndeterminate = true;
-                MainPage.mainPage.pbUpdateProgress.ToolTip = new ToolTip($"{App.Text.StartingUpdate}...");
+                MainPage._MainPage.pbUpdateProgress.Visibility = Visibility.Visible;
+                MainPage._MainPage.pbUpdateProgress.IsIndeterminate = true;
+                MainPage._MainPage.pbUpdateProgress.ToolTip = new ToolTip($"{App.Text.StartingUpdate}...");
             });
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
                 App.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
@@ -131,11 +133,11 @@ namespace MultiRPC.Functions
             catch(Exception e)
             {
                 IsUpdating = false;
-                MainPage.mainPage.Dispatcher.Invoke(() =>
+                MainPage._MainPage.Dispatcher.Invoke(() =>
                 {
-                    MainPage.mainPage.pbUpdateProgress.Visibility = Visibility.Collapsed;
-                    MainPage.mainPage.pbUpdateProgress.IsIndeterminate = false;
-                    MainPage.mainPage.pbUpdateProgress.ToolTip = null;
+                    MainPage._MainPage.pbUpdateProgress.Visibility = Visibility.Collapsed;
+                    MainPage._MainPage.pbUpdateProgress.IsIndeterminate = false;
+                    MainPage._MainPage.pbUpdateProgress.ToolTip = null;
                 });
                 if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
                     App.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
@@ -165,10 +167,10 @@ namespace MultiRPC.Functions
                     State = App.Text.DownloadingDeploymentInfo;
                     break;
             }
-            await MainPage.mainPage.Dispatcher.InvokeAsync(() =>
+            await MainPage._MainPage.Dispatcher.InvokeAsync(() =>
             {
-                MainPage.mainPage.pbUpdateProgress.Value = e.ProgressPercentage;
-                MainPage.mainPage.pbUpdateProgress.ToolTip = new ToolTip ($"{State} ({e.ProgressPercentage}%/100%)");
+                MainPage._MainPage.pbUpdateProgress.Value = e.ProgressPercentage;
+                MainPage._MainPage.pbUpdateProgress.ToolTip = new ToolTip ($"{State} ({e.ProgressPercentage}%/100%)");
             });
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
             {
@@ -210,11 +212,11 @@ namespace MultiRPC.Functions
                     window.ShowDialog();
                 });
             }
-            MainPage.mainPage.Dispatcher.Invoke(() =>
+            MainPage._MainPage.Dispatcher.Invoke(() =>
             {
-                MainPage.mainPage.pbUpdateProgress.Visibility = Visibility.Collapsed;
-                MainPage.mainPage.pbUpdateProgress.IsIndeterminate = false;
-                MainPage.mainPage.pbUpdateProgress.ToolTip = null;
+                MainPage._MainPage.pbUpdateProgress.Visibility = Visibility.Collapsed;
+                MainPage._MainPage.pbUpdateProgress.IsIndeterminate = false;
+                MainPage._MainPage.pbUpdateProgress.ToolTip = null;
             });
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
                 App.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;

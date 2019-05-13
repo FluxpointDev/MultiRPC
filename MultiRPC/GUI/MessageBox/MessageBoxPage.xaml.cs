@@ -50,13 +50,13 @@ namespace MultiRPC.GUI
                 imgMessageBoxImage.Visibility = Visibility.Collapsed;
 
             if ((int)messageBoxImage == 64)
-                imgMessageBoxImage.Source = (ImageSource)App.Current.Resources["InfoIconDrawingImage"];
+                imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "InfoIconDrawingImage");
             else if ((int)messageBoxImage == 48)
-                imgMessageBoxImage.Source = (ImageSource)App.Current.Resources["WarningIconDrawingImage"];
+                imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "WarningIconDrawingImage");
             else if ((int)messageBoxImage == 16)
-                imgMessageBoxImage.Source = (ImageSource)App.Current.Resources["AlertIconDrawingImage"];
+                imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "AlertIconDrawingImage");
             else if ((int)messageBoxImage == 32)
-                imgMessageBoxImage.Source = (ImageSource)App.Current.Resources["HelpIconDrawingImage"];
+                imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "HelpIconDrawingImage");
         }
 
         private void ButOk_OnClick(object sender, RoutedEventArgs e)

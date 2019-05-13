@@ -17,8 +17,9 @@ namespace MultiRPC.GUI.Pages
     /// </summary>
     public partial class MainPage : Page
     {
-        private Button SelectedButton;
-        private static DiscordRPC.RichPresence PresenceBeforeAfk;
+        private Button selectedButton;
+        private static DiscordRPC.RichPresence presenceBeforeAfk;
+        public static MainPage _MainPage;
 
         public MainPage()
         {
@@ -27,24 +28,25 @@ namespace MultiRPC.GUI.Pages
             btnStart.Click += ButStart_OnClick;
 
             rUsername.Text = App.Config.LastUser;
-            _mainPage = this;
+            _MainPage = this;
 
-            btnMuiltiRPC.Tag = new MultiRPCPage();
-            btnCustom.Tag = new CustomPage();
-            btnLogs.Tag = new LogsPage();
-            btnCredits.Tag = new CreditsPage();
-            btnSettings.Tag = new SettingsPage();
-            btnDebug.Tag = new DebugPage();
-            btnThemeEditor.Tag = new ThemeEditorPage();
-            btnMuiltiRPC.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             frameRPCPreview.Content = new RPCPreview(RPCPreview.ViewType.Default);
         }
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             UpdateText();
+            Updater.Check();
             if (!App.Config.DiscordCheck)
             {
+                if (App.Config.AutoStart == "MultiRPC" || App.Config.AutoStart == App.Text.No)
+                {
+                    btnMultiRPC.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                }
+                else
+                {
+                    btnCustom.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                }
                 gridCheckForDiscord.Visibility = Visibility.Collapsed;
             }
             else
@@ -56,31 +58,31 @@ namespace MultiRPC.GUI.Pages
                 hylServerLinkUri.NavigateUri = new Uri($"https://discord.gg/{App.ServerInviteCode}");
 
                 int count;
-                string DiscordClient = "";
+                string discordClient = "";
                 try
                 {
                     FindClient:
-                    Process[] Client = Process.GetProcessesByName("Discord");
-                    if ((count = Client.Length) != 0)
+                    Process[] client = Process.GetProcessesByName("Discord");
+                    if ((count = client.Length) != 0)
                     {
                         tblMultiRPC.Text = "MultiRPC - Discord";
-                        DiscordClient = "Discord";
+                        discordClient = "Discord";
                     }
                     else
                     {
-                        Client = Process.GetProcessesByName("DiscordCanary");
-                        if ((count = Client.Length) != 0)
+                        client = Process.GetProcessesByName("DiscordCanary");
+                        if ((count = client.Length) != 0)
                         {
                             tblMultiRPC.Text = "MultiRPC - Discord Canary";
-                            DiscordClient = "Discord Canary";
+                            discordClient = "Discord Canary";
                         }
                         else
                         {
-                            Client = Process.GetProcessesByName("DiscordPTB");
-                            if ((count = Client.Length) != 0)
+                            client = Process.GetProcessesByName("DiscordPTB");
+                            if ((count = client.Length) != 0)
                             {
                                 tblMultiRPC.Text = "MultiRPC - Discord PTB";
-                                DiscordClient = "Discord PTB";
+                                discordClient = "Discord PTB";
                             }
                         }
                     }
@@ -93,27 +95,38 @@ namespace MultiRPC.GUI.Pages
                     }
                     else if (count < 6)
                     {
-                        tblDiscordClientMessage.Text = $"{DiscordClient} {App.Text.IsLoading}....";
+                        tblDiscordClientMessage.Text = $"{discordClient} {App.Text.IsLoading}....";
                         await Task.Delay(750);
                         goto FindClient;
                     }
                     else
+                    {
+                        if (App.Config.AutoStart == "MultiRPC" || App.Config.AutoStart == App.Text.No)
+                        {
+                            btnMultiRPC.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        }
+                        else
+                        {
+                            btnCustom.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        }
                         gridCheckForDiscord.Visibility = Visibility.Collapsed;
+                    }
                 }
                 catch { }
-                Updater.Check();
             }
         }
 
-        public static MainPage _mainPage;
-        public static MainPage mainPage => _mainPage; 
-
-        public async Task UpdateText()
+        public Task UpdateText()
         {
-            if (ContentFrame.Content is MultiRPCPage)
-                btnStart.Content = $"{App.Text.Start} MuiltiRPC";
-            else if (ContentFrame.Content is CustomPage)
-                btnStart.Content = App.Text.StartCustom;
+            switch (ContentFrame.Content)
+            {
+                case MultiRPCPage _:
+                    btnStart.Content = $"{App.Text.Start} MuiltiRPC";
+                    break;
+                case CustomPage _:
+                    btnStart.Content = App.Text.StartCustom;
+                    break;
+            }
             
             btnUpdate.Content = App.Text.UpdatePresence;
             rStatus.Text = App.Text.Status + ": ";
@@ -122,58 +135,94 @@ namespace MultiRPC.GUI.Pages
             btnAuto.Content = App.Text.Auto;
             btnAfk.Content = App.Text.Afk;
             tblAfkText.Text = App.Text.AfkText + ": ";
+            return Task.CompletedTask;
         }
 
         private void ChangePage_OnClick(object sender, RoutedEventArgs e)
         {
-            string ImageName(string s, bool Selected = false)
+            if (selectedButton?.Tag != null && ContentFrame.Content == ((Button)sender).Tag)
             {
-                return s.Replace("img", "") + (Selected ? "Selected" : "") + "DrawingImage";
+                return;
             }
 
-            if (SelectedButton != null)
+            string ImageName(string s, bool selected = false)
             {
-                SelectedButton.Style = (Style)this.Resources["NavButton"];
-                ((Image) SelectedButton.Content).Source = (DrawingImage) App.Current.Resources[ImageName(((Image)SelectedButton.Content).Name)];
+                return s.Replace("img", "") + (selected ? "Selected" : "") + "DrawingImage";
             }
-            SelectedButton = (Button)sender;
 
-            SelectedButton.Style = (Style)this.Resources["NavButtonSelected"];
-            ((Image)SelectedButton.Content).Source = (DrawingImage)App.Current.Resources[ImageName(((Image)SelectedButton.Content).Name, true)];
-            ContentFrame.Navigate(SelectedButton.Tag);
+            if (selectedButton != null)
+            {
+                selectedButton.SetResourceReference(StyleProperty, "NavButton");
+                ((Image)selectedButton.Content).Source = (DrawingImage) App.Current.Resources[ImageName(((Image)selectedButton.Content).Name)];
+            }
+            selectedButton = (Button)sender;
+
+            selectedButton.SetResourceReference(StyleProperty, "NavButtonSelected");
+            ((Image)selectedButton.Content).Source = (DrawingImage)App.Current.Resources[ImageName(((Image)selectedButton.Content).Name, true)];
+            if (selectedButton.Tag == null)
+            {
+                switch (((Button)sender).Name)
+                {
+                    case "btnMultiRPC":
+                        btnMultiRPC.Tag = new MultiRPCPage();
+                        break;
+                    case "btnCustom":
+                        btnCustom.Tag = new CustomPage();
+                        break;
+                    case "btnLogs":
+                        btnLogs.Tag = new LogsPage();
+                        break;
+                    case "btnCredits":
+                        btnCredits.Tag = new CreditsPage();
+                        break;
+                    case "btnSettings":
+                        btnSettings.Tag = new SettingsPage();
+                        break;
+                    case "btnDebug":
+                        btnDebug.Tag = new DebugPage();
+                        break;
+                    case "btnThemeEditor":
+                        btnThemeEditor.Tag = new ThemeEditorPage();
+                        break;
+                }
+            }
+
+            ContentFrame.Navigate(selectedButton.Tag);
         }
 
-        public async Task RerenderButtons()
+        public Task RerenderButtons()
         {
             string ImageName(Button but)
             {
-                var s = ((Image)but.Content).Name.Replace("img", "") + (but == SelectedButton ? "Selected" : "") +
+                var s = ((Image)but.Content).Name.Replace("img", "") + (but == selectedButton ? "Selected" : "") +
                         "DrawingImage";
                 return s;
             }
 
-            ((Image)btnMuiltiRPC.Content).Source = (DrawingImage)App.Current.Resources[ImageName(btnMuiltiRPC)];
+            ((Image)btnMultiRPC.Content).Source = (DrawingImage)App.Current.Resources[ImageName(btnMultiRPC)];
             ((Image)btnCustom.Content).Source = (DrawingImage)App.Current.Resources[ImageName(btnCustom)];
             ((Image)btnLogs.Content).Source = (DrawingImage)App.Current.Resources[ImageName(btnLogs)];
             ((Image)btnSettings.Content).Source = (DrawingImage)App.Current.Resources[ImageName(btnSettings)];
             ((Image)btnCredits.Content).Source = (DrawingImage)App.Current.Resources[ImageName(btnCredits)];
             ((Image)btnDebug.Content).Source = (DrawingImage)App.Current.Resources[ImageName(btnDebug)];
+            return Task.CompletedTask;
         }
 
-        public async Task CanRunRPC()
+        private Task CanRunRPC()
         {
             if (tbAfkReason.Text.Length == 1)
             {
-                tbAfkReason.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
+                tbAfkReason.SetResourceReference(Control.BorderBrushProperty, "Red");
                 tbAfkReason.ToolTip = new ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
                 btnAfk.IsEnabled = false;
             }
             else
             {
-                tbAfkReason.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
+                tbAfkReason.SetResourceReference(Control.BorderBrushProperty, "AccentColour4SCBrush");
                 tbAfkReason.ToolTip = null;
                 btnAfk.IsEnabled = true;
             }
+            return Task.CompletedTask;
         }
 
         private static void ButStart_OnClick(object sender, RoutedEventArgs e)
@@ -181,21 +230,21 @@ namespace MultiRPC.GUI.Pages
             if (((Button) sender).Content.ToString() != App.Text.Shutdown)
             {
                 RPC.Start();
-                mainPage.btnAfk.IsEnabled = false;
+                _MainPage.btnAfk.IsEnabled = false;
             }
             else
             {
                 RPC.Shutdown();
-                if(PresenceBeforeAfk != null)
-                    RPC.Presence = PresenceBeforeAfk;
-                mainPage.btnAfk.IsEnabled = true;
+                if (presenceBeforeAfk != null)
+                    RPC.Presence = presenceBeforeAfk;
+                _MainPage.btnAfk.IsEnabled = true;
 
-                if (mainPage.ContentFrame.Content is MultiRPCPage mainRpcPage)
+                if (_MainPage.ContentFrame.Content is MultiRPCPage mainRpcPage)
                 {
                     RPC.UpdateType(RPC.RPCType.MultiRPC);
                     mainRpcPage.CanRunRPC();
                 }
-                else if (mainPage.ContentFrame.Content is CustomPage customPage)
+                else if (_MainPage.ContentFrame.Content is CustomPage customPage)
                 {
                     RPC.UpdateType(RPC.RPCType.Custom);
                     customPage.CanRunRPC(true);
@@ -212,16 +261,18 @@ namespace MultiRPC.GUI.Pages
         {
             if (!string.IsNullOrWhiteSpace(tbAfkReason.Text))
             {
-                if (PresenceBeforeAfk == null)
-                    PresenceBeforeAfk = RPC.Presence.Clone();
-                RPC.SetPresence(tbAfkReason.Text, "", "cat", App.Text.SleepyCat, "", "", App.Config.AFKTime);
+                if (presenceBeforeAfk == null)
+                    presenceBeforeAfk = RPC.Presence.Clone();
                 RPC.AFK = true;
+
                 var tmp = RPC.IDToUse;
                 RPC.IDToUse = 469643793851744257;
-                tbAfkReason.Text = "";
+                RPC.SetPresence(tbAfkReason.Text, "", "cat", App.Text.SleepyCat, "", "", App.Config.AFKTime);
                 RPC.Update();
+                tbAfkReason.Text = "";
                 RPC.IDToUse = tmp;
-                RPC.Presence = PresenceBeforeAfk.Clone();
+                await Task.Delay(100);
+                RPC.Presence = presenceBeforeAfk.Clone();
             }
             else
             {

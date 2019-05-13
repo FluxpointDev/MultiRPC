@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       x:Class="MultiRPC.GUI.Pages.MultiRPCPage"
       mc:Ignorable="d" 
+      IsEnabled="False"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MultiRPC">
     <Page.Resources>

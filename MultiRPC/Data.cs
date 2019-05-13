@@ -9,7 +9,7 @@ namespace MultiRPC
 
         public static async Task<Dictionary<string, string>> MakeImagesDictionary()
         {
-            return new Dictionary<string, string>()
+            return new Dictionary<string, string>
             {
                 { App.Text.NoImage, "" },
                 { "Discord", "https://i.imgur.com/QN5WA4W.png" },

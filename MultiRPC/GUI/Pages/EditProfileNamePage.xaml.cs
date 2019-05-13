@@ -11,16 +11,16 @@ namespace MultiRPC.GUI.Pages
     /// </summary>
     public partial class EditProfileNamePage : Page
     {
-        public long WindowID;
-        private Dictionary<string, CustomProfile> Profiles;
-        private string OldName;
+        private long windowID;
+        private Dictionary<string, CustomProfile> profiles;
+        private string oldName;
 
-        public EditProfileNamePage(long windowID, Dictionary<string, CustomProfile> profiles, string oldName)
+        public EditProfileNamePage(long _windowID, Dictionary<string, CustomProfile> _profiles, string _oldName)
         {
             InitializeComponent();
-            WindowID = windowID;
-            Profiles = profiles;
-            OldName = oldName;
+            windowID = _windowID;
+            profiles = _profiles;
+            oldName = _oldName;
             btnDone.Content = App.Text.Done;
             Title = App.Text.ProfileEdit;
             tbNewProfileName.Text = oldName;
@@ -28,11 +28,11 @@ namespace MultiRPC.GUI.Pages
 
         private async void ButDone_OnClick(object sender, RoutedEventArgs e)
         {
-            if (await UpdateProfileName(tbNewProfileName.Text))
-                MainWindow.CloseWindow(WindowID, tbNewProfileName.Text);
+            if (await CanUpdateProfileName(tbNewProfileName.Text))
+                MainWindow.CloseWindow(windowID, tbNewProfileName.Text);
         }
 
-        private async Task<bool> UpdateProfileName(string newProfileName)
+        private async Task<bool> CanUpdateProfileName(string newProfileName)
         {
             if (string.IsNullOrWhiteSpace(newProfileName))
             {
@@ -40,12 +40,12 @@ namespace MultiRPC.GUI.Pages
                 return false;
             }
 
-            if (!Profiles.ContainsKey(newProfileName))
+            if (!profiles.ContainsKey(newProfileName))
             {
-                var profile = Profiles[OldName];
+                var profile = profiles[oldName];
                 profile.Name = newProfileName;
-                Profiles.Remove(OldName);
-                Profiles.Add(newProfileName, profile);
+                profiles.Remove(oldName);
+                profiles.Add(newProfileName, profile);
                 return true;
             }
             else

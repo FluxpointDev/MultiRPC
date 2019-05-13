@@ -17,7 +17,7 @@ namespace MultiRPC
         public string ActiveLanguage = "English";
 
         /// <summary> What theme to use </summary>
-        public string ActiveTheme = "Assets/Themes/DarkTheme.xaml";
+        public string ActiveTheme = "Assets/Themes/DarkTheme" + Theme.ThemeExtension;
 
         /// <summary> If to auto update the app </summary>
         public bool AutoUpdate = false;
@@ -97,9 +97,6 @@ namespace MultiRPC
     /// <summary> Disabled settings config </summary>
     public class DisableConfig
     {
-        /// <summary> Disable the programs tab </summary>
-        public bool ProgramsTab = false;
-
         /// <summary> Disable the custom tab help icons </summary>
         public bool HelpIcons = false;
     }

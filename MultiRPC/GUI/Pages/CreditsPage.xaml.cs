@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using MultiRPC.Functions;
 using System.Diagnostics;
 using MultiRPC.JsonClasses;
 using System.Threading.Tasks;
@@ -14,15 +15,13 @@ namespace MultiRPC.GUI.Pages
     /// </summary>
     public partial class CreditsPage : Page
     {
-        private CreditsList CreditsList;
-        private int retryCount;
+        private CreditsList creditsList;
+        private int retryCount; //Local retryCount
 
         public CreditsPage()
         {
             InitializeComponent();
             Loaded += CreditsPage_Loaded;
-            if (File.Exists(CreditsFileLocalLocation))
-                UpdateCredits();
             SetupLogic();
         }
 
@@ -31,49 +30,67 @@ namespace MultiRPC.GUI.Pages
             UpdateText();
         }
 
-        public async Task UpdateText()
+        private Task UpdateText()
         {
             tblCommunityAdminsTitle.Text = App.Text.CommunityAdmins;
             tblPatreonDonatorsTitle.Text = App.Text.PatreonDonators;
             tblPaypalDonatorsTitle.Text = App.Text.PaypalDonators;
             tblIconProvidersTitle.Text = App.Text.IconProviders;
-            await UpdateCredits(true);
+            UpdateCredits(true);
+            return Task.CompletedTask;
         }
 
-        public async Task UpdateCredits(bool updateText = false)
+        private Task UpdateCredits(bool updateText = false)
         {
-            FileInfo CreditsFileFI = new FileInfo(CreditsFileLocalLocation);
+            FileInfo creditsFileFI = new FileInfo(CreditsFileLocalLocation);
             if (!updateText)
-                using (StreamReader reader = CreditsFileFI.OpenText())
+            {
+                using (StreamReader reader = creditsFileFI.OpenText())
                 {
-                    CreditsList = (CreditsList) App.JsonSerializer.Deserialize(reader, typeof(CreditsList));
-                    if (CreditsList != null)
+                    creditsList = (CreditsList) App.JsonSerializer.Deserialize(reader, typeof(CreditsList));
+                    if (creditsList != null)
                     {
-                        tblCommunityAdmins.Text = string.Join("\r\n\r\n", CreditsList.Admins);
-                        tblPatreonDonators.Text = string.Join("\r\n\r\n", CreditsList.Patreon);
-                        tblPaypalDonators.Text = string.Join("\r\n\r\n", CreditsList.Paypal);
+                        tblCommunityAdmins.Text = string.Join("\r\n\r\n", creditsList.Admins);
+                        tblPatreonDonators.Text = string.Join("\r\n\r\n", creditsList.Patreon);
+                        tblPaypalDonators.Text = string.Join("\r\n\r\n", creditsList.Paypal);
                     }
                 }
+            }
 
-            if (CreditsFileFI.LastWriteTime.Date == DateTime.Now.Date)
-                tblLastUpdated.Text = $"{App.Text.LastUpdatedAt}: {CreditsFileFI.LastWriteTime.ToShortTimeString()}";
-            else
-                tblLastUpdated.Text = $"{App.Text.LastUpdatedOn}: {CreditsFileFI.LastWriteTime.ToLongDateString()}";
+            tblLastUpdated.Text = creditsFileFI.LastWriteTime.Date == DateTime.Now.Date ? 
+                $"{App.Text.LastUpdatedAt}: {creditsFileFI.LastWriteTime.ToShortTimeString()}" : 
+                $"{App.Text.LastUpdatedOn}: {creditsFileFI.LastWriteTime.ToLongDateString()}";
+            return Task.CompletedTask;
         }
 
-        public async Task SetupLogic()
+        private async Task SetupLogic()
         {
-            await UpdateText();
+            if (File.Exists(CreditsFileLocalLocation))
+                UpdateCredits();
+
             App.WebClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
             var webFile = System.Extra.Uri.Combine(App.MuiltiRPCWebsiteRoot, CreditsFileName);
-            tblLastUpdated.Text = $"{App.Text.Loading}...";
+
             DownloadFile:
             try
             {
+                if (!Utils.NetworkIsAvailable())
+                {
+                    int second = 5;
+                    while (second != 0)
+                    {
+                        tblLastUpdated.Text = $"{App.Text.WaitingForInternetUpdate.Replace("{second}", second.ToString())}...";
+                        await Task.Delay(1000);
+                        second--;
+                    }
+                    goto DownloadFile;
+                }
                 await App.WebClient.DownloadFileTaskAsync(webFile, CreditsFileLocalLocation + ".new");
             }
-            catch
+            catch (Exception e)
             {
+                App.Logging.Application(e.Message);
+
                 if (File.Exists(CreditsFileLocalLocation + ".new"))
                     File.Delete(CreditsFileLocalLocation + ".new");
 
@@ -98,23 +115,25 @@ namespace MultiRPC.GUI.Pages
 
         private async void WebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
-            bool DoLogic = false;
+            bool doLogic;
             try
             {
-                var uri = (Uri)((TaskCompletionSource<object>) e.UserState).Task.AsyncState;
-                DoLogic = uri.AbsoluteUri == System.Extra.Uri.Combine(App.MuiltiRPCWebsiteRoot, CreditsFileName);
+                var uri = (Uri) ((TaskCompletionSource<object>) e.UserState).Task.AsyncState;
+                doLogic = uri.AbsoluteUri == System.Extra.Uri.Combine(App.MuiltiRPCWebsiteRoot, CreditsFileName);
             }
-            catch { }
-
-            if (DoLogic)
+            catch (Exception ex)
             {
-                if (File.Exists(CreditsFileLocalLocation))
-                    File.Delete(CreditsFileLocalLocation);
-
-                File.Move(CreditsFileLocalLocation + ".new", CreditsFileLocalLocation);
-                App.WebClient.DownloadFileCompleted -= WebClient_DownloadFileCompleted;
-                await UpdateCredits();
+                App.Logging.Application(ex.Message);
+                return;
             }
+
+            if (!doLogic) return;
+            if (File.Exists(CreditsFileLocalLocation))
+                File.Delete(CreditsFileLocalLocation);
+
+            File.Move(CreditsFileLocalLocation + ".new", CreditsFileLocalLocation);
+            App.WebClient.DownloadFileCompleted -= WebClient_DownloadFileCompleted;
+            await UpdateCredits();
         }
     }
 }

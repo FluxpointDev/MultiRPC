@@ -1,15 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Net;
-using DiscordRPC;
 using System.Linq;
 using System.Windows;
-using System.Net.Http;
 using Newtonsoft.Json;
 using MultiRPC.Functions;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Globalization;
 using MultiRPC.JsonClasses;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -25,18 +21,16 @@ namespace MultiRPC.GUI.Pages
     /// </summary>
     public partial class CustomPage : Page
     {
-        private Image SelectedHelpImage;
-        public Dictionary<string, CustomProfile> Profiles;
+        private Image selectedHelpImage;
+        public static Dictionary<string, CustomProfile> Profiles;
         public static List<Button> ProfileButtons = new List<Button>();
-        public Button CurrentButton;
-
-        private static CustomPage _CustomPage;
-        public static CustomPage customPage => _CustomPage;
+        public static Button CurrentButton;
+        public static CustomPage _CustomPage;
+        private bool haveDoneAutoStart;
 
         public CustomPage()
         {
             InitializeComponent();
-            UpdateText();
             Loaded += CustomPage_Loaded;
             _CustomPage = this;
 
@@ -48,16 +42,16 @@ namespace MultiRPC.GUI.Pages
             else
             {
                 Profiles = new Dictionary<string, CustomProfile>
-                    {
-                        { App.Text.Custom, new CustomProfile { Name = App.Text.Custom } }
-                    };
+                {
+                    { App.Text.Custom, new CustomProfile { Name = App.Text.Custom } }
+                };
                 using (var writer = new StreamWriter(FileLocations.ProfilesFileLocalLocation))
                     App.JsonSerializer.Serialize(writer, Profiles);
             }
 
-            foreach (var profile in Profiles)
+            for (int i = 0; i < Profiles.Count; i++)
             {
-                MakeMenuButton(profile.Key);
+                MakeMenuButton(Profiles.ElementAt(i).Key);
             }
             tbProfiles.ItemsSource = ProfileButtons;
 
@@ -91,7 +85,7 @@ namespace MultiRPC.GUI.Pages
             };
         }
 
-        public async Task UpdateText()
+        private Task UpdateText()
         {
             tblClientID.Text = App.Text.ClientID + ":";
             tblText1.Text = App.Text.Text1 + ":";
@@ -104,7 +98,8 @@ namespace MultiRPC.GUI.Pages
             imgProfileEdit.ToolTip = new ToolTip(App.Text.ProfileEdit);
             imgProfileShare.ToolTip = new ToolTip(App.Text.ProfileShare); 
             imgProfileAdd.ToolTip = new ToolTip(App.Text.ProfileAdd); 
-            imgProfileDelete.ToolTip = new ToolTip(App.Text.ProfileDelete); 
+            imgProfileDelete.ToolTip = new ToolTip(App.Text.ProfileDelete);
+            return Task.CompletedTask;
         }
 
         private async void CustomPage_Loaded(object sender, RoutedEventArgs e)
@@ -126,286 +121,123 @@ namespace MultiRPC.GUI.Pages
             tbProfiles.Visibility = tbProfiles.Items.Count == 1 ? Visibility.Collapsed : Visibility.Visible;
 
             UpdateText();
-            CanRunRPC(true);
-        }
 
-        private async void TbLargeText_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckImageText(((TextBox)sender));
-            RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, cbElapasedTime.IsChecked.Value);
-            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
-            CanRunRPC();
-        }
-
-        private async void TbSmallText_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckImageText(((TextBox)sender));
-            RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, cbElapasedTime.IsChecked.Value);
-            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
-            CanRunRPC();
-        }
-
-        public async Task<string> CheckImageText(TextBox textBox)
-        {
-            string text = textBox.Text;
-            if (!Checks.UnderAmountOfBytes(text, 128))
-                textBox.Undo();
-            return textBox.Text;
-        }
-
-        private void TbText1_OnSizeChanged(object sender, TextChangedEventArgs e)
-        {
-            string text = ((TextBox)sender).Text;
-
-            if (!Checks.UnderAmountOfBytes(text, 128))
+            if (!haveDoneAutoStart && App.Config.AutoStart == App.Text.Custom)
             {
-                ((TextBox)sender).Undo();
-                text = ((TextBox)sender).Text;
+                if (await CanRunRPC(true))
+                {
+                    MainPage._MainPage.btnStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                }
+                haveDoneAutoStart = true;
             }
+            else
+            {
+                CanRunRPC(true);
+            }
+        }
+
+        private void TbLargeText_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            MultiRPCAndCustomLogic.CheckImageText(((TextBox)sender));
+            RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
+            CanRunRPC();
+        }
+
+        private void TbSmallText_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            MultiRPCAndCustomLogic.CheckImageText(((TextBox)sender));
+            RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
+            CanRunRPC();
+        }
+
+        private async void TbText1_OnSizeChanged(object sender, TextChangedEventArgs e)
+        {
+            string text = await MultiRPCAndCustomLogic.CheckImageText((TextBox)sender);
 
             RPC.SetPresence(text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, cbElapasedTime.IsChecked.Value);
             UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
             CanRunRPC();
         }
 
+        private async void TbText2_OnSizeChanged(object sender, TextChangedEventArgs e)
+        {
+            string text = await MultiRPCAndCustomLogic.CheckImageText((TextBox)sender);
+
+            RPC.SetPresence(tbText1.Text, text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
+            CanRunRPC();
+        }
+
+        public async void CbElapasedTime_OnChecked(object sender, RoutedEventArgs e)
+        {
+            MultiRPCAndCustomLogic.UpdateTimestamps((CheckBox)sender);
+            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
+        }
+
+        private void TbLargeKey_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
+        }
+
+        private void TbSmallKey_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
+        }
+
+        public async Task<bool> CanRunRPC(bool TokenTextChanged = false)
+        {
+            return await MultiRPCAndCustomLogic.CanRunRPC(tbText1, tbText2, tbSmallText, tbLargeText, tbClientID, TokenTextChanged);
+        }
+
+        //Custom Page Code
+        private async void TbClientID_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
+            CanRunRPC(true);
+        }
+
         public static async Task JumpListLogic(string buttonName, bool fromStartUp = false)
         {
             if (fromStartUp)
             {
-                while (MainPage.mainPage == null || MainPage.mainPage == null || MainPage.mainPage.gridCheckForDiscord.Visibility == Visibility.Visible)
+                while (MainPage._MainPage == null || MainPage._MainPage == null || MainPage._MainPage.gridCheckForDiscord.Visibility == Visibility.Visible)
                 {
                     await Task.Delay(250);
                 }
             }
 
-            await MainPage.mainPage.Dispatcher.InvokeAsync(() =>
+            await MainPage._MainPage.Dispatcher.InvokeAsync(() =>
             {
-                MainPage.mainPage.btnCustom.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                MainPage._MainPage.btnCustom.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             });
-            if (MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
+            if (MainPage._MainPage.btnStart.Content.ToString() == App.Text.Shutdown)
             {
-                await MainPage.mainPage.Dispatcher.InvokeAsync(() =>
+                await MainPage._MainPage.Dispatcher.InvokeAsync(() =>
                 {
-                    MainPage.mainPage.btnStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    MainPage._MainPage.btnStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                 });
             }
 
-            foreach (var button in ProfileButtons)
+            for (int i = 0; i < ProfileButtons.Count; i++)
             {
-                if (button.Content.ToString() == buttonName)
+                if (ProfileButtons[i].Content.ToString() == buttonName)
                 {
-                    button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                    if (await customPage.CanRunRPC(true))
+                    ProfileButtons[i].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    if (await _CustomPage.CanRunRPC(true))
                     {
-                        await MainPage.mainPage.Dispatcher.InvokeAsync(() =>
+                        await MainPage._MainPage.Dispatcher.InvokeAsync(() =>
                         {
-                            MainPage.mainPage.btnStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                            MainPage._MainPage.btnStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                         });
                     }
 
                     break;
                 }
             }
-        }
-
-        /// <summary>
-        /// If the content will not crash the RPC Client
-        /// </summary>
-        /// <param name="TokenTextChanged">If to check the token because the token text had changed</param>
-        /// <returns></returns>
-        public async Task<bool> CanRunRPC(bool TokenTextChanged = false)
-        {
-            if (RPC.RPCClient != null && RPC.RPCClient.Disposed)
-            {
-                MainPage.mainPage.btnUpdate.IsEnabled = false;
-                MainPage.mainPage.btnStart.IsEnabled = false;
-            }
-
-            bool isEnabled = true;
-            if (tbText2.Text.Length == 1)
-            {
-                tbText2.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
-                tbText2.ToolTip = new ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
-                isEnabled = false;
-            }
-            else
-            {
-                tbText2.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
-                tbText2.ToolTip = null;
-            }
-            if (tbText1.Text.Length == 1)
-            {
-                tbText1.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
-                tbText1.ToolTip = new ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
-                isEnabled = false;
-            }
-            else
-            {
-                tbText1.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
-                tbText1.ToolTip = null;
-            }
-
-            if (tbSmallText.Text.Length == 1)
-            {
-                tbSmallText.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
-                tbSmallText.ToolTip = new ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
-                isEnabled = false;
-            }
-            else
-            {
-                tbSmallText.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
-                tbSmallText.ToolTip = null;
-            }
-            if (tbLargeText.Text.Length == 1)
-            {
-                tbLargeText.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
-                tbLargeText.ToolTip = new ToolTip(App.Text.LengthMustBeAtLeast2CharactersLong);
-                isEnabled = false;
-            }
-            else
-            {
-                tbLargeText.BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour4SCBrush"];
-                tbLargeText.ToolTip = null;
-            }
-
-            ulong ID = 0;
-            var profile = Profiles[CurrentButton.Content.ToString()];
-
-            if (App.Config.CheckToken && TokenTextChanged)
-            {
-                var isValidCode =
-                    ulong.TryParse(tbClientID.Text, NumberStyles.Any, new NumberFormatInfo(), out ID);
-
-                if ((ID.ToString().Length != tbClientID.MaxLength || !isValidCode))
-                {
-                    RPC.IDToUse = 0;
-                    tbClientID.BorderBrush = (SolidColorBrush) App.Current.Resources["Red"];
-                    tbClientID.ToolTip = !isValidCode
-                        ? new ToolTip(App.Text.ClientIDIsNotValid)
-                        : new ToolTip(App.Text.ClientIDMustBe18CharactersLong);
-                    isEnabled = false;
-                }
-                else
-                {
-                    tbClientID.BorderBrush = (SolidColorBrush)App.Current.Resources["Orange"];
-                    tbClientID.ToolTip = new ToolTip(App.Text.CheckingClientID);
-                    await Task.Delay(1000);
-                    HttpResponseMessage T = null;
-                    try
-                    {
-                        HttpClient Client = new HttpClient();
-                        T = await Client.PostAsync("https://discordapp.com/api/oauth2/token/rpc",
-                            new FormUrlEncodedContent(new Dictionary<string, string>
-                            {
-                                {"client_id", ID.ToString()}
-                            }));
-                    }
-                    catch
-                    {
-                        App.Logging.Error("API", App.Text.DiscordAPIDown);
-                        tbClientID.ToolTip = new ToolTip($"{App.Text.NetworkIssue}!");
-                        tbClientID.BorderBrush = (SolidColorBrush)App.Current.Resources["Red"];
-                        isEnabled = false;
-                    }
-                    
-                    if (T != null && profile == Profiles[CurrentButton.Content.ToString()])
-                    {
-                        if (T.StatusCode == HttpStatusCode.BadRequest)
-                        {
-                            App.Logging.Error("API", App.Text.ClientIDIsNotValid);
-                            tbClientID.ToolTip = new ToolTip(App.Text.ClientIDIsNotValid);
-                            tbClientID.BorderBrush = (SolidColorBrush) App.Current.Resources["Red"];
-                            isEnabled = false;
-                        }
-                        else if (T.StatusCode != HttpStatusCode.InternalServerError)
-                        {
-                            string response = T.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                            App.Logging.Error("API", $"{App.Text.APIError} {response}");
-                            tbClientID.ToolTip = new ToolTip($"{App.Text.APIIssue}!");
-                            tbClientID.BorderBrush = (SolidColorBrush) App.Current.Resources["Red"];
-                            isEnabled = false;
-                        }
-                        else
-                        {
-                            if(MainPage.mainPage.ContentFrame.Content is CustomPage)
-                                RPC.IDToUse = ID;
-                            tbClientID.BorderBrush = (SolidColorBrush) App.Current.Resources["AccentColour4SCBrush"];
-                            tbClientID.ToolTip = null;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (tbClientID.BorderBrush == (SolidColorBrush)App.Current.Resources["Red"])
-                    isEnabled = false;
-            }
-
-
-            if (Profiles[CurrentButton.Content.ToString()] == profile)
-            {
-                if (MainPage.mainPage.ContentFrame.Content is CustomPage && RPC.Type == RPC.RPCType.Custom)
-                {
-                    if (MainPage.mainPage.btnStart.Content.ToString() == App.Text.Shutdown)
-                    {
-                        MainPage.mainPage.btnUpdate.IsEnabled = isEnabled;
-                        MainPage.mainPage.btnStart.IsEnabled = true;
-                    }
-                    else
-                    {
-                        MainPage.mainPage.btnUpdate.IsEnabled = false;
-                        MainPage.mainPage.btnStart.IsEnabled = isEnabled;
-                    }
-                }
-            }
-
-            return isEnabled;
-        }
-
-        private void TbText2_OnSizeChanged(object sender, TextChangedEventArgs e)
-        {
-            string text = ((TextBox)sender).Text;
-
-            if (!Checks.UnderAmountOfBytes(text, 128))
-            {
-                ((TextBox)sender).Undo();
-                text = ((TextBox)sender).Text;
-            }
-
-            RPC.SetPresence(tbText1.Text, text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, cbElapasedTime.IsChecked.Value);
-            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
-            CanRunRPC();
-        }
-
-        public static async Task UpdateTimestamps(CheckBox checkBox)
-        {
-            RPC.Presence.Timestamps = checkBox.IsChecked.Value ? new Timestamps() : null;
-        }
-
-        public async void CbElapasedTime_OnChecked(object sender, RoutedEventArgs e)
-        {
-            UpdateTimestamps((CheckBox)sender);
-            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
-        }
-
-        //Custom Page logic that isn't in MultiRPCPage
-
-        private async void TbClientID_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
-            CanRunRPC(true);
-        }
-
-        private void TbLargeKey_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, cbElapasedTime.IsChecked.Value);
-            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
-        }
-
-        private void TbSmallKey_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, cbElapasedTime.IsChecked.Value);
-            UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text, tbClientID.Text , cbElapasedTime.IsChecked.Value);
         }
 
         private async void CustomProfileButton_Click(object sender, RoutedEventArgs e)
@@ -417,7 +249,7 @@ namespace MultiRPC.GUI.Pages
             if (CurrentButton != null)
                 CurrentButton.Background = null;
             CurrentButton = (Button)sender;
-            CurrentButton.Background = (SolidColorBrush)App.Current.Resources["AccentColour2HoverSCBrush"];
+            CurrentButton.SetResourceReference(Button.BackgroundProperty, "AccentColour2HoverSCBrush");
             var profile = Profiles[CurrentButton.Content.ToString()];
             tblProfileName.Text = profile.Name;
             tbText1.Text = profile.Text1;
@@ -437,41 +269,41 @@ namespace MultiRPC.GUI.Pages
         {
             Storyboard storyboard = new Storyboard();
 
-            if (SelectedHelpImage != null)
+            if (selectedHelpImage != null)
             {
-                if (SelectedHelpImage == (Image)sender)
+                if (selectedHelpImage == (Image)sender)
                 {
                     imgHelpImageBehind.Source = null;
-                    SettingsPage.ImageAnimation(imgHelpImage, 0, storyboard);
-                    SettingsPage.ImageAnimation(SelectedHelpImage, 0.6);
-                    SettingsPage.ImageAnimation(imgHelpImageBehind, 0);
-                    SelectedHelpImage = null;
+                    Animations.ImageFadeAnimation(imgHelpImage, 0, storyboard);
+                    Animations.ImageFadeAnimation(selectedHelpImage, 0.6);
+                    Animations.ImageFadeAnimation(imgHelpImageBehind, 0);
+                    selectedHelpImage = null;
                 }
                 else
                 {
                     storyboard.Completed += ImageFaded;
-                    SettingsPage.ImageAnimation(SelectedHelpImage, 0.6);
-                    SettingsPage.ImageAnimation(imgHelpImageBehind, 1);
+                    Animations.ImageFadeAnimation(selectedHelpImage, 0.6);
+                    Animations.ImageFadeAnimation(imgHelpImageBehind, 1);
 
                     imgHelpImageBehind.Source = ((Image)((Image)sender).Tag).Source;
-                    SettingsPage.ImageAnimation(imgHelpImage, 0, storyboard);
+                    Animations.ImageFadeAnimation(imgHelpImage, 0, storyboard);
 
-                    SelectedHelpImage = (Image)sender;
-                    SettingsPage.ImageAnimation(SelectedHelpImage, 1);
+                    selectedHelpImage = (Image)sender;
+                    Animations.ImageFadeAnimation(selectedHelpImage, 1);
                 }
             }
             else
             {
                 imgHelpImage.Source = ((Image)((Image)sender).Tag).Source;
-                SettingsPage.ImageAnimation(imgHelpImage, 1);
-                SelectedHelpImage = (Image)sender;
-                SettingsPage.ImageAnimation(SelectedHelpImage, 1);
+                Animations.ImageFadeAnimation(imgHelpImage, 1);
+                selectedHelpImage = (Image)sender;
+                Animations.ImageFadeAnimation(selectedHelpImage, 1);
             }
         }
 
         private void ImageFaded(object sender, EventArgs e)
         {
-            SettingsPage.ImageAnimation(imgHelpImage, 1, duration: new Duration(TimeSpan.Zero));
+            Animations.ImageFadeAnimation(imgHelpImage, 1, duration: new Duration(TimeSpan.Zero));
             if (imgHelpImageBehind.Source != null || imgHelpImageBehind.Opacity < 1)
             {
                 imgHelpImage.Source = imgHelpImageBehind.Source;
@@ -588,11 +420,13 @@ namespace MultiRPC.GUI.Pages
         {
             await Dispatcher.InvokeAsync(() =>
             {
-                Button b = new Button();
-                b.Content = profileName;
-                b.Margin = new Thickness(2.5, 0, 2.5, 0);
-                b.Style = (Style)App.Current.Resources["DefaultButton"];
-                b.BorderThickness = new Thickness(0);
+                Button b = new Button
+                {
+                    Content = profileName,
+                    Margin = new Thickness(2.5, 0, 2.5, 0),
+                    BorderThickness = new Thickness(0)
+                };
+                b.SetResourceReference(Button.StyleProperty, "DefaultButton");
                 b.Click += CustomProfileButton_Click;
                 ProfileButtons.Add(b);
             });
@@ -636,11 +470,11 @@ namespace MultiRPC.GUI.Pages
                 App.JsonSerializer.Serialize(writer, Profiles);
             }
             tbProfiles.Items.Refresh();
-            foreach (var button in ProfileButtons)
+            for (int i = 0; i < ProfileButtons.Count; i++)
             {
-                if (button.Content.ToString() == lastKey)
+                if (ProfileButtons[i].Content.ToString() == lastKey)
                 {
-                    button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                    ProfileButtons[i].RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
                     break;
                 }
             }
@@ -650,12 +484,12 @@ namespace MultiRPC.GUI.Pages
 
         private void Img_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            SettingsPage.ImageAnimation(((Image)sender), 1);
+            Animations.ImageFadeAnimation(((Image)sender), 1);
         }
 
         private void Img_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            SettingsPage.ImageAnimation(((Image)sender), 0.6);
+            Animations.ImageFadeAnimation(((Image)sender), 0.6);
         }
     }
 }

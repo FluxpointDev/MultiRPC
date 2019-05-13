@@ -9,6 +9,6 @@
       Title="Changelog">
 
     <Grid>
-        <TextBox TextWrapping="Wrap" IsReadOnly="True" Height="NaN" Name="tbChangelogText" Margin="10"/>
+        <TextBox TextWrapping="Wrap" IsReadOnly="True" Height="NaN" Name="tbChangelogText" Margin="10" Text="???"/>
     </Grid>
 </Page>

@@ -10,16 +10,16 @@ namespace MultiRPC.GUI.Pages
     /// </summary>
     public partial class ShareProfilePage : Page
     {
-        private CustomProfile Profile;
-        private long WindowID;
+        private CustomProfile profile;
+        private long windowID;
 
-        public ShareProfilePage(CustomProfile profile, long windowID)
+        public ShareProfilePage(CustomProfile _profile, long _windowID)
         {
             InitializeComponent();
             btnExport.Content = App.Text.Export;
             btnImport.Content = App.Text.Import;
-            Profile = profile;
-            WindowID = windowID;
+            profile = _profile;
+            windowID = _windowID;
             Title = App.Text.ProfileShare;
             if (RPC.RPCClient != null && RPC.RPCClient.IsInitialized && !RPC.RPCClient.Disposed)
                 btnImport.IsEnabled = false;
@@ -27,16 +27,16 @@ namespace MultiRPC.GUI.Pages
 
         private void ButImport_OnClick(object sender, RoutedEventArgs e)
         {
-            string Get = Newtonsoft.Json.JsonConvert.SerializeObject(tbShare.Text);
-            Clipboard.SetText(Get = Utils.Base64Encode(Get));
-            MainWindow.CloseWindow(WindowID, Get);
+            string profileBase64 = Newtonsoft.Json.JsonConvert.SerializeObject(tbShare.Text);
+            Clipboard.SetText(profileBase64 = Utils.Base64Encode(profileBase64));
+            MainWindow.CloseWindow(windowID, profileBase64);
         }
 
         private async void ButExport_OnClick(object sender, RoutedEventArgs e)
         {
-            string Get = Newtonsoft.Json.JsonConvert.SerializeObject(Profile);
-            Clipboard.SetText(Get = Utils.Base64Encode(Get));
-            tbShare.Text = Get;
+            string profileBase64 = Newtonsoft.Json.JsonConvert.SerializeObject(profile);
+            Clipboard.SetText(profileBase64 = Utils.Base64Encode(profileBase64));
+            tbShare.Text = profileBase64;
             await CustomMessageBox.Show(App.Text.ProfileCopyMessage);
         }
     }

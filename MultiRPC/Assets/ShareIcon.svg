@@ -1,9 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 48" version="1.1" width="48px" height="48px">
-<g id="surface1">
-<path style=" fill:#1976D2;" d="M 38.101563 31.199219 L 19.398438 24 L 38.101563 16.800781 C 39.601563 16.199219 40.398438 14.5 39.800781 12.898438 C 39.199219 11.398438 37.5 10.601563 35.898438 11.199219 L 9.898438 21.199219 C 8.800781 21.601563 8 22.800781 8 24 C 8 25.199219 8.800781 26.398438 9.898438 26.800781 L 35.898438 36.800781 C 36.300781 36.898438 36.601563 37 37 37 C 38.199219 37 39.300781 36.300781 39.800781 35.101563 C 40.398438 33.5 39.601563 31.800781 38.101563 31.199219 Z "/>
-<path style=" fill:#1E88E5;" d="M 18 24 C 18 27.867188 14.867188 31 11 31 C 7.132813 31 4 27.867188 4 24 C 4 20.132813 7.132813 17 11 17 C 14.867188 17 18 20.132813 18 24 Z "/>
-<path style=" fill:#1E88E5;" d="M 44 14 C 44 17.867188 40.867188 21 37 21 C 33.132813 21 30 17.867188 30 14 C 30 10.132813 33.132813 7 37 7 C 40.867188 7 44 10.132813 44 14 Z "/>
-<path style=" fill:#1E88E5;" d="M 44 34 C 44 37.867188 40.867188 41 37 41 C 33.132813 41 30 37.867188 30 34 C 30 30.132813 33.132813 27 37 27 C 40.867188 27 44 30.132813 44 34 Z "/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#25B7D3;}
+	.st1{fill:#FFFFFF;}
+</style>
+<g>
+	<g>
+		<g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<path class="st0" d="M3,32C3,16,16,3,32,3s29,13,29,29S48,61,32,61S3,48,3,32z"/>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g>
+			<circle class="st1" cx="20.1" cy="32.1" r="6.3"/>
+			<circle class="st1" cx="39.3" cy="20.9" r="6.3"/>
+			<circle class="st1" cx="39.3" cy="43.1" r="6.3"/>
+		</g>
+		<g>
+			
+				<rect x="18.6" y="24.6" transform="matrix(0.8642 -0.5032 0.5032 0.8642 -9.1962 18.5318)" class="st1" width="22.2" height="3.4"/>
+		</g>
+		<g>
+			
+				<rect x="28" y="26.4" transform="matrix(0.5032 -0.8642 0.8642 0.5032 -17.6278 44.3094)" class="st1" width="3.4" height="22.2"/>
+		</g>
+	</g>
 </g>
 </svg>

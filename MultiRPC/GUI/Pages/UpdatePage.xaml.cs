@@ -15,9 +15,9 @@ namespace MultiRPC.GUI.Pages
     /// </summary>
     public partial class UpdatePage : Page
     {
-        private long WindowID;
+        private long windowID;
 
-        public UpdatePage(UpdateCheckInfo info, long windowID)
+        public UpdatePage(UpdateCheckInfo info, long _windowID)
         {
             InitializeComponent();
             if (App.Config.AutoUpdate)
@@ -41,16 +41,16 @@ namespace MultiRPC.GUI.Pages
             if(File.Exists(FileLocations.ChangelogFileLocalLocation))
                 tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
 
-            WindowID = windowID;
+            windowID = _windowID;
             Title = App.Text.Update;
         }
 
         private async void ButSkip_OnClick(object sender, RoutedEventArgs e)
         {
-            MainWindow.CloseWindow(WindowID, false);
-            await MainPage.mainPage.Dispatcher.Invoke(async () =>
+            MainWindow.CloseWindow(windowID, false);
+            await MainPage._MainPage.Dispatcher.Invoke(async () =>
             {
-                MainPage.mainPage.pbUpdateProgress.Visibility = Visibility.Collapsed;
+                MainPage._MainPage.pbUpdateProgress.Visibility = Visibility.Collapsed;
             });
         }
 
@@ -58,7 +58,7 @@ namespace MultiRPC.GUI.Pages
         {
             if (!App.Config.AutoUpdate)
             {
-                MainWindow.CloseWindow(WindowID, true);
+                MainWindow.CloseWindow(windowID, true);
                 await Task.Delay(250);
                 Updater.Start();
             }

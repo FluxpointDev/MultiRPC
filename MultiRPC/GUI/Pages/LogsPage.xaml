@@ -6,9 +6,10 @@
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
+      Background="Black"
       Title="Logs">
 
-    <ScrollViewer Background="Black" VerticalScrollBarVisibility="Auto">
-        <TextBlock Name="tbLogText" Text="{Binding LogText}" Margin="10,10,5,5" Foreground="White"/>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <TextBlock Name="tbLogText" Text="{Binding LogText}" Margin="10,10,5,5" Foreground="White" TextWrapping="Wrap"/>
     </ScrollViewer>
 </Page>

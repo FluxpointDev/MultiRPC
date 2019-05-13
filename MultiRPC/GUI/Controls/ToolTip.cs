@@ -22,8 +22,8 @@ namespace MultiRPC.GUI.Controls
         public async Task UISetup()
         {
             BorderThickness = new Thickness(1);
-            BorderBrush = (SolidColorBrush)App.Current.Resources["AccentColour1SCBrush"];
-            Background = (SolidColorBrush)App.Current.Resources["AccentColour2SCBrush"];
+            SetResourceReference(BorderBrushProperty, "AccentColour1SCBrush");
+            SetResourceReference(BackgroundProperty, "AccentColour2SCBrush");
         }
 
         public ToolTip()

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Linq;
 using System.Windows;
 using Newtonsoft.Json;
 using MultiRPC.Functions;
 using MultiRPC.GUI.Pages;
-using System.Diagnostics;
 using MultiRPC.JsonClasses;
 using System.Threading.Tasks;
 using System.Windows.Threading;
@@ -33,6 +33,21 @@ namespace MultiRPC
 
         public App()
         {
+            var darkThemeLocation = Path.Combine("Assets", "Themes", "DarkTheme" + Theme.ThemeExtension);
+            var lightThemeLocation = Path.Combine("Assets", "Themes", "LightTheme" + Theme.ThemeExtension);
+            var russiaThemeLocation = Path.Combine("Assets", "Themes", "RussiaTheme" + Theme.ThemeExtension);
+            if (!File.Exists(darkThemeLocation))
+            {
+                Theme.Save(Theme.Dark, darkThemeLocation);
+            }
+            if (!File.Exists(lightThemeLocation))
+            {
+                Theme.Save(Theme.Light, lightThemeLocation);
+            }
+            if (!File.Exists(russiaThemeLocation))
+            {
+                Theme.Save(Theme.Russia, russiaThemeLocation);
+            }
             Startup += App_Startup;
         }
 
@@ -81,8 +96,9 @@ namespace MultiRPC
 
         private async Task UITextUpdate()
         {
-            foreach (var text in SettingsPage.UIText)
+            for (int i = 0; i < SettingsPage.UIText.Count; i++)
             {
+                var text = SettingsPage.UIText[i];
                 if (Config != null)
                 {
                     if (text.LanguageName == Config.ActiveLanguage)
@@ -104,11 +120,12 @@ namespace MultiRPC
 
         public async Task GetLangFiles()
         {
-            foreach (var LangFile in Directory.EnumerateFiles("Lang"))
+            var langFiles = Directory.EnumerateFiles("Lang").ToArray();
+            for (int i = 0; i < langFiles.Count(); i++)
             {
-                using (var reader = File.OpenText(LangFile))
+                using (var reader = File.OpenText(langFiles[i]))
                 {
-                    SettingsPage.UIText.Add((UIText) JsonSerializer.Deserialize(reader, typeof(UIText)));
+                    SettingsPage.UIText.Add((UIText)JsonSerializer.Deserialize(reader, typeof(UIText)));
                 }
             }
             

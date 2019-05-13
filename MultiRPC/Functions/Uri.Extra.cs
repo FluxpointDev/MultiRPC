@@ -5,9 +5,9 @@
         public static string Combine(params string[] strings)
         {
             string uri = "";
-            foreach (var s in strings)
+            for (int i = 0; i < strings.Length; i++)
             {
-                uri += $"{s}/";
+                uri += $"{strings[i]}/";
             }
             return uri.Remove(uri.Length - 1);
         }

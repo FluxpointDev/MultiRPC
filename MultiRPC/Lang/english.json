@@ -182,5 +182,6 @@
   "ThemeWithSameName": "There is a theme already called that",
   "InvalidThemeName": "This is a invalid name",
   "Editing": "Editing",
-  "ResetTheme": "Reset Theme"
+  "ResetTheme": "Reset Theme",
+  "WaitingForInternetUpdate": "Waiting for internet to update (checking in {second} seconds)"
 }

@@ -315,16 +315,61 @@
     </DrawingGroup>
   </DrawingGroup>
   <DrawingImage x:Key="DownloadIconDrawingImage" Drawing="{StaticResource DownloadIconDrawingGroup}" />
-  <Geometry x:Key="ShareIconGeometry1">F1 M48,48z M0,0z M38.101563,31.199219L19.398438,24 38.101563,16.800781C39.601563,16.199219 40.398438,14.5 39.800781,12.898438 39.199219,11.398438 37.5,10.601563 35.898438,11.199219L9.898438,21.199219C8.800781,21.601563 8,22.800781 8,24 8,25.199219 8.800781,26.398438 9.898438,26.800781L35.898438,36.800781C36.300781,36.898438 36.601563,37 37,37 38.199219,37 39.300781,36.300781 39.800781,35.101563 40.398438,33.5 39.601563,31.800781 38.101563,31.199219z</Geometry>
-  <Geometry x:Key="ShareIconGeometry2">F1 M48,48z M0,0z M18,24C18,27.867188 14.867188,31 11,31 7.132813,31 4,27.867188 4,24 4,20.132813 7.132813,17 11,17 14.867188,17 18,20.132813 18,24z</Geometry>
-  <Geometry x:Key="ShareIconGeometry3">F1 M48,48z M0,0z M44,14C44,17.867188 40.867188,21 37,21 33.132813,21 30,17.867188 30,14 30,10.132813 33.132813,7 37,7 40.867188,7 44,10.132813 44,14z</Geometry>
-  <Geometry x:Key="ShareIconGeometry4">F1 M48,48z M0,0z M44,34C44,37.867188 40.867188,41 37,41 33.132813,41 30,37.867188 30,34 30,30.132813 33.132813,27 37,27 40.867188,27 44,30.132813 44,34z</Geometry>
-  <DrawingGroup x:Key="ShareIconDrawingGroup" ClipGeometry="M0,0 V48 H48 V0 H0 Z">
+  <Geometry x:Key="ShareIconGeometry">F1 M64,64z M0,0z M3,32C3,16 16,3 32,3 48,3 61,16 61,32 61,48 48,61 32,61 16,61 3,48 3,32z</Geometry>
+  <DrawingGroup x:Key="ShareIconDrawingGroup" ClipGeometry="M0,0 V64 H64 V0 H0 Z">
     <DrawingGroup Opacity="1">
-      <GeometryDrawing Brush="#FF1976D2" Geometry="{StaticResource ShareIconGeometry1}" />
-      <GeometryDrawing Brush="#FF1E88E5" Geometry="{StaticResource ShareIconGeometry2}" />
-      <GeometryDrawing Brush="#FF1E88E5" Geometry="{StaticResource ShareIconGeometry3}" />
-      <GeometryDrawing Brush="#FF1E88E5" Geometry="{StaticResource ShareIconGeometry4}" />
+      <DrawingGroup Opacity="1">
+        <DrawingGroup Opacity="1">
+          <DrawingGroup Opacity="1">
+            <DrawingGroup Opacity="1">
+              <DrawingGroup Opacity="1">
+                <DrawingGroup Opacity="1">
+                  <DrawingGroup Opacity="1">
+                    <GeometryDrawing Brush="#FF25B7D3" Geometry="{StaticResource ShareIconGeometry}" />
+                  </DrawingGroup>
+                </DrawingGroup>
+              </DrawingGroup>
+            </DrawingGroup>
+          </DrawingGroup>
+        </DrawingGroup>
+      </DrawingGroup>
+      <DrawingGroup Opacity="1">
+        <DrawingGroup Opacity="1">
+          <GeometryDrawing Brush="#FFFFFFFF">
+            <GeometryDrawing.Geometry>
+              <EllipseGeometry RadiusX="6.3" RadiusY="6.3" Center="20.1,32.1" />
+            </GeometryDrawing.Geometry>
+          </GeometryDrawing>
+          <GeometryDrawing Brush="#FFFFFFFF">
+            <GeometryDrawing.Geometry>
+              <EllipseGeometry RadiusX="6.3" RadiusY="6.3" Center="39.3,20.9" />
+            </GeometryDrawing.Geometry>
+          </GeometryDrawing>
+          <GeometryDrawing Brush="#FFFFFFFF">
+            <GeometryDrawing.Geometry>
+              <EllipseGeometry RadiusX="6.3" RadiusY="6.3" Center="39.3,43.1" />
+            </GeometryDrawing.Geometry>
+          </GeometryDrawing>
+        </DrawingGroup>
+        <DrawingGroup Opacity="1">
+          <DrawingGroup Transform="0.8642,-0.5032,0.5032,0.8642,-9.1962,18.5318">
+            <GeometryDrawing Brush="#FFFFFFFF">
+              <GeometryDrawing.Geometry>
+                <RectangleGeometry RadiusX="0" RadiusY="0" Rect="18.6,24.6,22.2,3.4" />
+              </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+          </DrawingGroup>
+        </DrawingGroup>
+        <DrawingGroup Opacity="1">
+          <DrawingGroup Transform="0.5032,-0.8642,0.8642,0.5032,-17.6278,44.3094">
+            <GeometryDrawing Brush="#FFFFFFFF">
+              <GeometryDrawing.Geometry>
+                <RectangleGeometry RadiusX="0" RadiusY="0" Rect="28,26.4,3.4,22.2" />
+              </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+          </DrawingGroup>
+        </DrawingGroup>
+      </DrawingGroup>
     </DrawingGroup>
   </DrawingGroup>
   <DrawingImage x:Key="ShareIconDrawingImage" Drawing="{StaticResource ShareIconDrawingGroup}" />
@@ -526,4 +571,26 @@
         </DrawingGroup>
     </DrawingGroup>
     <DrawingImage x:Key="InfoIconDrawingImage" Drawing="{StaticResource InfoIconDrawingGroup}" />
+
+  <Geometry x:Key="ProgramsIconGeometry1">F1 M512,512z M0,0z M339.7,6L339.7,6 339.7,112.8 448.3,112.8z</Geometry>
+  <Geometry x:Key="ProgramsIconGeometry2">F1 M512,512z M0,0z M367.6,338.6L367.6,338.6C367.6,289.5,327.8,249.7,278.7,249.7L63.7,249.7 63.7,427.5 278.7,427.5C327.8,427.5,367.6,387.7,367.6,338.6z M159.5,386.1L103,386.1 103,296.1 159.1,296.1 159.1,308.2 118,308.2 118,333.6 153.2,333.6 153.2,345.7 118,345.7 118,374.2 159.5,374.2 159.5,386.1z M223.6,386.1L204,352.3 184.5,386.1 166.7,386.1 195,340.7 167.3,296.1 185,296.1 203.8,329.4 222.8,296.1 240.6,296.1 212.9,340.7 241.6,386.1 223.6,386.1z M253.4,296.1L309.5,296.1 309.5,308.2 268.4,308.2 268.4,333.6 303.6,333.6 303.6,345.7 268.4,345.7 268.4,374.2 310,374.2 310,386.2 253.4,386.2 253.4,296.1z</Geometry>
+  <Geometry x:Key="ProgramsIconGeometry3">F1 M512,512z M0,0z M327.7,6.3L81,6.3 81,237.6 278.7,237.6C334.3,237.6 379.6,282.9 379.6,338.5 379.6,394.1 334.3,439.4 278.7,439.4L81,439.4 81,506 447.7,506 448.3,124.8 327.7,124.8 327.7,6.3z</Geometry>
+
+  <DrawingGroup x:Key="ProgramsIconDrawingGroup" ClipGeometry="M0,0 V512 H512 V0 H0 Z">
+      <DrawingGroup Opacity="1">
+            <GeometryDrawing Brush="{DynamicResource AccentColour3SCBrush}" Geometry="{StaticResource ProgramsIconGeometry1}" />
+            <GeometryDrawing Brush="{DynamicResource AccentColour3SCBrush}" Geometry="{StaticResource ProgramsIconGeometry2}" />
+            <GeometryDrawing Brush="{DynamicResource AccentColour3SCBrush}" Geometry="{StaticResource ProgramsIconGeometry3}" />
+      </DrawingGroup>
+  </DrawingGroup>
+    <DrawingImage x:Key="ProgramsIconDrawingImage" Drawing="{StaticResource ProgramsIconDrawingGroup}" />
+
+    <DrawingGroup x:Key="ProgramsIconSelectedDrawingGroup" ClipGeometry="M0,0 V512 H512 V0 H0 Z">
+      <DrawingGroup Opacity="1">
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource ProgramsIconGeometry1}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource ProgramsIconGeometry2}" />
+            <GeometryDrawing Brush="{DynamicResource NavButtonIconColourSelected}" Geometry="{StaticResource ProgramsIconGeometry3}" />
+      </DrawingGroup>
+  </DrawingGroup>
+    <DrawingImage x:Key="ProgramsIconSelectedDrawingImage" Drawing="{StaticResource ProgramsIconSelectedDrawingGroup}" />
 </ResourceDictionary>

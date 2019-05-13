@@ -40,14 +40,15 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ButtonBase}">
                         <Border Margin="0,0,0,25" CornerRadius="100" x:Name="border" Height="{TemplateBinding ActualWidth}" BorderBrush="Transparent" BorderThickness="0" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="15" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="13" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" TargetName="border" Value="{DynamicResource AccentColour2HoverSCBrush}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" TargetName="border" Value="{DynamicResource AccentColour1SCBrush}"/>
+                                <Setter Property="Background" TargetName="border" Value="{DynamicResource AccentColour2HoverSCBrush}"/>
+                                <Setter Property="Margin" Value="0,2,0,0" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -60,8 +61,13 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ButtonBase}">
                         <Border Margin="0,0,0,25" CornerRadius="100" x:Name="border" Height="{TemplateBinding ActualWidth}" BorderBrush="Transparent" BorderThickness="0" Background="{DynamicResource NavButtonBackgroundSelected}" SnapsToDevicePixels="True">
-                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="15" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="13" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Margin" Value="0,2,0,0" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -75,15 +81,15 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="72"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <!--Nav bar-->
             <ScrollViewer Grid.RowSpan="2" VerticalScrollBarVisibility="Hidden">
                 <Grid Background="{DynamicResource AccentColour1SCBrush}">
-                    <StackPanel Margin="5,10,5,0">
-                        <Button Style="{DynamicResource NavButton}" Name="btnMuiltiRPC" Click="ChangePage_OnClick">
+                    <StackPanel Margin="8,10,8,0">
+                        <Button Style="{DynamicResource NavButton}" Name="btnMultiRPC" Click="ChangePage_OnClick">
                             <Button.Content>
                                 <Image Name="imgDiscordIcon" Source="{DynamicResource DiscordIconDrawingImage}"/>
                             </Button.Content>
@@ -91,6 +97,11 @@
                         <Button Style="{DynamicResource NavButton}" Name="btnCustom" Click="ChangePage_OnClick">
                             <Button.Content>
                                 <Image Name="imgCustomIcon" Source="{DynamicResource CustomIconDrawingImage}"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Style="{DynamicResource NavButton}" Name="btnPrograms" Click="ChangePage_OnClick">
+                            <Button.Content>
+                                <Image Name="imgProgramsIcon" Source="{DynamicResource ProgramsIconDrawingImage}"/>
                             </Button.Content>
                         </Button>
                         <Button Style="{DynamicResource NavButton}" Name="btnSettings" Click="ChangePage_OnClick">

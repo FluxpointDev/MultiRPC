@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Windows;
+using MultiRPC.GUI.Views;
 using MultiRPC.GUI.Pages;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -14,7 +15,9 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Windows.Media.Animation;
 using System.Runtime.InteropServices;
+using System.Windows.Shapes;
 using Hardcodet.Wpf.TaskbarNotification;
+using Path = System.IO.Path;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI
@@ -48,13 +51,15 @@ namespace MultiRPC.GUI
             if (this != App.Current.MainWindow)
                 return;
 
-            var mainPage = new MainPage();
-            StartLogic(mainPage);
+            var _MainPage = new MainPage();
+            StartLogic(_MainPage);
             MakeJumpList();
-            mainPage.ContentFrame.Navigated += MainPageContentFrame_OnNavigated;
+            _MainPage.ContentFrame.Navigated += MainPageContentFrame_OnNavigated;
 
-            TaskbarIcon = new TaskbarIcon();
-            TaskbarIcon.IconSource = Icon;
+            TaskbarIcon = new TaskbarIcon
+            {
+                IconSource = Icon
+            };
             TaskbarIcon.TrayLeftMouseDown += IconOnTrayLeftMouseDown;
             TaskbarIcon.TrayToolTip = new ToolTip(App.Text.HideMultiRPC);
         }
@@ -128,11 +133,24 @@ namespace MultiRPC.GUI
                 Activate();
         }
 
+        public static Task<object> OpenWindow(Page page, bool isDialog, long tick, bool minButton)
+        {
+            var window = new MainWindow(page, minButton)
+            {
+                WindowID = tick
+            };
+
+            if (isDialog) window.ShowDialog();
+            else window.Show();
+
+            return Task.FromResult(window.ToReturn);
+        }
+
         public static async Task CloseWindow(long WindowID, object Return = null)
         {
-            foreach (var window in App.Current.Windows)
+            for (int i = 0; i < App.Current.Windows.Count; i++)
             {
-                if (window is MainWindow mainWindow && ((MainWindow)window).WindowID == WindowID)
+                if (App.Current.Windows[i] is MainWindow mainWindow && mainWindow.WindowID == WindowID)
                 {
                     mainWindow.ToReturn = Return;
                     mainWindow.ShowInTaskbar = false;
@@ -148,31 +166,14 @@ namespace MultiRPC.GUI
         {
             if (!File.Exists(App.Config.ActiveTheme))
             {
-                App.Config.ActiveTheme = "Assets/Themes/DarkTheme.xaml";
+                App.Config.ActiveTheme = Path.Combine("Assets", "Themes", "DarkTheme" + Theme.ThemeExtension);
                 App.Config.Save();
             }
 
             await ThemeEditorPage.UpdateGlobalUI();
+            MainPage._MainPage.frameRPCPreview.Content = new RPCPreview(RPCPreview.ViewType.Default);
             MakeWinAnimation(OpenStoryboard, 0, 1);
             OpenStoryboard.Begin(this);
-            if (App.Current.MainWindow != this)
-                return;
-
-            if (App.Config.DiscordCheck)
-            {
-                while (MainPage.mainPage.gridCheckForDiscord.Visibility == Visibility.Visible)
-                    await Task.Delay(760);
-                await Task.Delay(250);
-            }
-            if (App.Config.AutoStart == "MultiRPC")
-            {
-                MainPage.mainPage.btnStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-            }
-            else if (App.Config.AutoStart == App.Text.Custom)
-            {
-                MainPage.mainPage.btnCustom.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                MainPage.mainPage.btnStart.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-            }
         }
 
         public static async Task MakeJumpList()
@@ -183,7 +184,7 @@ namespace MultiRPC.GUI
 
                 for (int i = 0; i < 10; i++)
                 {
-                    if (i > CustomPage.customPage.Profiles.Count - 1)
+                    if (i > CustomPage.Profiles.Count - 1)
                         break;
 
                     //Configure a new JumpTask
@@ -191,10 +192,10 @@ namespace MultiRPC.GUI
                     {
                         // Set the JumpTask properties.
                         ApplicationPath = FileLocations.MultiRPCStartLink,
-                        Arguments = $"-custom \"{CustomPage.customPage.Profiles.ElementAt(i).Key}\"",
+                        Arguments = $"-custom \"{CustomPage.Profiles.ElementAt(i).Key}\"",
                         IconResourcePath = FileLocations.MultiRPCStartLink,
-                        Title = CustomPage.customPage.Profiles.ElementAt(i).Key,
-                        Description = $"{App.Text.Load} '{CustomPage.customPage.Profiles.ElementAt(i).Key}'",
+                        Title = CustomPage.Profiles.ElementAt(i).Key,
+                        Description = $"{App.Text.Load} '{CustomPage.Profiles.ElementAt(i).Key}'",
                         CustomCategory = App.Text.CustomProfiles
                     };
                     jumpList.JumpItems.Add(jumpTask);
@@ -260,7 +261,7 @@ namespace MultiRPC.GUI
 
         private void Close_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            plgCloseIcon.Fill = (Brush)App.Current.Resources["TextColourSCBrush"];
+            plgCloseIcon.SetResourceReference(Polygon.FillProperty, "TextColourSCBrush");
         }
 
         private void MainPageContentFrame_OnNavigated(object sender, NavigationEventArgs e)

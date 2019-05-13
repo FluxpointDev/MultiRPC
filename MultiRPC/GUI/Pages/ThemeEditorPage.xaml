@@ -7,6 +7,7 @@
       xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
       mc:Ignorable="d" 
       d:DesignHeight="850" d:DesignWidth="800"
+      SizeChanged="ThemeEditorPage_OnSizeChanged"
       Loaded="ThemeEditorPage_OnLoaded"
       Title="ThemeEditorPage">
 
@@ -298,8 +299,9 @@
                 </StackPanel>
             </StackPanel>
 
-            <StackPanel Grid.Row="3" Margin="0,10" Name="spInstalledThemes" HorizontalAlignment="Left">
+            <StackPanel Grid.Row="3" Margin="0,10">
                 <TextBlock Name="tblInstalledThemes" FontWeight="SemiBold" FontSize="18" Margin="0,0,0,15"/>
+                <WrapPanel Name="wpInstalledThemes" HorizontalAlignment="Left"/>
             </StackPanel>
         </Grid>
     </ScrollViewer>

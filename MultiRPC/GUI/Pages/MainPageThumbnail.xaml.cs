@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Windows;
+using MultiRPC.JsonClasses;
 using System.Windows.Media;
 using System.Windows.Markup;
 using System.Threading.Tasks;
@@ -12,7 +13,13 @@ namespace MultiRPC.GUI.Pages
     /// </summary>
     public partial class MainPageThumbnail : Page
     {
-        private bool runningUpdateMergedDictionaries;
+        public MainPageThumbnail(Theme theme)
+        {
+            InitializeComponent();
+            this.Resources.MergedDictionaries.Add(Theme.ThemeToResourceDictionary(theme));
+            this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText($"Assets/Icons.xaml")));
+            Loaded += MainPageThumbnail_Loaded;
+        }
 
         public MainPageThumbnail(ResourceDictionary resource)
         {
@@ -22,20 +29,16 @@ namespace MultiRPC.GUI.Pages
             Loaded += MainPageThumbnail_Loaded;
         }
 
-        public async Task UpdateMergedDictionaries(ResourceDictionary resource)
+        public async Task UpdateMergedDictionaries(string solidBrushKey, SolidColorBrush brush, string colourKey = null)
         {
-            while (runningUpdateMergedDictionaries)
-                await Task.Delay(250);
+            this.Resources.MergedDictionaries[0][solidBrushKey] = brush;
+            if (!string.IsNullOrWhiteSpace(colourKey))
+                this.Resources.MergedDictionaries[0][colourKey] = brush.Color;
 
-            runningUpdateMergedDictionaries = true;
-            this.Resources.MergedDictionaries.Clear();
-            this.Resources.MergedDictionaries.Add(resource);
-            this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Parse(File.ReadAllText($"Assets/Icons.xaml")));
-            UpdateButtons();
-            runningUpdateMergedDictionaries = false;
+            await UpdateButtons();
         }
 
-        public async Task UpdateText()
+        private Task UpdateText()
         {
             tbExample.Text = App.Text.WewTextbox;
             cbiExample.Content = App.Text.WewComboboxItem;
@@ -43,6 +46,7 @@ namespace MultiRPC.GUI.Pages
             tblExample.Text = App.Text.WewTextBlock;
             btnExample.Content = App.Text.WewButton;
             btnDisabledExample.Content = App.Text.WewDisabledButton;
+            return Task.CompletedTask;
         }
 
         private Task UpdateButtons()
@@ -52,19 +56,21 @@ namespace MultiRPC.GUI.Pages
                 return ((DrawingGroup)((DrawingImage)((Image)btn.Content).Source).Drawing).Children;
             }
 
-            void UpdateButton(Button btn, SolidColorBrush brushToUpdateTo)
+            void UpdateButtonColour(Button btn, SolidColorBrush brushToUpdateTo)
             {
-                foreach (DrawingGroup group in ButtonDrawing(btn))
+                var mainButtonDrawings = ButtonDrawing(btn);
+                for (int i = 0; i < mainButtonDrawings.Count; i++)
                 {
-                    foreach (GeometryDrawing drawing in group.Children)
+                    var buttonDrawings = (DrawingGroup) mainButtonDrawings[i];
+                    for (int j = 0; j < buttonDrawings.Children.Count; j++)
                     {
-                        drawing.Brush = brushToUpdateTo;
+                        ((GeometryDrawing) buttonDrawings.Children[j]).Brush = brushToUpdateTo;
                     }
                 }
             }
 
-            UpdateButton(btnNavButton, (SolidColorBrush)this.Resources["AccentColour3SCBrush"]);
-            UpdateButton(btnNavButtonSelected, (SolidColorBrush)this.Resources["NavButtonIconColourSelected"]);
+            UpdateButtonColour(btnNavButton, (SolidColorBrush)this.Resources["AccentColour3SCBrush"]);
+            UpdateButtonColour(btnNavButtonSelected, (SolidColorBrush)this.Resources["NavButtonIconColourSelected"]);
             return Task.CompletedTask;
         }
 

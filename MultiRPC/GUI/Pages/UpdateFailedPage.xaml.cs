@@ -10,11 +10,11 @@ namespace MultiRPC.GUI.Pages
     /// </summary>
     public partial class UpdateFailedPage : Page
     {
-        private long WindowID;
-        public UpdateFailedPage(Exception e, long windowID)
+        private long windowID;
+        public UpdateFailedPage(Exception e, long _windowID)
         {
             InitializeComponent();
-            WindowID = windowID;
+            windowID = _windowID;
             tblUpdateFailed.Text = App.Text.UpdateFailed;
             tblUpdateFailedMessage.Text = App.Text.UpdateFailedMessage;
             btnRetryUpdate.Content = App.Text.RetryUpdate;
@@ -25,13 +25,13 @@ namespace MultiRPC.GUI.Pages
 
         private void ButRetryUpdate_OnClick(object sender, RoutedEventArgs e)
         {
-            MainWindow.CloseWindow(WindowID);
+            MainWindow.CloseWindow(windowID);
             Updater.Start();
         }
 
         private void ButRetryOnNextStartUp_OnClick(object sender, RoutedEventArgs e)
         {
-            MainWindow.CloseWindow(WindowID);
+            MainWindow.CloseWindow(windowID);
         }
     }
 }

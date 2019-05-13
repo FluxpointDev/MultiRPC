@@ -186,5 +186,6 @@
         public string InvalidThemeName;
         public string Editing;
         public string ResetTheme;
+        public string WaitingForInternetUpdate;
     }
 }

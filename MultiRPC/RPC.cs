@@ -2,13 +2,13 @@
 using System.IO;
 using DiscordRPC;
 using System.Linq;
-using System.Runtime.InteropServices;
 using MultiRPC.GUI;
 using System.Windows;
 using MultiRPC.GUI.Pages;
 using MultiRPC.GUI.Views;
 using MultiRPC.JsonClasses;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace MultiRPC
 {
@@ -85,9 +85,10 @@ namespace MultiRPC
             //Get the client to connect to
             if (App.Config.ClientToUse != 0)
             {
-                foreach (string i in Directory.GetFiles(@"\\.\pipe\"))
+                var pipes = Directory.GetFiles(@"\\.\pipe\");
+                for (int i = 0; i < pipes.Length; i++)
                 {
-                    string pipe = i.Split('\\').Last();
+                    string pipe = pipes[i].Split('\\').Last();
 
                     switch (pipe)
                     {
@@ -131,16 +132,16 @@ namespace MultiRPC
             RPCClient.OnReady += Client_OnReady;
 
             if (!AFK)
-                MainPage.mainPage.btnUpdate.IsEnabled = true;
+                MainPage._MainPage.btnUpdate.IsEnabled = true;
 
             //Show that we are going to load things™
-            await MainPage.mainPage.frameRPCPreview.Dispatcher.InvokeAsync(async () =>
+            await MainPage._MainPage.frameRPCPreview.Dispatcher.InvokeAsync(async () =>
             {
-                await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Loading);
-                MainPage.mainPage.rCon.Text = App.Text.Loading;
-                MainPage.mainPage.btnStart.Style = (Style)MainPage.mainPage.Resources["ButtonRed"];
-                PageUserWasOnWhenStarted = MainPage.mainPage.btnStart.Content.ToString();
-                MainPage.mainPage.btnStart.Content = App.Text.Shutdown;
+                await ((RPCPreview)MainPage._MainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Loading);
+                MainPage._MainPage.rCon.Text = App.Text.Loading;
+                MainPage._MainPage.btnStart.Style = (Style)MainPage._MainPage.Resources["ButtonRed"];
+                PageUserWasOnWhenStarted = MainPage._MainPage.btnStart.Content.ToString();
+                MainPage._MainPage.btnStart.Content = App.Text.Shutdown;
             });
 
             //Connect
@@ -156,19 +157,19 @@ namespace MultiRPC
             //Disable buttons
             string profileClientID = "0";
 
-            if(CustomPage.customPage.CurrentButton != null)
-                profileClientID = CustomPage.customPage.Profiles[CustomPage.customPage.CurrentButton.Content.ToString()]
+            if(!AFK && CustomPage.CurrentButton != null)
+                profileClientID = CustomPage.Profiles[CustomPage.CurrentButton.Content.ToString()]
                     .ClientID;
-            foreach (var button in CustomPage.ProfileButtons)
+            for (int i = 0; i < CustomPage.ProfileButtons.Count; i++)
             {
-                if (profileClientID == "0" || CustomPage.customPage.Profiles[button.Content.ToString()]
+                if (profileClientID == "0" || CustomPage.Profiles[CustomPage.ProfileButtons[i].Content.ToString()]
                         .ClientID != profileClientID)
-                    button.IsEnabled = false;
+                    CustomPage.ProfileButtons[i].IsEnabled = false;
             }
 
-            CustomPage.customPage.imgProfileAdd.IsEnabled = false;
-            CustomPage.customPage.imgProfileDelete.IsEnabled = false;
-            CustomPage.customPage.tbClientID.IsEnabled = false;
+            CustomPage._CustomPage.imgProfileAdd.IsEnabled = false;
+            CustomPage._CustomPage.imgProfileDelete.IsEnabled = false;
+            CustomPage._CustomPage.tbClientID.IsEnabled = false;
         }
 
         public static void SetPresence(string text1, string text2, string largeKey, string largeText, string smallKey, string smallText, bool showTime)
@@ -230,33 +231,33 @@ namespace MultiRPC
                 Uptime.Start();
             Uptime.Elapsed += Uptime_Elapsed;
 
-            MainPage.mainPage.Dispatcher.Invoke(() =>
+            MainPage._MainPage.Dispatcher.Invoke(() =>
             {
-                MainPage.mainPage.rUsername.Text = user;
-                MainPage.mainPage.rCon.Text = App.Text.Connected;
+                MainPage._MainPage.rUsername.Text = user;
+                MainPage._MainPage.rCon.Text = App.Text.Connected;
             });
         }
 
         private static void Uptime_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             TimeSpan ts = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - StartTime.Ticks + TimeSpan.TicksPerSecond);
-            MainPage.mainPage.frameRPCPreview.Dispatcher.Invoke( async () =>
+            MainPage._MainPage.frameRPCPreview.Dispatcher.Invoke( async () =>
             {
-                await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateTime(ts);
+                await ((RPCPreview)MainPage._MainPage.frameRPCPreview.Content).UpdateTime(ts);
             });
         }
 
         private static void Client_OnPresenceUpdate(object sender, DiscordRPC.Message.PresenceMessage args)
         {
-            MainPage.mainPage.frameRPCPreview.Dispatcher.Invoke(() =>
+            MainPage._MainPage.frameRPCPreview.Dispatcher.Invoke(() =>
             {
-                MainPage.mainPage.frameRPCPreview.Content = new RPCPreview(args);
+                MainPage._MainPage.frameRPCPreview.Content = new RPCPreview(args);
                 if (Presence.Timestamps != null)
                     Uptime.Start();
                 else
                     Uptime.Stop();
             });
-            MainPage.mainPage.Dispatcher.Invoke(() => MainPage.mainPage.rCon.Text = App.Text.Connected);
+            MainPage._MainPage.Dispatcher.Invoke(() => MainPage._MainPage.rCon.Text = App.Text.Connected);
         }
 
         private static void Client_OnConnectionFailed(object sender, DiscordRPC.Message.ConnectionFailedMessage args)
@@ -264,10 +265,10 @@ namespace MultiRPC
             if (!Failed)
             {
                 Failed = true;
-                MainPage.mainPage.frameRPCPreview.Dispatcher.Invoke( async () =>
+                MainPage._MainPage.frameRPCPreview.Dispatcher.Invoke( async () =>
                 {
-                    await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Error, App.Text.AttemptingToReconnect);
-                    MainPage.mainPage.rCon.Text = App.Text.Loading;
+                    await ((RPCPreview)MainPage._MainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Error, App.Text.AttemptingToReconnect);
+                    MainPage._MainPage.rCon.Text = App.Text.Loading;
                 });
             }
         }
@@ -283,35 +284,38 @@ namespace MultiRPC
 
             Uptime?.Dispose();
             RPCClient?.Dispose();
-            MainPage.mainPage.frameRPCPreview.Dispatcher.Invoke( async () =>
+            MainPage._MainPage.frameRPCPreview.Dispatcher.Invoke(async () =>
             {
-                await ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Default);
+                await ((RPCPreview)MainPage._MainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Default);
             });
 
-            MainPage.mainPage.btnStart.Style = (Style)App.Current.Resources["ButtonGreen"];
-            if (MainPage.mainPage.ContentFrame.Content is MultiRPCPage multiRpcPage)
+            MainPage._MainPage.btnStart.SetResourceReference(Button.StyleProperty, "ButtonGreen");
+            if (MainPage._MainPage.ContentFrame.Content is MultiRPCPage multiRpcPage)
             {
-                MainPage.mainPage.btnStart.Content = App.Text.Start + " MuiltiRPC";
+                MainPage._MainPage.btnStart.Content = App.Text.Start + " MuiltiRPC";
                 multiRpcPage.CanRunRPC();
             }
-            else if (MainPage.mainPage.ContentFrame.Content is CustomPage customPage)
+            else if (MainPage._MainPage.ContentFrame.Content is CustomPage _CustomPage)
             {
-                MainPage.mainPage.btnStart.Content = App.Text.StartCustom;
-                customPage.CanRunRPC();
+                MainPage._MainPage.btnStart.Content = App.Text.StartCustom;
+                _CustomPage.CanRunRPC();
             }
             else
             {
-                MainPage.mainPage.btnStart.Content = PageUserWasOnWhenStarted;
+                MainPage._MainPage.btnStart.Content = PageUserWasOnWhenStarted;
             }
 
-            MainPage.mainPage.btnUpdate.IsEnabled = false;
-            MainPage.mainPage.rCon.Text = App.Text.Disconnected;
+            MainPage._MainPage.btnUpdate.IsEnabled = false;
+            MainPage._MainPage.rCon.Text = App.Text.Disconnected;
+            AFK = false;
 
-            foreach (var button in CustomPage.ProfileButtons)
-                button.IsEnabled = true;
-            CustomPage.customPage.imgProfileAdd.IsEnabled = true;
-            CustomPage.customPage.imgProfileDelete.IsEnabled = true;
-            CustomPage.customPage.tbClientID.IsEnabled = true;
+            for (int i = 0; i < CustomPage.ProfileButtons.Count; i++)
+            {
+                CustomPage.ProfileButtons[i].IsEnabled = true;
+            }
+            CustomPage._CustomPage.imgProfileAdd.IsEnabled = true;
+            CustomPage._CustomPage.imgProfileDelete.IsEnabled = true;
+            CustomPage._CustomPage.tbClientID.IsEnabled = true;
         }
     }
 }

@@ -16,7 +16,6 @@ namespace MultiRPC.GUI.Pages
         {
             InitializeComponent();
             Loaded += DebugPage_Loaded;
-            UpdateText();
         }
 
         private void DebugPage_Loaded(object sender, RoutedEventArgs e)
@@ -24,7 +23,7 @@ namespace MultiRPC.GUI.Pages
             UpdateText();
         }
 
-        public async Task UpdateText()
+        private Task UpdateText()
         {
             btnDebugStartRPC.Content = App.Text.DebugRPCStart;
             btnDebugStopRPC.Content = App.Text.DebugRPCStop;
@@ -32,12 +31,12 @@ namespace MultiRPC.GUI.Pages
             btnDebugStopRPC.ToolTip = new ToolTip(App.Text.DebugStopRPCTooltip);
             btnTestUpdate.Content = App.Text.TestUpdateWindow;
             btnTestUpdate.ToolTip = new ToolTip(App.Text.TestUpdateWindowTooltip);
-
+            return Task.CompletedTask;
         }
 
         private void ButDebugStartRPC_OnClick(object sender, RoutedEventArgs e)
         {
-            ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Loading);
+            ((RPCPreview)MainPage._MainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Loading);
             RPC.SetPresence(App.Text.Testing, App.Text.DebugMode, "debug", App.Text.BeepBoop, "", "", false);
             RPC.IDToUse = 450894077165043722;
             RPC.Start();
@@ -46,19 +45,14 @@ namespace MultiRPC.GUI.Pages
         private void ButDebugStopRPC_OnClick(object sender, RoutedEventArgs e)
         {
             RPC.Shutdown();
-            ((RPCPreview)MainPage.mainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Default);
+            ((RPCPreview)MainPage._MainPage.frameRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Default);
         }
 
-        private void ButTestUpdate_OnClick(object sender, RoutedEventArgs e)
+        private async void ButTestUpdate_OnClick(object sender, RoutedEventArgs e)
         {
-            App.Current.Dispatcher.InvokeAsync(() =>
-            {
-                var tick = DateTime.Now.Ticks;
-                var page = new UpdatePage(null, tick);
-                var window = new MainWindow(page, false);
-                window.WindowID = tick;
-                window.ShowDialog();
-            });
+            var tick = DateTime.Now.Ticks;
+            var page = new UpdatePage(null, tick);
+            await MainWindow.OpenWindow(page, true, tick, false);
         }
     }
 }

@@ -8,7 +8,6 @@ using MultiRPC.JsonClasses;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Collections.Generic;
-using System.Windows.Media.Animation;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI.Pages
@@ -19,55 +18,59 @@ namespace MultiRPC.GUI.Pages
     public partial class SettingsPage : Page
     {
         public static List<UIText> UIText;
-        private static SettingsPage _settingsPage;
-        public static SettingsPage settingsPage => _settingsPage;
+        public static SettingsPage _SettingsPage;
 
         public SettingsPage()
         {
             InitializeComponent();
             Loaded += SettingsPage_Loaded;
-            _settingsPage = this;
+            _SettingsPage = this;
             UpdateText();
             cbClient.SelectedIndex = App.Config.ClientToUse;
+
             ComboBoxItem item = null;
-            foreach (ComboBoxItem start in cbAutoStart.Items)
+            for (int i = 0; i < cbAutoStart.Items.Count; i++)
             {
-                if (start.Content.ToString() == App.Config.AutoStart)
+                var startItem = (ComboBoxItem)cbAutoStart.Items[i];
+                if (startItem.Content.ToString() == App.Config.AutoStart)
                 {
-                    item = start;
+                    item = startItem;
                     break;
                 }
             }
             if(item != null)
                 cbAutoStart.SelectedItem = item;
+
             cbAfkTime.IsChecked = App.Config.AFKTime;
             cbDiscordCheck.IsChecked = !App.Config.DiscordCheck;
             cbTokenCheck.IsChecked = !App.Config.CheckToken;
-            cbProgramsTab.IsChecked = App.Config.Disabled.ProgramsTab;
             cbHelpIcons.IsChecked = App.Config.Disabled.HelpIcons;
             cbAutoUpdating.IsChecked = !App.Config.AutoUpdate;
             cbHideTaskbarIcon.IsChecked = !App.Config.HideTaskbarIconWhenMin;
             rAppDev.Text = App.AppDev;
 
-            int ActiveLangInt = 0;
+            int activeLangInt = 0;
             string[] langs = new string[UIText.Count];
             for (int i = 0; i < UIText.Count; i++)
             {
                 langs[i] = UIText[i].LanguageName;
                 if (UIText[i].LanguageName == App.Config.ActiveLanguage)
-                    ActiveLangInt = i;
+                {
+                    activeLangInt = i;
+                    break;
+                }
             }
             cbLanguage.ItemsSource = langs;
-            cbLanguage.SelectedIndex = ActiveLangInt;
+            cbLanguage.SelectedIndex = activeLangInt;
         }
 
-        private async void SettingsPage_Loaded(object sender, RoutedEventArgs e)
+        private void SettingsPage_Loaded(object sender, RoutedEventArgs e)
         {
             btnChangelog.IsEnabled = File.Exists(FileLocations.ChangelogFileLocalLocation);
             UpdateButtonCheckLogic();
         }
 
-        public async Task UpdateButtonCheckLogic()
+        private async Task UpdateButtonCheckLogic()
         {
             btnCheckUpdates.IsEnabled = false;
             if (Updater.BeenUpdated || Updater.IsUpdating)
@@ -80,7 +83,7 @@ namespace MultiRPC.GUI.Pages
             btnCheckUpdates.IsEnabled = true;
         }
 
-        public async Task UpdateText()
+        private Task UpdateText()
         {
             tblWebsiteMultiRPC.Text = App.Text.Website;
             tblDownload.Text = App.Text.Download;
@@ -98,7 +101,6 @@ namespace MultiRPC.GUI.Pages
             tblDisable.Text = App.Text.Disable;
             tblDiscordCheck.Text = App.Text.DiscordCheck + ":";
             tblTokenCheck.Text = App.Text.TokenCheck + ":";
-            tblProgramsTab.Text = App.Text.ProgramsTab + ":";
             tblHelpIcons.Text = App.Text.HelpIcons + ":";
             tblAutoUpdating.Text = App.Text.AutomaticUpdates + ":";
             tblPaypal.Text = App.Text.PaypalMin1;
@@ -114,32 +116,18 @@ namespace MultiRPC.GUI.Pages
             tblLanguage.Text = App.Text.Language;
             rAppDev.ToolTip = new ToolTip(App.Text.ClickToCopy);
             tblHideTaskbarIcon.Text = App.Text.HideTaskbarIcon;
-        }
 
-        public static void ImageAnimation(Image image, double to, Storyboard storyboard = null, Duration duration = new Duration())
-        {
-            if(storyboard == null)
-                storyboard = new Storyboard();
-            DoubleAnimation winOpacityAnimation = new DoubleAnimation();
-            winOpacityAnimation.From = image.Opacity;
-            winOpacityAnimation.To = to;
-            winOpacityAnimation.Duration = !duration.HasTimeSpan ? new Duration(TimeSpan.FromSeconds(0.5)) : duration;
-            winOpacityAnimation.EasingFunction = new QuinticEase();
-
-            storyboard.Children.Add(winOpacityAnimation);
-            Storyboard.SetTargetName(winOpacityAnimation, image.Name);
-            Storyboard.SetTargetProperty(winOpacityAnimation, new PropertyPath(Image.OpacityProperty));
-            storyboard.Begin(image);
+            return Task.CompletedTask;
         }
 
         private void Image_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            ImageAnimation(((Image) sender), 1);
+            Animations.ImageFadeAnimation(((Image) sender), 1);
         }
 
         private void Image_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            ImageAnimation(((Image)sender), 0.6);
+            Animations.ImageFadeAnimation(((Image)sender), 0.6);
         }
 
         private void Image_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -201,15 +189,6 @@ namespace MultiRPC.GUI.Pages
             }
         }
 
-        private void CbProgramsTab_OnChecked(object sender, RoutedEventArgs e)
-        {
-            if (IsInitialized)
-            {
-                App.Config.Disabled.ProgramsTab = ((CheckBox) sender).IsChecked.Value;
-                App.Config.Save();
-            }
-        }
-
         private void CbHelpIcons_OnChecked(object sender, RoutedEventArgs e)
         {
             if (IsInitialized)
@@ -231,8 +210,7 @@ namespace MultiRPC.GUI.Pages
 
         private void ButChangelog_OnClick(object sender, RoutedEventArgs e)
         {
-            MainWindow window = new MainWindow(new ChangelogPage(), false);
-            window.ShowDialog();
+            MainWindow.OpenWindow(new ChangelogPage(), true, 0, false);
         }
 
         private void ButCheckUpdates_OnClick(object sender, RoutedEventArgs e)
@@ -243,7 +221,7 @@ namespace MultiRPC.GUI.Pages
 
         private void ButDebug_OnClick(object sender, RoutedEventArgs e)
         {
-            MainPage.mainPage.btnDebug.Visibility = Visibility.Visible;
+            MainPage._MainPage.btnDebug.Visibility = Visibility.Visible;
             btnDebug.IsEnabled = false;
         }
 
@@ -263,20 +241,20 @@ namespace MultiRPC.GUI.Pages
 
         private async void CbLanguage_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var wew = e.AddedItems[0].ToString();
-            foreach (var uiText in UIText)
+            var languageSelected = e.AddedItems[0].ToString();
+            for (int i = 0; i < UIText.Count; i++)
             {
-                if (uiText.LanguageName == wew)
+                if (UIText[i].LanguageName == languageSelected)
                 {
-                    App.Text = uiText;
+                    App.Text = UIText[i];
                     break;
                 }
             }
 
-            App.Config.ActiveLanguage = wew;
-            await UpdateText();
+            App.Config.ActiveLanguage = languageSelected;
             App.Config.AutoStart = cbAutoStart.Text;
-            MainPage.mainPage.UpdateText();
+            UpdateText();
+            MainPage._MainPage.UpdateText();
             App.Config.Save();
         }
 

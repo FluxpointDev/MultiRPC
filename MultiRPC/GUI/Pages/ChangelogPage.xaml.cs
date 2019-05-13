@@ -12,7 +12,9 @@ namespace MultiRPC.GUI.Pages
         public ChangelogPage()
         {
             InitializeComponent();
-            tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
+            if (File.Exists(File.ReadAllText(FileLocations.ChangelogFileLocalLocation)))
+                tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
+
             Title = App.Text.Changelog;
         }
     }
