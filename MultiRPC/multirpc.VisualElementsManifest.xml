@@ -5,6 +5,5 @@
     ShowNameOnSquare150x150Logo="on"
     ForegroundText="light"
     Square150x150Logo="Assets\150x150Logo.png"
-    Square70x70Logo="Assets\70x70Logo.png"
-  />
+    Square70x70Logo="Assets\70x70Logo.png" />
 </Application>

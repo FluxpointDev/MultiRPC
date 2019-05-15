@@ -5,16 +5,9 @@ namespace MultiRPC.JsonClasses
 {
     public static class FileLocations
     {
-        static FileLocations()
-        {
-            if (!Directory.Exists(ConfigFolder))
-                Directory.CreateDirectory(ConfigFolder);
+        public static string ConfigFolder =
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MultiRPC");
 
-            if (!Directory.Exists(ThemesFolder))
-                Directory.CreateDirectory(ThemesFolder);
-        }
-
-        public static string ConfigFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "MultiRPC");
         public static string ThemesFolder = Path.Combine(ConfigFolder, "Themes");
 
         public static string ConfigFileName = "Config.json";
@@ -34,7 +27,18 @@ namespace MultiRPC.JsonClasses
 
         public static string OpenFileName = "Open.rpc";
         public static string OpenFileLocalLocation = Path.Combine(ConfigFolder, OpenFileName);
-        public static string MultiRPCStartLink = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), "Programs", "Discord Universe", "MultiRPC.appref-ms");
 
+        public static string MultiRPCStartLink =
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), "Programs", "Discord Universe",
+                "MultiRPC.appref-ms");
+
+        static FileLocations()
+        {
+            if (!Directory.Exists(ConfigFolder))
+                Directory.CreateDirectory(ConfigFolder);
+
+            if (!Directory.Exists(ThemesFolder))
+                Directory.CreateDirectory(ThemesFolder);
+        }
     }
 }

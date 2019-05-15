@@ -1,44 +1,42 @@
-﻿using System;
-using System.IO;
-using System.Windows;
-using MultiRPC.Functions;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows.Input;
-using MultiRPC.JsonClasses;
+using System.Extra;
+using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
-using System.Collections.Generic;
+using System.Windows.Input;
+using MultiRPC.Functions;
+using MultiRPC.JsonClasses;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    /// Interaction logic for SettingsPage.xaml
+    ///     Interaction logic for SettingsPage.xaml
     /// </summary>
     public partial class SettingsPage : Page
     {
         public static List<UIText> UIText;
-        public static SettingsPage _SettingsPage;
 
         public SettingsPage()
         {
             InitializeComponent();
-            Loaded += SettingsPage_Loaded;
-            _SettingsPage = this;
             UpdateText();
             cbClient.SelectedIndex = App.Config.ClientToUse;
 
             ComboBoxItem item = null;
-            for (int i = 0; i < cbAutoStart.Items.Count; i++)
+            for (var i = 0; i < cbAutoStart.Items.Count; i++)
             {
-                var startItem = (ComboBoxItem)cbAutoStart.Items[i];
+                var startItem = (ComboBoxItem) cbAutoStart.Items[i];
                 if (startItem.Content.ToString() == App.Config.AutoStart)
                 {
                     item = startItem;
                     break;
                 }
             }
-            if(item != null)
+
+            if (item != null)
                 cbAutoStart.SelectedItem = item;
 
             cbAfkTime.IsChecked = App.Config.AFKTime;
@@ -49,19 +47,23 @@ namespace MultiRPC.GUI.Pages
             cbHideTaskbarIcon.IsChecked = !App.Config.HideTaskbarIconWhenMin;
             rAppDev.Text = App.AppDev;
 
-            int activeLangInt = 0;
-            string[] langs = new string[UIText.Count];
-            for (int i = 0; i < UIText.Count; i++)
+            var activeLangInt = 0;
+            var cbilangs = new List<ComboBoxItem>(UIText.Count);
+            for (var i = 0; i < UIText.Count; i++)
             {
-                langs[i] = UIText[i].LanguageName;
-                if (UIText[i].LanguageName == App.Config.ActiveLanguage)
+                var cbilang = new ComboBoxItem
                 {
-                    activeLangInt = i;
-                    break;
-                }
+                    Content = UIText[i].LanguageName,
+                    Tag = UIText[i].LanguageTag
+                };
+                cbilangs.Add(cbilang);
+
+                if (UIText[i].LanguageTag == App.Config.ActiveLanguage) activeLangInt = i;
             }
-            cbLanguage.ItemsSource = langs;
+
+            cbLanguage.ItemsSource = cbilangs;
             cbLanguage.SelectedIndex = activeLangInt;
+            imgDownloadRPC.Tag = App.MultiRPCWebsiteRoot;
         }
 
         private void SettingsPage_Loaded(object sender, RoutedEventArgs e)
@@ -122,17 +124,19 @@ namespace MultiRPC.GUI.Pages
 
         private void Image_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            Animations.ImageFadeAnimation(((Image) sender), 1);
+            Animations.ImageFadeAnimation((Image) sender, 0.8);
         }
 
         private void Image_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            Animations.ImageFadeAnimation(((Image)sender), 0.6);
+            Animations.ImageFadeAnimation((Image) sender, 0.6);
         }
 
-        private void Image_OnMouseDown(object sender, MouseButtonEventArgs e)
+        private async void Image_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             Process.Start(((Image) sender).Tag.ToString());
+            await Animations.ImageFadeAnimation((Image) sender, 1);
+            Animations.ImageFadeAnimation((Image) sender, 0.8);
         }
 
         private async void Server_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -141,7 +145,7 @@ namespace MultiRPC.GUI.Pages
                 App.Text.DiscordServer,
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
-            Process.Start("https://discord.gg/" + App.ServerInviteCode);
+            Process.Start(Uri.Combine("https://discord.gg", App.ServerInviteCode));
         }
 
         private void CbClient_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -157,7 +161,7 @@ namespace MultiRPC.GUI.Pages
         {
             if (IsInitialized)
             {
-                App.Config.AutoStart = ((ComboBoxItem)e.AddedItems[0]).Content.ToString();
+                App.Config.AutoStart = ((ComboBoxItem) e.AddedItems[0]).Content.ToString();
                 App.Config.Save();
             }
         }
@@ -234,35 +238,47 @@ namespace MultiRPC.GUI.Pages
         {
             if (IsInitialized)
             {
-                App.Config.AutoUpdate = !((CheckBox)sender).IsChecked.Value;
+                App.Config.AutoUpdate = !((CheckBox) sender).IsChecked.Value;
                 App.Config.Save();
             }
         }
 
-        private async void CbLanguage_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CbLanguage_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var languageSelected = e.AddedItems[0].ToString();
-            for (int i = 0; i < UIText.Count; i++)
+            if (IsInitialized)
             {
-                if (UIText[i].LanguageName == languageSelected)
-                {
-                    App.Text = UIText[i];
-                    break;
-                }
-            }
+                var oldActiveWord = App.Text.Active;
+                var oldEditingWord = App.Text.Editing;
+                var languageSelected = (ComboBoxItem) e.AddedItems[0];
 
-            App.Config.ActiveLanguage = languageSelected;
-            App.Config.AutoStart = cbAutoStart.Text;
-            UpdateText();
-            MainPage._MainPage.UpdateText();
-            App.Config.Save();
+                for (var i = 0; i < UIText.Count; i++)
+                    if (UIText[i].LanguageTag == languageSelected.Tag.ToString())
+                    {
+                        App.Text = UIText[i];
+                        break;
+                    }
+
+                App.Config.ActiveLanguage = languageSelected.Tag.ToString();
+                App.Config.AutoStart = cbAutoStart.Text;
+
+                UpdateText();
+                MainPage._MainPage.UpdateText();
+                MultiRPCPage._MultiRPCPage?.UpdateText();
+                CustomPage._CustomPage?.UpdateText();
+                ProgramsPage._ProgramsPage?.UpdateText();
+                CreditsPage._CreditsPage?.UpdateText();
+                ThemeEditorPage._ThemeEditorPage?.UpdateText(oldEditingWord, oldActiveWord);
+                DebugPage._DebugPage?.UpdateText();
+
+                App.Config.Save();
+            }
         }
 
         private void CbHideTaskbarIcon_OnChecked(object sender, RoutedEventArgs e)
         {
             if (IsInitialized)
             {
-                App.Config.HideTaskbarIconWhenMin = !((CheckBox)sender).IsChecked.Value;
+                App.Config.HideTaskbarIconWhenMin = !((CheckBox) sender).IsChecked.Value;
                 App.Config.Save();
             }
         }

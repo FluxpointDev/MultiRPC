@@ -1,35 +1,35 @@
-﻿using System.Windows;
-using MultiRPC.JsonClasses;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
-using System.Collections.Generic;
+using MultiRPC.JsonClasses;
 
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    /// Interaction logic for EditProfileNamePage.xaml
+    ///     Interaction logic for EditProfileNamePage.xaml
     /// </summary>
     public partial class EditProfileNamePage : Page
     {
-        private long windowID;
-        private Dictionary<string, CustomProfile> profiles;
-        private string oldName;
+        private readonly string _oldName;
+        private readonly Dictionary<string, CustomProfile> _profiles;
+        private readonly long _windowID;
 
-        public EditProfileNamePage(long _windowID, Dictionary<string, CustomProfile> _profiles, string _oldName)
+        public EditProfileNamePage(long windowID, Dictionary<string, CustomProfile> profiles, string oldName)
         {
             InitializeComponent();
-            windowID = _windowID;
-            profiles = _profiles;
-            oldName = _oldName;
+            _windowID = windowID;
+            _profiles = profiles;
+            _oldName = oldName;
             btnDone.Content = App.Text.Done;
             Title = App.Text.ProfileEdit;
-            tbNewProfileName.Text = oldName;
+            tbNewProfileName.Text = _oldName;
         }
 
         private async void ButDone_OnClick(object sender, RoutedEventArgs e)
         {
             if (await CanUpdateProfileName(tbNewProfileName.Text))
-                MainWindow.CloseWindow(windowID, tbNewProfileName.Text);
+                MainWindow.CloseWindow(_windowID, tbNewProfileName.Text);
         }
 
         private async Task<bool> CanUpdateProfileName(string newProfileName)
@@ -40,19 +40,17 @@ namespace MultiRPC.GUI.Pages
                 return false;
             }
 
-            if (!profiles.ContainsKey(newProfileName))
+            if (!_profiles.ContainsKey(newProfileName))
             {
-                var profile = profiles[oldName];
+                var profile = _profiles[_oldName];
                 profile.Name = newProfileName;
-                profiles.Remove(oldName);
-                profiles.Add(newProfileName, profile);
+                _profiles.Remove(_oldName);
+                _profiles.Add(newProfileName, profile);
                 return true;
             }
-            else
-            {
-                await CustomMessageBox.Show(App.Text.SameProfileName);
-                return false;
-            }
+
+            await CustomMessageBox.Show(App.Text.SameProfileName);
+            return false;
         }
     }
 }

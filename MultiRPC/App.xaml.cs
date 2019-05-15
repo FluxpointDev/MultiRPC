@@ -1,53 +1,44 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
-using Newtonsoft.Json;
+using System.Windows.Threading;
 using MultiRPC.Functions;
 using MultiRPC.GUI.Pages;
 using MultiRPC.JsonClasses;
-using System.Threading.Tasks;
-using System.Windows.Threading;
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace MultiRPC
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    ///     Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
+        public const string MultiRPCWebsiteRoot = "https://multirpc.blazedev.me";
+        public const int RetryCount = 10; //How many times to attempt downloading files
+        public const string AppDev = "Builder#0001";
+        public const string ServerInviteCode = "susQ6XA";
         public static UIText Text;
         public static Logging Logging;
-        public static WebClient WebClient = new WebClient();
-        public const string MuiltiRPCWebsiteRoot = "https://multirpc.blazedev.me";
+
         public static JsonSerializer JsonSerializer = new JsonSerializer
         {
             Formatting = Formatting.Indented
         };
+
         public static Config Config;
-        public const int RetryCount = 10; //How many times to attempt downloading files
-        public const string AppDev = "Builder#0001";
-        public const string ServerInviteCode = "susQ6XA";
 
         public App()
         {
             var darkThemeLocation = Path.Combine("Assets", "Themes", "DarkTheme" + Theme.ThemeExtension);
             var lightThemeLocation = Path.Combine("Assets", "Themes", "LightTheme" + Theme.ThemeExtension);
             var russiaThemeLocation = Path.Combine("Assets", "Themes", "RussiaTheme" + Theme.ThemeExtension);
-            if (!File.Exists(darkThemeLocation))
-            {
-                Theme.Save(Theme.Dark, darkThemeLocation);
-            }
-            if (!File.Exists(lightThemeLocation))
-            {
-                Theme.Save(Theme.Light, lightThemeLocation);
-            }
-            if (!File.Exists(russiaThemeLocation))
-            {
-                Theme.Save(Theme.Russia, russiaThemeLocation);
-            }
+            if (!File.Exists(darkThemeLocation)) Theme.Save(Theme.Dark, darkThemeLocation);
+            if (!File.Exists(lightThemeLocation)) Theme.Save(Theme.Light, lightThemeLocation);
+            if (!File.Exists(russiaThemeLocation)) Theme.Save(Theme.Russia, russiaThemeLocation);
             Startup += App_Startup;
         }
 
@@ -90,13 +81,14 @@ namespace MultiRPC
             Config = Config.Load().Result;
             UITextUpdate().ConfigureAwait(false).GetAwaiter().GetResult();
             Logging = new Logging();
-            File.AppendAllText(FileLocations.ErrorFileLocalLocation, $"\r\n------------------------------------------------------------------------------------------------\r\n{App.Text.ErrorsFrom} {DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}");
+            File.AppendAllText(FileLocations.ErrorFileLocalLocation,
+                $"\r\n------------------------------------------------------------------------------------------------\r\n{Text.ErrorsFrom} {DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}");
             DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
 
-        private async Task UITextUpdate()
+        private Task UITextUpdate()
         {
-            for (int i = 0; i < SettingsPage.UIText.Count; i++)
+            for (var i = 0; i < SettingsPage.UIText.Count; i++)
             {
                 var text = SettingsPage.UIText[i];
                 if (Config != null)
@@ -109,33 +101,33 @@ namespace MultiRPC
                 }
                 else
                 {
-                    if (text.LanguageName == "English")
+                    if (text.LanguageTag == "en-gb")
                     {
                         Text = text;
                         break;
                     }
                 }
             }
+
+            return Task.CompletedTask;
         }
 
-        public async Task GetLangFiles()
+        private Task GetLangFiles()
         {
             var langFiles = Directory.EnumerateFiles("Lang").ToArray();
-            for (int i = 0; i < langFiles.Count(); i++)
-            {
+            for (var i = 0; i < langFiles.LongLength; i++)
                 using (var reader = File.OpenText(langFiles[i]))
                 {
-                    SettingsPage.UIText.Add((UIText)JsonSerializer.Deserialize(reader, typeof(UIText)));
+                    SettingsPage.UIText.Add((UIText) JsonSerializer.Deserialize(reader, typeof(UIText)));
                 }
-            }
-            
-            using (var reader = File.OpenText("Lang/english.json"))
-                Text = (UIText)JsonSerializer.Deserialize(reader, typeof(UIText));
+
+            return Task.CompletedTask;
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            File.AppendAllText(FileLocations.ErrorFileLocalLocation, $"\r\n\r\n{App.Text.Message}\r\n{e.Exception.Message}\r\n\r\n{App.Text.Source}\r\n{e.Exception.Source}\r\n\r\nStackTrace\r\n{e.Exception.StackTrace}");
+            File.AppendAllText(FileLocations.ErrorFileLocalLocation,
+                $"\r\n\r\n{Text.Message}\r\n{e.Exception.Message}\r\n\r\n{Text.Source}\r\n{e.Exception.Source}\r\n\r\nStackTrace\r\n{e.Exception.StackTrace}");
             Logging.Error(Text.UnhandledException, e.Exception);
         }
     }

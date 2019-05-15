@@ -1,5 +1,8 @@
 {
+  "README":
+    "Hello people's of the world reading this for some reason, if your editing this in your own language that's great, and if you want it to be in MultiRPC send it to Builderb#0001 (in discord) so he can add it to the project",
   "LanguageName": "English",
+  "LanguageTag": "en-gb",
   "Start": "Start",
   "UpdatePresence": "Update Presence",
   "Text1": "Text 1",
@@ -54,7 +57,8 @@
   "Download": "Download",
   "DiscordServer": "Discord Server",
   "JoinForFunBotsAndSupport": "Join for fun bots and support!",
-  "JoinServerMessage": "Discord Universe is a fun place to hang out with other users, talk about games, anime or development.\n\nWe also have many high quality bots made by me or other popular devs from anime to music to memes so enjoy playing with them.\r\n\r\nThis also serves as a support server for many of my projects so dont be afraid to say hi ;)",
+  "JoinServerMessage":
+    "Discord Universe is a fun place to hang out with other users, talk about games, anime or development.\n\nWe also have many high quality bots made by me or other popular devs from anime to music to memes so enjoy playing with them.\r\n\r\nThis also serves as a support server for many of my projects so dont be afraid to say hi ;)",
   "Settings": "Settings",
   "AutoStart": "Auto Start",
   "AfkTime": "Afk Time",
@@ -63,7 +67,6 @@
   "DiscordCheck": "Discord Check",
   "TokenCheck": "Token Check",
   "HelpIcons": "Help Icons",
-  "Version": "Version",
   "MadeBy": "Made by",
   "Changelog": "Changelog",
   "Debug": "Debug",
@@ -72,10 +75,11 @@
   "PaypalMin1": "Paypal (min $1)",
   "PatreonMonthly": "Patreon (Monthly)",
   "ClickHere": "Click Here",
-  "ProgramsTab": "Programs Tab",
   "Disable": "Disable",
-  "DonateMessage": "Consider donating money to help fund my services to keep the projects alive by using Patreon or Paypal\r\n\r\nYou will gain perks on all my bots and discord server!",
-  "PaypalDonateMessage": "Paypal donations have to be approved by me please contact me on Discord or join the Discord server",
+  "DonateMessage":
+    "Consider donating money to help fund my services to keep the projects alive by using Patreon or Paypal\r\n\r\nYou will gain perks on all my bots and discord server!",
+  "PaypalDonateMessage":
+    "Paypal donations have to be approved by me please contact me on Discord or join the Discord server",
   "AdvertisingWarning": "Advertising in rpc could result in you being kicked or banned from servers!",
   "AdvertisingWarningDisabled": "Disabled invite warning message",
   "CantFindDiscord": "Can't find Discord client, waiting for a Discord client to open",
@@ -116,8 +120,6 @@
   "IconProviders": "Icon Providers",
   "AutomaticUpdates": "Automatic Updates",
   "Theme": "Theme",
-  "Dark": "Dark",
-  "Light": "Light",
   "Language": "Language",
   "HideTaskbarIcon": "Hide taskbar icon",
   "DiscordAPIDown": "Could not connect to Discord API",
@@ -183,5 +185,17 @@
   "InvalidThemeName": "This is a invalid name",
   "Editing": "Editing",
   "ResetTheme": "Reset Theme",
-  "WaitingForInternetUpdate": "Waiting for internet to update (checking in {second} seconds)"
+  "WaitingForInternetUpdate": "Waiting for internet to update (checking in {second} seconds)",
+  "DoesntExist": "doesn't exist",
+  "SomethingHappenedWhile": "Something happened while getting",
+  "ThemeColours": "theme colours",
+  "ThemeMetadata": "theme metadata",
+  "CantOpenOrSaveThemeFile": "Couldn't {open/save} theme file",
+  "Save": "save",
+  "Open": "open",
+  "Saving": "saving",
+  "Getting": "getting",
+  "CouldntDownload": "Couldn't download",
+  "CouldntDelete": "Couldn't delete",
+  "ProcessFindError": "Something happened while finding Discord processes, going to stop showing gridCheckForDiscord"
 }

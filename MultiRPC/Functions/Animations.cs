@@ -1,17 +1,19 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
 namespace MultiRPC.Functions
 {
-    class Animations
+    internal class Animations
     {
-        public static void ImageFadeAnimation(Image image, double to, Storyboard storyboard = null, Duration duration = new Duration())
+        public static async Task ImageFadeAnimation(Image image, double to, Storyboard storyboard = null,
+            Duration duration = new Duration())
         {
             if (storyboard == null)
                 storyboard = new Storyboard();
-            DoubleAnimation winOpacityAnimation = new DoubleAnimation
+            var fadeAnimation = new DoubleAnimation
             {
                 From = image.Opacity,
                 To = to,
@@ -19,10 +21,11 @@ namespace MultiRPC.Functions
                 EasingFunction = new QuinticEase()
             };
 
-            storyboard.Children.Add(winOpacityAnimation);
-            Storyboard.SetTargetName(winOpacityAnimation, image.Name);
-            Storyboard.SetTargetProperty(winOpacityAnimation, new PropertyPath(Image.OpacityProperty));
+            storyboard.Children.Add(fadeAnimation);
+            Storyboard.SetTargetName(fadeAnimation, image.Name);
+            Storyboard.SetTargetProperty(fadeAnimation, new PropertyPath(UIElement.OpacityProperty));
             storyboard.Begin(image);
+            await Task.Delay(fadeAnimation.Duration.TimeSpan);
         }
     }
 }

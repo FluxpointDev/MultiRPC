@@ -1,8 +1,8 @@
 ﻿using System;
-using DiscordRPC.Logging;
-using System.Windows.Media;
 using System.ComponentModel;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using DiscordRPC.Logging;
 
 namespace MultiRPC.Functions
 {
@@ -13,33 +13,30 @@ namespace MultiRPC.Functions
             Application(App.Text.LoggerHasStarted);
         }
 
-        private string logText;
+        private string _logText;
+
         public string LogText
         {
             set
             {
-                if (logText != value)
+                if (_logText != value)
                 {
-                    logText = value;
+                    _logText = value;
                     OnPropertyChanged("LogText");
                 }
             }
-            get => logText;
+            get => _logText;
         }
 
 #if DEBUG
-        private LogLevel _level = LogLevel.Trace;
 #elif !DEBUG
         private LogLevel _level = LogLevel.Info;
 #endif
-        public LogLevel Level
-        {
-            get => _level;
-            set => _level = value;
-        }
+        public LogLevel Level { get; set; } = LogLevel.Trace;
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string propertyName)
+
+        private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -72,9 +69,11 @@ namespace MultiRPC.Functions
         public void ImageError(BitmapImage img, ExceptionEventArgs ex)
         {
             if (ex == null)
-                LogText += LogEvent(App.Text.ImageError, $"{App.Text.FailedToDownload} ({img.UriSource.AbsoluteUri}) {App.Text.NetworkError}");
+                LogText += LogEvent(App.Text.ImageError,
+                    $"{App.Text.FailedToDownload} ({img.UriSource.AbsoluteUri}) {App.Text.NetworkError}");
             else
-                LogText += LogEvent(App.Text.ImageError, $"{App.Text.FailedToDownload} ({img.UriSource.AbsoluteUri}) {ex.ErrorException.Message}");
+                LogText += LogEvent(App.Text.ImageError,
+                    $"{App.Text.FailedToDownload} ({img.UriSource.AbsoluteUri}) {ex.ErrorException.Message}");
         }
 
         public string LogEvent(string name, string message)
@@ -104,7 +103,7 @@ namespace MultiRPC.Functions
 
         private string RPCMessage(string message, params object[] args)
         {
-           return message + (args != null && args.Length > 0 ? "\r\nArgs\r\n" + string.Join("\r\n", args) : "");
+            return message + (args != null && args.Length > 0 ? "\r\nArgs\r\n" + string.Join("\r\n", args) : "");
         }
     }
 }

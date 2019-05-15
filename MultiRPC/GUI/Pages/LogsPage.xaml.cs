@@ -3,7 +3,7 @@
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    /// Interaction logic for LogsPage.xaml
+    ///     Interaction logic for LogsPage.xaml
     /// </summary>
     public partial class LogsPage : Page
     {

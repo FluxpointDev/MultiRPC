@@ -10,10 +10,10 @@
     <Color A="255" R="180" G="180" B="180" x:Key="AccentColour4" />
     <Color A="255" R="112" G="112" B="112" x:Key="AccentColour5" />
     <Color A="255" R="255" G="255" B="255" x:Key="TextColour" />
-    <SolidColorBrush Color="#505050" x:Key="DisabledButtonColour"/>
-    <SolidColorBrush Color="White" x:Key="DisabledButtonTextColour"/>
-    <SolidColorBrush Color="#FF00ABEB" x:Key="NavButtonBackgroundSelected"/>
-    <SolidColorBrush Color="#FFFFFFFF" x:Key="NavButtonIconColourSelected"/>
+    <SolidColorBrush Color="#505050" x:Key="DisabledButtonColour" />
+    <SolidColorBrush Color="White" x:Key="DisabledButtonTextColour" />
+    <SolidColorBrush Color="#FF00ABEB" x:Key="NavButtonBackgroundSelected" />
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="NavButtonIconColourSelected" />
     <system:String x:Key="ThemeName">Dark</system:String>
 
     <SolidColorBrush Color="{DynamicResource AccentColour1}" x:Key="AccentColour1SCBrush" />

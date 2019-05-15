@@ -148,6 +148,9 @@
       <DependentUpon>MainPageThumbnail.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Pages\MultiRPCAndCustomLogic.cs" />
+    <Compile Include="GUI\Pages\ProgramsPage.xaml.cs">
+      <DependentUpon>ProgramsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Pages\ShareProfilePage.xaml.cs">
       <DependentUpon>ShareProfilePage.xaml</DependentUpon>
     </Compile>
@@ -219,7 +222,7 @@
     <Resource Include="Assets\Text1Help.jpg" />
     <Resource Include="Assets\Text2Help.jpg" />
     <Resource Include="Assets\Loading.gif" />
-    <Content Include="Lang\english.json">
+    <Content Include="Lang\en-gb.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="MultiRPCIcon.ico" />
@@ -249,12 +252,12 @@
   <ItemGroup>
     <PublishFile Include="MultiRPC.pdb">
       <Visible>False</Visible>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
@@ -268,8 +271,9 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Page Include="GUI\Controls\MuiltiRPCAndCustomDictionary.xaml">
+    <Page Include="GUI\Controls\MultiRPCAndCustomDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="GUI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -303,6 +307,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Pages\MultiRPCPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\ProgramsPage.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Pages\ShareProfilePage.xaml">

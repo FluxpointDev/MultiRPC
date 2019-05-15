@@ -1,23 +1,23 @@
-﻿using System.IO;
-using System.Windows;
-using System.Reflection;
-using MultiRPC.Functions;
+﻿using System.Deployment.Application;
 using System.Diagnostics;
-using MultiRPC.JsonClasses;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
-using System.Deployment.Application;
+using MultiRPC.Functions;
+using MultiRPC.JsonClasses;
 
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    /// Interaction logic for UpdatePage.xaml
+    ///     Interaction logic for UpdatePage.xaml
     /// </summary>
     public partial class UpdatePage : Page
     {
-        private long windowID;
+        private readonly long _windowID;
 
-        public UpdatePage(UpdateCheckInfo info, long _windowID)
+        public UpdatePage(UpdateCheckInfo info, long windowID)
         {
             InitializeComponent();
             if (App.Config.AutoUpdate)
@@ -38,17 +38,17 @@ namespace MultiRPC.GUI.Pages
             else
                 tblNewVersion.Text = App.Text.NewVersion + ": " + "???";
 
-            if(File.Exists(FileLocations.ChangelogFileLocalLocation))
+            if (File.Exists(FileLocations.ChangelogFileLocalLocation))
                 tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
 
-            windowID = _windowID;
+            _windowID = windowID;
             Title = App.Text.Update;
         }
 
-        private async void ButSkip_OnClick(object sender, RoutedEventArgs e)
+        private void ButSkip_OnClick(object sender, RoutedEventArgs e)
         {
-            MainWindow.CloseWindow(windowID, false);
-            await MainPage._MainPage.Dispatcher.Invoke(async () =>
+            MainWindow.CloseWindow(_windowID, false);
+            MainPage._MainPage.Dispatcher.Invoke(() =>
             {
                 MainPage._MainPage.pbUpdateProgress.Visibility = Visibility.Collapsed;
             });
@@ -58,7 +58,7 @@ namespace MultiRPC.GUI.Pages
         {
             if (!App.Config.AutoUpdate)
             {
-                MainWindow.CloseWindow(windowID, true);
+                MainWindow.CloseWindow(_windowID, true);
                 await Task.Delay(250);
                 Updater.Start();
             }
@@ -66,7 +66,7 @@ namespace MultiRPC.GUI.Pages
             {
                 if (File.Exists(FileLocations.MultiRPCStartLink))
                     Process.Start(FileLocations.MultiRPCStartLink);
-                App.Current.Shutdown();
+                Application.Current.Shutdown();
             }
         }
     }

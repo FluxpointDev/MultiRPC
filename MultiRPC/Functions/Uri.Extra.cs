@@ -4,11 +4,8 @@
     {
         public static string Combine(params string[] strings)
         {
-            string uri = "";
-            for (int i = 0; i < strings.Length; i++)
-            {
-                uri += $"{strings[i]}/";
-            }
+            var uri = "";
+            for (var i = 0; i < strings.Length; i++) uri += $"{strings[i]}/";
             return uri.Remove(uri.Length - 1);
         }
     }

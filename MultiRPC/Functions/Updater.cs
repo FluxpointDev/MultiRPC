@@ -1,15 +1,17 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Deployment.Application;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
-using MultiRPC.GUI;
-using System.Windows;
-using MultiRPC.GUI.Pages;
-using System.Diagnostics;
-using MultiRPC.JsonClasses;
-using System.Windows.Shell;
-using MultiRPC.GUI.Controls;
 using System.Threading.Tasks;
-using System.Deployment.Application;
+using System.Windows;
+using System.Windows.Shell;
+using MultiRPC.GUI;
+using MultiRPC.GUI.Controls;
+using MultiRPC.GUI.Pages;
+using MultiRPC.JsonClasses;
+using Uri = System.Extra.Uri;
 
 namespace MultiRPC.Functions
 {
@@ -27,7 +29,6 @@ namespace MultiRPC.Functions
             IsChecking = true;
 
             if (ApplicationDeployment.IsNetworkDeployed)
-            {
                 try
                 {
                     MainPage._MainPage.Dispatcher.Invoke(() =>
@@ -37,9 +38,10 @@ namespace MultiRPC.Functions
                         MainPage._MainPage.pbUpdateProgress.ToolTip = new ToolTip($"{App.Text.CheckingForUpdates}...");
                     });
                     if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
-                        App.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
+                        Application.Current.MainWindow.TaskbarItemInfo.ProgressState =
+                            TaskbarItemProgressState.Indeterminate;
 
-                    UpdateCheckInfo info = ApplicationDeployment.CurrentDeployment.CheckForDetailedUpdate(false);
+                    var info = ApplicationDeployment.CurrentDeployment.CheckForDetailedUpdate(false);
 
                     MainPage._MainPage.Dispatcher.Invoke(() =>
                     {
@@ -47,21 +49,22 @@ namespace MultiRPC.Functions
                         MainPage._MainPage.pbUpdateProgress.ToolTip = null;
                     });
                     if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
-                        App.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+                        Application.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
                     if (info.UpdateAvailable)
                     {
                         try
                         {
-                            using (WebClient client = new WebClient())
+                            using (var client = new WebClient())
                             {
-                                await client.DownloadFileTaskAsync("https://multirpc.blazedev.me/Changelog.txt",
+                                await client.DownloadFileTaskAsync(
+                                    Uri.Combine(App.MultiRPCWebsiteRoot, "Changelog.txt"),
                                     FileLocations.ChangelogFileLocalLocation);
                             }
                         }
                         catch
                         {
-
+                            App.Logging.Application($"{App.Text.CouldntDownload} {App.Text.Changelog}");
                         }
 
                         if (App.Config.AutoUpdate)
@@ -71,16 +74,10 @@ namespace MultiRPC.Functions
                         else
                         {
                             var tick = DateTime.Now.Ticks;
-                            await App.Current.Dispatcher.InvokeAsync(() =>
+                            await Application.Current.Dispatcher.InvokeAsync(async () =>
                             {
-                                var page = new UpdatePage(info, tick);
-                                var window = new MainWindow(page, false);
-                                window.WindowID = tick;
-                                window.ShowDialog();
-                                if (window.ToReturn != null)
-                                {
+                                if (await MainWindow.OpenWindow(new UpdatePage(null, tick), true, tick, false) != null)
                                     IsChecking = false;
-                                }
                             });
 
                             IsChecking = false;
@@ -93,7 +90,7 @@ namespace MultiRPC.Functions
                 }
                 catch
                 {
-                    App.Logging.Error("App",App.Text.UpdateCheckFailed);
+                    App.Logging.Error("App", App.Text.UpdateCheckFailed);
                     MainPage._MainPage.Dispatcher.Invoke(() =>
                     {
                         MainPage._MainPage.pbUpdateProgress.Visibility = Visibility.Collapsed;
@@ -101,9 +98,8 @@ namespace MultiRPC.Functions
                         MainPage._MainPage.pbUpdateProgress.ToolTip = null;
                     });
                     if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
-                        App.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+                        Application.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
                 }
-            }
 
             IsChecking = false;
         }
@@ -122,15 +118,16 @@ namespace MultiRPC.Functions
                 MainPage._MainPage.pbUpdateProgress.ToolTip = new ToolTip($"{App.Text.StartingUpdate}...");
             });
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
-                App.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
+                Application.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
 
             try
             {
                 ApplicationDeployment.CurrentDeployment.UpdateCompleted += CurrentDeployment_UpdateCompleted;
-                ApplicationDeployment.CurrentDeployment.UpdateProgressChanged += CurrentDeployment_UpdateProgressChanged;
+                ApplicationDeployment.CurrentDeployment.UpdateProgressChanged +=
+                    CurrentDeployment_UpdateProgressChanged;
                 ApplicationDeployment.CurrentDeployment.UpdateAsync();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 IsUpdating = false;
                 MainPage._MainPage.Dispatcher.Invoke(() =>
@@ -140,46 +137,43 @@ namespace MultiRPC.Functions
                     MainPage._MainPage.pbUpdateProgress.ToolTip = null;
                 });
                 if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
-                    App.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+                    Application.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
-                await App.Current.Dispatcher.InvokeAsync(() =>
-                {
-                    var tick = DateTime.Now.Ticks;
-                    var window = new MainWindow(new UpdateFailedPage(e, tick), false);
-                    window.WindowID = tick;
-                    window.ShowDialog();
-                });
+                var tick = DateTime.Now.Ticks;
+                await MainWindow.OpenWindow(new UpdateFailedPage(e, tick), true, tick, false);
             }
         }
 
-        private static async void CurrentDeployment_UpdateProgressChanged(object sender, DeploymentProgressChangedEventArgs e)
+        private static async void CurrentDeployment_UpdateProgressChanged(object sender,
+            DeploymentProgressChangedEventArgs e)
         {
-            string State = App.Text.Unknown;
+            var state = App.Text.Unknown;
             switch (e.State)
             {
                 case DeploymentProgressState.DownloadingApplicationFiles:
-                    State = App.Text.DownloadingFiles;
+                    state = App.Text.DownloadingFiles;
                     break;
                 case DeploymentProgressState.DownloadingApplicationInformation:
-                    State = App.Text.GetAppInfo;
+                    state = App.Text.GetAppInfo;
                     break;
                 case DeploymentProgressState.DownloadingDeploymentInformation:
-                    State = App.Text.DownloadingDeploymentInfo;
+                    state = App.Text.DownloadingDeploymentInfo;
                     break;
             }
+
             await MainPage._MainPage.Dispatcher.InvokeAsync(() =>
             {
                 MainPage._MainPage.pbUpdateProgress.Value = e.ProgressPercentage;
-                MainPage._MainPage.pbUpdateProgress.ToolTip = new ToolTip ($"{State} ({e.ProgressPercentage}%/100%)");
+                MainPage._MainPage.pbUpdateProgress.ToolTip = new ToolTip($"{state} ({e.ProgressPercentage}%/100%)");
             });
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
             {
-                App.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
-                App.Current.MainWindow.TaskbarItemInfo.ProgressValue = e.ProgressPercentage;
+                Application.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+                Application.Current.MainWindow.TaskbarItemInfo.ProgressValue = e.ProgressPercentage;
             }
         }
 
-        private static async void CurrentDeployment_UpdateCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        private static async void CurrentDeployment_UpdateCompleted(object sender, AsyncCompletedEventArgs e)
         {
             IsUpdating = false;
             if (e.Error == null)
@@ -187,31 +181,28 @@ namespace MultiRPC.Functions
                 BeenUpdated = true;
                 if (App.Config.AutoUpdate)
                 {
-                    await App.Current.Dispatcher.InvokeAsync(() =>
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
                     {
                         var tick = DateTime.Now.Ticks;
-                        var window = new MainWindow(new UpdatePage(null, tick), false);
-                        window.WindowID = tick;
-                        window.ShowDialog();
+                        MainWindow.OpenWindow(new UpdatePage(null, tick), true, tick, false);
                     });
                 }
                 else
                 {
                     if (File.Exists(FileLocations.MultiRPCStartLink))
                         Process.Start(FileLocations.MultiRPCStartLink);
-                    App.Current.Shutdown();
+                    Application.Current.Shutdown();
                 }
             }
             else
             {
-                await App.Current.Dispatcher.InvokeAsync(() =>
+                await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     var tick = DateTime.Now.Ticks;
-                    var window = new MainWindow(new UpdateFailedPage(e.Error, tick), false);
-                    window.WindowID = tick;
-                    window.ShowDialog();
+                    MainWindow.OpenWindow(new UpdateFailedPage(e.Error, tick), true, tick, false);
                 });
             }
+
             MainPage._MainPage.Dispatcher.Invoke(() =>
             {
                 MainPage._MainPage.pbUpdateProgress.Visibility = Visibility.Collapsed;
@@ -219,7 +210,7 @@ namespace MultiRPC.Functions
                 MainPage._MainPage.pbUpdateProgress.ToolTip = null;
             });
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
-                App.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+                Application.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
         }
     }
 }
