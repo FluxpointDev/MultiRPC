@@ -31,7 +31,7 @@ namespace MultiRPC.GUI.Pages
 
             frmRPCPreview.Content = new RPCPreview(RPCPreview.ViewType.Default);
             UpdateText();
-#if !DEBUG
+#if DEBUG
             btnPrograms.Visibility = Visibility.Visible;
 #endif
         }
@@ -310,12 +310,14 @@ namespace MultiRPC.GUI.Pages
 
         private void ChangePage_OnMouseDown(object sender, MouseEventArgs e)
         {
-            Animations.ButtonMarginAnimation((Button) sender, new Thickness(2));
+            var button = (Button) sender;
+            Animations.ThicknessAnimation(button, new Thickness(2), button.Margin);
         }
 
         private void ChangePage_OnMouseUp(object sender, MouseEventArgs e)
         {
-            Animations.ButtonMarginAnimation((Button) sender, new Thickness(0));
+            var button = (Button)sender;
+            Animations.ThicknessAnimation(button, new Thickness(0), button.Margin);
         }
     }
 }

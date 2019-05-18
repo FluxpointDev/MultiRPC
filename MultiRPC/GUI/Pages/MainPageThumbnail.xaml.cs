@@ -84,12 +84,14 @@ namespace MultiRPC.GUI.Pages
 
         private void ChangePage_OnMouseDown(object sender, MouseEventArgs e)
         {
-            Animations.ButtonMarginAnimation((Button) sender, new Thickness(2));
+            var button = (Button)sender;
+            Animations.ThicknessAnimation(button, new Thickness(2), button.Margin);
         }
 
         private void ChangePage_OnMouseUp(object sender, MouseEventArgs e)
         {
-            Animations.ButtonMarginAnimation((Button) sender, new Thickness(0));
+            var button = (Button)sender;
+            Animations.ThicknessAnimation(button, new Thickness(0), button.Margin);
         }
     }
 }

@@ -124,19 +124,19 @@ namespace MultiRPC.GUI.Pages
 
         private void Image_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            Animations.ImageFadeAnimation((Image) sender, 0.8);
+            Animations.DoubleAnimation((Image) sender, 0.8);
         }
 
         private void Image_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            Animations.ImageFadeAnimation((Image) sender, 0.6);
+            Animations.DoubleAnimation((Image) sender, 0.6);
         }
 
         private async void Image_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             Process.Start(((Image) sender).Tag.ToString());
-            await Animations.ImageFadeAnimation((Image) sender, 1);
-            Animations.ImageFadeAnimation((Image) sender, 0.8);
+            await Animations.DoubleAnimation((Image) sender, 1);
+            Animations.DoubleAnimation((Image) sender, 0.8);
         }
 
         private async void Server_OnMouseDown(object sender, MouseButtonEventArgs e)

@@ -284,36 +284,36 @@ namespace MultiRPC.GUI.Pages
                 if (_selectedHelpImage == (Image) sender)
                 {
                     imgHelpImageBehind.Source = null;
-                    Animations.ImageFadeAnimation(imgHelpImage, 0, storyboard);
-                    Animations.ImageFadeAnimation(_selectedHelpImage, 0.6);
-                    Animations.ImageFadeAnimation(imgHelpImageBehind, 0);
+                    Animations.DoubleAnimation(imgHelpImage, 0, storyboard);
+                    Animations.DoubleAnimation(_selectedHelpImage, 0.6);
+                    Animations.DoubleAnimation(imgHelpImageBehind, 0);
                     _selectedHelpImage = null;
                 }
                 else
                 {
                     storyboard.Completed += ImageFaded;
-                    Animations.ImageFadeAnimation(_selectedHelpImage, 0.6);
-                    Animations.ImageFadeAnimation(imgHelpImageBehind, 1);
+                    Animations.DoubleAnimation(_selectedHelpImage, 0.6);
+                    Animations.DoubleAnimation(imgHelpImageBehind, 1);
 
                     imgHelpImageBehind.Source = ((Image) ((Image) sender).Tag).Source;
-                    Animations.ImageFadeAnimation(imgHelpImage, 0, storyboard);
+                    Animations.DoubleAnimation(imgHelpImage, 0, storyboard);
 
                     _selectedHelpImage = (Image) sender;
-                    Animations.ImageFadeAnimation(_selectedHelpImage, 1);
+                    Animations.DoubleAnimation(_selectedHelpImage, 1);
                 }
             }
             else
             {
                 imgHelpImage.Source = ((Image) ((Image) sender).Tag).Source;
-                Animations.ImageFadeAnimation(imgHelpImage, 1);
+                Animations.DoubleAnimation(imgHelpImage, 1);
                 _selectedHelpImage = (Image) sender;
-                Animations.ImageFadeAnimation(_selectedHelpImage, 1);
+                Animations.DoubleAnimation(_selectedHelpImage, 1);
             }
         }
 
         private void ImageFaded(object sender, EventArgs e)
         {
-            Animations.ImageFadeAnimation(imgHelpImage, 1, duration: new Duration(TimeSpan.Zero));
+            Animations.DoubleAnimation(imgHelpImage, 1, duration: new Duration(TimeSpan.Zero));
             if (imgHelpImageBehind.Source != null || imgHelpImageBehind.Opacity < 1)
             {
                 imgHelpImage.Source = imgHelpImageBehind.Source;
@@ -502,12 +502,12 @@ namespace MultiRPC.GUI.Pages
 
         private void Img_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            Animations.ImageFadeAnimation((Image) sender, 1);
+            Animations.DoubleAnimation((Image) sender, 1);
         }
 
         private void Img_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            Animations.ImageFadeAnimation((Image) sender, 0.6);
+            Animations.DoubleAnimation((Image) sender, 0.6);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace MultiRPC.GUI.Pages
             var profileBase64 = JsonConvert.SerializeObject(_profile);
             Clipboard.SetText(profileBase64 = Utils.Base64Encode(profileBase64));
             tbShare.Text = profileBase64;
-            await CustomMessageBox.Show(App.Text.ProfileCopyMessage);
+            await CustomMessageBox.Show(App.Text.ProfileCopyMessage, window: MainWindow.GetWindow(_windowID));
         }
     }
 }

@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Shell;
 using Hardcodet.Wpf.TaskbarNotification;
+using MultiRPC.Functions;
 using MultiRPC.GUI.Pages;
 using MultiRPC.GUI.Views;
 using MultiRPC.JsonClasses;
@@ -104,6 +105,15 @@ namespace MultiRPC.GUI
                 storyboard.Completed += OpenCloseStoryboard_Completed;
         }
 
+        public static MainWindow GetWindow(long windowID)
+        {
+            for (var i = 0; i < Application.Current.Windows.Count; i++)
+                if (Application.Current.Windows[i] is MainWindow mainWindow && mainWindow.WindowID == windowID)
+                    return mainWindow;
+
+            return null;
+        }
+
         private void StartLogic(Page page)
         {
             if (page.MinWidth > Width)
@@ -137,7 +147,10 @@ namespace MultiRPC.GUI
         {
             var window = new MainWindow(page, minButton)
             {
-                WindowID = tick
+                WindowID = tick,
+                Owner = App.Current.MainWindow,
+                ResizeMode = ResizeMode.CanMinimize,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
             window.Loaded += Window_Loaded;
 
@@ -250,8 +263,6 @@ namespace MultiRPC.GUI
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            WindowsContent.Margin = WindowState == WindowState.Maximized ? new Thickness(7) : new Thickness(0);
-
             if (Application.Current.MainWindow != this)
                 return;
 
@@ -317,8 +328,9 @@ namespace MultiRPC.GUI
 
         private void MainWindow_OnActivateChanged(object sender, EventArgs e)
         {
-            WindowsContent.BorderThickness =
-                IsActive ? new Thickness(1) : new Thickness(0);
+            Animations.ThicknessAnimation(WindowsContent, IsActive ? new Thickness(1) : new Thickness(0),
+                WindowsContent.BorderThickness,
+                propertyPath: new PropertyPath(Border.BorderThicknessProperty));
             if (TaskbarIcon != null)
                 TaskbarIcon.TrayToolTip = new ToolTip(!IsActive ? App.Text.ShowMultiRPC : App.Text.HideMultiRPC);
             if (!IsActive)
@@ -327,8 +339,11 @@ namespace MultiRPC.GUI
 
         private void MainWindow_OnStateChanged(object sender, EventArgs e)
         {
+            Animations.ThicknessAnimation(WindowsContent, WindowState == WindowState.Maximized ? new Thickness(7) : new Thickness(0),
+                WindowsContent.Margin);
+
             if (Icon != null && App.Config.HideTaskbarIconWhenMin)
-                ShowInTaskbar = WindowState != WindowState.Minimized;
+                ShowInTaskbar = WindowState != WindowState.Minimized; 
         }
 
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)
