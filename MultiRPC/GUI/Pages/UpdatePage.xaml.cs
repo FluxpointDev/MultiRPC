@@ -1,59 +1,73 @@
-﻿using MultiRPC.Functions;
-using System;
-using System.Collections.Generic;
+﻿using System.Deployment.Application;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using MultiRPC.Functions;
+using MultiRPC.JsonClasses;
 
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    /// Interaction logic for UpdatePage.xaml
+    ///     Interaction logic for UpdatePage.xaml
     /// </summary>
     public partial class UpdatePage : Page
     {
-        public UpdatePage()
+        private readonly long _windowID;
+
+        public UpdatePage(UpdateCheckInfo info, long windowID)
         {
             InitializeComponent();
-            try
+            if (App.Config.AutoUpdate)
             {
-                using (WebClient client = new WebClient())
-                {
-                    client.DownloadFile("https://multirpc.blazedev.me/Changelog.txt", App.ConfigFolder + "Changelog.txt");
-                }
-                using (StreamReader reader = new StreamReader(App.ConfigFolder + "Changelog.txt"))
-                {
-                    App.Changelog = reader.ReadToEnd();
-                }
-                Changelog.Text = App.Changelog;
+                btnSkip.Content = App.Text.DontRestartProgram;
+                btnUpdateNow.Content = App.Text.RestartProgram;
             }
-            catch (Exception ex)
+            else
             {
-                Changelog.Text = $"Error getting changelog text, {ex.Message}";
+                btnSkip.Content = App.Text.Skip;
+                btnUpdateNow.Content = App.Text.UpdateNow;
             }
+
+            tblCurrentVersion.Text =
+                App.Text.CurrentVersion + ": " + Assembly.GetExecutingAssembly().GetName().Version;
+            if (info != null)
+                tblNewVersion.Text = App.Text.NewVersion + ": " + info.AvailableVersion;
+            else
+                tblNewVersion.Text = App.Text.NewVersion + ": " + "???";
+
+            if (File.Exists(FileLocations.ChangelogFileLocalLocation))
+                tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
+
+            _windowID = windowID;
+            Title = App.Text.Update;
         }
 
-        private void BtnSkip_Click(object sender, RoutedEventArgs e)
+        private void ButSkip_OnClick(object sender, RoutedEventArgs e)
         {
-            App.BW.LoadMain();
+            MainWindow.CloseWindow(_windowID, false);
+            MainPage._MainPage.Dispatcher.Invoke(() =>
+            {
+                MainPage._MainPage.pbUpdateProgress.Visibility = Visibility.Collapsed;
+            });
         }
 
-        private void BtnUpdate_Click(object sender, RoutedEventArgs e)
+        private async void ButUpdateNow_OnClick(object sender, RoutedEventArgs e)
         {
-            BtnSkip.Visibility = Visibility.Hidden;
-            BtnUpdate.Visibility = Visibility.Hidden;
-            FuncUpdater.Start();
+            if (!App.Config.AutoUpdate)
+            {
+                MainWindow.CloseWindow(_windowID, true);
+                await Task.Delay(250);
+                Updater.Start();
+            }
+            else
+            {
+                if (File.Exists(FileLocations.MultiRPCStartLink))
+                    Process.Start(FileLocations.MultiRPCStartLink);
+                Application.Current.Shutdown();
+            }
         }
     }
 }
