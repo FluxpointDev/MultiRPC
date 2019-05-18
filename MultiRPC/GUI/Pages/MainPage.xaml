@@ -65,8 +65,7 @@
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter Property="Background" TargetName="border"
-                                        Value="{DynamicResource AccentColour2HoverSCBrush}" />
-                                <Setter Property="Margin" Value="2" />
+                                        Value="{DynamicResource AccentColour1SCBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -91,11 +90,6 @@
                                               SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                         </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Margin" Value="2" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -117,43 +111,59 @@
             <ScrollViewer Grid.RowSpan="2" VerticalScrollBarVisibility="Hidden">
                 <Grid Background="{DynamicResource AccentColour1SCBrush}">
                     <StackPanel Margin="8,10,8,0">
-                        <Button Style="{DynamicResource NavButton}" Name="btnMultiRPC" Click="ChangePage_OnClick">
+                        <Button Style="{DynamicResource NavButton}" Name="btnMultiRPC" Click="ChangePage_OnClick"
+                                PreviewMouseLeftButtonDown="ChangePage_OnMouseDown"
+                                PreviewMouseLeftButtonUp="ChangePage_OnMouseUp">
                             <Button.Content>
                                 <Image Name="imgDiscordIcon" Source="{DynamicResource DiscordIconDrawingImage}" />
                             </Button.Content>
                         </Button>
-                        <Button Style="{DynamicResource NavButton}" Name="btnCustom" Click="ChangePage_OnClick">
+                        <Button Style="{DynamicResource NavButton}" Name="btnCustom" Click="ChangePage_OnClick"
+                                PreviewMouseLeftButtonDown="ChangePage_OnMouseDown"
+                                PreviewMouseLeftButtonUp="ChangePage_OnMouseUp">
                             <Button.Content>
                                 <Image Name="imgCustomIcon" Source="{DynamicResource CustomIconDrawingImage}" />
                             </Button.Content>
                         </Button>
                         <Button Visibility="Collapsed" Style="{DynamicResource NavButton}" Name="btnPrograms"
+                                PreviewMouseLeftButtonDown="ChangePage_OnMouseDown"
+                                PreviewMouseLeftButtonUp="ChangePage_OnMouseUp"
                                 Click="ChangePage_OnClick">
                             <Button.Content>
                                 <Image Name="imgProgramsIcon" Source="{DynamicResource ProgramsIconDrawingImage}" />
                             </Button.Content>
                         </Button>
-                        <Button Style="{DynamicResource NavButton}" Name="btnSettings" Click="ChangePage_OnClick">
+                        <Button Style="{DynamicResource NavButton}" Name="btnSettings" Click="ChangePage_OnClick"
+                                PreviewMouseLeftButtonDown="ChangePage_OnMouseDown"
+                                PreviewMouseLeftButtonUp="ChangePage_OnMouseUp">
                             <Button.Content>
                                 <Image Name="imgSettingsIcon" Source="{DynamicResource SettingsIconDrawingImage}" />
                             </Button.Content>
                         </Button>
-                        <Button Style="{DynamicResource NavButton}" Name="btnLogs" Click="ChangePage_OnClick">
+                        <Button Style="{DynamicResource NavButton}" Name="btnLogs" Click="ChangePage_OnClick"
+                                PreviewMouseLeftButtonDown="ChangePage_OnMouseDown"
+                                PreviewMouseLeftButtonUp="ChangePage_OnMouseUp">
                             <Button.Content>
                                 <Image Name="imgLogsIcon" Source="{DynamicResource LogsIconDrawingImage}" />
                             </Button.Content>
                         </Button>
-                        <Button Style="{DynamicResource NavButton}" Name="btnCredits" Click="ChangePage_OnClick">
+                        <Button Style="{DynamicResource NavButton}" Name="btnCredits" Click="ChangePage_OnClick"
+                                PreviewMouseLeftButtonDown="ChangePage_OnMouseDown"
+                                PreviewMouseLeftButtonUp="ChangePage_OnMouseUp">
                             <Button.Content>
                                 <Image Name="imgCreditsIcon" Source="{DynamicResource CreditsIconDrawingImage}" />
                             </Button.Content>
                         </Button>
-                        <Button Style="{DynamicResource NavButton}" Name="btnThemeEditor" Click="ChangePage_OnClick">
+                        <Button Style="{DynamicResource NavButton}" Name="btnThemeEditor" Click="ChangePage_OnClick"
+                                PreviewMouseLeftButtonDown="ChangePage_OnMouseDown"
+                                PreviewMouseLeftButtonUp="ChangePage_OnMouseUp">
                             <Button.Content>
                                 <Image Name="imgThemeIcon" Source="{DynamicResource ThemeIconDrawingImage}" />
                             </Button.Content>
                         </Button>
                         <Button Visibility="Collapsed" Style="{DynamicResource NavButton}" Name="btnDebug"
+                                PreviewMouseLeftButtonDown="ChangePage_OnMouseDown"
+                                PreviewMouseLeftButtonUp="ChangePage_OnMouseUp"
                                 Click="ChangePage_OnClick">
                             <Button.Content>
                                 <Image Name="imgDebugIcon" Source="{DynamicResource DebugIconDrawingImage}" />

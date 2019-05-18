@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using MultiRPC.Functions;
@@ -305,6 +306,16 @@ namespace MultiRPC.GUI.Pages
         {
             Process.Start(Uri.Combine("https://discord.gg", App.ServerInviteCode));
             e.Handled = true;
+        }
+
+        private void ChangePage_OnMouseDown(object sender, MouseEventArgs e)
+        {
+            Animations.ButtonMarginAnimation((Button) sender, new Thickness(2));
+        }
+
+        private void ChangePage_OnMouseUp(object sender, MouseEventArgs e)
+        {
+            Animations.ButtonMarginAnimation((Button) sender, new Thickness(0));
         }
     }
 }

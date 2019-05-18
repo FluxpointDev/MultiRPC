@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
+using MultiRPC.Functions;
 using MultiRPC.JsonClasses;
 
 namespace MultiRPC.GUI.Pages
@@ -78,6 +80,16 @@ namespace MultiRPC.GUI.Pages
         {
             UpdateButtons();
             UpdateText();
+        }
+
+        private void ChangePage_OnMouseDown(object sender, MouseEventArgs e)
+        {
+            Animations.ButtonMarginAnimation((Button) sender, new Thickness(2));
+        }
+
+        private void ChangePage_OnMouseUp(object sender, MouseEventArgs e)
+        {
+            Animations.ButtonMarginAnimation((Button) sender, new Thickness(0));
         }
     }
 }

@@ -229,7 +229,8 @@ namespace MultiRPC.GUI.Pages
                 while (!(MainPage._MainPage.frmContent.Content is CustomPage))
                     await Task.Delay(250);
             });
-            if (MainPage._MainPage.btnStart.Content != null && MainPage._MainPage.btnStart.Content.ToString() == App.Text.Shutdown)
+            if (MainPage._MainPage.btnStart.Content != null &&
+                MainPage._MainPage.btnStart.Content.ToString() == App.Text.Shutdown)
                 await MainPage._MainPage.Dispatcher.InvokeAsync(() =>
                 {
                     MainPage._MainPage.btnStart.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));

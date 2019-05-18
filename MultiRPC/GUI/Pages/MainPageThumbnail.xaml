@@ -16,10 +16,10 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ButtonBase}">
-                            <Border Margin="0,0,0,15" CornerRadius="100" x:Name="border"
+                            <Border Margin="0,0,0,25" CornerRadius="100" x:Name="border"
                                     Height="{TemplateBinding ActualWidth}" BorderBrush="Transparent"
-                                    BorderThickness="0" Background="{TemplateBinding Background}"
-                                    SnapsToDevicePixels="True">
+                                    BorderThickness="0"
+                                    Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                                 <ContentPresenter x:Name="contentPresenter"
                                                   ContentTemplate="{TemplateBinding ContentTemplate}"
                                                   Content="{TemplateBinding Content}"
@@ -49,9 +49,10 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ButtonBase}">
-                            <Border Margin="0,0,0,15" CornerRadius="100" x:Name="border"
+                            <Border Margin="0,0,0,25" CornerRadius="100" x:Name="border"
                                     Height="{TemplateBinding ActualWidth}" BorderBrush="Transparent"
-                                    BorderThickness="0" Background="{DynamicResource NavButtonBackgroundSelected}"
+                                    BorderThickness="0"
+                                    Background="{DynamicResource NavButtonBackgroundSelected}"
                                     SnapsToDevicePixels="True">
                                 <ContentPresenter x:Name="contentPresenter"
                                                   ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -84,12 +85,16 @@
             <Grid Grid.RowSpan="2" Background="{DynamicResource AccentColour1SCBrush}" />
             <Grid Grid.Column="1" Background="{DynamicResource AccentColour1SCBrush}" />
             <StackPanel Grid.RowSpan="2" Margin="5,10,5,0">
-                <Button Name="btnNavButton" Style="{DynamicResource NavButton}">
+                <Button Name="btnNavButton" Style="{DynamicResource NavButton}"
+                        PreviewMouseLeftButtonDown="ChangePage_OnMouseDown"
+                        PreviewMouseLeftButtonUp="ChangePage_OnMouseUp">
                     <Button.Content>
                         <Image Source="{DynamicResource DiscordIconDrawingImage}" />
                     </Button.Content>
                 </Button>
-                <Button Name="btnNavButtonSelected" Style="{DynamicResource NavButtonSelected}">
+                <Button Name="btnNavButtonSelected" Style="{DynamicResource NavButtonSelected}"
+                        PreviewMouseLeftButtonDown="ChangePage_OnMouseDown"
+                        PreviewMouseLeftButtonUp="ChangePage_OnMouseUp">
                     <Button.Content>
                         <Image Source="{DynamicResource DiscordIconSelectedDrawingImage}" />
                     </Button.Content>

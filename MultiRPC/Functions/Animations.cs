@@ -27,5 +27,24 @@ namespace MultiRPC.Functions
             storyboard.Begin(image);
             await Task.Delay(fadeAnimation.Duration.TimeSpan);
         }
+
+        public static async Task ButtonMarginAnimation(Button button, Thickness to,
+            Duration duration = new Duration())
+        {
+            var storyboard = new Storyboard();
+            var fadeAnimation = new ThicknessAnimation
+            {
+                From = button.Margin,
+                To = to,
+                Duration = !duration.HasTimeSpan ? new Duration(TimeSpan.FromSeconds(0.3)) : duration,
+                EasingFunction = new CircleEase()
+            };
+
+            storyboard.Children.Add(fadeAnimation);
+            Storyboard.SetTargetName(fadeAnimation, button.Name);
+            Storyboard.SetTargetProperty(fadeAnimation, new PropertyPath(FrameworkElement.MarginProperty));
+            storyboard.Begin(button);
+            await Task.Delay(fadeAnimation.Duration.TimeSpan);
+        }
     }
 }

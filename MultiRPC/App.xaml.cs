@@ -26,6 +26,7 @@ namespace MultiRPC
         public static Logging Logging;
         public static bool StartedWithJumpListLogic;
         public static Config Config;
+
         public static readonly JsonSerializer JsonSerializer = new JsonSerializer
         {
             Formatting = Formatting.Indented
