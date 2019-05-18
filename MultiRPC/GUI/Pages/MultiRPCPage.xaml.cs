@@ -52,7 +52,7 @@ namespace MultiRPC.GUI.Pages
             RPC.SetPresence(tbText1.Text, tbText2.Text, cbLargeKey.Text.ToLower(), tbLargeText.Text,
                 cbSmallKey.Text.ToLower(), tbSmallText.Text, cbElapasedTime.IsChecked.Value);
 
-            if (!_haveDoneAutoStart && App.Config.AutoStart == "MultiRPC")
+            if (!_haveDoneAutoStart && App.Config.AutoStart == "MultiRPC" && !App.StartedWithJumpListLogic)
             {
                 if (await CanRunRPC())
                     MainPage._MainPage.btnStart.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));

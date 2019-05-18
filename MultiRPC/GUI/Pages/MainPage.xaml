@@ -221,7 +221,7 @@
             </Frame>
         </Grid>
         <Grid Background="{DynamicResource AccentColour2SCBrush}" Name="gridCheckForDiscord"
-              HorizontalAlignment="Stretch" Visibility="Collapsed">
+              HorizontalAlignment="Stretch">
             <StackPanel HorizontalAlignment="Center" Margin="10">
                 <Grid>
                     <Grid.ColumnDefinitions>

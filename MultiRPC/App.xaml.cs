@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,13 +24,13 @@ namespace MultiRPC
         public const string ServerInviteCode = "susQ6XA";
         public static UIText Text;
         public static Logging Logging;
-
-        public static JsonSerializer JsonSerializer = new JsonSerializer
+        public static bool StartedWithJumpListLogic;
+        public static Config Config;
+        public static readonly JsonSerializer JsonSerializer = new JsonSerializer
         {
             Formatting = Formatting.Indented
         };
 
-        public static Config Config;
 
         public App()
         {
@@ -51,11 +52,11 @@ namespace MultiRPC
                 {
                     try
                     {
-                        File.Delete(Path.Combine(FileLocations.OpenFileLocalLocation));
+                        File.Delete(FileLocations.OpenFileLocalLocation);
                     }
                     catch
                     {
-
+                        App.Logging.Application(App.Text.CouldntDelete + " " + FileLocations.OpenFileLocalLocation);
                     }
                 }
                 if (e.Args.Length > 0)
@@ -70,7 +71,8 @@ namespace MultiRPC
             }
             else if (e.Args.Length > 1 && e.Args[0] == "-custom")
             {
-                CustomPage.JumpListLogic(e.Args[1], true);
+                StartedWithJumpListLogic = true;
+                _ = CustomPage.JumpListLogic(e.Args[1], true);
             }
 #endif
 

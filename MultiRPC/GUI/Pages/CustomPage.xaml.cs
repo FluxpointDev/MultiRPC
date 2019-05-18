@@ -125,7 +125,7 @@ namespace MultiRPC.GUI.Pages
                 ProfileButtons[App.Config.SelectedCustom].RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
             tbProfiles.Visibility = tbProfiles.Items.Count == 1 ? Visibility.Collapsed : Visibility.Visible;
 
-            if (!_haveDoneAutoStart && App.Config.AutoStart == App.Text.Custom)
+            if (!_haveDoneAutoStart && App.Config.AutoStart == App.Text.Custom && !App.StartedWithJumpListLogic)
             {
                 if (await CanRunRPC(true))
                     MainPage._MainPage.btnStart.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
@@ -219,15 +219,17 @@ namespace MultiRPC.GUI.Pages
         public static async Task JumpListLogic(string buttonName, bool fromStartUp = false)
         {
             if (fromStartUp)
-                while (MainPage._MainPage == null || MainPage._MainPage == null ||
+                while (MainPage._MainPage == null ||
                        MainPage._MainPage.gridCheckForDiscord.Visibility == Visibility.Visible)
                     await Task.Delay(250);
 
-            await MainPage._MainPage.Dispatcher.InvokeAsync(() =>
+            await MainPage._MainPage.Dispatcher.Invoke(async () =>
             {
                 MainPage._MainPage.btnCustom.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                while (!(MainPage._MainPage.frmContent.Content is CustomPage))
+                    await Task.Delay(250);
             });
-            if (MainPage._MainPage.btnStart.Content.ToString() == App.Text.Shutdown)
+            if (MainPage._MainPage.btnStart.Content != null && MainPage._MainPage.btnStart.Content.ToString() == App.Text.Shutdown)
                 await MainPage._MainPage.Dispatcher.InvokeAsync(() =>
                 {
                     MainPage._MainPage.btnStart.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));

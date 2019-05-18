@@ -30,7 +30,7 @@ namespace MultiRPC.GUI.Pages
 
             frmRPCPreview.Content = new RPCPreview(RPCPreview.ViewType.Default);
             UpdateText();
-#if DEBUG
+#if !DEBUG
             btnPrograms.Visibility = Visibility.Visible;
 #endif
         }

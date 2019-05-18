@@ -45,7 +45,7 @@ namespace MultiRPC.Functions
 
                         try
                         {
-                            File.Delete(Path.Combine(FileLocations.OpenFileLocalLocation));
+                            File.Delete(FileLocations.OpenFileLocalLocation);
                         }
                         catch
                         {

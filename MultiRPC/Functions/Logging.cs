@@ -29,10 +29,11 @@ namespace MultiRPC.Functions
         }
 
 #if DEBUG
-#elif !DEBUG
-        private LogLevel _level = LogLevel.Info;
+        private static readonly LogLevel _level = LogLevel.Trace;
+#else
+        private static readonly LogLevel _level = LogLevel.Info;
 #endif
-        public LogLevel Level { get; set; } = LogLevel.Trace;
+        public LogLevel Level { get; set; } = _level;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
