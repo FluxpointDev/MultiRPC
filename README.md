@@ -3,9 +3,9 @@ A windows app for managing Discord rich presence with the ability to set a custo
 
 This supports all versions of windows, linux/mac support coming soon using .net core
 
-Ram usage: 25mb | Language: C# | GUI: Wpf
+Translations, themes and custom theme support now available!
 
-
+Ram usage: 50mb | Language: C# | GUI: Wpf
 
 # Support 
 
@@ -18,7 +18,7 @@ Click more info and run anyway (windows limitation)
 
 ![Image](https://i.imgur.com/jV9jIte.png)
 
-![Image](https://i.imgur.com/XM541gt.png)
+![Image](https://i.imgur.com/FgrdIAU.png)
 
 # MultiRPC
 
