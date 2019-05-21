@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d"
       MinHeight="200" MinWidth="400"
+      MaxWidth="400"
       Title="Share Profile">
 
     <Grid Margin="10">

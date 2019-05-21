@@ -2,12 +2,10 @@
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
@@ -28,8 +26,6 @@ namespace MultiRPC.GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const int WM_NCLBUTTONDOWN = 0xA1;
-        private const int HT_CAPTION = 0x2;
         private static bool firstRun = true;
         private readonly Storyboard _openStoryboard = new Storyboard();
         private Storyboard _closeStoryboard;
@@ -68,12 +64,6 @@ namespace MultiRPC.GUI
             if (!minButton)
                 btnMin.Visibility = Visibility.Collapsed;
         }
-
-        [DllImport("user32.dll")]
-        private static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-
-        [DllImport("user32.dll")]
-        private static extern bool ReleaseCapture();
 
         private void MakeWinAnimation(Storyboard storyboard, double from = 1, double to = 0,
             bool addEventHandler = true, object parameter = null, Duration lengthToRun = new Duration())
@@ -116,20 +106,6 @@ namespace MultiRPC.GUI
 
         private void StartLogic(Page page)
         {
-            if (page.MinWidth > Width)
-            {
-                MinWidth = page.MinWidth;
-                Width = MinWidth;
-            }
-
-            if (page.MinHeight + 30 > Height)
-            {
-                MinHeight = page.MinHeight + 30;
-                Height = MinHeight;
-            }
-
-            MaxHeight = page.MaxHeight;
-            MaxWidth = page.MaxWidth;
             frmContent.Content = page;
         }
 
@@ -235,10 +211,7 @@ namespace MultiRPC.GUI
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var hwnd = new WindowInteropHelper(this).Handle;
-                ReleaseCapture();
-                SendMessage(hwnd, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-                hwnd = new IntPtr(0);
+                DragMove();
             }
         }
 

@@ -259,9 +259,9 @@ namespace MultiRPC.GUI.Pages
                     }
 
                 App.Config.ActiveLanguage = languageSelected.Tag.ToString();
-                App.Config.AutoStart = cbAutoStart.Text;
 
                 UpdateText();
+                App.Config.AutoStart = cbAutoStart.Text;
                 MainPage._MainPage.UpdateText();
                 MultiRPCPage._MultiRPCPage?.UpdateText();
                 CustomPage._CustomPage?.UpdateText();

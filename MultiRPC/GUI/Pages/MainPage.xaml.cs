@@ -11,6 +11,7 @@ using System.Windows.Navigation;
 using MultiRPC.Functions;
 using MultiRPC.GUI.Views;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
+using System.Windows.Media.Animation;
 
 namespace MultiRPC.GUI.Pages
 {
@@ -174,6 +175,10 @@ namespace MultiRPC.GUI.Pages
             ((Image) _selectedButton.Content).Source =
                 (DrawingImage) Application.Current.Resources[ImageName(((Image) _selectedButton.Content).Name, true)];
 
+            double pageWidth = btnMultiRPC.Tag != null ? 
+                ((MultiRPCPage)btnMultiRPC.Tag).ActualWidth : 
+                this.ActualWidth;
+
             if (_selectedButton.Tag == null)
                 switch (((Button) sender).Name)
                 {
@@ -181,10 +186,10 @@ namespace MultiRPC.GUI.Pages
                         btnMultiRPC.Tag = new MultiRPCPage();
                         break;
                     case "btnCustom":
-                        btnCustom.Tag = new CustomPage();
+                        btnCustom.Tag = new CustomPage(pageWidth);
                         break;
                     case "btnLogs":
-                        btnLogs.Tag = new LogsPage();
+                        btnLogs.Tag = new LogsPage(pageWidth);
                         break;
                     case "btnCredits":
                         btnCredits.Tag = new CreditsPage();
@@ -317,7 +322,7 @@ namespace MultiRPC.GUI.Pages
         private void ChangePage_OnMouseUp(object sender, MouseEventArgs e)
         {
             var button = (Button)sender;
-            Animations.ThicknessAnimation(button, new Thickness(0), button.Margin);
+            Animations.ThicknessAnimation(button, new Thickness(0), button.Margin, ease: new BounceEase());
         }
     }
 }

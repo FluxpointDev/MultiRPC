@@ -5,7 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d"
-      MinHeight="79" MinWidth="250"
+      MaxHeight="79" MaxWidth="250"
+      MinWidth="250"
       Title="Edit Profile Name">
 
     <StackPanel Margin="10">

@@ -46,6 +46,8 @@ namespace MultiRPC
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
+            //This might help with Jump List fixing
+            //https://robindotnet.wordpress.com/2010/03/21/how-to-pass-arguments-to-an-offline-clickonce-application/
 #if !DEBUG
             if (Process.GetProcessesByName("MultiRPC").Length > 1)
             {
@@ -79,43 +81,50 @@ namespace MultiRPC
 
             FileWatch.Create();
             SettingsPage.UIText = new List<UIText>();
-            GetLangFiles().ConfigureAwait(false).GetAwaiter().GetResult();
-            UITextUpdate().ConfigureAwait(false).GetAwaiter().GetResult();
+            GetLangFiles();
             Config = Config.Load().Result;
-            UITextUpdate().ConfigureAwait(false).GetAwaiter().GetResult();
+            UITextUpdate();
             Logging = new Logging();
             File.AppendAllText(FileLocations.ErrorFileLocalLocation,
                 $"\r\n------------------------------------------------------------------------------------------------\r\n{Text.ErrorsFrom} {DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}");
             DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
 
-        private Task UITextUpdate()
+        private void UITextUpdate()
         {
+            int engbInt = 0;
+            bool foundText = false;
             for (var i = 0; i < SettingsPage.UIText.Count; i++)
             {
                 var text = SettingsPage.UIText[i];
-                if (Config != null)
+                if (Config != null && text != null && text.LanguageTag == Config.ActiveLanguage)
                 {
-                    if (text.LanguageName == Config.ActiveLanguage)
+                    Text = text;
+                    foundText = true;
+                    if (string.IsNullOrWhiteSpace(Config.AutoStart))
                     {
-                        Text = text;
-                        break;
+                        Config.AutoStart = Text.No;
                     }
+                    if (string.IsNullOrWhiteSpace(Config.MultiRPC.Text1))
+                    {
+                        Config.MultiRPC.Text1 = Text.Hello;
+                    }
+                    if (string.IsNullOrWhiteSpace(Config.MultiRPC.Text2))
+                    {
+                        Config.MultiRPC.Text2 = Text.World;
+                    }
+                    break;
                 }
-                else
+                else if (text != null && text.LanguageTag == "en-gb")
                 {
-                    if (text.LanguageTag == "en-gb")
-                    {
-                        Text = text;
-                        break;
-                    }
+                    engbInt = i;
                 }
             }
-
-            return Task.CompletedTask;
+            if (!foundText)
+                Text = SettingsPage.UIText[engbInt];
         }
 
-        private Task GetLangFiles()
+        private void GetLangFiles()
         {
             var langFiles = Directory.EnumerateFiles("Lang").ToArray();
             for (var i = 0; i < langFiles.LongLength; i++)
@@ -123,8 +132,6 @@ namespace MultiRPC
                 {
                     SettingsPage.UIText.Add((UIText) JsonSerializer.Deserialize(reader, typeof(UIText)));
                 }
-
-            return Task.CompletedTask;
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

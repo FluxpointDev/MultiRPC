@@ -28,11 +28,12 @@ namespace MultiRPC.GUI.Pages
         private bool _haveDoneAutoStart;
         private Image _selectedHelpImage;
 
-        public CustomPage()
+        public CustomPage(double mainPageWidth)
         {
             InitializeComponent();
             _CustomPage = this;
             UpdateText();
+            tbProfiles.MaxWidth = mainPageWidth;
 
             if (File.Exists(FileLocations.ProfilesFileLocalLocation))
             {

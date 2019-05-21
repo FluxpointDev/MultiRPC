@@ -73,7 +73,7 @@ namespace MultiRPC.GUI.Pages
         {
             //Give the theme a name if it doesn't have one 
             if (string.IsNullOrWhiteSpace(tbThemeBeingMadeName.Text))
-                tbThemeBeingMadeName.Text = "Theme " + wpInstalledThemes.Children.Count + 1;
+                tbThemeBeingMadeName.Text = App.Text.Theme + " " + (wpInstalledThemes.Children.Count + 1);
         }
 
         public Task UpdateText(string oldEditingWord, string oldActiveWord)
@@ -112,9 +112,9 @@ namespace MultiRPC.GUI.Pages
                 var text = GetThemeNameFromTextBlock(themeName, oldEditingWord, oldActiveWord);
 
                 if (text == Application.Current.Resources["ThemeName"].ToString())
-                    text = text + $" ({App.Text.Active})";
+                    text += $" ({App.Text.Active})";
                 else if (!string.IsNullOrWhiteSpace(_themeNameThatBeingEdited) && text == _themeNameThatBeingEdited)
-                    text = text + $" ({App.Text.Editing})";
+                    text += $" ({App.Text.Editing})";
                 themeName.Text = text;
 
                 var themeTopControls = (StackPanel) stackPanel.Children[0];
@@ -351,7 +351,7 @@ namespace MultiRPC.GUI.Pages
                         doNotSetIfContains.Contains(themeName.Text.Split(' ').Last().Replace("(", "").Replace(")", "")))
                         return;
 
-                    text = text + $" ({status})";
+                    text += $" ({status})";
                     text = text.Replace(" ()", "");
                     themeName.Text = text;
                 }
@@ -488,7 +488,7 @@ namespace MultiRPC.GUI.Pages
 
             //Edit name to have copy so user's know it's the cloned one
             if (!themeContent.ThemeMetadata.ThemeName.Contains("("))
-                themeContent.ThemeMetadata.ThemeName = themeContent.ThemeMetadata.ThemeName + " (1)";
+                themeContent.ThemeMetadata.ThemeName += " (1)";
 
             var tmpName = themeContent.ThemeMetadata.ThemeName;
             var copyCount = 1;

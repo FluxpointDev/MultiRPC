@@ -16,7 +16,7 @@ namespace MultiRPC.JsonClasses
         public bool AFKTime = false;
 
         /// <summary> Enable starting rich presence when app loads </summary>
-        public string AutoStart = App.Text.No;
+        public string AutoStart = App.Text?.No;
 
         /// <summary> If to auto update the app </summary>
         public bool AutoUpdate = false;
@@ -90,8 +90,8 @@ namespace MultiRPC.JsonClasses
         public bool ShowTime = false;
         public int SmallKey;
         public string SmallText;
-        public string Text1 = App.Text.Hello;
-        public string Text2 = App.Text.World;
+        public string Text1 = App.Text?.Hello;
+        public string Text2 = App.Text?.World;
     }
 
     /// <summary> Disabled settings config </summary>

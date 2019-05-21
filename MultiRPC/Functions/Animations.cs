@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace MultiRPC.Functions
@@ -30,7 +28,8 @@ namespace MultiRPC.Functions
         }
 
         public static async Task ThicknessAnimation(FrameworkElement element, Thickness to,
-            Thickness from, Duration duration = new Duration(), PropertyPath propertyPath = null)
+            Thickness from, Duration duration = new Duration(), PropertyPath propertyPath = null,
+            IEasingFunction ease = null)
         {
             if (propertyPath == null)
                 propertyPath = new PropertyPath(FrameworkElement.MarginProperty);
@@ -40,7 +39,7 @@ namespace MultiRPC.Functions
                 From = from,
                 To = to,
                 Duration = !duration.HasTimeSpan ? new Duration(TimeSpan.FromSeconds(0.3)) : duration,
-                EasingFunction = new CircleEase()
+                EasingFunction = ease ?? new CircleEase()
             };
 
             storyboard.Children.Add(fadeAnimation);
