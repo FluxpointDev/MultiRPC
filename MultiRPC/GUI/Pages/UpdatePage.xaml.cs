@@ -65,7 +65,7 @@ namespace MultiRPC.GUI.Pages
             else
             {
                 if (File.Exists(FileLocations.MultiRPCStartLink))
-                    Process.Start(FileLocations.MultiRPCStartLink);
+                    Process.Start(FileLocations.MultiRPCStartLink, "--fromupdate");
                 Application.Current.Shutdown();
             }
         }

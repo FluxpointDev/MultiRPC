@@ -176,37 +176,6 @@ namespace MultiRPC.GUI
             }
         }
 
-        public static Task MakeJumpList()
-        {
-            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
-            {
-                var jumpList = new JumpList();
-
-                for (var i = 0; i < 10; i++)
-                {
-                    if (i > CustomPage.Profiles.Count - 1)
-                        break;
-
-                    //Configure a new JumpTask
-                    var jumpTask = new JumpTask
-                    {
-                        // Set the JumpTask properties.
-                        ApplicationPath = FileLocations.MultiRPCStartLink,
-                        Arguments = $"-custom \"{CustomPage.Profiles.ElementAt(i).Key}\"",
-                        IconResourcePath = FileLocations.MultiRPCStartLink,
-                        Title = CustomPage.Profiles.ElementAt(i).Key,
-                        Description = $"{App.Text.Load} '{CustomPage.Profiles.ElementAt(i).Key}'",
-                        CustomCategory = App.Text.CustomProfiles
-                    };
-                    jumpList.JumpItems.Add(jumpTask);
-                }
-
-                JumpList.SetJumpList(Application.Current, jumpList);
-            }
-
-            return Task.CompletedTask;
-        }
-
         private void RecHandle_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)

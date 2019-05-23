@@ -9,6 +9,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Shell;
 using MultiRPC.Functions;
 using MultiRPC.JsonClasses;
 using Newtonsoft.Json;
@@ -55,7 +56,7 @@ namespace MultiRPC.GUI.Pages
                 }
             }
 
-            MainWindow.MakeJumpList();
+            MakeJumpList();
             for (var i = 0; i < Profiles.Count; i++) MakeMenuButton(Profiles.ElementAt(i).Key);
             tbProfiles.ItemsSource = ProfileButtons;
 
@@ -251,6 +252,38 @@ namespace MultiRPC.GUI.Pages
                 }
         }
 
+        private static Task MakeJumpList()
+        {
+            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
+            {
+                var jumpList = new JumpList();
+
+                for (var i = 0; i < 10; i++)
+                {
+                    if (i > CustomPage.Profiles.Count - 1)
+                        break;
+
+                    //Configure a new JumpTask
+                    var jumpTask = new JumpTask
+                    {
+                        // Set the JumpTask properties.
+                        ApplicationPath = FileLocations.MultiRPCStartLink,
+                        Arguments = $"-custom,{CustomPage.Profiles.ElementAt(i).Key}",
+                        IconResourcePath = FileLocations.MultiRPCStartLink,
+                        Title = CustomPage.Profiles.ElementAt(i).Key,
+                        Description = $"{App.Text.Load} '{CustomPage.Profiles.ElementAt(i).Key}'",
+                        CustomCategory = App.Text.CustomProfiles
+                    };
+                    jumpList.JumpItems.Add(jumpTask);
+                }
+
+                JumpList.SetJumpList(Application.Current, jumpList);
+            }
+
+            return Task.CompletedTask;
+        }
+
+
         private async void CustomProfileButton_Click(object sender, RoutedEventArgs e)
         {
             imgProfileDelete.Visibility = Profiles[((Button) sender).Content.ToString()] == Profiles.Values.First()
@@ -378,7 +411,7 @@ namespace MultiRPC.GUI.Pages
                 App.JsonSerializer.Serialize(writer, Profiles);
             }
 
-            MainWindow.MakeJumpList();
+            MakeJumpList();
         }
 
         private async void ImgProfileShare_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -471,7 +504,7 @@ namespace MultiRPC.GUI.Pages
                 App.JsonSerializer.Serialize(writer, Profiles);
             }
 
-            MainWindow.MakeJumpList();
+            MakeJumpList();
         }
 
         private void ImgProfileDelete_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -498,7 +531,7 @@ namespace MultiRPC.GUI.Pages
                 }
 
             tbProfiles.Visibility = tbProfiles.Items.Count == 1 ? Visibility.Collapsed : Visibility.Visible;
-            MainWindow.MakeJumpList();
+            MakeJumpList();
         }
 
         private void Img_OnMouseEnter(object sender, MouseEventArgs e)

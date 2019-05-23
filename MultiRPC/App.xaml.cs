@@ -46,9 +46,9 @@ namespace MultiRPC
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
-            //This might help with Jump List fixing
-            //https://robindotnet.wordpress.com/2010/03/21/how-to-pass-arguments-to-an-offline-clickonce-application/
-#if !DEBUG
+#if DEBUG
+            var arg = AppDomain.CurrentDomain.SetupInformation.ActivationArguments?.ActivationData.ToString();
+            var args = arg?.Split(',');
             if (Process.GetProcessesByName("MultiRPC").Length > 1)
             {
                 if (File.Exists(FileLocations.OpenFileLocalLocation))
@@ -62,17 +62,20 @@ namespace MultiRPC
                         App.Logging.Application(App.Text.CouldntDelete + " " + FileLocations.OpenFileLocalLocation);
                     }
                 }
-                if (e.Args.Length > 0)
+                if (args?.Length >= 2 && args[0] == "-custom")
                 {
-                    File.WriteAllLines(FileLocations.OpenFileLocalLocation, new List<string> { "LOADCUSTOM", e.Args[1] });
+                    File.WriteAllLines(FileLocations.OpenFileLocalLocation,
+                        new List<string> {"LOADCUSTOM", args[1]});
                 }
                 else
                 {
                     File.Create(FileLocations.OpenFileLocalLocation);
                 }
-                Current.Shutdown();
+
+                if (args == null || args.Length == 0 || args[0] != "--fromupdate")
+                    Current.Shutdown();
             }
-            else if (e.Args.Length > 1 && e.Args[0] == "-custom")
+            else if (args?.Length >= 2 && args[0] == "-custom")
             {
                 StartedWithJumpListLogic = true;
                 _ = CustomPage.JumpListLogic(e.Args[1], true);
