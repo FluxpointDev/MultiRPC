@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using DiscordRPC;
 using MultiRPC.Functions;
@@ -12,6 +13,9 @@ namespace MultiRPC.GUI.Pages
 {
     internal class MultiRPCAndCustomLogic
     {
+        private static bool OnCustomPage =>
+            MainPage._MainPage.frmContent.Content is CustomPage && RPC.Type == RPC.RPCType.Custom;
+
         public static Task UpdateTimestamps(CheckBox checkBox)
         {
             RPC.Presence.Timestamps = checkBox.IsChecked.Value ? new Timestamps() : null;
@@ -80,14 +84,17 @@ namespace MultiRPC.GUI.Pages
                 tbLargeText.ToolTip = null;
             }
 
-            var isCustomPage = MainPage._MainPage.frmContent.Content is CustomPage && RPC.Type == RPC.RPCType.Custom;
             var profile = CustomPage.Profiles != null && CustomPage.CurrentButton != null
                 ? CustomPage.Profiles[CustomPage.CurrentButton.Content.ToString()]
                 : null;
-            if (isCustomPage && profile != null)
+            if (OnCustomPage && profile != null)
             {
-                MainPage._MainPage.btnUpdate.IsEnabled = false;
-                MainPage._MainPage.btnStart.IsEnabled = false;
+                if (!RPC.IsRPCRunning)
+                {
+                    MainPage._MainPage.btnUpdate.IsEnabled = false;
+                    MainPage._MainPage.btnStart.IsEnabled = false;
+                }
+
                 var isValidCode =
                     ulong.TryParse(tbClientID.Text, NumberStyles.Any, new NumberFormatInfo(), out var ID);
 
@@ -159,14 +166,21 @@ namespace MultiRPC.GUI.Pages
                 }
                 else if (MainPage._MainPage.frmContent.Content is CustomPage)
                 {
-                    RPC.IDToUse = ID;
-                    tbClientID.SetResourceReference(Control.BorderBrushProperty, "AccentColour4SCBrush");
-                    tbClientID.ToolTip = null;
+                    if (tokenTextChanged)
+                    {
+                        RPC.IDToUse = ID;
+                        tbClientID.SetResourceReference(Control.BorderBrushProperty, "AccentColour4SCBrush");
+                        tbClientID.ToolTip = null;
+                    }
+                    else if (tbClientID.BorderBrush == Application.Current.Resources["Red"])
+                    {
+                        isEnabled = false;
+                    }
                 }
             }
 
             if (MainPage._MainPage.frmContent.Content is MultiRPCPage && RPC.Type == RPC.RPCType.MultiRPC ||
-                isCustomPage && CustomPage.Profiles[CustomPage.CurrentButton.Content.ToString()] == profile && !RPC.AFK)
+                OnCustomPage && CustomPage.Profiles[CustomPage.CurrentButton.Content.ToString()] == profile && !RPC.AFK)
             {
                 if (MainPage._MainPage.btnStart.Content.ToString() == App.Text.Shutdown)
                 {

@@ -58,18 +58,22 @@ namespace MultiRPC.GUI
 
         public static async Task<MessageBoxResult> Show(string messageBoxText, Window window = null)
         {
-            return await _Show(messageBoxText, "MultiRPC", MessageBoxButton.OK, MessageBoxImage.None, Ownerwindow: window);
+            return await _Show(messageBoxText, "MultiRPC", MessageBoxButton.OK, MessageBoxImage.None,
+                Ownerwindow: window);
         }
 
-        public static async Task<MessageBoxResult> Show(string messageBoxText, string messageBoxTitle, Window window = null)
+        public static async Task<MessageBoxResult> Show(string messageBoxText, string messageBoxTitle,
+            Window window = null)
         {
-            return await _Show(messageBoxText, messageBoxTitle, MessageBoxButton.OK, MessageBoxImage.None, Ownerwindow: window);
+            return await _Show(messageBoxText, messageBoxTitle, MessageBoxButton.OK, MessageBoxImage.None,
+                Ownerwindow: window);
         }
 
         public static async Task<MessageBoxResult> Show(string messageBoxText, string messageBoxTitle,
             MessageBoxButton messageBoxButton, Window window = null)
         {
-            return await _Show(messageBoxText, messageBoxTitle, messageBoxButton, MessageBoxImage.None, Ownerwindow: window);
+            return await _Show(messageBoxText, messageBoxTitle, messageBoxButton, MessageBoxImage.None,
+                Ownerwindow: window);
         }
 
         public static async Task<MessageBoxResult> Show(string messageBoxText, string messageBoxTitle,
@@ -79,9 +83,11 @@ namespace MultiRPC.GUI
         }
 
         public static async Task<MessageBoxResult> Show(string messageBoxText, string messageBoxTitle,
-            MessageBoxButton messageBoxButton, MessageBoxImage messageBoxImage, MessageBoxResult defaultResult, Window window = null)
+            MessageBoxButton messageBoxButton, MessageBoxImage messageBoxImage, MessageBoxResult defaultResult,
+            Window window = null)
         {
-            return await _Show(messageBoxText, messageBoxTitle, messageBoxButton, messageBoxImage, defaultResult, window);
+            return await _Show(messageBoxText, messageBoxTitle, messageBoxButton, messageBoxImage, defaultResult,
+                window);
         }
     }
 }

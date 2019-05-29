@@ -197,5 +197,13 @@
   "Getting": "getting",
   "CouldntDownload": "Couldn't download",
   "CouldntDelete": "Couldn't delete",
-  "ProcessFindError": "Something happened while finding Discord processes, going to stop showing gridCheckForDiscord"
+  "ProcessFindError": "Something happened while finding Discord processes, going to stop showing gridCheckForDiscord",
+  "Log": "Log",
+  "Credits": "Credits",
+  "Programs": "Programs",
+  "Page": "page",
+  "ShowPageTooltips": "Show Page Tooltips",
+  "TempDisableDiscordCheck": "Temporary disable discord checking",
+  "InternetBack": "Internet is back",
+  "InternetLost": "Internet has been lost"
 }

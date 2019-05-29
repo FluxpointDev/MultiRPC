@@ -34,29 +34,27 @@ namespace MultiRPC.GUI.Pages
             tbLargeText.Text = App.Config.MultiRPC.LargeText;
             tbSmallText.Text = App.Config.MultiRPC.SmallText;
             cbElapasedTime.IsChecked = App.Config.MultiRPC.ShowTime;
+
+            cbSmallKey.ItemsSource = Data.MultiRPCImages.Keys;
+            cbLargeKey.ItemsSource = Data.MultiRPCImages.Keys;
+            cbSmallKey.SelectedIndex = App.Config.MultiRPC.SmallKey;
+            cbLargeKey.SelectedIndex = App.Config.MultiRPC.LargeKey;
         }
 
         private async void MultiRPCPage_Loaded(object sender, RoutedEventArgs e)
         {
-            Data.MultiRPCImages = Data.MakeImagesDictionary();
-
-            cbSmallKey.ItemsSource = Data.MultiRPCImages.Keys;
-            cbLargeKey.ItemsSource = Data.MultiRPCImages.Keys;
-            cbSmallKey.Items.Refresh();
-            cbLargeKey.Items.Refresh();
-            cbSmallKey.SelectedIndex = App.Config.MultiRPC.SmallKey;
-            cbLargeKey.SelectedIndex = App.Config.MultiRPC.LargeKey;
-
-            RPC.IDToUse = RPC.MultiRPCID;
-            RPC.UpdateType(RPC.RPCType.MultiRPC);
-            RPC.SetPresence(tbText1.Text, tbText2.Text, cbLargeKey.Text.ToLower(), tbLargeText.Text,
-                cbSmallKey.Text.ToLower(), tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            if (!RPC.IsRPCRunning)
+            {
+                RPC.IDToUse = RPC.MultiRPCID;
+                RPC.UpdateType(RPC.RPCType.MultiRPC);
+                RPC.SetPresence(tbText1.Text, tbText2.Text, cbLargeKey.Text.ToLower(), tbLargeText.Text,
+                    cbSmallKey.Text.ToLower(), tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            }
 
             if (!_haveDoneAutoStart && App.Config.AutoStart == "MultiRPC" && !App.StartedWithJumpListLogic)
             {
                 if (await CanRunRPC())
                     MainPage._MainPage.btnStart.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                _haveDoneAutoStart = true;
             }
             else
             {
@@ -64,6 +62,7 @@ namespace MultiRPC.GUI.Pages
             }
 
             IsEnabled = true;
+            _haveDoneAutoStart = true;
         }
 
         private async Task UpdatePreviewImage(bool updateSmall, string key = "")

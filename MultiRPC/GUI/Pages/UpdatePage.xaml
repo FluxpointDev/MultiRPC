@@ -10,7 +10,7 @@
       Title="Update">
     <Page.Resources>
         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
     </Page.Resources>
     <Grid Margin="10">

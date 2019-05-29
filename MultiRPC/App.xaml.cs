@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using MultiRPC.Functions;
@@ -46,31 +45,26 @@ namespace MultiRPC
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
-#if DEBUG
+#if !DEBUG
             var arg = AppDomain.CurrentDomain.SetupInformation.ActivationArguments?.ActivationData.ToString();
             var args = arg?.Split(',');
             if (Process.GetProcessesByName("MultiRPC").Length > 1)
             {
                 if (File.Exists(FileLocations.OpenFileLocalLocation))
-                {
                     try
                     {
                         File.Delete(FileLocations.OpenFileLocalLocation);
                     }
                     catch
                     {
-                        App.Logging.Application(App.Text.CouldntDelete + " " + FileLocations.OpenFileLocalLocation);
+                        Logging.Application(Text.CouldntDelete + " " + FileLocations.OpenFileLocalLocation);
                     }
-                }
+
                 if (args?.Length >= 2 && args[0] == "-custom")
-                {
                     File.WriteAllLines(FileLocations.OpenFileLocalLocation,
                         new List<string> {"LOADCUSTOM", args[1]});
-                }
                 else
-                {
                     File.Create(FileLocations.OpenFileLocalLocation);
-                }
 
                 if (args == null || args.Length == 0 || args[0] != "--fromupdate")
                     Current.Shutdown();
@@ -95,8 +89,8 @@ namespace MultiRPC
 
         private void UITextUpdate()
         {
-            int engbInt = 0;
-            bool foundText = false;
+            var engbInt = 0;
+            var foundText = false;
             for (var i = 0; i < SettingsPage.UIText.Count; i++)
             {
                 var text = SettingsPage.UIText[i];
@@ -104,25 +98,15 @@ namespace MultiRPC
                 {
                     Text = text;
                     foundText = true;
-                    if (string.IsNullOrWhiteSpace(Config.AutoStart))
-                    {
-                        Config.AutoStart = Text.No;
-                    }
-                    if (string.IsNullOrWhiteSpace(Config.MultiRPC.Text1))
-                    {
-                        Config.MultiRPC.Text1 = Text.Hello;
-                    }
-                    if (string.IsNullOrWhiteSpace(Config.MultiRPC.Text2))
-                    {
-                        Config.MultiRPC.Text2 = Text.World;
-                    }
+                    if (string.IsNullOrWhiteSpace(Config.AutoStart)) Config.AutoStart = Text.No;
+                    if (string.IsNullOrWhiteSpace(Config.MultiRPC.Text1)) Config.MultiRPC.Text1 = Text.Hello;
+                    if (string.IsNullOrWhiteSpace(Config.MultiRPC.Text2)) Config.MultiRPC.Text2 = Text.World;
                     break;
                 }
-                else if (text != null && text.LanguageTag == "en-gb")
-                {
-                    engbInt = i;
-                }
+
+                if (text != null && text.LanguageTag == "en-gb") engbInt = i;
             }
+
             if (!foundText)
                 Text = SettingsPage.UIText[engbInt];
         }

@@ -33,7 +33,6 @@ namespace MultiRPC
         public static DiscordRpcClient RPCClient;
         private static string _pageUserWasOnWhenStarted;
 
-
         /// <summary>
         ///     Has rpc failed
         /// </summary>
@@ -43,6 +42,8 @@ namespace MultiRPC
         ///     Is afk rpc status on
         /// </summary>
         public static bool AFK;
+
+        public static bool IsRPCRunning { get; private set; }
 
         private static async Task<bool> CheckPresence(string text)
         {
@@ -68,7 +69,7 @@ namespace MultiRPC
 
         public static Task UpdateType(RPCType type)
         {
-            if (RPCClient != null && RPCClient.Disposed || RPCClient == null)
+            if (!IsRPCRunning)
                 Type = type;
 
             return Task.CompletedTask;
@@ -167,9 +168,11 @@ namespace MultiRPC
             if (CustomPage._CustomPage != null)
             {
                 //Disable buttons unless it's the same ClientID (still not allowed to mess with the Client ID tho)
-                var profileClientID = !AFK && CustomPage.CurrentButton != null
+                var profileClientID = !AFK && CustomPage.CurrentButton != null &&
+                                      MainPage._MainPage.frmContent.Content is CustomPage
                     ? CustomPage.Profiles[CustomPage.CurrentButton.Content.ToString()].ClientID
                     : "0";
+
                 for (var i = 0; i < CustomPage.ProfileButtons.Count; i++)
                     if (profileClientID == "0" || CustomPage.Profiles[CustomPage.ProfileButtons[i].Content.ToString()]
                             .ClientID != profileClientID)
@@ -179,6 +182,8 @@ namespace MultiRPC
                 CustomPage._CustomPage.imgProfileDelete.IsEnabled = false;
                 CustomPage._CustomPage.tbClientID.IsEnabled = false;
             }
+
+            IsRPCRunning = true;
         }
 
         public static void SetPresence(string text1, string text2, string largeKey, string largeText, string smallKey,
@@ -218,7 +223,7 @@ namespace MultiRPC
 
         public static async void Update()
         {
-            if (RPCClient != null && RPCClient.IsInitialized && !RPCClient.Disposed)
+            if (IsRPCRunning)
             {
                 if (Presence.Timestamps != null)
                     Presence.Timestamps.Start = _startTime;
@@ -297,6 +302,7 @@ namespace MultiRPC
         {
             App.Logging.LogEvent(App.Text.Client, App.Text.ShuttingDown);
 
+            _uptime?.Stop();
             _uptime?.Dispose();
             RPCClient?.Dispose();
             MainPage._MainPage.frmRPCPreview.Dispatcher.Invoke(async () =>
@@ -306,21 +312,21 @@ namespace MultiRPC
             });
 
             MainPage._MainPage.btnStart.SetResourceReference(FrameworkElement.StyleProperty, "ButtonGreen");
-            if (MainPage._MainPage.frmContent.Content is MultiRPCPage multiRpcPage)
+            switch (MainPage._MainPage.frmContent.Content)
             {
-                MainPage._MainPage.btnStart.Content = App.Text.Start + " MultiRPC";
-                multiRpcPage.CanRunRPC();
-            }
-            else if (MainPage._MainPage.frmContent.Content is CustomPage _CustomPage)
-            {
-                MainPage._MainPage.btnStart.Content = App.Text.StartCustom;
-                _CustomPage.CanRunRPC();
-            }
-            else
-            {
-                MainPage._MainPage.btnStart.Content = _pageUserWasOnWhenStarted.Contains("MultiRPC")
-                    ? App.Text.Start + " MultiRPC"
-                    : App.Text.StartCustom;
+                case MultiRPCPage multiRpcPage:
+                    MainPage._MainPage.btnStart.Content = App.Text.Start + " MultiRPC";
+                    multiRpcPage.CanRunRPC();
+                    break;
+                case CustomPage _CustomPage:
+                    MainPage._MainPage.btnStart.Content = App.Text.StartCustom;
+                    _CustomPage.CanRunRPC();
+                    break;
+                default:
+                    MainPage._MainPage.btnStart.Content = _pageUserWasOnWhenStarted.Contains("MultiRPC")
+                        ? App.Text.Start + " MultiRPC"
+                        : App.Text.StartCustom;
+                    break;
             }
 
             MainPage._MainPage.btnUpdate.IsEnabled = false;
@@ -334,6 +340,8 @@ namespace MultiRPC
                 CustomPage._CustomPage.imgProfileDelete.IsEnabled = true;
                 CustomPage._CustomPage.tbClientID.IsEnabled = true;
             }
+
+            IsRPCRunning = false;
         }
     }
 }

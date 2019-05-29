@@ -36,7 +36,7 @@ namespace MultiRPC.GUI.Pages
         {
             if (string.IsNullOrWhiteSpace(newProfileName))
             {
-                await CustomMessageBox.Show(App.Text.EmptyProfileName + "!!!",  window: MainWindow.GetWindow(_windowID));
+                await CustomMessageBox.Show(App.Text.EmptyProfileName + "!!!", MainWindow.GetWindow(_windowID));
                 return false;
             }
 
@@ -49,7 +49,7 @@ namespace MultiRPC.GUI.Pages
                 return true;
             }
 
-            await CustomMessageBox.Show(App.Text.SameProfileName, window: MainWindow.GetWindow(_windowID));
+            await CustomMessageBox.Show(App.Text.SameProfileName, MainWindow.GetWindow(_windowID));
             return false;
         }
     }

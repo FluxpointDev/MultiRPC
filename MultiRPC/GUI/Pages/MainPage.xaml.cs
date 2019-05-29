@@ -1,5 +1,6 @@
-﻿using System.Diagnostics;
-using System.Extra;
+﻿using System;
+using System.Diagnostics;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -7,11 +8,12 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 using MultiRPC.Functions;
 using MultiRPC.GUI.Views;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
-using System.Windows.Media.Animation;
+using Uri = System.Extra.Uri;
 
 namespace MultiRPC.GUI.Pages
 {
@@ -35,18 +37,52 @@ namespace MultiRPC.GUI.Pages
 #if DEBUG
             btnPrograms.Visibility = Visibility.Visible;
 #endif
+            NetworkChange.NetworkAddressChanged += AddressChangedCallback;
+        }
+
+        private async void AddressChangedCallback(object sender, EventArgs e)
+        {
+            if (Utils.NetworkIsAvailable())
+                await gridInternetConnectivity.Dispatcher.InvokeAsync(async () =>
+                {
+                    gridInternetConnectivity.SetResourceReference(Panel.BackgroundProperty, "Green");
+                    tblInternetConnectivity.Text = App.Text.InternetBack + "!!";
+                    await Task.Delay(3000);
+                    gridInternetConnectivity.Height = 0;
+                });
+            else
+                await gridInternetConnectivity.Dispatcher.InvokeAsync(() =>
+                {
+                    gridInternetConnectivity.Height = double.NaN;
+                    tblInternetConnectivity.Text = App.Text.InternetLost + "!!";
+                    gridInternetConnectivity.SetResourceReference(Panel.BackgroundProperty, "Red");
+                });
+        }
+
+        private async void DiscordCheckFadeOutAnimation()
+        {
+            if (App.Config.AutoStart == "MultiRPC" || App.Config.AutoStart == App.Text.No)
+                btnMultiRPC.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            else
+                btnCustom.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            await Animations.DoubleAnimation(gridCheckForDiscord, 0, gridCheckForDiscord.Opacity);
+            gridCheckForDiscord.Visibility = Visibility.Collapsed;
         }
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
+            DateTime startDateTime;
+
+            async void ShowTempDisableButton()
+            {
+                if (btnDisableDiscordCheck.Opacity == 0 && DateTime.Now.Subtract(startDateTime).TotalSeconds >= 5)
+                    await Animations.DoubleAnimation(btnDisableDiscordCheck, 1, btnDisableDiscordCheck.Opacity);
+            }
+
             Updater.Check();
             if (!App.Config.DiscordCheck)
             {
-                if (App.Config.AutoStart == "MultiRPC" || App.Config.AutoStart == App.Text.No)
-                    btnMultiRPC.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                else
-                    btnCustom.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                gridCheckForDiscord.Visibility = Visibility.Collapsed;
+                DiscordCheckFadeOutAnimation();
             }
             else
             {
@@ -55,6 +91,7 @@ namespace MultiRPC.GUI.Pages
                 rDiscordServer.Text = App.Text.DiscordServer + ": ";
                 rServerLink.Text = App.ServerInviteCode;
                 hylServerLinkUri.NavigateUri = new System.Uri(Uri.Combine("https://discord.gg", App.ServerInviteCode));
+                startDateTime = DateTime.Now;
 
                 int processCount;
                 var discordClient = "";
@@ -89,6 +126,7 @@ namespace MultiRPC.GUI.Pages
                     if (processCount == 0)
                     {
                         tblDiscordClientMessage.Text = App.Text.CantFindDiscord;
+                        ShowTempDisableButton();
                         await Task.Delay(750);
                         goto FindClient;
                     }
@@ -96,26 +134,40 @@ namespace MultiRPC.GUI.Pages
                     if (processCount < 4)
                     {
                         tblDiscordClientMessage.Text = $"{discordClient} {App.Text.IsLoading}....";
+                        ShowTempDisableButton();
                         await Task.Delay(750);
                         goto FindClient;
                     }
 
-                    if (App.Config.AutoStart == "MultiRPC" || App.Config.AutoStart == App.Text.No)
-                        btnMultiRPC.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                    else
-                        btnCustom.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                    gridCheckForDiscord.Visibility = Visibility.Collapsed;
+                    DiscordCheckFadeOutAnimation();
                 }
                 catch
                 {
                     App.Logging.Application(App.Text.ProcessFindError);
-                    if (App.Config.AutoStart == "MultiRPC" || App.Config.AutoStart == App.Text.No)
-                        btnMultiRPC.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                    else
-                        btnCustom.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                    gridCheckForDiscord.Visibility = Visibility.Collapsed;
+                    DiscordCheckFadeOutAnimation();
                 }
             }
+        }
+
+        public Task UpdateTooltips()
+        {
+            btnMultiRPC.ToolTip = !App.Config.ShowPageTooltips ? null : new ToolTip("MultiRPC" + " " + App.Text.Page);
+            btnCustom.ToolTip =
+                !App.Config.ShowPageTooltips ? null : new ToolTip(App.Text.Custom + " " + App.Text.Page);
+            btnSettings.ToolTip = !App.Config.ShowPageTooltips
+                ? null
+                : new ToolTip(App.Text.Settings + " " + App.Text.Page);
+            btnLogs.ToolTip = !App.Config.ShowPageTooltips ? null : new ToolTip(App.Text.Log + " " + App.Text.Page);
+            btnCredits.ToolTip = !App.Config.ShowPageTooltips
+                ? null
+                : new ToolTip(App.Text.Credits + " " + App.Text.Page);
+            btnThemeEditor.ToolTip =
+                !App.Config.ShowPageTooltips ? null : new ToolTip(App.Text.Theme + " " + App.Text.Page);
+            btnDebug.ToolTip = !App.Config.ShowPageTooltips ? null : new ToolTip(App.Text.Debug + " " + App.Text.Page);
+            btnPrograms.ToolTip = !App.Config.ShowPageTooltips
+                ? null
+                : new ToolTip(App.Text.Programs + " " + App.Text.Page);
+            return Task.CompletedTask;
         }
 
         public Task UpdateText()
@@ -146,9 +198,11 @@ namespace MultiRPC.GUI.Pages
             btnAuto.Content = App.Text.Auto;
             btnAfk.Content = App.Text.Afk;
             tblAfkText.Text = App.Text.AfkText + ": ";
+            btnDisableDiscordCheck.Content = App.Text.TempDisableDiscordCheck;
             var preview = (RPCPreview) frmRPCPreview.Content;
             if (preview != null && preview.CurrentViewType != RPCPreview.ViewType.RichPresence)
                 preview.UpdateUIViewType(preview.CurrentViewType);
+            UpdateTooltips();
 
             return Task.CompletedTask;
         }
@@ -175,9 +229,7 @@ namespace MultiRPC.GUI.Pages
             ((Image) _selectedButton.Content).Source =
                 (DrawingImage) Application.Current.Resources[ImageName(((Image) _selectedButton.Content).Name, true)];
 
-            double pageWidth = btnMultiRPC.Tag != null ? 
-                ((MultiRPCPage)btnMultiRPC.Tag).ActualWidth : 
-                this.ActualWidth;
+            var pageWidth = btnMultiRPC.Tag != null ? ((MultiRPCPage) btnMultiRPC.Tag).ActualWidth : ActualWidth;
 
             if (_selectedButton.Tag == null)
                 switch (((Button) sender).Name)
@@ -321,8 +373,13 @@ namespace MultiRPC.GUI.Pages
 
         private void ChangePage_OnMouseUp(object sender, MouseEventArgs e)
         {
-            var button = (Button)sender;
+            var button = (Button) sender;
             Animations.ThicknessAnimation(button, new Thickness(0), button.Margin, ease: new BounceEase());
+        }
+
+        private void BtnDisableDiscordCheck_OnClick(object sender, RoutedEventArgs e)
+        {
+            DiscordCheckFadeOutAnimation();
         }
     }
 }

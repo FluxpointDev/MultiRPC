@@ -118,25 +118,29 @@ namespace MultiRPC.GUI.Pages
             tblLanguage.Text = App.Text.Language;
             rAppDev.ToolTip = new ToolTip(App.Text.ClickToCopy);
             tblHideTaskbarIcon.Text = App.Text.HideTaskbarIcon;
+            tblShowPageTooltips.Text = App.Text.ShowPageTooltips;
 
             return Task.CompletedTask;
         }
 
         private void Image_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            Animations.DoubleAnimation((Image) sender, 0.8);
+            var image = (Image) sender;
+            Animations.DoubleAnimation(image, 0.8, image.Opacity);
         }
 
         private void Image_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            Animations.DoubleAnimation((Image) sender, 0.6);
+            var image = (Image) sender;
+            Animations.DoubleAnimation(image, 0.6, image.Opacity);
         }
 
         private async void Image_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             Process.Start(((Image) sender).Tag.ToString());
-            await Animations.DoubleAnimation((Image) sender, 1);
-            Animations.DoubleAnimation((Image) sender, 0.8);
+            var image = (Image) sender;
+            await Animations.DoubleAnimation(image, 1, image.Opacity);
+            Animations.DoubleAnimation(image, 0.8, image.Opacity);
         }
 
         private async void Server_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -250,6 +254,8 @@ namespace MultiRPC.GUI.Pages
                 var oldActiveWord = App.Text.Active;
                 var oldEditingWord = App.Text.Editing;
                 var languageSelected = (ComboBoxItem) e.AddedItems[0];
+                var internetConnectivityTextIsInternetLost =
+                    MainPage._MainPage.tblInternetConnectivity.Text == App.Text.InternetLost;
 
                 for (var i = 0; i < UIText.Count; i++)
                     if (UIText[i].LanguageTag == languageSelected.Tag.ToString())
@@ -270,6 +276,23 @@ namespace MultiRPC.GUI.Pages
                 ThemeEditorPage._ThemeEditorPage?.UpdateText(oldEditingWord, oldActiveWord);
                 DebugPage._DebugPage?.UpdateText();
 
+                if (!string.IsNullOrWhiteSpace(MainPage._MainPage.tblInternetConnectivity.Text))
+                    MainPage._MainPage.tblInternetConnectivity.Text = internetConnectivityTextIsInternetLost
+                        ? App.Text.InternetLost
+                        : App.Text.InternetBack;
+
+                Data.MultiRPCImages = Data.MakeImagesDictionary();
+
+                if (MultiRPCPage._MultiRPCPage != null)
+                {
+                    MultiRPCPage._MultiRPCPage.cbSmallKey.ItemsSource = Data.MultiRPCImages.Keys;
+                    MultiRPCPage._MultiRPCPage.cbLargeKey.ItemsSource = Data.MultiRPCImages.Keys;
+                    MultiRPCPage._MultiRPCPage.cbSmallKey.Items.Refresh();
+                    MultiRPCPage._MultiRPCPage.cbLargeKey.Items.Refresh();
+                    MultiRPCPage._MultiRPCPage.cbSmallKey.SelectedIndex = App.Config.MultiRPC.SmallKey;
+                    MultiRPCPage._MultiRPCPage.cbLargeKey.SelectedIndex = App.Config.MultiRPC.LargeKey;
+                }
+
                 App.Config.Save();
             }
         }
@@ -280,6 +303,16 @@ namespace MultiRPC.GUI.Pages
             {
                 App.Config.HideTaskbarIconWhenMin = !((CheckBox) sender).IsChecked.Value;
                 App.Config.Save();
+            }
+        }
+
+        private void CbShowPageTooltips_OnChecked(object sender, RoutedEventArgs e)
+        {
+            if (IsInitialized)
+            {
+                App.Config.ShowPageTooltips = !((CheckBox) sender).IsChecked.Value;
+                App.Config.Save();
+                MainPage._MainPage.UpdateTooltips();
             }
         }
     }

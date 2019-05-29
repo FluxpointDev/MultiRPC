@@ -42,6 +42,7 @@
         public string Connected;
         public string CouldntDelete;
         public string CouldntDownload;
+        public string Credits;
         public string CurrentVersion;
         public string Custom;
         public string CustomProfiles;
@@ -87,6 +88,8 @@
         public string Import;
         public string Info;
         public string InstalledThemes;
+        public string InternetBack;
+        public string InternetLost;
         public string InvalidThemeName;
         public string IsLoading;
         public string JoinForFunBotsAndSupport;
@@ -102,6 +105,7 @@
         public string LetMakeTheme;
         public string Load;
         public string Loading;
+        public string Log;
         public string LoggerHasStarted;
         public string MadeBy;
         public string Message;
@@ -114,6 +118,7 @@
         public string NoUpdate;
         public string Ok;
         public string Open;
+        public string Page;
         public string PatreonDonators;
         public string PatreonMonthly;
         public string PaypalDonateMessage;
@@ -127,6 +132,7 @@
         public string ProfileDelete;
         public string ProfileEdit;
         public string ProfileShare;
+        public string Programs;
         public string Remove;
         public string ResetTheme;
         public string RestartProgram;
@@ -146,6 +152,7 @@
         public string ShowElapsedTime;
         public string Showing;
         public string ShowMultiRPC;
+        public string ShowPageTooltips;
         public string Shutdown;
         public string ShuttingDown;
         public string Skip;
@@ -159,6 +166,7 @@
         public string StartingRpc;
         public string StartingUpdate;
         public string Status;
+        public string TempDisableDiscordCheck;
         public string Testing;
         public string TestUpdateWindow;
         public string TestUpdateWindowTooltip;

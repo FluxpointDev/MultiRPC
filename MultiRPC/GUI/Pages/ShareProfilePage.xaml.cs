@@ -22,8 +22,7 @@ namespace MultiRPC.GUI.Pages
             _profile = profile;
             _windowID = windowID;
             Title = App.Text.ProfileShare;
-            if (RPC.RPCClient != null && RPC.RPCClient.IsInitialized && !RPC.RPCClient.Disposed)
-                btnImport.IsEnabled = false;
+            btnImport.IsEnabled = !RPC.IsRPCRunning;
         }
 
         private void ButImport_OnClick(object sender, RoutedEventArgs e)
@@ -38,7 +37,7 @@ namespace MultiRPC.GUI.Pages
             var profileBase64 = JsonConvert.SerializeObject(_profile);
             Clipboard.SetText(profileBase64 = Utils.Base64Encode(profileBase64));
             tbShare.Text = profileBase64;
-            await CustomMessageBox.Show(App.Text.ProfileCopyMessage, window: MainWindow.GetWindow(_windowID));
+            await CustomMessageBox.Show(App.Text.ProfileCopyMessage, MainWindow.GetWindow(_windowID));
         }
     }
 }

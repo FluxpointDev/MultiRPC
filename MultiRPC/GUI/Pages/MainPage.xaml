@@ -183,9 +183,9 @@
             <!--Status bar-->
             <Grid Grid.Column="1" Background="{DynamicResource AccentColour1SCBrush}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0">
@@ -259,7 +259,12 @@
                 <Image Width="50" Name="imgLoading" gif:AnimationBehavior.SourceUri="../../Assets/Loading.gif"
                        gif:AnimationBehavior.RepeatBehavior="Forever" gif:AnimationBehavior.AnimateInDesignMode="True"
                        gif:AnimationBehavior.AutoStart="True" />
+                <Button Margin="0,5,0,0" Name="btnDisableDiscordCheck" Opacity="0"
+                        Click="BtnDisableDiscordCheck_OnClick" />
             </StackPanel>
+        </Grid>
+        <Grid VerticalAlignment="Bottom" Name="gridInternetConnectivity" Background="{DynamicResource Red}" Height="0">
+            <TextBlock Name="tblInternetConnectivity" HorizontalAlignment="Center" Margin="0,5" />
         </Grid>
     </Grid>
 </Page>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -124,7 +123,7 @@ namespace MultiRPC.GUI
             var window = new MainWindow(page, minButton)
             {
                 WindowID = tick,
-                Owner = App.Current.MainWindow,
+                Owner = Application.Current.MainWindow,
                 ResizeMode = ResizeMode.CanMinimize,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
@@ -178,10 +177,7 @@ namespace MultiRPC.GUI
 
         private void RecHandle_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                DragMove();
-            }
+            if (e.LeftButton == MouseButtonState.Pressed) DragMove();
         }
 
         private void Min_OnClick(object sender, RoutedEventArgs e)
@@ -230,12 +226,9 @@ namespace MultiRPC.GUI
         {
             if (frmContent.Content != null && Application.Current.MainWindow == this)
             {
-                var runCode = true;
-                if (RPC.RPCClient != null)
-                    if (!RPC.RPCClient.Disposed && RPC.RPCClient.IsInitialized)
-                        runCode = false;
-
+                var runCode = !RPC.IsRPCRunning;
                 var content = ((Frame) sender).Content;
+
                 if (runCode)
                 {
                     switch (content)
@@ -281,11 +274,12 @@ namespace MultiRPC.GUI
 
         private void MainWindow_OnStateChanged(object sender, EventArgs e)
         {
-            Animations.ThicknessAnimation(WindowsContent, WindowState == WindowState.Maximized ? new Thickness(7) : new Thickness(0),
+            Animations.ThicknessAnimation(WindowsContent,
+                WindowState == WindowState.Maximized ? new Thickness(7) : new Thickness(0),
                 WindowsContent.Margin);
 
             if (Icon != null && App.Config.HideTaskbarIconWhenMin)
-                ShowInTaskbar = WindowState != WindowState.Minimized; 
+                ShowInTaskbar = WindowState != WindowState.Minimized;
         }
 
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)

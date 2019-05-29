@@ -282,13 +282,20 @@ namespace MultiRPC.JsonClasses
             public SolidColorBrush NavButtonIconColourSelected;
             public Color TextColour;
 
-            public SolidColorBrush AccentColour1SCBrush => new SolidColorBrush(AccentColour1);
-            public SolidColorBrush AccentColour2SCBrush => new SolidColorBrush(AccentColour2);
-            public SolidColorBrush AccentColour2HoverSCBrush => new SolidColorBrush(AccentColour2Hover);
-            public SolidColorBrush AccentColour3SCBrush => new SolidColorBrush(AccentColour3);
-            public SolidColorBrush AccentColour4SCBrush => new SolidColorBrush(AccentColour4);
-            public SolidColorBrush AccentColour5SCBrush => new SolidColorBrush(AccentColour5);
-            public SolidColorBrush TextColourSCBrush => new SolidColorBrush(TextColour);
+            //Ignore because we make it with the color so no point in having it in the json file
+            [JsonIgnore] public SolidColorBrush AccentColour1SCBrush => new SolidColorBrush(AccentColour1);
+
+            [JsonIgnore] public SolidColorBrush AccentColour2SCBrush => new SolidColorBrush(AccentColour2);
+
+            [JsonIgnore] public SolidColorBrush AccentColour2HoverSCBrush => new SolidColorBrush(AccentColour2Hover);
+
+            [JsonIgnore] public SolidColorBrush AccentColour3SCBrush => new SolidColorBrush(AccentColour3);
+
+            [JsonIgnore] public SolidColorBrush AccentColour4SCBrush => new SolidColorBrush(AccentColour4);
+
+            [JsonIgnore] public SolidColorBrush AccentColour5SCBrush => new SolidColorBrush(AccentColour5);
+
+            [JsonIgnore] public SolidColorBrush TextColourSCBrush => new SolidColorBrush(TextColour);
         }
 
         public class Metadata

@@ -111,9 +111,13 @@ namespace MultiRPC.GUI.Pages
         private async void CustomPage_Loaded(object sender, RoutedEventArgs e)
         {
             ShowHelpImages();
-            RPC.UpdateType(RPC.RPCType.Custom);
-            RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text,
-                tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+
+            if (!RPC.IsRPCRunning)
+            {
+                RPC.UpdateType(RPC.RPCType.Custom);
+                RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text,
+                    tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            }
 
             while (tbProfiles.Items.Count < 0)
             {
@@ -131,19 +135,26 @@ namespace MultiRPC.GUI.Pages
             {
                 if (await CanRunRPC(true))
                     MainPage._MainPage.btnStart.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                _haveDoneAutoStart = true;
             }
             else
             {
                 CanRunRPC(true);
             }
+
+            _haveDoneAutoStart = true;
+        }
+
+        private void SetPresence()
+        {
+            if (!RPC.IsRPCRunning || RPC.Type == RPC.RPCType.Custom)
+                RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text,
+                    tbSmallText.Text, cbElapasedTime.IsChecked.Value);
         }
 
         private void TbLargeText_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             MultiRPCAndCustomLogic.CheckImageText((TextBox) sender);
-            RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text,
-                tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            SetPresence();
             UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
                 tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
             CanRunRPC();
@@ -152,8 +163,7 @@ namespace MultiRPC.GUI.Pages
         private void TbSmallText_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             MultiRPCAndCustomLogic.CheckImageText((TextBox) sender);
-            RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text,
-                tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            SetPresence();
             UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
                 tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
             CanRunRPC();
@@ -163,8 +173,7 @@ namespace MultiRPC.GUI.Pages
         {
             var text = await MultiRPCAndCustomLogic.CheckImageText((TextBox) sender);
 
-            RPC.SetPresence(text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text,
-                cbElapasedTime.IsChecked.Value);
+            SetPresence();
             UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
                 tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
             CanRunRPC();
@@ -174,8 +183,7 @@ namespace MultiRPC.GUI.Pages
         {
             var text = await MultiRPCAndCustomLogic.CheckImageText((TextBox) sender);
 
-            RPC.SetPresence(tbText1.Text, text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text, tbSmallText.Text,
-                cbElapasedTime.IsChecked.Value);
+            SetPresence();
             UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
                 tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
             CanRunRPC();
@@ -190,16 +198,14 @@ namespace MultiRPC.GUI.Pages
 
         private void TbLargeKey_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text,
-                tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            SetPresence();
             UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
                 tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
         }
 
         private void TbSmallKey_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text,
-                tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            SetPresence();
             UpdateProfile(tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
                 tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
         }
@@ -260,7 +266,7 @@ namespace MultiRPC.GUI.Pages
 
                 for (var i = 0; i < 10; i++)
                 {
-                    if (i > CustomPage.Profiles.Count - 1)
+                    if (i > Profiles.Count - 1)
                         break;
 
                     //Configure a new JumpTask
@@ -268,10 +274,10 @@ namespace MultiRPC.GUI.Pages
                     {
                         // Set the JumpTask properties.
                         ApplicationPath = FileLocations.MultiRPCStartLink,
-                        Arguments = $"-custom,{CustomPage.Profiles.ElementAt(i).Key}",
+                        Arguments = $"-custom,{Profiles.ElementAt(i).Key}",
                         IconResourcePath = FileLocations.MultiRPCStartLink,
-                        Title = CustomPage.Profiles.ElementAt(i).Key,
-                        Description = $"{App.Text.Load} '{CustomPage.Profiles.ElementAt(i).Key}'",
+                        Title = Profiles.ElementAt(i).Key,
+                        Description = $"{App.Text.Load} '{Profiles.ElementAt(i).Key}'",
                         CustomCategory = App.Text.CustomProfiles
                     };
                     jumpList.JumpItems.Add(jumpTask);
@@ -318,36 +324,36 @@ namespace MultiRPC.GUI.Pages
                 if (_selectedHelpImage == (Image) sender)
                 {
                     imgHelpImageBehind.Source = null;
-                    Animations.DoubleAnimation(imgHelpImage, 0, storyboard);
-                    Animations.DoubleAnimation(_selectedHelpImage, 0.6);
-                    Animations.DoubleAnimation(imgHelpImageBehind, 0);
+                    Animations.DoubleAnimation(imgHelpImage, 0, imgHelpImage.Opacity, storyboard);
+                    Animations.DoubleAnimation(_selectedHelpImage, 0.6, _selectedHelpImage.Opacity);
+                    Animations.DoubleAnimation(imgHelpImageBehind, 0, imgHelpImageBehind.Opacity);
                     _selectedHelpImage = null;
                 }
                 else
                 {
                     storyboard.Completed += ImageFaded;
-                    Animations.DoubleAnimation(_selectedHelpImage, 0.6);
-                    Animations.DoubleAnimation(imgHelpImageBehind, 1);
+                    Animations.DoubleAnimation(_selectedHelpImage, 0.6, _selectedHelpImage.Opacity);
+                    Animations.DoubleAnimation(imgHelpImageBehind, 1, imgHelpImageBehind.Opacity);
 
                     imgHelpImageBehind.Source = ((Image) ((Image) sender).Tag).Source;
-                    Animations.DoubleAnimation(imgHelpImage, 0, storyboard);
+                    Animations.DoubleAnimation(imgHelpImage, 0, imgHelpImage.Opacity, storyboard);
 
                     _selectedHelpImage = (Image) sender;
-                    Animations.DoubleAnimation(_selectedHelpImage, 1);
+                    Animations.DoubleAnimation(_selectedHelpImage, 1, _selectedHelpImage.Opacity);
                 }
             }
             else
             {
                 imgHelpImage.Source = ((Image) ((Image) sender).Tag).Source;
-                Animations.DoubleAnimation(imgHelpImage, 1);
+                Animations.DoubleAnimation(imgHelpImage, 1, imgHelpImage.Opacity);
                 _selectedHelpImage = (Image) sender;
-                Animations.DoubleAnimation(_selectedHelpImage, 1);
+                Animations.DoubleAnimation(_selectedHelpImage, 1, _selectedHelpImage.Opacity);
             }
         }
 
         private void ImageFaded(object sender, EventArgs e)
         {
-            Animations.DoubleAnimation(imgHelpImage, 1, duration: new Duration(TimeSpan.Zero));
+            Animations.DoubleAnimation(imgHelpImage, 1, imgHelpImage.Opacity, duration: new Duration(TimeSpan.Zero));
             if (imgHelpImageBehind.Source != null || imgHelpImageBehind.Opacity < 1)
             {
                 imgHelpImage.Source = imgHelpImageBehind.Source;
@@ -473,7 +479,8 @@ namespace MultiRPC.GUI.Pages
                 {
                     Content = profileName,
                     Margin = new Thickness(2.5, 0, 2.5, 0),
-                    BorderThickness = new Thickness(0)
+                    BorderThickness = new Thickness(0),
+                    IsEnabled = !RPC.IsRPCRunning
                 };
                 b.SetResourceReference(StyleProperty, "DefaultButton");
                 b.Click += CustomProfileButton_Click;
@@ -536,12 +543,14 @@ namespace MultiRPC.GUI.Pages
 
         private void Img_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            Animations.DoubleAnimation((Image) sender, 1);
+            var image = (Image) sender;
+            Animations.DoubleAnimation(image, 1, image.Opacity);
         }
 
         private void Img_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            Animations.DoubleAnimation((Image) sender, 0.6);
+            var image = (Image) sender;
+            Animations.DoubleAnimation(image, 0.6, image.Opacity);
         }
     }
 }

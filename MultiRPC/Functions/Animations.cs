@@ -7,14 +7,17 @@ namespace MultiRPC.Functions
 {
     internal class Animations
     {
-        public static async Task DoubleAnimation(FrameworkElement element, double to, Storyboard storyboard = null,
-            Duration duration = new Duration())
+        public static async Task DoubleAnimation(FrameworkElement element, double to, double from,
+            Storyboard storyboard = null,
+            Duration duration = new Duration(), PropertyPath propertyPath = null)
         {
             if (storyboard == null)
                 storyboard = new Storyboard();
+            if (propertyPath == null)
+                propertyPath = new PropertyPath(UIElement.OpacityProperty);
             var fadeAnimation = new DoubleAnimation
             {
-                From = element.Opacity,
+                From = from,
                 To = to,
                 Duration = !duration.HasTimeSpan ? new Duration(TimeSpan.FromSeconds(0.5)) : duration,
                 EasingFunction = new QuinticEase()
@@ -22,7 +25,7 @@ namespace MultiRPC.Functions
 
             storyboard.Children.Add(fadeAnimation);
             Storyboard.SetTargetName(fadeAnimation, element.Name);
-            Storyboard.SetTargetProperty(fadeAnimation, new PropertyPath(UIElement.OpacityProperty));
+            Storyboard.SetTargetProperty(fadeAnimation, propertyPath);
             storyboard.Begin(element);
             await Task.Delay(fadeAnimation.Duration.TimeSpan);
         }

@@ -48,6 +48,8 @@ namespace MultiRPC.JsonClasses
         /// <summary> Tells the app what custom button to press in code </summary>
         public int SelectedCustom = 0;
 
+        public bool ShowPageTooltips = true;
+
         /// <summary> Get the settings stored on disk </summary>
         public static Task<Config> Load()
         {
