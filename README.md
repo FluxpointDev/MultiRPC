@@ -18,13 +18,13 @@ Click more info and run anyway (windows limitation)
 
 ![Image](https://i.imgur.com/jV9jIte.png)
 
-![Image](https://i.imgur.com/FgrdIAU.png)
+![Image](https://i.imgur.com/fNdwVn4.png)
 
 # MultiRPC
 
 Default rpc profile change the text and select any images or set the tooltip
 
-![Image](https://i.imgur.com/NctHudZ.png)
+![Image](https://i.imgur.com/UpqlwSd.png)
 
 # Custom
 
