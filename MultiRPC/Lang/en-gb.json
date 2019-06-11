@@ -185,7 +185,7 @@
   "InvalidThemeName": "This is a invalid name",
   "Editing": "Editing",
   "ResetTheme": "Reset Theme",
-  "WaitingForInternetUpdate": "Waiting for internet to update (checking in {second} seconds)",
+  "WaitingForInternetUpdate": "Waiting for internet to update",
   "DoesntExist": "doesn't exist",
   "SomethingHappenedWhile": "Something happened while getting",
   "ThemeColours": "theme colours",
@@ -202,8 +202,10 @@
   "Credits": "Credits",
   "Programs": "Programs",
   "Page": "page",
-  "ShowPageTooltips": "Show Page Tooltips",
+  "ShowPageTooltips": "Show page buttons Tooltips",
   "TempDisableDiscordCheck": "Temporary disable discord checking",
   "InternetBack": "Internet is back",
-  "InternetLost": "Internet has been lost"
+  "InternetLost": "Internet has been lost",
+  "ThemeEditor": "Theme Editor",
+  "ThemeIcons": "Theme Icons"
 }

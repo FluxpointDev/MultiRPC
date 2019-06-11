@@ -31,7 +31,7 @@ namespace MultiRPC.GUI
         private DateTime _timeWindowWasDeactivated;
         public TaskbarIcon TaskbarIcon;
 
-        protected object ToReturn;
+        public object ToReturn { get; private set; }
         protected long WindowID; //This is so we can know that the window we look for is the window we are looking for
 
         public MainWindow()
@@ -118,7 +118,8 @@ namespace MultiRPC.GUI
                 Activate();
         }
 
-        public static Task<object> OpenWindow(Page page, bool isDialog, long tick, bool minButton)
+        public static Task<object> OpenWindow(Page page, bool isDialog, long tick, bool minButton,
+            Action<Window> otherSetup = null)
         {
             var window = new MainWindow(page, minButton)
             {
@@ -128,6 +129,7 @@ namespace MultiRPC.GUI
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
             window.Loaded += Window_Loaded;
+            otherSetup?.Invoke(window); //This allows pages that need more hooks to get hooked
 
             if (isDialog) window.ShowDialog();
             else window.Show();
@@ -140,12 +142,12 @@ namespace MultiRPC.GUI
             ((MainWindow) sender).Activate();
         }
 
-        public static Task CloseWindow(long windowID, object _return = null)
+        public static Task CloseWindow(long windowID, object returnObject = null)
         {
             for (var i = 0; i < Application.Current.Windows.Count; i++)
                 if (Application.Current.Windows[i] is MainWindow mainWindow && mainWindow.WindowID == windowID)
                 {
-                    mainWindow.ToReturn = _return;
+                    mainWindow.ToReturn = returnObject;
                     mainWindow.ShowInTaskbar = false;
                     mainWindow._closeStoryboard = new Storyboard();
                     mainWindow.MakeWinAnimation(mainWindow._closeStoryboard);

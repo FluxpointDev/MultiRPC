@@ -227,8 +227,7 @@
 
             <!--C O N T E N T-->
             <Rectangle Grid.Column="1" Grid.Row="1" Fill="{DynamicResource AccentColour1SCBrush}" />
-            <Border Name="mask" CornerRadius="15,15,0,0" Grid.Column="1" Grid.Row="1"
-                    Background="{DynamicResource AccentColour2SCBrush}" />
+            <Border Name="mask" Style="{DynamicResource maskStyle}" Grid.Column="1" Grid.Row="1" />
             <Frame Name="frmContent" Grid.Column="1" Grid.Row="1">
                 <Frame.OpacityMask>
                     <VisualBrush Visual="{Binding ElementName=mask}" />

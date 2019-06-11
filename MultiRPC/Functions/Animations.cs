@@ -9,7 +9,8 @@ namespace MultiRPC.Functions
     {
         public static async Task DoubleAnimation(FrameworkElement element, double to, double from,
             Storyboard storyboard = null,
-            Duration duration = new Duration(), PropertyPath propertyPath = null)
+            Duration duration = new Duration(), PropertyPath propertyPath = null,
+            IEasingFunction ease = null)
         {
             if (storyboard == null)
                 storyboard = new Storyboard();
@@ -20,7 +21,7 @@ namespace MultiRPC.Functions
                 From = from,
                 To = to,
                 Duration = !duration.HasTimeSpan ? new Duration(TimeSpan.FromSeconds(0.5)) : duration,
-                EasingFunction = new QuinticEase()
+                EasingFunction = ease ?? new QuadraticEase()
             };
 
             storyboard.Children.Add(fadeAnimation);

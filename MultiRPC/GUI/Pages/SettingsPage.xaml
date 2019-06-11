@@ -240,7 +240,7 @@
             </StackPanel>
             <Border Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1"
                     CornerRadius="4" Background="{DynamicResource AccentColour1SCBrush}" />
-            <TextBlock TextWrapping="Wrap" Name="tblDonateMessage" Margin="12" HorizontalAlignment="Center"
+            <TextBlock TextWrapping="Wrap" Name="tblDonateMessage" Margin="15" HorizontalAlignment="Center"
                        VerticalAlignment="Center" Grid.Row="1" MaxWidth="250" />
         </Grid>
 

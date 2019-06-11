@@ -10,7 +10,7 @@
       Title="Edit Profile Name">
 
     <StackPanel Margin="10">
-        <TextBox Name="tbNewProfileName" />
+        <TextBox Name="tbNewProfileName" KeyDown="EditProfileNamePage_OnKeyDown" />
         <Button Name="btnDone" Click="ButDone_OnClick" Style="{DynamicResource ButtonGreen}" HorizontalAlignment="Left"
                 Margin="0,10,0,0" />
     </StackPanel>

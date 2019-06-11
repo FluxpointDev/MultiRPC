@@ -57,9 +57,6 @@ namespace MultiRPC.GUI.Pages
             }
 
             MakeJumpList();
-            for (var i = 0; i < Profiles.Count; i++) MakeMenuButton(Profiles.ElementAt(i).Key);
-            tbProfiles.ItemsSource = ProfileButtons;
-
             imgSmallText.Tag = new Image
             {
                 Source = new BitmapImage(new Uri("../../Assets/SmallTextHelp.jpg", UriKind.Relative))
@@ -88,6 +85,18 @@ namespace MultiRPC.GUI.Pages
             {
                 Source = new BitmapImage(new Uri("../../Assets/SmallAndLargeKeyHelp.jpg", UriKind.Relative))
             };
+
+            _haveDoneAutoStart = !(App.Config.AutoStart == App.Text.Custom && !App.StartedWithJumpListLogic);
+
+            for (var i = 0; i < Profiles.Count; i++) MakeMenuButton(Profiles.ElementAt(i).Key);
+            tbProfiles.ItemsSource = ProfileButtons;
+            tbProfiles.Items.Refresh();
+
+            if (CurrentButton != null)
+                CurrentButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            else
+                ProfileButtons[App.Config.SelectedCustom].RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            tbProfiles.Visibility = tbProfiles.Items.Count == 1 ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public Task UpdateText()
@@ -110,7 +119,7 @@ namespace MultiRPC.GUI.Pages
 
         private async void CustomPage_Loaded(object sender, RoutedEventArgs e)
         {
-            ShowHelpImages();
+            ShowHelpImages().ConfigureAwait(false);
 
             if (!RPC.IsRPCRunning)
             {
@@ -119,19 +128,7 @@ namespace MultiRPC.GUI.Pages
                     tbSmallText.Text, cbElapasedTime.IsChecked.Value);
             }
 
-            while (tbProfiles.Items.Count < 0)
-            {
-                tbProfiles.Items.Refresh();
-                await Task.Delay(520);
-            }
-
-            if (CurrentButton != null)
-                CurrentButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-            else
-                ProfileButtons[App.Config.SelectedCustom].RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-            tbProfiles.Visibility = tbProfiles.Items.Count == 1 ? Visibility.Collapsed : Visibility.Visible;
-
-            if (!_haveDoneAutoStart && App.Config.AutoStart == App.Text.Custom && !App.StartedWithJumpListLogic)
+            if (!_haveDoneAutoStart)
             {
                 if (await CanRunRPC(true))
                     MainPage._MainPage.btnStart.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
@@ -402,26 +399,28 @@ namespace MultiRPC.GUI.Pages
         private async void ImgProfileEdit_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             var ticks = DateTime.Now.Ticks;
+            var page = new EditProfileNamePage(ticks, Profiles, CurrentButton.Content.ToString());
             var newProfileName = (string) await MainWindow.OpenWindow(
-                new EditProfileNamePage(ticks, Profiles, CurrentButton.Content.ToString()), true,
-                ticks, false);
+                page, true,
+                ticks, false, (window) => { window.KeyDown += page.EditProfileNamePage_OnKeyDown; });
 
             if (!string.IsNullOrWhiteSpace(newProfileName))
             {
                 CurrentButton.Content = newProfileName;
                 tblProfileName.Text = newProfileName;
-            }
 
-            using (var writer = new StreamWriter(FileLocations.ProfilesFileLocalLocation))
-            {
-                App.JsonSerializer.Serialize(writer, Profiles);
-            }
+                using (var writer = new StreamWriter(FileLocations.ProfilesFileLocalLocation))
+                {
+                    App.JsonSerializer.Serialize(writer, Profiles);
+                }
 
-            MakeJumpList();
+                MakeJumpList();
+            }
         }
 
         private async void ImgProfileShare_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            TopLine:
             var ticks = DateTime.Now.Ticks;
             var newProfile = (string) await MainWindow.OpenWindow(
                 new ShareProfilePage(Profiles[CurrentButton.Content.ToString()], ticks), true, ticks,
@@ -440,13 +439,14 @@ namespace MultiRPC.GUI.Pages
                     await CustomMessageBox.Show(App.Text.SharingError);
                     App.Logging.Application(
                         $"{App.Text.SharingError}\r\n{App.Text.ExceptionMessage}{exception.Message}");
+                    goto TopLine;
                 }
 
                 if (profile != null)
                 {
                     profile.Name = MakeProfileName(profile.Name);
                     Profiles.Add(profile.Name, profile);
-                    await MakeMenuButton(profile.Name);
+                    MakeMenuButton(profile.Name);
                     tbProfiles.Items.Refresh();
                     tbProfiles.Visibility = tbProfiles.Items.Count == 1 ? Visibility.Collapsed : Visibility.Visible;
                     using (var writer = new StreamWriter(FileLocations.ProfilesFileLocalLocation))
@@ -471,9 +471,9 @@ namespace MultiRPC.GUI.Pages
             return name;
         }
 
-        private async Task MakeMenuButton(string profileName)
+        private void MakeMenuButton(string profileName)
         {
-            await Dispatcher.InvokeAsync(() =>
+            Dispatcher.Invoke(() =>
             {
                 var b = new Button
                 {
@@ -497,7 +497,7 @@ namespace MultiRPC.GUI.Pages
             });
             Task.Run(async () =>
             {
-                await MakeMenuButton(name);
+                MakeMenuButton(name);
                 await Dispatcher.InvokeAsync(() =>
                 {
                     tbProfiles.Items.Refresh();

@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using MultiRPC.Functions;
 using MultiRPC.JsonClasses;
 
@@ -91,7 +92,7 @@ namespace MultiRPC.GUI.Pages
         private void ChangePage_OnMouseUp(object sender, MouseEventArgs e)
         {
             var button = (Button) sender;
-            Animations.ThicknessAnimation(button, new Thickness(0), button.Margin);
+            Animations.ThicknessAnimation(button, new Thickness(0), button.Margin, ease: new BounceEase());
         }
     }
 }

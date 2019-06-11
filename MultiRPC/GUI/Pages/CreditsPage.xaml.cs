@@ -1,8 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -68,40 +68,49 @@ namespace MultiRPC.GUI.Pages
         private async Task SetupLogic()
         {
             if (File.Exists(CreditsFileLocalLocation))
-                UpdateCredits();
+                await UpdateCredits();
 
-            _webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
             var webFile = Uri.Combine(App.MultiRPCWebsiteRoot, CreditsFileName);
-
             DownloadFile:
             try
             {
                 if (!Utils.NetworkIsAvailable())
                 {
-                    var second = 5;
-                    while (second != 0)
-                    {
-                        tblLastUpdated.Text =
-                            $"{App.Text.WaitingForInternetUpdate.Replace("{second}", second.ToString())}...";
-                        await Task.Delay(1000);
-                        second--;
-                    }
-
-                    goto DownloadFile;
+                    NetworkChange.NetworkAddressChanged += NetworkChange_NetworkAddressChanged;
+                    tblLastUpdated.Text =
+                        $"{App.Text.WaitingForInternetUpdate}...";
+                    return;
                 }
 
-                await _webClient.DownloadFileTaskAsync(webFile, CreditsFileLocalLocation + ".new");
+                tblLastUpdated.Text = App.Text.CheckForUpdates.Replace("\r\n", " ");
+                if (_webClient.IsBusy)
+                    _webClient.CancelAsync();
+
+                var creditFileContent = await _webClient.DownloadStringTaskAsync(webFile);
+                if (!string.IsNullOrWhiteSpace(creditFileContent))
+                {
+                    File.WriteAllText(CreditsFileLocalLocation, creditFileContent);
+                    await UpdateCredits();
+                }
+                else
+                {
+                    if (_retryCount == App.RetryCount)
+                    {
+                        await UpdateCredits();
+                    }
+                    else
+                    {
+                        _retryCount++;
+                        goto DownloadFile;
+                    }
+                }
             }
             catch (Exception e)
             {
                 App.Logging.Application(e.Message);
 
-                if (File.Exists(CreditsFileLocalLocation + ".new"))
-                    File.Delete(CreditsFileLocalLocation + ".new");
-
                 if (_retryCount == App.RetryCount)
                 {
-                    _webClient.DownloadFileCompleted -= WebClient_DownloadFileCompleted;
                     await UpdateCredits();
                 }
                 else
@@ -112,33 +121,16 @@ namespace MultiRPC.GUI.Pages
             }
         }
 
+        private void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
+        {
+            if (Utils.NetworkIsAvailable())
+                Dispatcher.Invoke(async () => await SetupLogic());
+        }
+
         private void LinkUri_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
             Process.Start(e.Uri.OriginalString);
             e.Handled = true;
-        }
-
-        private async void WebClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            bool doLogic;
-            try
-            {
-                var uri = (System.Uri) ((TaskCompletionSource<object>) e.UserState).Task.AsyncState;
-                doLogic = uri.AbsoluteUri == Uri.Combine(App.MultiRPCWebsiteRoot, CreditsFileName);
-            }
-            catch (Exception ex)
-            {
-                App.Logging.Application(ex.Message);
-                return;
-            }
-
-            if (!doLogic) return;
-            if (File.Exists(CreditsFileLocalLocation))
-                File.Delete(CreditsFileLocalLocation);
-
-            File.Move(CreditsFileLocalLocation + ".new", CreditsFileLocalLocation);
-            _webClient.DownloadFileCompleted -= WebClient_DownloadFileCompleted;
-            await UpdateCredits();
         }
     }
 }

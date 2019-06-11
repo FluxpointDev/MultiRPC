@@ -22,7 +22,6 @@ namespace MultiRPC.GUI.Pages
             _profile = profile;
             _windowID = windowID;
             Title = App.Text.ProfileShare;
-            btnImport.IsEnabled = !RPC.IsRPCRunning;
         }
 
         private void ButImport_OnClick(object sender, RoutedEventArgs e)
@@ -38,6 +37,11 @@ namespace MultiRPC.GUI.Pages
             Clipboard.SetText(profileBase64 = Utils.Base64Encode(profileBase64));
             tbShare.Text = profileBase64;
             await CustomMessageBox.Show(App.Text.ProfileCopyMessage, MainWindow.GetWindow(_windowID));
+        }
+
+        private void TbShare_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            btnImport.IsEnabled = !RPC.IsRPCRunning && !string.IsNullOrWhiteSpace(tbShare.Text);
         }
     }
 }

@@ -86,6 +86,7 @@ namespace MultiRPC.JsonClasses
         };
 
         public Colours ThemeColours;
+        public Icons ThemeIcons;
         public Metadata ThemeMetadata;
 
         static Theme()
@@ -115,6 +116,7 @@ namespace MultiRPC.JsonClasses
                 {
                     var coloursEntry = archive.GetEntry("colours.json");
                     var metadataEntry = archive.GetEntry("metadataEntry.json");
+                    var iconEntry = archive.GetEntry("iconEntry.json");
                     try
                     {
                         using (var writer = new StreamReader(coloursEntry.Open()))
@@ -140,6 +142,22 @@ namespace MultiRPC.JsonClasses
                         App.Logging.Application(
                             $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeMetadata}");
                     }
+
+                    if (theme.ThemeMetadata.MultiRPCVersion >= Assembly.GetExecutingAssembly().GetName().Version)
+                    {
+                        try
+                        {
+                            using (var writer = new StreamReader(iconEntry.Open()))
+                            {
+                                theme.ThemeIcons = JsonConvert.DeserializeObject<Icons>(writer.ReadToEnd());
+                            }
+                        }
+                        catch
+                        {
+                            App.Logging.Application(
+                                $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeIcons}");
+                        }
+                    }
                 }
             }
             else
@@ -151,7 +169,7 @@ namespace MultiRPC.JsonClasses
             return Task.FromResult(theme);
         }
 
-        public static string ThemeFileLocation(Theme theme)
+        public static string GetThemeFileLocation(Theme theme)
         {
             return Path.Combine(FileLocations.ThemesFolder, theme.ThemeMetadata.ThemeName + ThemeExtension);
         }
@@ -215,7 +233,7 @@ namespace MultiRPC.JsonClasses
         public static Task Save(Theme theme, string fileLocation = null)
         {
             if (string.IsNullOrWhiteSpace(fileLocation))
-                fileLocation = ThemeFileLocation(theme);
+                fileLocation = GetThemeFileLocation(theme);
 
             FileStream fileStream;
             try
@@ -259,6 +277,20 @@ namespace MultiRPC.JsonClasses
                     {
                         App.Logging.Application(
                             $"{App.Text.SomethingHappenedWhile} {App.Text.Saving} {fileLocation} {App.Text.ThemeMetadata}");
+                    }
+
+                    var iconEntry = archive.CreateEntry("iconEntry.json");
+                    try
+                    {
+                        using (var writer = new StreamWriter(iconEntry.Open()))
+                        {
+                            App.JsonSerializer.Serialize(writer, theme.ThemeIcons);
+                        }
+                    }
+                    catch
+                    {
+                        App.Logging.Application(
+                            $"{App.Text.SomethingHappenedWhile} {App.Text.Saving} {fileLocation} {App.Text.ThemeIcons}");
                     }
                 }
             }
@@ -304,6 +336,40 @@ namespace MultiRPC.JsonClasses
             public Version MultiRPCVersion;
 
             public string ThemeName;
+        }
+
+        public class Icons
+        {
+            public string AddIconFileType;
+            public string AlertIconFileType;
+            public string BrowserIconFileType;
+            public string CreditsIconFileType;
+            public string CreditsIconSelectedFileType;
+            public string CustomIconFileType;
+            public string CustomIconSelectedFileType;
+            public string DebugIconFileType;
+            public string DebugIconSelectedFileType;
+            public string DeleteIconFileType;
+            public string DiscordColourIconFileType;
+            public string DiscordIconFileType;
+            public string DiscordIconSelectedFileType;
+            public string DownloadIconFileType;
+            public string GithubIconFileType;
+            public string HeartIconFileType;
+            public string HelpIconFileType;
+            public string InfoIconFileType;
+            public string LogsIconFileType;
+            public string LogsIconSelectedFileType;
+            public string PencilIconFileType;
+            public string ProgramsIconFileType;
+            public string ProgramsIconSelectedFileType;
+            public string SettingsIconFileType;
+            public string SettingsIconSelectedFileType;
+            public string ShareIconFileType;
+            public string ShieldIconFileType;
+            public string ThemeIconFileType;
+            public string ThemeIconSelectedFileType;
+            public string WarningIconFileType;
         }
     }
 }

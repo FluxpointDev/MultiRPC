@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using MultiRPC.JsonClasses;
 
 namespace MultiRPC.GUI.Pages
@@ -51,6 +53,14 @@ namespace MultiRPC.GUI.Pages
 
             await CustomMessageBox.Show(App.Text.SameProfileName, MainWindow.GetWindow(_windowID));
             return false;
+        }
+
+        public void EditProfileNamePage_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                btnDone.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using MultiRPC.Functions;
 using MultiRPC.GUI.Views;
@@ -30,6 +31,7 @@ namespace MultiRPC.GUI.Pages
             InitializeComponent();
 
             rUsername.Text = App.Config.LastUser;
+            tblVersion.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             _MainPage = this;
 
             frmRPCPreview.Content = new RPCPreview(RPCPreview.ViewType.Default);
@@ -38,11 +40,13 @@ namespace MultiRPC.GUI.Pages
             btnPrograms.Visibility = Visibility.Visible;
 #endif
             NetworkChange.NetworkAddressChanged += AddressChangedCallback;
+            AddressChangedCallback(null, null);
         }
 
         private async void AddressChangedCallback(object sender, EventArgs e)
         {
             if (Utils.NetworkIsAvailable())
+            {
                 await gridInternetConnectivity.Dispatcher.InvokeAsync(async () =>
                 {
                     gridInternetConnectivity.SetResourceReference(Panel.BackgroundProperty, "Green");
@@ -50,13 +54,16 @@ namespace MultiRPC.GUI.Pages
                     await Task.Delay(3000);
                     gridInternetConnectivity.Height = 0;
                 });
+            }
             else
+            {
                 await gridInternetConnectivity.Dispatcher.InvokeAsync(() =>
                 {
                     gridInternetConnectivity.Height = double.NaN;
                     tblInternetConnectivity.Text = App.Text.InternetLost + "!!";
                     gridInternetConnectivity.SetResourceReference(Panel.BackgroundProperty, "Red");
                 });
+            }
         }
 
         private async void DiscordCheckFadeOutAnimation()
@@ -86,7 +93,6 @@ namespace MultiRPC.GUI.Pages
             }
             else
             {
-                tblVersion.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 tblMadeBy.Text = $"{App.Text.MadeBy}: {App.AppDev}";
                 rDiscordServer.Text = App.Text.DiscordServer + ": ";
                 rServerLink.Text = App.ServerInviteCode;
@@ -253,12 +259,21 @@ namespace MultiRPC.GUI.Pages
                         btnDebug.Tag = new DebugPage();
                         break;
                     case "btnThemeEditor":
-                        btnThemeEditor.Tag = new ThemeEditorPage();
+                        btnThemeEditor.Tag = new MasterThemeEditorPage();
                         break;
                     case "btnPrograms":
                         btnPrograms.Tag = new ProgramsPage();
                         break;
                 }
+
+            //var drawingImage = new DrawingImage();
+            //var image = new ImageDrawing();
+            //var imageBitmap = new BitmapImage(new System.Uri("Assets/150x150Logo.png", UriKind.Relative));
+            //image.ImageSource = imageBitmap;
+            //image.Rect = new Rect(new Size(imageBitmap.Width, imageBitmap.Height));
+            //drawingImage.Drawing = image;
+
+            //((Image) _selectedButton.Content).Source = drawingImage;
 
             frmContent.Navigate(_selectedButton.Tag);
         }

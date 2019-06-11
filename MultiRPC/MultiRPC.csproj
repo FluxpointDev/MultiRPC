@@ -130,6 +130,9 @@
     <Compile Include="Functions\Updater.cs" />
     <Compile Include="Functions\Uri.Extra.cs" />
     <Compile Include="Functions\Utils.cs" />
+    <Compile Include="GUI\Controls\TabPage.xaml.cs">
+      <DependentUpon>TabPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Controls\ToolTip.cs" />
     <Compile Include="GUI\MessageBox\CustomMessageBox.cs" />
     <Compile Include="GUI\MessageBox\MessageBoxPage.xaml.cs">
@@ -144,8 +147,14 @@
     <Compile Include="GUI\Pages\EditProfileNamePage.xaml.cs">
       <DependentUpon>EditProfileNamePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Pages\Theme Pages\InstalledThemes.xaml.cs">
+      <DependentUpon>InstalledThemes.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Pages\MainPageThumbnail.xaml.cs">
       <DependentUpon>MainPageThumbnail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\Theme Pages\MasterThemeEditorPage.xaml.cs">
+      <DependentUpon>MasterThemeEditorPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Pages\MultiRPCAndCustomLogic.cs" />
     <Compile Include="GUI\Pages\ProgramsPage.xaml.cs">
@@ -154,7 +163,7 @@
     <Compile Include="GUI\Pages\ShareProfilePage.xaml.cs">
       <DependentUpon>ShareProfilePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Pages\ThemeEditorPage.xaml.cs">
+    <Compile Include="GUI\Pages\Theme Pages\ThemeEditorPage.xaml.cs">
       <DependentUpon>ThemeEditorPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Pages\UpdateFailedPage.xaml.cs">
@@ -275,6 +284,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="GUI\Controls\TabPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GUI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -296,6 +309,10 @@
     <Page Include="GUI\Pages\EditProfileNamePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GUI\Pages\Theme Pages\InstalledThemes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GUI\Pages\LogsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -304,6 +321,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="GUI\Pages\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\Theme Pages\MasterThemeEditorPage.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Pages\MultiRPCPage.xaml">
@@ -319,7 +340,7 @@
     <Page Include="GUI\Pages\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\Pages\ThemeEditorPage.xaml">
+    <Page Include="GUI\Pages\Theme Pages\ThemeEditorPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

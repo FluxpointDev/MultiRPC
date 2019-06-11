@@ -12,4 +12,22 @@
         public string Text1 = "";
         public string Text2 = "";
     }
+
+    public class Triggers
+    {
+        /// <summary>
+        /// Trigger for when a process is started/close
+        /// </summary>
+        public string ProcessFileLocation = "";
+
+        /// <summary>
+        /// Trigger for when contents of a folder have been changed
+        /// </summary>
+        public string FolderChange = "";
+
+        /// <summary>
+        /// Trigger for when contents of a file have been changed
+        /// </summary>
+        public string FileChange = "";
+    }
 }

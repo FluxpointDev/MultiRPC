@@ -273,7 +273,9 @@ namespace MultiRPC.GUI.Pages
                 CustomPage._CustomPage?.UpdateText();
                 ProgramsPage._ProgramsPage?.UpdateText();
                 CreditsPage._CreditsPage?.UpdateText();
-                ThemeEditorPage._ThemeEditorPage?.UpdateText(oldEditingWord, oldActiveWord);
+                MasterThemeEditorPage._MasterThemeEditorPage?.UpdateText();
+                ThemeEditorPage._ThemeEditorPage?.UpdateText();
+                InstalledThemes._InstalledThemes?.UpdateText(oldEditingWord, oldActiveWord);
                 DebugPage._DebugPage?.UpdateText();
 
                 if (!string.IsNullOrWhiteSpace(MainPage._MainPage.tblInternetConnectivity.Text))

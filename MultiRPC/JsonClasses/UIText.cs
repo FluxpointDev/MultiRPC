@@ -176,6 +176,7 @@
         public string ThankYouForUsing;
         public string Theme;
         public string ThemeColours;
+        public string ThemeEditor;
         public string ThemeMetadata;
         public string ThemeName;
         public string ThemeNeedName;
@@ -204,5 +205,6 @@
         public string WhatItWillLookLike;
         public string World;
         public string Yes;
+        public string ThemeIcons;
     }
 }
