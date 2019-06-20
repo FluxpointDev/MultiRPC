@@ -30,7 +30,7 @@ namespace MultiRPC
         private static Timer _uptime;
 
         public static ulong IDToUse;
-        public static DiscordRpcClient RPCClient;
+        private static DiscordRpcClient RPCClient;
         private static string _pageUserWasOnWhenStarted;
 
         /// <summary>
@@ -62,6 +62,38 @@ namespace MultiRPC
                 }
 
                 if (result == MessageBoxResult.Cancel) return false;
+            }
+
+            return true;
+        }
+
+        public static bool Equals(this RichPresence richPresence, CustomProfile profile)
+        {
+            if (richPresence.Details != profile.Text1)
+            {
+                return false;
+            }
+            if (richPresence.State != profile.Text2)
+            {
+                return false;
+            }
+            if (richPresence.Timestamps == null && profile.ShowTime || richPresence.Timestamps != null && !profile.ShowTime)
+            {
+                return false;
+            }
+
+            var assets = !string.IsNullOrWhiteSpace(profile.LargeKey) || !string.IsNullOrWhiteSpace(profile.SmallKey)
+                ? new Assets
+                {
+                    LargeImageKey = profile.LargeKey,
+                    LargeImageText = profile.LargeText,
+                    SmallImageKey = profile.SmallKey,
+                    SmallImageText = profile.SmallText
+                }
+                : null;
+            if (richPresence.Assets != assets)
+            {
+                return false;
             }
 
             return true;
@@ -165,21 +197,21 @@ namespace MultiRPC
             //Send the presence
             RPCClient.SetPresence(Presence);
 
-            if (CustomPage._CustomPage != null)
+            if (MasterCustomPage._MasterCustomPage != null)
             {
                 //Disable buttons unless it's the same ClientID (still not allowed to mess with the Client ID tho)
-                var profileClientID = !AFK && CustomPage.CurrentButton != null &&
-                                      MainPage._MainPage.frmContent.Content is CustomPage
-                    ? CustomPage.Profiles[CustomPage.CurrentButton.Content.ToString()].ClientID
+                var profileClientID = !AFK && MasterCustomPage.CurrentButton != null &&
+                                      MainPage._MainPage.frmContent.Content is MasterCustomPage
+                    ? MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].ClientID
                     : "0";
 
-                for (var i = 0; i < CustomPage.ProfileButtons.Count; i++)
-                    if (profileClientID == "0" || CustomPage.Profiles[CustomPage.ProfileButtons[i].Content.ToString()]
+                for (var i = 0; i < MasterCustomPage.ProfileButtons.Count; i++)
+                    if (profileClientID == "0" || MasterCustomPage.Profiles[MasterCustomPage.ProfileButtons[i].Content.ToString()]
                             .ClientID != profileClientID)
-                        CustomPage.ProfileButtons[i].IsEnabled = false;
+                        MasterCustomPage.ProfileButtons[i].IsEnabled = false;
 
-                CustomPage._CustomPage.imgProfileAdd.IsEnabled = false;
-                CustomPage._CustomPage.imgProfileDelete.IsEnabled = false;
+                MasterCustomPage._MasterCustomPage.imgProfileAdd.IsEnabled = false;
+                MasterCustomPage._MasterCustomPage.imgProfileDelete.IsEnabled = false;
                 CustomPage._CustomPage.tbClientID.IsEnabled = false;
             }
 
@@ -309,37 +341,41 @@ namespace MultiRPC
             {
                 await ((RPCPreview) MainPage._MainPage.frmRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType
                     .Default);
+
+                MainPage._MainPage.btnStart.SetResourceReference(FrameworkElement.StyleProperty, "ButtonGreen");
+                switch (MainPage._MainPage.frmContent.Content)
+                {
+                    case MultiRPCPage multiRpcPage:
+                        MainPage._MainPage.btnStart.Content = App.Text.Start + " MultiRPC";
+                        multiRpcPage.CanRunRPC();
+                        break;
+                    case MasterCustomPage _CustomPage:
+                        MainPage._MainPage.btnStart.Content = App.Text.StartCustom;
+                        _CustomPage.CustomPage.CanRunRPC();
+                        break;
+                    default:
+                        MainPage._MainPage.btnStart.Content = _pageUserWasOnWhenStarted.Contains("MultiRPC")
+                            ? App.Text.Start + " MultiRPC"
+                            : App.Text.StartCustom;
+                        break;
+                }
+
+                MainPage._MainPage.btnUpdate.IsEnabled = false;
+                MainPage._MainPage.rCon.Text = App.Text.Disconnected;
             });
 
-            MainPage._MainPage.btnStart.SetResourceReference(FrameworkElement.StyleProperty, "ButtonGreen");
-            switch (MainPage._MainPage.frmContent.Content)
-            {
-                case MultiRPCPage multiRpcPage:
-                    MainPage._MainPage.btnStart.Content = App.Text.Start + " MultiRPC";
-                    multiRpcPage.CanRunRPC();
-                    break;
-                case CustomPage _CustomPage:
-                    MainPage._MainPage.btnStart.Content = App.Text.StartCustom;
-                    _CustomPage.CanRunRPC();
-                    break;
-                default:
-                    MainPage._MainPage.btnStart.Content = _pageUserWasOnWhenStarted.Contains("MultiRPC")
-                        ? App.Text.Start + " MultiRPC"
-                        : App.Text.StartCustom;
-                    break;
-            }
-
-            MainPage._MainPage.btnUpdate.IsEnabled = false;
-            MainPage._MainPage.rCon.Text = App.Text.Disconnected;
             AFK = false;
 
-            if (CustomPage._CustomPage != null)
+            MasterCustomPage._MasterCustomPage.Dispatcher.Invoke(() =>
             {
-                for (var i = 0; i < CustomPage.ProfileButtons.Count; i++) CustomPage.ProfileButtons[i].IsEnabled = true;
-                CustomPage._CustomPage.imgProfileAdd.IsEnabled = true;
-                CustomPage._CustomPage.imgProfileDelete.IsEnabled = true;
-                CustomPage._CustomPage.tbClientID.IsEnabled = true;
-            }
+                if (MasterCustomPage._MasterCustomPage != null)
+                {
+                    for (var i = 0; i < MasterCustomPage.ProfileButtons.Count; i++) MasterCustomPage.ProfileButtons[i].IsEnabled = true;
+                    MasterCustomPage._MasterCustomPage.imgProfileAdd.IsEnabled = true;
+                    MasterCustomPage._MasterCustomPage.imgProfileDelete.IsEnabled = true;
+                }
+            });
+            CustomPage._CustomPage.Dispatcher.Invoke(() => CustomPage._CustomPage.tbClientID.IsEnabled = true);
 
             IsRPCRunning = false;
         }

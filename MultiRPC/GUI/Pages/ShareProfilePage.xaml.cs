@@ -27,7 +27,6 @@ namespace MultiRPC.GUI.Pages
         private void ButImport_OnClick(object sender, RoutedEventArgs e)
         {
             var profileBase64 = JsonConvert.SerializeObject(tbShare.Text);
-            Clipboard.SetText(profileBase64 = Utils.Base64Encode(profileBase64));
             MainWindow.CloseWindow(_windowID, profileBase64);
         }
 

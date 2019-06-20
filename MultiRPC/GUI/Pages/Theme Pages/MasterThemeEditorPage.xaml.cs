@@ -33,8 +33,6 @@ namespace MultiRPC.GUI.Pages
             });
             frmContent.Content = _tabPage;
             _MasterThemeEditorPage = this;
-
-            UpdateText();
         }
 
         public Task UpdateText()

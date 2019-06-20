@@ -37,9 +37,22 @@ namespace MultiRPC
             var darkThemeLocation = Path.Combine("Assets", "Themes", "DarkTheme" + Theme.ThemeExtension);
             var lightThemeLocation = Path.Combine("Assets", "Themes", "LightTheme" + Theme.ThemeExtension);
             var russiaThemeLocation = Path.Combine("Assets", "Themes", "RussiaTheme" + Theme.ThemeExtension);
-            if (!File.Exists(darkThemeLocation)) Theme.Save(Theme.Dark, darkThemeLocation);
-            if (!File.Exists(lightThemeLocation)) Theme.Save(Theme.Light, lightThemeLocation);
-            if (!File.Exists(russiaThemeLocation)) Theme.Save(Theme.Russia, russiaThemeLocation);
+            if (!File.Exists(darkThemeLocation))
+            {
+                Theme.Save(Theme.Dark, darkThemeLocation);
+            }
+
+            if (!File.Exists(lightThemeLocation))
+            {
+                Theme.Save(Theme.Light, lightThemeLocation);
+            }
+
+            if (!File.Exists(russiaThemeLocation))
+            {
+                Theme.Save(Theme.Russia, russiaThemeLocation);
+            }
+
+            TriggerWatch.Start();
             Startup += App_Startup;
         }
 
@@ -51,6 +64,7 @@ namespace MultiRPC
             if (Process.GetProcessesByName("MultiRPC").Length > 1)
             {
                 if (File.Exists(FileLocations.OpenFileLocalLocation))
+                {
                     try
                     {
                         File.Delete(FileLocations.OpenFileLocalLocation);
@@ -59,20 +73,27 @@ namespace MultiRPC
                     {
                         Logging.Application(Text.CouldntDelete + " " + FileLocations.OpenFileLocalLocation);
                     }
+                }
 
                 if (args?.Length >= 2 && args[0] == "-custom")
+                {
                     File.WriteAllLines(FileLocations.OpenFileLocalLocation,
                         new List<string> {"LOADCUSTOM", args[1]});
+                }
                 else
+                {
                     File.Create(FileLocations.OpenFileLocalLocation);
+                }
 
                 if (args == null || args.Length == 0 || args[0] != "--fromupdate")
+                {
                     Current.Shutdown();
+                }
             }
             else if (args?.Length >= 2 && args[0] == "-custom")
             {
                 StartedWithJumpListLogic = true;
-                _ = CustomPage.JumpListLogic(e.Args[1], true);
+                _ = CustomPage.StartCustomProfileLogic(e.Args[1], true);
             }
 #endif
 
@@ -104,21 +125,28 @@ namespace MultiRPC
                     break;
                 }
 
-                if (text != null && text.LanguageTag == "en-gb") engbInt = i;
+                if (text != null && text.LanguageTag == "en-gb")
+                {
+                    engbInt = i;
+                }
             }
 
             if (!foundText)
+            {
                 Text = SettingsPage.UIText[engbInt];
+            }
         }
 
         private void GetLangFiles()
         {
             var langFiles = Directory.EnumerateFiles("Lang").ToArray();
             for (var i = 0; i < langFiles.LongLength; i++)
+            {
                 using (var reader = File.OpenText(langFiles[i]))
                 {
                     SettingsPage.UIText.Add((UIText) JsonSerializer.Deserialize(reader, typeof(UIText)));
                 }
+            }
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

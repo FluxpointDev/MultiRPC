@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Extra;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -9,7 +10,6 @@ using System.Windows.Navigation;
 using MultiRPC.Functions;
 using MultiRPC.JsonClasses;
 using static MultiRPC.JsonClasses.FileLocations;
-using Uri = System.Extra.Uri;
 
 namespace MultiRPC.GUI.Pages
 {
@@ -70,7 +70,7 @@ namespace MultiRPC.GUI.Pages
             if (File.Exists(CreditsFileLocalLocation))
                 await UpdateCredits();
 
-            var webFile = Uri.Combine(App.MultiRPCWebsiteRoot, CreditsFileName);
+            var webFile = new[] {App.MultiRPCWebsiteRoot, CreditsFileName}.Combine();
             DownloadFile:
             try
             {

@@ -73,7 +73,7 @@ namespace MultiRPC.GUI.Pages
             else
                 value = Data.GetImageValue(key);
 
-            var image = !string.IsNullOrWhiteSpace(value) ? await BitmapDownloader.DownloadImage(new Uri(value)) : null;
+            var image = !string.IsNullOrWhiteSpace(value) ? await new Uri(value).DownloadImage() : null;
             if (!string.IsNullOrWhiteSpace(value) && key != App.Text.NoImage)
                 _preview.UpdateImage(updateSmall, new ImageBrush(image));
             else

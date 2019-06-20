@@ -206,5 +206,7 @@
         public string World;
         public string Yes;
         public string ThemeIcons;
+        public string CustomTriggers;
+        public string CustomPage;
     }
 }

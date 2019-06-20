@@ -9,7 +9,7 @@ using DiscordRPC.Message;
 using MultiRPC.Functions;
 using XamlAnimatedGif;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
-using Uri = System.Extra.Uri;
+using System.Extra;
 
 namespace MultiRPC.GUI.Views
 {
@@ -56,11 +56,12 @@ namespace MultiRPC.GUI.Views
                 if (!string.IsNullOrEmpty(msg.Presence.Assets.LargeImageKey))
                 {
                     recLargeImage.Visibility = Visibility.Visible;
-                    var largeImage = BitmapDownloader
-                        .DownloadImage(new System.Uri(Uri.Combine("https://cdn.discordapp.com/app-assets",
-                            msg.ApplicationID,
-                            msg.Presence.Assets.LargeImageID + ".png"))).ConfigureAwait(false)
-                        .GetAwaiter().GetResult();
+                    var largeImage = (new [] {
+                        "https://cdn.discordapp.com/app-assets",
+                        msg.ApplicationID,
+                        msg.Presence.Assets.LargeImageID + ".png" }.CombineToUri()).DownloadImage()
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
+
                     recLargeImage.Fill = new ImageBrush(largeImage);
                     if (!string.IsNullOrEmpty(msg.Presence.Assets.LargeImageText))
                         recLargeImage.ToolTip = new ToolTip(msg.Presence.Assets.LargeImageText);
@@ -73,10 +74,13 @@ namespace MultiRPC.GUI.Views
                 if (!string.IsNullOrEmpty(msg.Presence.Assets.SmallImageKey) &&
                     recLargeImage.Visibility == Visibility.Visible)
                 {
-                    var smallImage = BitmapDownloader
-                        .DownloadImage(new System.Uri(Uri.Combine("https://cdn.discordapp.com/app-assets",
+                    var smallImage = new [] {
+                            "https://cdn.discordapp.com/app-assets",
                             msg.ApplicationID,
-                            msg.Presence.Assets.SmallImageID + ".png"))).ConfigureAwait(false)
+                            msg.Presence.Assets.SmallImageID + ".png"}
+                            .CombineToUri()
+                            .DownloadImage()
+                        .ConfigureAwait(false)
                         .GetAwaiter().GetResult();
                     ellSmallImage.Fill = new ImageBrush(smallImage);
                     if (!string.IsNullOrEmpty(msg.Presence.Assets.SmallImageText))

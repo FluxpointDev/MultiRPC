@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Extra;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -9,12 +10,10 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using MultiRPC.Functions;
 using MultiRPC.GUI.Views;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
-using Uri = System.Extra.Uri;
 
 namespace MultiRPC.GUI.Pages
 {
@@ -96,7 +95,7 @@ namespace MultiRPC.GUI.Pages
                 tblMadeBy.Text = $"{App.Text.MadeBy}: {App.AppDev}";
                 rDiscordServer.Text = App.Text.DiscordServer + ": ";
                 rServerLink.Text = App.ServerInviteCode;
-                hylServerLinkUri.NavigateUri = new System.Uri(Uri.Combine("https://discord.gg", App.ServerInviteCode));
+                hylServerLinkUri.NavigateUri = new[] { "https://discord.gg", App.ServerInviteCode }.CombineToUri();
                 startDateTime = DateTime.Now;
 
                 int processCount;
@@ -184,7 +183,7 @@ namespace MultiRPC.GUI.Pages
                     case MultiRPCPage _:
                         btnStart.Content = $"{App.Text.Start} MultiRPC";
                         break;
-                    case CustomPage _:
+                    case MasterCustomPage _:
                         btnStart.Content = App.Text.StartCustom;
                         break;
                     default:
@@ -244,7 +243,7 @@ namespace MultiRPC.GUI.Pages
                         btnMultiRPC.Tag = new MultiRPCPage();
                         break;
                     case "btnCustom":
-                        btnCustom.Tag = new CustomPage(pageWidth);
+                        btnCustom.Tag = new MasterCustomPage(pageWidth);
                         break;
                     case "btnLogs":
                         btnLogs.Tag = new LogsPage(pageWidth);
@@ -334,9 +333,10 @@ namespace MultiRPC.GUI.Pages
                     mainRpcPage.TbText1_OnTextChanged(mainRpcPage.tbText1, null);
                     mainRpcPage.CanRunRPC();
                 }
-                else if (_MainPage.frmContent.Content is CustomPage customPage)
+                else if (_MainPage.frmContent.Content is MasterCustomPage masterCustomPage)
                 {
                     RPC.UpdateType(RPC.RPCType.Custom);
+                    var customPage = masterCustomPage.CustomPage;
                     customPage.TbText1_OnTextChanged(customPage.tbText1, null);
                     customPage.CanRunRPC(true);
                 }
@@ -376,7 +376,7 @@ namespace MultiRPC.GUI.Pages
 
         private void HylServerLinkUri_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(Uri.Combine("https://discord.gg", App.ServerInviteCode));
+            Process.Start(new [] { "https://discord.gg", App.ServerInviteCode }.Combine());
             e.Handled = true;
         }
 

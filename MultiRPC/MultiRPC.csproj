@@ -99,6 +99,7 @@
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -126,6 +127,7 @@
     <Compile Include="Functions\Animations.cs" />
     <Compile Include="Functions\BitmapDownloader.cs" />
     <Compile Include="Functions\Checks.cs" />
+    <Compile Include="Functions\TriggerWatch.cs" />
     <Compile Include="Functions\FileWatch.cs" />
     <Compile Include="Functions\Updater.cs" />
     <Compile Include="Functions\Uri.Extra.cs" />
@@ -140,6 +142,12 @@
     </Compile>
     <Compile Include="GUI\Pages\ChangelogPage.xaml.cs">
       <DependentUpon>ChangelogPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\Custom Pages\MasterCustomPage.xaml.cs">
+      <DependentUpon>MasterCustomPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\Custom Pages\TriggerPage.xaml.cs">
+      <DependentUpon>TriggerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Pages\DebugPage.xaml.cs">
       <DependentUpon>DebugPage.xaml</DependentUpon>
@@ -191,7 +199,7 @@
     <Compile Include="GUI\Pages\CreditsPage.xaml.cs">
       <DependentUpon>CreditsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Pages\CustomPage.xaml.cs">
+    <Compile Include="GUI\Pages\Custom Pages\CustomPage.xaml.cs">
       <DependentUpon>CustomPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Pages\LogsPage.xaml.cs">
@@ -300,7 +308,15 @@
     <Page Include="GUI\Pages\CreditsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\Pages\CustomPage.xaml">
+    <Page Include="GUI\Pages\Custom Pages\CustomPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\Custom Pages\MasterCustomPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\Custom Pages\TriggerPage.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Pages\DebugPage.xaml">

@@ -7,7 +7,7 @@ namespace MultiRPC.Functions
 {
     public static class BitmapDownloader
     {
-        public static async Task<BitmapImage> DownloadImage(Uri uri)
+        public static async Task<BitmapImage> DownloadImage(this Uri uri)
         {
             var b = new BitmapImage();
 

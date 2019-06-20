@@ -14,7 +14,7 @@ namespace MultiRPC.GUI.Pages
     internal class MultiRPCAndCustomLogic
     {
         private static bool OnCustomPage =>
-            MainPage._MainPage.frmContent.Content is CustomPage && RPC.Type == RPC.RPCType.Custom;
+            MainPage._MainPage.frmContent.Content is MasterCustomPage && RPC.Type == RPC.RPCType.Custom;
 
         public static Task UpdateTimestamps(CheckBox checkBox)
         {
@@ -84,8 +84,8 @@ namespace MultiRPC.GUI.Pages
                 tbLargeText.ToolTip = null;
             }
 
-            var profile = CustomPage.Profiles != null && CustomPage.CurrentButton != null
-                ? CustomPage.Profiles[CustomPage.CurrentButton.Content.ToString()]
+            var profile = MasterCustomPage.Profiles != null && MasterCustomPage.CurrentButton != null
+                ? MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()]
                 : null;
             if (OnCustomPage && profile != null)
             {
@@ -126,7 +126,7 @@ namespace MultiRPC.GUI.Pages
                         }
                         catch
                         {
-                            if (MainPage._MainPage.frmContent.Content is CustomPage && RPC.Type == RPC.RPCType.Custom)
+                            if (MainPage._MainPage.frmContent.Content is MasterCustomPage && RPC.Type == RPC.RPCType.Custom)
                             {
                                 App.Logging.Error("API", App.Text.DiscordAPIDown);
                                 tbClientID.ToolTip = new ToolTip($"{App.Text.NetworkIssue}!");
@@ -135,9 +135,9 @@ namespace MultiRPC.GUI.Pages
                             }
                         }
 
-                        if (MainPage._MainPage.frmContent.Content is CustomPage && RPC.Type == RPC.RPCType.Custom &&
+                        if (MainPage._MainPage.frmContent.Content is MasterCustomPage && RPC.Type == RPC.RPCType.Custom &&
                             T != null && profile.ClientID ==
-                            CustomPage.Profiles[CustomPage.CurrentButton.Content.ToString()].ClientID)
+                            MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].ClientID)
                         {
                             if (T.StatusCode == HttpStatusCode.BadRequest)
                             {
@@ -146,7 +146,7 @@ namespace MultiRPC.GUI.Pages
                                 tbClientID.SetResourceReference(Control.BorderBrushProperty, "Red");
                                 isEnabled = false;
                             }
-                            else if (T.StatusCode != HttpStatusCode.InternalServerError)
+                            else if (T.StatusCode != HttpStatusCode.Unauthorized)
                             {
                                 var response = T.Content.ReadAsStringAsync().GetAwaiter().GetResult();
                                 App.Logging.Error("API", $"{App.Text.APIError} {response}");
@@ -156,7 +156,7 @@ namespace MultiRPC.GUI.Pages
                             }
                             else
                             {
-                                if (MainPage._MainPage.frmContent.Content is CustomPage)
+                                if (MainPage._MainPage.frmContent.Content is MasterCustomPage)
                                     RPC.IDToUse = ID;
                                 tbClientID.SetResourceReference(Control.BorderBrushProperty, "AccentColour4SCBrush");
                                 tbClientID.ToolTip = null;
@@ -164,7 +164,7 @@ namespace MultiRPC.GUI.Pages
                         }
                     }
                 }
-                else if (MainPage._MainPage.frmContent.Content is CustomPage)
+                else if (MainPage._MainPage.frmContent.Content is MasterCustomPage)
                 {
                     if (tokenTextChanged)
                     {
@@ -180,7 +180,7 @@ namespace MultiRPC.GUI.Pages
             }
 
             if (MainPage._MainPage.frmContent.Content is MultiRPCPage && RPC.Type == RPC.RPCType.MultiRPC ||
-                OnCustomPage && CustomPage.Profiles[CustomPage.CurrentButton.Content.ToString()] == profile && !RPC.AFK)
+                OnCustomPage && MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()] == profile && !RPC.AFK)
             {
                 if (MainPage._MainPage.btnStart.Content.ToString() == App.Text.Shutdown)
                 {

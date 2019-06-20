@@ -65,7 +65,7 @@ namespace MultiRPC.GUI
         }
 
         private void MakeWinAnimation(Storyboard storyboard, double from = 1, double to = 0,
-            bool addEventHandler = true, object parameter = null, Duration lengthToRun = new Duration())
+            bool addEventHandler = false, object parameter = null, Duration lengthToRun = new Duration())
         {
             if (!lengthToRun.HasTimeSpan)
                 lengthToRun = new Duration(TimeSpan.FromSeconds(0.4));
@@ -150,7 +150,7 @@ namespace MultiRPC.GUI
                     mainWindow.ToReturn = returnObject;
                     mainWindow.ShowInTaskbar = false;
                     mainWindow._closeStoryboard = new Storyboard();
-                    mainWindow.MakeWinAnimation(mainWindow._closeStoryboard);
+                    mainWindow.MakeWinAnimation(mainWindow._closeStoryboard, addEventHandler: true);
                     mainWindow._closeStoryboard.Begin(mainWindow);
                     break;
                 }
@@ -191,14 +191,13 @@ namespace MultiRPC.GUI
         {
             ShowInTaskbar = false;
             _closeStoryboard = new Storyboard();
-            MakeWinAnimation(_closeStoryboard);
+            MakeWinAnimation(_closeStoryboard, addEventHandler: true);
             _closeStoryboard.Begin(this);
         }
 
         private void OpenCloseStoryboard_Completed(object sender, EventArgs e)
         {
-            if (_closeStoryboard != null)
-                Close();
+            Close();
         }
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -238,7 +237,7 @@ namespace MultiRPC.GUI
                         case MultiRPCPage _:
                             ((MainPage) frmContent.Content).btnStart.Content = $"{App.Text.Start} MultiRPC";
                             break;
-                        case CustomPage _:
+                        case MasterCustomPage _:
                             ((MainPage) frmContent.Content).btnStart.Content = App.Text.StartCustom;
                             break;
                     }
@@ -249,12 +248,12 @@ namespace MultiRPC.GUI
                     switch (content)
                     {
                         case MultiRPCPage _ when RPC.Type != RPC.RPCType.MultiRPC:
-                        case CustomPage _ when RPC.Type != RPC.RPCType.Custom:
+                        case MasterCustomPage _ when RPC.Type != RPC.RPCType.Custom:
                             ((MainPage) frmContent.Content).btnUpdate.IsEnabled = false;
                             break;
                         default:
                         {
-                            if (!(content is CustomPage) && !(content is MultiRPCPage))
+                            if (!(content is MasterCustomPage) && !(content is MultiRPCPage))
                                 ((MainPage) frmContent.Content).btnUpdate.IsEnabled = false;
                             break;
                         }

@@ -35,7 +35,7 @@ namespace MultiRPC.Functions
 
                         if (text[0] == "LOADCUSTOM") //Load a custom profile
                         {
-                            CustomPage.JumpListLogic(text[2]);
+                            CustomPage.StartCustomProfileLogic(text[2]);
                         }
                         else
                         {

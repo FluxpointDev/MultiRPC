@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Deployment.Application;
 using System.Diagnostics;
+using System.Extra;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -11,7 +12,6 @@ using MultiRPC.GUI;
 using MultiRPC.GUI.Controls;
 using MultiRPC.GUI.Pages;
 using MultiRPC.JsonClasses;
-using Uri = System.Extra.Uri;
 
 namespace MultiRPC.Functions
 {
@@ -58,7 +58,7 @@ namespace MultiRPC.Functions
                             using (var client = new WebClient())
                             {
                                 await client.DownloadFileTaskAsync(
-                                    Uri.Combine(App.MultiRPCWebsiteRoot, "Changelog.txt"),
+                                    new [] { App.MultiRPCWebsiteRoot, "Changelog.txt" }.CombineToUri(),
                                     FileLocations.ChangelogFileLocalLocation);
                             }
                         }

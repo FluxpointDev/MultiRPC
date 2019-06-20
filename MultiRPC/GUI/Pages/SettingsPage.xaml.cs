@@ -149,7 +149,7 @@ namespace MultiRPC.GUI.Pages
                 App.Text.DiscordServer,
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
-            Process.Start(Uri.Combine("https://discord.gg", App.ServerInviteCode));
+            Process.Start(new [] { "https://discord.gg", App.ServerInviteCode }.Combine());
         }
 
         private void CbClient_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -270,7 +270,7 @@ namespace MultiRPC.GUI.Pages
                 App.Config.AutoStart = cbAutoStart.Text;
                 MainPage._MainPage.UpdateText();
                 MultiRPCPage._MultiRPCPage?.UpdateText();
-                CustomPage._CustomPage?.UpdateText();
+                MasterCustomPage._MasterCustomPage?.UpdateText();
                 ProgramsPage._ProgramsPage?.UpdateText();
                 CreditsPage._CreditsPage?.UpdateText();
                 MasterThemeEditorPage._MasterThemeEditorPage?.UpdateText();
