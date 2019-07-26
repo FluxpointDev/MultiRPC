@@ -28,12 +28,13 @@
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>https://multirpc.blazedev.me/</InstallUrl>
     <UpdateUrl>https://multirpc.blazedev.me/</UpdateUrl>
+    <SupportUrl>https://discord.gg/susQ6XA</SupportUrl>
     <PublisherName>Discord Universe</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>5.0.0.0</ApplicationVersion>
+    <ApplicationVersion>5.3.0.0</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -92,6 +93,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>MultiRPC.App</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -226,6 +230,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="MultiRPCIcon.ico" />
+    <Content Include="Lang\es.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

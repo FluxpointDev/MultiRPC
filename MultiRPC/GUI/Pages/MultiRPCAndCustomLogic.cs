@@ -139,7 +139,7 @@ namespace MultiRPC.GUI.Pages
                                 tbClientID.SetResourceReference(Control.BorderBrushProperty, "Red");
                                 isEnabled = false;
                             }
-                            else if (T.StatusCode != HttpStatusCode.InternalServerError)
+                            else if (T.StatusCode != HttpStatusCode.Unauthorized)
                             {
                                 var response = T.Content.ReadAsStringAsync().GetAwaiter().GetResult();
                                 App.Logging.Error("API", $"{App.Text.APIError} {response}");
