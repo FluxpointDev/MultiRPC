@@ -1,5 +1,5 @@
 # Info
-A windows app for managing Discord rich presence with the ability to set a custom status or default ones with an afk option too.
+![Image](https://gallery.blazedev.me/i/2019/08/08/65879d0a-me.jpg)
 
 This supports all versions of windows, linux/mac support coming soon using .net core
 
