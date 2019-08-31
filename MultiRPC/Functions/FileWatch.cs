@@ -22,6 +22,7 @@ namespace MultiRPC.Functions
         private static async void Watcher_FileCreated(object sender, FileSystemEventArgs e)
         {
             if (e.Name == FileLocations.OpenFileName)
+            {
                 await Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
                     await Application.Current.MainWindow.Dispatcher.InvokeAsync(async () =>
@@ -53,6 +54,7 @@ namespace MultiRPC.Functions
                         }
                     });
                 });
+            }
         }
     }
 }

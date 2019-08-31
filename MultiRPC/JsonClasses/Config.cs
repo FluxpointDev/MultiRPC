@@ -54,6 +54,7 @@ namespace MultiRPC.JsonClasses
         public static Task<Config> Load()
         {
             if (File.Exists(FileLocations.ConfigFileLocalLocation))
+            {
                 using (var file = File.OpenText(FileLocations.ConfigFileLocalLocation))
                 {
                     var serializer = new JsonSerializer
@@ -63,6 +64,7 @@ namespace MultiRPC.JsonClasses
                     };
                     return Task.FromResult((Config) serializer.Deserialize(file, typeof(Config)));
                 }
+            }
 
             return Task.FromResult(new Config());
         }

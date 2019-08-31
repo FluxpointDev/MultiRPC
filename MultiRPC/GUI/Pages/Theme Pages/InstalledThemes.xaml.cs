@@ -42,7 +42,11 @@ namespace MultiRPC.GUI.Pages
                 .Concat(Directory.EnumerateFiles(FileLocations.ThemesFolder)).ToArray();
             for (var i = 0; i < files.LongCount(); i++)
             {
-                if (files[i] == _designerXamlFile) continue;
+                if (files[i] == _designerXamlFile)
+                {
+                    continue;
+                }
+
                 MakeThemeUI(files[i], putActive: true).ConfigureAwait(false);
             }
         }
@@ -61,15 +65,24 @@ namespace MultiRPC.GUI.Pages
                 var text = GetThemeNameFromTextBlock(themeName, oldEditingWord, oldActiveWord);
 
                 if (text == Application.Current.Resources["ThemeName"].ToString())
+                {
                     text += $" ({App.Text.Active})";
+                }
                 else if (!string.IsNullOrWhiteSpace(ThemeNameThatBeingEdited) && text == ThemeNameThatBeingEdited)
+                {
                     text += $" ({App.Text.Editing})";
+                }
+
                 themeName.Text = text;
 
                 var themeTopControls = (StackPanel) stackPanel.Children[0];
                 for (var i = 0; i < themeTopControls.Children.Count; i++)
                 {
-                    if (!(themeTopControls.Children[i] is Button button)) continue;
+                    if (!(themeTopControls.Children[i] is Button button))
+                    {
+                        continue;
+                    }
+
                     switch (button.Name)
                     {
                         case "btnEdit":
@@ -174,8 +187,14 @@ namespace MultiRPC.GUI.Pages
             //Add everything to the themeStackPanel and then the one that shows all theme's 
             themeStackPanel.Children.Add(topStackPanel);
             themeStackPanel.Children.Add(frame);
-            if (themeLocation == -1) wpInstalledThemes.Children.Add(themeStackPanel);
-            else wpInstalledThemes.Children.Insert(themeLocation, themeStackPanel);
+            if (themeLocation == -1)
+            {
+                wpInstalledThemes.Children.Add(themeStackPanel);
+            }
+            else
+            {
+                wpInstalledThemes.Children.Insert(themeLocation, themeStackPanel);
+            }
 
             return frame;
         }
@@ -192,11 +211,16 @@ namespace MultiRPC.GUI.Pages
                         ((TextBlock) ((StackPanel) ((StackPanel) wpInstalledThemes.Children[j]).Children[0])
                             .Children[0]).Text;
                     if (themeName.IndexOf("(") != -1)
+                    {
                         themeName = themeName.Remove(themeName.IndexOf("("));
+                    }
+
                     wpInstalledThemes.Children.Remove((StackPanel) sp);
                     ThemeNames.Remove(themeName.Trim());
                     if (!string.IsNullOrWhiteSpace(ThemeNameThatBeingEdited))
+                    {
                         ThemeEditorPage._ThemeEditorPage._themeThatBeingEditedIntLocation = j;
+                    }
 
                     //Delete it (tony stark i don't feel so good....)
                     File.Delete(((Frame) ((StackPanel) sp).Children[1]).Tag.ToString());
@@ -240,7 +264,9 @@ namespace MultiRPC.GUI.Pages
 
             //Edit name to have copy so user's know it's the cloned one
             if (!themeContent.ThemeMetadata.ThemeName.Contains("("))
+            {
                 themeContent.ThemeMetadata.ThemeName += " (1)";
+            }
 
             var tmpName = themeContent.ThemeMetadata.ThemeName;
             var copyCount = 1;
@@ -273,7 +299,9 @@ namespace MultiRPC.GUI.Pages
                 {
                     if (doNotSetIfContains != null &&
                         doNotSetIfContains.Contains(themeName.Text.Split(' ').Last().Replace("(", "").Replace(")", "")))
+                    {
                         return;
+                    }
 
                     text += $" ({status})";
                     text = text.Replace(" ()", "");
@@ -332,7 +360,9 @@ namespace MultiRPC.GUI.Pages
         private Task EditInstalledTheme(Action<StackPanel> action)
         {
             for (var j = 0; j < wpInstalledThemes.Children.Count; j++)
+            {
                 action((StackPanel) wpInstalledThemes.Children[j]);
+            }
 
             return Task.CompletedTask;
         }
@@ -341,11 +371,19 @@ namespace MultiRPC.GUI.Pages
             string activeWord = null, string showingWord = null)
         {
             if (string.IsNullOrWhiteSpace(editingWord))
+            {
                 editingWord = App.Text.Editing;
+            }
+
             if (string.IsNullOrWhiteSpace(activeWord))
+            {
                 activeWord = App.Text.Active;
+            }
+
             if (string.IsNullOrWhiteSpace(showingWord))
+            {
                 showingWord = App.Text.Showing;
+            }
 
             var bracketIndex = textBlock.Text.LastIndexOf("(");
             var endBracketIndex = textBlock.Text.LastIndexOf(")");
@@ -359,7 +397,10 @@ namespace MultiRPC.GUI.Pages
             {
                 var numberBracket = $"({number})";
                 var tmp = text.IndexOf(numberBracket) + numberBracket.Length;
-                if (tmp != textBlock.Text.Length) text = text.Remove(tmp);
+                if (tmp != textBlock.Text.Length)
+                {
+                    text = text.Remove(tmp);
+                }
             }
             else if (bracketIndex != -1 && (lastBracketContent == editingWord ||
                                             lastBracketContent == activeWord ||
@@ -384,12 +425,16 @@ namespace MultiRPC.GUI.Pages
             if (openFile.ShowDialog().Value)
             {
                 for (var i = 0; i < openFile.FileNames.Length; i++)
+                {
                     File.Move(openFile.FileNames[i],
                         Path.Combine(FileLocations.ThemesFolder, openFile.SafeFileNames[i]));
+                }
 
                 var themeFiles = new List<string>();
                 for (var i = 0; i < openFile.SafeFileNames.LongLength; i++)
+                {
                     themeFiles.Add(Path.Combine(FileLocations.ThemesFolder, openFile.SafeFileNames[i]));
+                }
 
                 await AddExternalTheme(apply, themeFiles.ToArray());
             }
@@ -410,7 +455,10 @@ namespace MultiRPC.GUI.Pages
             }
             else
             {
-                for (var i = 0; i < themeFiles.Length; i++) await MakeThemeUI(themeFiles[i]);
+                for (var i = 0; i < themeFiles.Length; i++)
+                {
+                    await MakeThemeUI(themeFiles[i]);
+                }
             }
         }
 

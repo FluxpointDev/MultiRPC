@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:MultiRPC.Assets"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <Color A="255" R="54" G="57" B="62" x:Key="AccentColour1" />

@@ -64,7 +64,9 @@ namespace MultiRPC.GUI.Views
 
                     recLargeImage.Fill = new ImageBrush(largeImage);
                     if (!string.IsNullOrEmpty(msg.Presence.Assets.LargeImageText))
+                    {
                         recLargeImage.ToolTip = new ToolTip(msg.Presence.Assets.LargeImageText);
+                    }
                 }
                 else
                 {
@@ -84,7 +86,9 @@ namespace MultiRPC.GUI.Views
                         .GetAwaiter().GetResult();
                     ellSmallImage.Fill = new ImageBrush(smallImage);
                     if (!string.IsNullOrEmpty(msg.Presence.Assets.SmallImageText))
+                    {
                         ellSmallImage.ToolTip = new ToolTip(msg.Presence.Assets.SmallImageText);
+                    }
                 }
                 else
                 {
@@ -157,18 +161,32 @@ namespace MultiRPC.GUI.Views
 
             CurrentViewType = view;
             if (background == null && string.IsNullOrWhiteSpace(backgroundName))
+            {
                 backgroundName = "AccentColour2SCBrush";
+            }
+
             if (!string.IsNullOrWhiteSpace(backgroundName))
+            {
                 UpdateBackground(backgroundName);
+            }
             else
+            {
                 UpdateBackground(background);
+            }
 
             if (foreground == null && string.IsNullOrWhiteSpace(foregroundName))
+            {
                 foregroundName = "TextColourSCBrush";
+            }
+
             if (!string.IsNullOrWhiteSpace(foregroundName))
+            {
                 UpdateForeground(foregroundName);
+            }
             else
+            {
                 UpdateForeground(foreground);
+            }
 
             imgLoading.Visibility = Visibility.Collapsed;
             recLargeImage.Visibility = Visibility.Visible;
@@ -267,7 +285,9 @@ namespace MultiRPC.GUI.Views
                 recLargeImage.Fill = image;
                 recLargeImage.Visibility = Visibility.Visible;
                 if (gridSmallImage.Visibility == Visibility.Collapsed && ellSmallImage.Fill != null)
+                {
                     gridSmallImage.Visibility = Visibility.Visible;
+                }
             }
 
             if (onSmallImage && image?.ImageSource == null)
@@ -279,7 +299,9 @@ namespace MultiRPC.GUI.Views
             {
                 ellSmallImage.Fill = image;
                 if (recLargeImage.Visibility != Visibility.Collapsed)
+                {
                     gridSmallImage.Visibility = Visibility.Visible;
+                }
             }
         }
     }

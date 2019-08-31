@@ -35,10 +35,14 @@ namespace MultiRPC.JsonClasses
         static FileLocations()
         {
             if (!Directory.Exists(ConfigFolder))
+            {
                 Directory.CreateDirectory(ConfigFolder);
+            }
 
             if (!Directory.Exists(ThemesFolder))
+            {
                 Directory.CreateDirectory(ThemesFolder);
+            }
         }
     }
 }

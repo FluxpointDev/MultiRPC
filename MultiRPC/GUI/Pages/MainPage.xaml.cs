@@ -68,9 +68,14 @@ namespace MultiRPC.GUI.Pages
         private async void DiscordCheckFadeOutAnimation()
         {
             if (App.Config.AutoStart == "MultiRPC" || App.Config.AutoStart == App.Text.No)
+            {
                 btnMultiRPC.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            }
             else
+            {
                 btnCustom.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            }
+
             await Animations.DoubleAnimation(gridCheckForDiscord, 0, gridCheckForDiscord.Opacity);
             gridCheckForDiscord.Visibility = Visibility.Collapsed;
         }
@@ -82,7 +87,9 @@ namespace MultiRPC.GUI.Pages
             async void ShowTempDisableButton()
             {
                 if (btnDisableDiscordCheck.Opacity == 0 && DateTime.Now.Subtract(startDateTime).TotalSeconds >= 5)
+                {
                     await Animations.DoubleAnimation(btnDisableDiscordCheck, 1, btnDisableDiscordCheck.Opacity);
+                }
             }
 
             Updater.Check();
@@ -178,6 +185,7 @@ namespace MultiRPC.GUI.Pages
         public Task UpdateText()
         {
             if (btnStart.Background != Application.Current.Resources["Red"])
+            {
                 switch (frmContent.Content)
                 {
                     case MultiRPCPage _:
@@ -188,13 +196,19 @@ namespace MultiRPC.GUI.Pages
                         break;
                     default:
                         if (btnStart.Content != null)
+                        {
                             btnStart.Content = btnStart.Content.ToString().Contains("MultiRPC")
                                 ? $"{App.Text.Start} MultiRPC"
                                 : App.Text.StartCustom;
+                        }
+
                         break;
                 }
+            }
             else
+            {
                 btnStart.Content = App.Text.Shutdown;
+            }
 
             btnUpdate.Content = App.Text.UpdatePresence;
             rStatus.Text = App.Text.Status + ": ";
@@ -206,7 +220,10 @@ namespace MultiRPC.GUI.Pages
             btnDisableDiscordCheck.Content = App.Text.TempDisableDiscordCheck;
             var preview = (RPCPreview) frmRPCPreview.Content;
             if (preview != null && preview.CurrentViewType != RPCPreview.ViewType.RichPresence)
+            {
                 preview.UpdateUIViewType(preview.CurrentViewType);
+            }
+
             UpdateTooltips();
 
             return Task.CompletedTask;
@@ -214,7 +231,10 @@ namespace MultiRPC.GUI.Pages
 
         private void ChangePage_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_selectedButton?.Tag != null && frmContent.Content == ((Button) sender).Tag) return;
+            if (_selectedButton?.Tag != null && frmContent.Content == ((Button) sender).Tag)
+            {
+                return;
+            }
 
             string ImageName(string s, bool selected = false)
             {
@@ -237,6 +257,7 @@ namespace MultiRPC.GUI.Pages
             var pageWidth = btnMultiRPC.Tag != null ? ((MultiRPCPage) btnMultiRPC.Tag).ActualWidth : ActualWidth;
 
             if (_selectedButton.Tag == null)
+            {
                 switch (((Button) sender).Name)
                 {
                     case "btnMultiRPC":
@@ -264,6 +285,7 @@ namespace MultiRPC.GUI.Pages
                         btnPrograms.Tag = new ProgramsPage();
                         break;
                 }
+            }
 
             //var drawingImage = new DrawingImage();
             //var image = new ImageDrawing();
@@ -356,7 +378,10 @@ namespace MultiRPC.GUI.Pages
                 RPC.AFK = true;
 
                 if (RPC.IDToUse != 469643793851744257)
+                {
                     RPC.Shutdown();
+                }
+
                 RPC.IDToUse = 469643793851744257;
                 RPC.Update();
                 tbAfkReason.Text = "";

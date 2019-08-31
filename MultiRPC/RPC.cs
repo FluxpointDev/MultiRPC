@@ -61,7 +61,10 @@ namespace MultiRPC
                     return true;
                 }
 
-                if (result == MessageBoxResult.Cancel) return false;
+                if (result == MessageBoxResult.Cancel)
+                {
+                    return false;
+                }
             }
 
             return true;
@@ -102,7 +105,9 @@ namespace MultiRPC
         public static Task UpdateType(RPCType type)
         {
             if (!IsRPCRunning)
+            {
                 Type = type;
+            }
 
             return Task.CompletedTask;
         }
@@ -111,7 +116,9 @@ namespace MultiRPC
         {
             //Check that the presence isn't ban worthy
             if (!await CheckPresence(Presence.Details) || !await CheckPresence(Presence.State))
+            {
                 return;
+            }
 
             App.Logging.Application(App.Text.StartingRpc);
 
@@ -157,9 +164,14 @@ namespace MultiRPC
                     }
 
                     if (foundClient)
+                    {
                         break;
+                    }
+
                     if (pipe.StartsWith("discord"))
+                    {
                         pipeCount++;
+                    }
                 }
             }
 
@@ -173,7 +185,10 @@ namespace MultiRPC
             RPCClient.OnPresenceUpdate += Client_OnPresenceUpdate;
             RPCClient.OnReady += Client_OnReady;
 
-            if (!AFK) MainPage._MainPage.btnUpdate.IsEnabled = true;
+            if (!AFK)
+            {
+                MainPage._MainPage.btnUpdate.IsEnabled = true;
+            }
 
             //Show that we are going to load things™
             await MainPage._MainPage.frmRPCPreview.Dispatcher.InvokeAsync(async () =>
@@ -192,7 +207,9 @@ namespace MultiRPC
             //Set up the time that will show (if user wants it)
             _startTime = DateTime.UtcNow;
             if (Presence.Timestamps != null)
+            {
                 Presence.Timestamps.Start = _startTime;
+            }
 
             //Send the presence
             RPCClient.SetPresence(Presence);
@@ -206,9 +223,13 @@ namespace MultiRPC
                     : "0";
 
                 for (var i = 0; i < MasterCustomPage.ProfileButtons.Count; i++)
+                {
                     if (profileClientID == "0" || MasterCustomPage.Profiles[MasterCustomPage.ProfileButtons[i].Content.ToString()]
                             .ClientID != profileClientID)
+                    {
                         MasterCustomPage.ProfileButtons[i].IsEnabled = false;
+                    }
+                }
 
                 MasterCustomPage._MasterCustomPage.imgProfileAdd.IsEnabled = false;
                 MasterCustomPage._MasterCustomPage.imgProfileDelete.IsEnabled = false;
@@ -236,7 +257,9 @@ namespace MultiRPC
         private static void SetPresence(CustomProfile profile)
         {
             if (AFK)
+            {
                 return;
+            }
 
             Presence.Details = profile.Text1;
             Presence.State = profile.Text2;
@@ -258,7 +281,10 @@ namespace MultiRPC
             if (IsRPCRunning)
             {
                 if (Presence.Timestamps != null)
+                {
                     Presence.Timestamps.Start = _startTime;
+                }
+
                 RPCClient.SetPresence(Presence);
             }
             else
@@ -281,7 +307,10 @@ namespace MultiRPC
             //Make update timer to update time in GUI
             _uptime = new Timer(new TimeSpan(0, 0, 1).TotalMilliseconds);
             if (Presence.Timestamps != null)
+            {
                 _uptime.Start();
+            }
+
             _uptime.Elapsed += Uptime_Elapsed;
 
             MainPage._MainPage.Dispatcher.Invoke(() =>
@@ -305,8 +334,15 @@ namespace MultiRPC
             MainPage._MainPage.frmRPCPreview.Dispatcher.Invoke(() =>
             {
                 MainPage._MainPage.frmRPCPreview.Content = new RPCPreview(args);
-                if (Presence.Timestamps != null) _uptime.Start();
-                else _uptime.Stop();
+                if (Presence.Timestamps != null)
+                {
+                    _uptime.Start();
+                }
+                else
+                {
+                    _uptime.Stop();
+                }
+
                 MainPage._MainPage.rCon.Text = App.Text.Connected;
             });
         }
@@ -370,7 +406,11 @@ namespace MultiRPC
             {
                 if (MasterCustomPage._MasterCustomPage != null)
                 {
-                    for (var i = 0; i < MasterCustomPage.ProfileButtons.Count; i++) MasterCustomPage.ProfileButtons[i].IsEnabled = true;
+                    for (var i = 0; i < MasterCustomPage.ProfileButtons.Count; i++)
+                    {
+                        MasterCustomPage.ProfileButtons[i].IsEnabled = true;
+                    }
+
                     MasterCustomPage._MasterCustomPage.imgProfileAdd.IsEnabled = true;
                     MasterCustomPage._MasterCustomPage.imgProfileDelete.IsEnabled = true;
                 }

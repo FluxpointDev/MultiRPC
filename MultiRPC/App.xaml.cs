@@ -119,9 +119,21 @@ namespace MultiRPC
                 {
                     Text = text;
                     foundText = true;
-                    if (string.IsNullOrWhiteSpace(Config.AutoStart)) Config.AutoStart = Text.No;
-                    if (string.IsNullOrWhiteSpace(Config.MultiRPC.Text1)) Config.MultiRPC.Text1 = Text.Hello;
-                    if (string.IsNullOrWhiteSpace(Config.MultiRPC.Text2)) Config.MultiRPC.Text2 = Text.World;
+                    if (string.IsNullOrWhiteSpace(Config.AutoStart))
+                    {
+                        Config.AutoStart = Text.No;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(Config.MultiRPC.Text1))
+                    {
+                        Config.MultiRPC.Text1 = Text.Hello;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(Config.MultiRPC.Text2))
+                    {
+                        Config.MultiRPC.Text2 = Text.World;
+                    }
+
                     break;
                 }
 

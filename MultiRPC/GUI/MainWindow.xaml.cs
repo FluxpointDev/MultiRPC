@@ -38,7 +38,9 @@ namespace MultiRPC.GUI
         {
             InitializeComponent();
             if (this != Application.Current.MainWindow)
+            {
                 return;
+            }
 
             var mainPage = new MainPage();
             StartLogic(mainPage);
@@ -61,17 +63,23 @@ namespace MultiRPC.GUI
             tblTitle.Text = Title;
 
             if (!minButton)
+            {
                 btnMin.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void MakeWinAnimation(Storyboard storyboard, double from = 1, double to = 0,
             bool addEventHandler = false, object parameter = null, Duration lengthToRun = new Duration())
         {
             if (!lengthToRun.HasTimeSpan)
+            {
                 lengthToRun = new Duration(TimeSpan.FromSeconds(0.4));
+            }
 
             if (parameter == null)
+            {
                 parameter = OpacityProperty;
+            }
 
             if (string.IsNullOrWhiteSpace(Name))
             {
@@ -91,14 +99,20 @@ namespace MultiRPC.GUI
             Storyboard.SetTargetName(winOpacityAnimation, Name);
             Storyboard.SetTargetProperty(winOpacityAnimation, new PropertyPath(parameter));
             if (addEventHandler)
+            {
                 storyboard.Completed += OpenCloseStoryboard_Completed;
+            }
         }
 
         public static MainWindow GetWindow(long windowID)
         {
             for (var i = 0; i < Application.Current.Windows.Count; i++)
+            {
                 if (Application.Current.Windows[i] is MainWindow mainWindow && mainWindow.WindowID == windowID)
+                {
                     return mainWindow;
+                }
+            }
 
             return null;
         }
@@ -112,10 +126,14 @@ namespace MultiRPC.GUI
         {
             var timeSpan = DateTime.Now.Subtract(_timeWindowWasDeactivated);
             if (timeSpan.TotalSeconds < 1 || WindowState == WindowState.Minimized)
+            {
                 WindowState = WindowState == WindowState.Normal ? WindowState.Minimized : WindowState.Normal;
+            }
 
             if (WindowState == WindowState.Normal)
+            {
                 Activate();
+            }
         }
 
         public static Task<object> OpenWindow(Page page, bool isDialog, long tick, bool minButton,
@@ -131,8 +149,14 @@ namespace MultiRPC.GUI
             window.Loaded += Window_Loaded;
             otherSetup?.Invoke(window); //This allows pages that need more hooks to get hooked
 
-            if (isDialog) window.ShowDialog();
-            else window.Show();
+            if (isDialog)
+            {
+                window.ShowDialog();
+            }
+            else
+            {
+                window.Show();
+            }
 
             return Task.FromResult(window.ToReturn);
         }
@@ -145,6 +169,7 @@ namespace MultiRPC.GUI
         public static Task CloseWindow(long windowID, object returnObject = null)
         {
             for (var i = 0; i < Application.Current.Windows.Count; i++)
+            {
                 if (Application.Current.Windows[i] is MainWindow mainWindow && mainWindow.WindowID == windowID)
                 {
                     mainWindow.ToReturn = returnObject;
@@ -154,6 +179,7 @@ namespace MultiRPC.GUI
                     mainWindow._closeStoryboard.Begin(mainWindow);
                     break;
                 }
+            }
 
             return Task.CompletedTask;
         }
@@ -179,7 +205,10 @@ namespace MultiRPC.GUI
 
         private void RecHandle_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed) DragMove();
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                DragMove();
+            }
         }
 
         private void Min_OnClick(object sender, RoutedEventArgs e)
@@ -203,14 +232,18 @@ namespace MultiRPC.GUI
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (Application.Current.MainWindow != this)
+            {
                 return;
+            }
 
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
+            {
                 TaskbarItemInfo = new TaskbarItemInfo
                 {
                     Description = "MultiRPC",
                     ThumbnailClipMargin = new Thickness(ActualWidth - 265, 41, 9, ActualHeight - 126)
                 };
+            }
         }
 
         private void Close_OnMouseEnter(object sender, MouseEventArgs e)
@@ -254,8 +287,11 @@ namespace MultiRPC.GUI
                         default:
                         {
                             if (!(content is MasterCustomPage) && !(content is MultiRPCPage))
-                                ((MainPage) frmContent.Content).btnUpdate.IsEnabled = false;
-                            break;
+                                {
+                                    ((MainPage) frmContent.Content).btnUpdate.IsEnabled = false;
+                                }
+
+                                break;
                         }
                     }
                 }
@@ -268,9 +304,14 @@ namespace MultiRPC.GUI
                 WindowsContent.BorderThickness,
                 propertyPath: new PropertyPath(Border.BorderThicknessProperty));
             if (TaskbarIcon != null)
+            {
                 TaskbarIcon.TrayToolTip = new ToolTip(!IsActive ? App.Text.ShowMultiRPC : App.Text.HideMultiRPC);
+            }
+
             if (!IsActive)
+            {
                 _timeWindowWasDeactivated = DateTime.Now;
+            }
         }
 
         private void MainWindow_OnStateChanged(object sender, EventArgs e)
@@ -280,7 +321,9 @@ namespace MultiRPC.GUI
                 WindowsContent.Margin);
 
             if (Icon != null && App.Config.HideTaskbarIconWhenMin)
+            {
                 ShowInTaskbar = WindowState != WindowState.Minimized;
+            }
         }
 
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)

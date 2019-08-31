@@ -92,7 +92,9 @@ namespace MultiRPC.JsonClasses
         static Theme()
         {
             if (!Directory.Exists(Path.Combine("Assets", "Themes")))
+            {
                 Directory.CreateDirectory(Path.Combine("Assets", "Themes"));
+            }
         }
 
         public static Task<Theme> Load(string filepath)
@@ -233,7 +235,9 @@ namespace MultiRPC.JsonClasses
         public static Task Save(Theme theme, string fileLocation = null)
         {
             if (string.IsNullOrWhiteSpace(fileLocation))
+            {
                 fileLocation = GetThemeFileLocation(theme);
+            }
 
             FileStream fileStream;
             try

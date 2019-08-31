@@ -54,7 +54,9 @@ namespace MultiRPC.GUI.Pages
             if (!_haveDoneAutoStart && App.Config.AutoStart == "MultiRPC" && !App.StartedWithJumpListLogic)
             {
                 if (await CanRunRPC())
+                {
                     MainPage._MainPage.btnStart.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                }
             }
             else
             {
@@ -69,15 +71,23 @@ namespace MultiRPC.GUI.Pages
         {
             var value = key;
             if (string.IsNullOrWhiteSpace(key))
+            {
                 value = updateSmall ? Data.GetImageValue(cbSmallKey.Text) : Data.GetImageValue(cbLargeKey.Text);
+            }
             else
+            {
                 value = Data.GetImageValue(key);
+            }
 
             var image = !string.IsNullOrWhiteSpace(value) ? await new Uri(value).DownloadImage() : null;
             if (!string.IsNullOrWhiteSpace(value) && key != App.Text.NoImage)
+            {
                 _preview.UpdateImage(updateSmall, new ImageBrush(image));
+            }
             else
+            {
                 _preview.UpdateImage(updateSmall, null);
+            }
         }
 
         public Task UpdateText()
@@ -104,7 +114,10 @@ namespace MultiRPC.GUI.Pages
             var text = await MultiRPCAndCustomLogic.CheckImageText((TextBox) sender);
 
             if (RPC.Presence.Assets != null)
+            {
                 RPC.Presence.Assets.LargeImageText = tbLargeText.Text;
+            }
+
             CanRunRPC();
             _preview.recLargeImage.ToolTip = !string.IsNullOrWhiteSpace(text) ? new ToolTip(text) : null;
 
@@ -117,7 +130,10 @@ namespace MultiRPC.GUI.Pages
             var text = await MultiRPCAndCustomLogic.CheckImageText((TextBox) sender);
 
             if (RPC.Presence.Assets != null)
+            {
                 RPC.Presence.Assets.SmallImageText = tbSmallText.Text;
+            }
+
             CanRunRPC();
             _preview.ellSmallImage.ToolTip = !string.IsNullOrWhiteSpace(text) ? new ToolTip(text) : null;
 
@@ -179,11 +195,13 @@ namespace MultiRPC.GUI.Pages
                 await UpdateImageEvent(e, false);
 
                 for (var i = 0; i < cbLargeKey.Items.Count; i++)
+                {
                     if (cbLargeKey.Items[i] == e.AddedItems[0])
                     {
                         App.Config.MultiRPC.LargeKey = i;
                         break;
                     }
+                }
 
                 App.Config.Save();
             }
@@ -193,14 +211,23 @@ namespace MultiRPC.GUI.Pages
         {
             var image = e.AddedItems[0].ToString();
             if (IsEnabled)
+            {
                 UpdatePreviewImage(updateSmall, image);
+            }
 
             if (RPC.Presence.Assets == null)
+            {
                 RPC.Presence.Assets = new Assets();
+            }
+
             if (updateSmall)
+            {
                 RPC.Presence.Assets.SmallImageKey = image.ToLower();
+            }
             else
+            {
                 RPC.Presence.Assets.LargeImageKey = image.ToLower();
+            }
 
             return Task.CompletedTask;
         }

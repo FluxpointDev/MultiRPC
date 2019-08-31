@@ -70,11 +70,15 @@ namespace MultiRPC.Functions
         public void ImageError(BitmapImage img, ExceptionEventArgs ex)
         {
             if (ex == null)
+            {
                 LogText += LogEvent(App.Text.ImageError,
                     $"{App.Text.FailedToDownload} ({img.UriSource.AbsoluteUri}) {App.Text.NetworkError}");
+            }
             else
+            {
                 LogText += LogEvent(App.Text.ImageError,
                     $"{App.Text.FailedToDownload} ({img.UriSource.AbsoluteUri}) {ex.ErrorException.Message}");
+            }
         }
 
         public string LogEvent(string name, string message)

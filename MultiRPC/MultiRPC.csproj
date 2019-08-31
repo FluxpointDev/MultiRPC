@@ -384,7 +384,7 @@
       <Version>12.0.2</Version>
     </PackageReference>
     <PackageReference Include="XamlAnimatedGif">
-      <Version>1.2.1</Version>
+      <Version>1.2.2</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

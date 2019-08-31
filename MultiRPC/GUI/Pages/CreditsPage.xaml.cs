@@ -47,6 +47,7 @@ namespace MultiRPC.GUI.Pages
         {
             var creditsFileFI = new FileInfo(CreditsFileLocalLocation);
             if (!updateText)
+            {
                 using (var reader = creditsFileFI.OpenText())
                 {
                     _creditsList = (CreditsList) App.JsonSerializer.Deserialize(reader, typeof(CreditsList));
@@ -57,6 +58,7 @@ namespace MultiRPC.GUI.Pages
                         tblPaypalDonators.Text = string.Join("\r\n\r\n", _creditsList.Paypal);
                     }
                 }
+            }
 
             tblLastUpdated.Text = creditsFileFI.LastWriteTime.Date == DateTime.Now.Date
                 ? $"{App.Text.LastUpdatedAt}: {creditsFileFI.LastWriteTime.ToShortTimeString()}"
@@ -68,7 +70,9 @@ namespace MultiRPC.GUI.Pages
         private async Task SetupLogic()
         {
             if (File.Exists(CreditsFileLocalLocation))
+            {
                 await UpdateCredits();
+            }
 
             var webFile = new[] {App.MultiRPCWebsiteRoot, CreditsFileName}.Combine();
             DownloadFile:
@@ -84,7 +88,9 @@ namespace MultiRPC.GUI.Pages
 
                 tblLastUpdated.Text = App.Text.CheckForUpdates.Replace("\r\n", " ");
                 if (_webClient.IsBusy)
+                {
                     _webClient.CancelAsync();
+                }
 
                 var creditFileContent = await _webClient.DownloadStringTaskAsync(webFile);
                 if (!string.IsNullOrWhiteSpace(creditFileContent))
@@ -124,7 +130,9 @@ namespace MultiRPC.GUI.Pages
         private void NetworkChange_NetworkAddressChanged(object sender, EventArgs e)
         {
             if (Utils.NetworkIsAvailable())
+            {
                 Dispatcher.Invoke(async () => await SetupLogic());
+            }
         }
 
         private void LinkUri_OnRequestNavigate(object sender, RequestNavigateEventArgs e)

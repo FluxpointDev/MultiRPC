@@ -51,7 +51,10 @@ namespace MultiRPC.GUI
                     Owner = ownerWindow
                 };
                 if (messageBoxButton == MessageBoxButton.YesNo)
+                {
                     window.btnClose.IsEnabled = false;
+                }
+
                 window.ShowDialog();
                 return window.ToReturn ?? DefaultReturn(messageBoxButton, messageBoxResult);
             });

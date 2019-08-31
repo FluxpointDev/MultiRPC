@@ -24,11 +24,14 @@ namespace MultiRPC.Functions
         public static async Task Check(bool showNoUpdateMessage = false)
         {
             if (BeenUpdated)
+            {
                 return;
+            }
 
             IsChecking = true;
 
             if (ApplicationDeployment.IsNetworkDeployed)
+            {
                 try
                 {
                     MainPage._MainPage.Dispatcher.Invoke(() =>
@@ -38,8 +41,10 @@ namespace MultiRPC.Functions
                         MainPage._MainPage.pbUpdateProgress.ToolTip = new ToolTip($"{App.Text.CheckingForUpdates}...");
                     });
                     if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
+                    {
                         Application.Current.MainWindow.TaskbarItemInfo.ProgressState =
                             TaskbarItemProgressState.Indeterminate;
+                    }
 
                     var info = ApplicationDeployment.CurrentDeployment.CheckForDetailedUpdate(false);
 
@@ -49,7 +54,9 @@ namespace MultiRPC.Functions
                         MainPage._MainPage.pbUpdateProgress.ToolTip = null;
                     });
                     if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
+                    {
                         Application.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+                    }
 
                     if (info.UpdateAvailable)
                     {
@@ -77,7 +84,9 @@ namespace MultiRPC.Functions
                             await Application.Current.Dispatcher.InvokeAsync(async () =>
                             {
                                 if (await MainWindow.OpenWindow(new UpdatePage(null, tick), true, tick, false) != null)
+                                {
                                     IsChecking = false;
+                                }
                             });
 
                             IsChecking = false;
@@ -98,8 +107,11 @@ namespace MultiRPC.Functions
                         MainPage._MainPage.pbUpdateProgress.ToolTip = null;
                     });
                     if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
+                    {
                         Application.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+                    }
                 }
+            }
 
             IsChecking = false;
         }
@@ -108,7 +120,9 @@ namespace MultiRPC.Functions
         public static async Task Start()
         {
             if (BeenUpdated)
+            {
                 return;
+            }
 
             IsUpdating = true;
             MainPage._MainPage.Dispatcher.Invoke(() =>
@@ -118,7 +132,9 @@ namespace MultiRPC.Functions
                 MainPage._MainPage.pbUpdateProgress.ToolTip = new ToolTip($"{App.Text.StartingUpdate}...");
             });
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
+            {
                 Application.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
+            }
 
             try
             {
@@ -137,7 +153,9 @@ namespace MultiRPC.Functions
                     MainPage._MainPage.pbUpdateProgress.ToolTip = null;
                 });
                 if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
+                {
                     Application.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+                }
 
                 var tick = DateTime.Now.Ticks;
                 await MainWindow.OpenWindow(new UpdateFailedPage(e, tick), true, tick, false);
@@ -190,7 +208,10 @@ namespace MultiRPC.Functions
                 else
                 {
                     if (File.Exists(FileLocations.MultiRPCStartLink))
+                    {
                         Process.Start(FileLocations.MultiRPCStartLink, "--fromupdate");
+                    }
+
                     Application.Current.Shutdown();
                 }
             }
@@ -210,7 +231,9 @@ namespace MultiRPC.Functions
                 MainPage._MainPage.pbUpdateProgress.ToolTip = null;
             });
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
+            {
                 Application.Current.MainWindow.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+            }
         }
     }
 }

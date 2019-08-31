@@ -27,7 +27,9 @@ namespace MultiRPC.GUI.Pages
         {
             var text = textBox.Text;
             if (!Checks.UnderAmountOfBytes(text, 128))
+            {
                 textBox.Undo();
+            }
 
             return Task.FromResult(textBox.Text);
         }
@@ -157,7 +159,10 @@ namespace MultiRPC.GUI.Pages
                             else
                             {
                                 if (MainPage._MainPage.frmContent.Content is MasterCustomPage)
+                                {
                                     RPC.IDToUse = ID;
+                                }
+
                                 tbClientID.SetResourceReference(Control.BorderBrushProperty, "AccentColour4SCBrush");
                                 tbClientID.ToolTip = null;
                             }

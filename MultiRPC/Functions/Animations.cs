@@ -7,15 +7,25 @@ namespace MultiRPC.Functions
 {
     internal class Animations
     {
-        public static async Task DoubleAnimation(FrameworkElement element, double to, double from,
+        public static async Task DoubleAnimation(
+            FrameworkElement element, 
+            double to, 
+            double from,
             Storyboard storyboard = null,
-            Duration duration = new Duration(), PropertyPath propertyPath = null,
+            Duration duration = new Duration(), 
+            PropertyPath propertyPath = null,
             IEasingFunction ease = null)
         {
             if (storyboard == null)
+            {
                 storyboard = new Storyboard();
+            }
+
             if (propertyPath == null)
+            {
                 propertyPath = new PropertyPath(UIElement.OpacityProperty);
+            }
+
             var fadeAnimation = new DoubleAnimation
             {
                 From = from,
@@ -31,12 +41,19 @@ namespace MultiRPC.Functions
             await Task.Delay(fadeAnimation.Duration.TimeSpan);
         }
 
-        public static async Task ThicknessAnimation(FrameworkElement element, Thickness to,
-            Thickness from, Duration duration = new Duration(), PropertyPath propertyPath = null,
+        public static async Task ThicknessAnimation(
+            FrameworkElement element, 
+            Thickness to,
+            Thickness from, 
+            Duration duration = new Duration(),
+            PropertyPath propertyPath = null,
             IEasingFunction ease = null)
         {
             if (propertyPath == null)
+            {
                 propertyPath = new PropertyPath(FrameworkElement.MarginProperty);
+            }
+
             var storyboard = new Storyboard();
             var fadeAnimation = new ThicknessAnimation
             {

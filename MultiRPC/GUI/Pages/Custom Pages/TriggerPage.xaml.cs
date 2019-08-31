@@ -82,7 +82,10 @@ namespace MultiRPC.GUI.Pages
 
         private void TimespanLogic(string time, Action<TimeSpan> editLogic, TextBlock errorTbl)
         {
-            if (MasterCustomPage.CurrentButton == null) return;
+            if (MasterCustomPage.CurrentButton == null)
+            {
+                return;
+            }
 
             if (time.Length == 0)
             {

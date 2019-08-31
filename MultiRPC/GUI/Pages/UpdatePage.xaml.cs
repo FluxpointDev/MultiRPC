@@ -34,12 +34,18 @@ namespace MultiRPC.GUI.Pages
             tblCurrentVersion.Text =
                 App.Text.CurrentVersion + ": " + Assembly.GetExecutingAssembly().GetName().Version;
             if (info != null)
+            {
                 tblNewVersion.Text = App.Text.NewVersion + ": " + info.AvailableVersion;
+            }
             else
+            {
                 tblNewVersion.Text = App.Text.NewVersion + ": " + "???";
+            }
 
             if (File.Exists(FileLocations.ChangelogFileLocalLocation))
+            {
                 tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
+            }
 
             _windowID = windowID;
             Title = App.Text.Update;
@@ -65,7 +71,10 @@ namespace MultiRPC.GUI.Pages
             else
             {
                 if (File.Exists(FileLocations.MultiRPCStartLink))
+                {
                     Process.Start(FileLocations.MultiRPCStartLink, "--fromupdate");
+                }
+
                 Application.Current.Shutdown();
             }
         }

@@ -25,7 +25,11 @@ namespace MultiRPC.GUI
             btnCancel.Content = App.Text.Cancel;
             tblMessageBoxText.Text = messageBoxText;
 
-            if (messageBoxButton == MessageBoxButton.OK) btnOk.Visibility = Visibility.Visible;
+            if (messageBoxButton == MessageBoxButton.OK)
+            {
+                btnOk.Visibility = Visibility.Visible;
+            }
+
             if (messageBoxButton == MessageBoxButton.OKCancel)
             {
                 btnOk.Visibility = Visibility.Visible;
@@ -46,16 +50,26 @@ namespace MultiRPC.GUI
             }
 
             if ((int) messageBoxImage == 0)
+            {
                 imgMessageBoxImage.Visibility = Visibility.Collapsed;
+            }
 
             if ((int) messageBoxImage == 64)
+            {
                 imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "InfoIconDrawingImage");
+            }
             else if ((int) messageBoxImage == 48)
+            {
                 imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "WarningIconDrawingImage");
+            }
             else if ((int) messageBoxImage == 16)
+            {
                 imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "AlertIconDrawingImage");
+            }
             else if ((int) messageBoxImage == 32)
+            {
                 imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "HelpIconDrawingImage");
+            }
         }
 
         private void ButOk_OnClick(object sender, RoutedEventArgs e)

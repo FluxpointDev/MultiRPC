@@ -49,8 +49,10 @@ namespace MultiRPC.GUI.Pages
         {
             //Give the theme a name if it doesn't have one 
             if (string.IsNullOrWhiteSpace(tbThemeBeingMadeName.Text))
+            {
                 tbThemeBeingMadeName.Text = App.Text.Theme + " " +
                                             (InstalledThemes._InstalledThemes.wpInstalledThemes.Children.Count + 1);
+            }
         }
 
         public Task UpdateText()
@@ -113,8 +115,14 @@ namespace MultiRPC.GUI.Pages
         {
             if (string.IsNullOrWhiteSpace(themeFile))
             {
-                if (File.Exists(App.Config.ActiveTheme)) themeFile = App.Config.ActiveTheme;
-                else themeFile = Path.Combine("Assets", "Themes", "DarkTheme" + Theme.ThemeExtension);
+                if (File.Exists(App.Config.ActiveTheme))
+                {
+                    themeFile = App.Config.ActiveTheme;
+                }
+                else
+                {
+                    themeFile = Path.Combine("Assets", "Themes", "DarkTheme" + Theme.ThemeExtension);
+                }
                 //We want to at least have a theme so this doesn't happen: https://1drv.ms/u/s!AhwsT7MDO4OvgtsoUYv7Tmq7KWDleA
             }
 
@@ -162,7 +170,9 @@ namespace MultiRPC.GUI.Pages
         public async Task MakeThemeUIEditable(string themeFile = null)
         {
             if (string.IsNullOrWhiteSpace(themeFile))
+            {
                 themeFile = Path.Combine("Assets", "Themes", "DarkTheme" + Theme.ThemeExtension);
+            }
 
             //Get the theme's C O N T E N T and slap it onto the screen
             var theme = await Theme.Load(themeFile);
@@ -184,9 +194,11 @@ namespace MultiRPC.GUI.Pages
             else
             {
                 if (InstalledThemes._InstalledThemes.ThemeNames?.Count != 0)
+                {
                     tbThemeBeingMadeName.Text =
                         $"{themeDictionary["ThemeName"]} " +
                         (InstalledThemes._InstalledThemes.wpInstalledThemes.Children.Count + 1);
+                }
             }
 
             GC.Collect();
@@ -206,7 +218,9 @@ namespace MultiRPC.GUI.Pages
         private void ColourPicker_OnSelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (!IsInitialized)
+            {
                 return;
+            }
 
             string solidColorBrushName = null;
             string colorName = null;
@@ -290,10 +304,14 @@ namespace MultiRPC.GUI.Pages
 
             //Update the test UI with the colour
             if (frmThemeBeingMade.Content != null)
+            {
                 ((MainPageThumbnail) frmThemeBeingMade.Content).UpdateMergedDictionaries(solidColorBrushName,
                     new SolidColorBrush(e.NewValue.Value), colorName);
+            }
             else
+            {
                 frmThemeBeingMade.Content = new MainPageThumbnail(_themeDictionary);
+            }
         }
 
         private async void BtnSaveAndApplyTheme_OnClick(object sender, RoutedEventArgs e)
@@ -335,7 +353,9 @@ namespace MultiRPC.GUI.Pages
             var newThemeName = tbThemeBeingMadeName.Text.Trim();
             var sameThemeName = false;
             if (InstalledThemes._InstalledThemes.ThemeNameThatBeingEdited != null)
+            {
                 sameThemeName = InstalledThemes._InstalledThemes.ThemeNameThatBeingEdited.Equals(newThemeName);
+            }
 
             if (InstalledThemes._InstalledThemes.ThemeNames.Contains(newThemeName) && !sameThemeName)
             {
@@ -347,6 +367,7 @@ namespace MultiRPC.GUI.Pages
             }
 
             for (var i = 0; i < Path.GetInvalidFileNameChars().Length; i++)
+            {
                 if (newThemeName.Contains(Path.GetInvalidFileNameChars()[i]))
                 {
                     tbThemeBeingMadeName.SetResourceReference(Control.BorderBrushProperty, "Red");
@@ -355,6 +376,7 @@ namespace MultiRPC.GUI.Pages
                     buttonToTrigger.IsEnabled = false;
                     return;
                 }
+            }
 
             tbThemeBeingMadeName.ToolTip = null;
             tbThemeBeingMadeName.SetResourceReference(Control.BorderBrushProperty, "AccentColour4SCBrush");

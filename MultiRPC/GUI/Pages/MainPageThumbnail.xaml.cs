@@ -36,7 +36,9 @@ namespace MultiRPC.GUI.Pages
         {
             Resources.MergedDictionaries[0][solidBrushKey] = brush;
             if (!string.IsNullOrWhiteSpace(colourKey))
+            {
                 Resources.MergedDictionaries[0][colourKey] = brush.Color;
+            }
 
             await UpdateButtons();
         }
@@ -67,7 +69,9 @@ namespace MultiRPC.GUI.Pages
                 {
                     var buttonDrawings = (DrawingGroup) mainButtonDrawings[i];
                     for (var j = 0; j < buttonDrawings.Children.Count; j++)
+                    {
                         ((GeometryDrawing) buttonDrawings.Children[j]).Brush = brushToUpdateTo;
+                    }
                 }
             }
 

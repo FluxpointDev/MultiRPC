@@ -87,7 +87,9 @@ namespace MultiRPC.GUI.Pages
             if (!_haveDoneAutoStart)
             {
                 if (await CanRunRPC(true))
+                {
                     MainPage._MainPage.btnStart.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                }
             }
             else
             {
@@ -100,8 +102,10 @@ namespace MultiRPC.GUI.Pages
         private void SetPresence()
         {
             if (!RPC.IsRPCRunning || RPC.Type == RPC.RPCType.Custom)
+            {
                 RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text,
                     tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+            }
         }
 
         private void TbLargeText_OnTextChanged(object sender, TextChangedEventArgs e)

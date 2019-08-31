@@ -13,7 +13,9 @@ namespace MultiRPC.GUI.Pages
         {
             InitializeComponent();
             if (File.Exists(FileLocations.ChangelogFileLocalLocation))
+            {
                 tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
+            }
 
             Title = App.Text.Changelog;
         }

@@ -59,14 +59,23 @@ namespace MultiRPC.GUI.Pages
                     Page = new TriggerPage(pageWidth)
                 }
             });
-            for (var i = 0; i < Profiles.Count; i++) MakeMenuButton(Profiles.ElementAt(i).Key);
+            for (var i = 0; i < Profiles.Count; i++)
+            {
+                MakeMenuButton(Profiles.ElementAt(i).Key);
+            }
+
             tbProfiles.ItemsSource = ProfileButtons;
             tbProfiles.Items.Refresh();
 
             if (CurrentButton != null)
+            {
                 CurrentButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            }
             else
+            {
                 ProfileButtons[App.Config.SelectedCustom].RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            }
+
             tbProfiles.Visibility = tbProfiles.Items.Count == 1 ? Visibility.Collapsed : Visibility.Visible;
 
             frmContent.Content = _tabPage;
@@ -76,7 +85,10 @@ namespace MultiRPC.GUI.Pages
         {
             var keyCount = Profiles.Count + 1;
             if (String.IsNullOrWhiteSpace(name))
+            {
                 name = App.Text.Custom + keyCount;
+            }
+
             while (Profiles.ContainsKey(name))
             {
                 keyCount++;
@@ -124,7 +136,10 @@ namespace MultiRPC.GUI.Pages
                 : Visibility.Visible;
 
             if (CurrentButton != null)
+            {
                 CurrentButton.Background = null;
+            }
+
             CurrentButton = (Button)sender;
             CurrentButton.SetResourceReference(Control.BackgroundProperty, "AccentColour2HoverSCBrush");
             var profile = Profiles[CurrentButton.Content.ToString()];
@@ -161,7 +176,9 @@ namespace MultiRPC.GUI.Pages
                 for (var i = 0; i < 10; i++)
                 {
                     if (i > Profiles.Count - 1)
+                    {
                         break;
+                    }
 
                     //Configure a new JumpTask
                     var jumpTask = new JumpTask
@@ -267,11 +284,13 @@ namespace MultiRPC.GUI.Pages
 
             tbProfiles.Items.Refresh();
             for (var i = 0; i < ProfileButtons.Count; i++)
+            {
                 if (ProfileButtons[i].Content.ToString() == lastKey)
                 {
                     ProfileButtons[i].RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
                     break;
                 }
+            }
 
             tbProfiles.Visibility = tbProfiles.Items.Count == 1 ? Visibility.Collapsed : Visibility.Visible;
             MakeJumpList();

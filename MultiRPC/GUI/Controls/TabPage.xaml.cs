@@ -26,7 +26,9 @@ namespace MultiRPC.GUI.Controls
             for (var i = 0; i < tabs.LongLength; i++)
             {
                 if (tabs[i].IsActive && gridToPress == 0)
+                {
                     gridToPress = i;
+                }
 
                 Grid grid = new Grid
                 {

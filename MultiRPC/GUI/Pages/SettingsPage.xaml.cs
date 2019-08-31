@@ -37,7 +37,9 @@ namespace MultiRPC.GUI.Pages
             }
 
             if (item != null)
+            {
                 cbAutoStart.SelectedItem = item;
+            }
 
             cbAfkTime.IsChecked = App.Config.AFKTime;
             cbDiscordCheck.IsChecked = !App.Config.DiscordCheck;
@@ -58,7 +60,10 @@ namespace MultiRPC.GUI.Pages
                 };
                 cbilangs.Add(cbilang);
 
-                if (UIText[i].LanguageTag == App.Config.ActiveLanguage) activeLangInt = i;
+                if (UIText[i].LanguageTag == App.Config.ActiveLanguage)
+                {
+                    activeLangInt = i;
+                }
             }
 
             cbLanguage.ItemsSource = cbilangs;
@@ -76,11 +81,15 @@ namespace MultiRPC.GUI.Pages
         {
             btnCheckUpdates.IsEnabled = false;
             if (Updater.BeenUpdated || Updater.IsUpdating)
+            {
                 return;
+            }
 
             await Task.Delay(250);
             while (Updater.IsChecking)
+            {
                 await Task.Delay(250);
+            }
 
             btnCheckUpdates.IsEnabled = true;
         }
@@ -258,11 +267,13 @@ namespace MultiRPC.GUI.Pages
                     MainPage._MainPage.tblInternetConnectivity.Text == App.Text.InternetLost;
 
                 for (var i = 0; i < UIText.Count; i++)
+                {
                     if (UIText[i].LanguageTag == languageSelected.Tag.ToString())
                     {
                         App.Text = UIText[i];
                         break;
                     }
+                }
 
                 App.Config.ActiveLanguage = languageSelected.Tag.ToString();
 
@@ -279,9 +290,11 @@ namespace MultiRPC.GUI.Pages
                 DebugPage._DebugPage?.UpdateText();
 
                 if (!string.IsNullOrWhiteSpace(MainPage._MainPage.tblInternetConnectivity.Text))
+                {
                     MainPage._MainPage.tblInternetConnectivity.Text = internetConnectivityTextIsInternetLost
                         ? App.Text.InternetLost
                         : App.Text.InternetBack;
+                }
 
                 Data.MultiRPCImages = Data.MakeImagesDictionary();
 
