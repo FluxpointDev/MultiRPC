@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Extra;
 using System.IO;
@@ -328,6 +329,32 @@ namespace MultiRPC.GUI.Pages
                 App.Config.ShowPageTooltips = !((CheckBox) sender).IsChecked.Value;
                 App.Config.Save();
                 MainPage._MainPage.UpdateTooltips();
+            }
+        }
+
+        private void BtnAdmin_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var processInfo = new ProcessStartInfo(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)
+                {
+                    UseShellExecute = true,
+                    Verb = "runas"
+                };
+                Process.Start(processInfo);
+                Application.Current.Shutdown();
+            }
+            catch (Win32Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                if (ex.NativeErrorCode == 1223)
+                {
+                    // User clicked no
+                }
+                else
+                {
+                    // Unknown error
+                }
             }
         }
     }

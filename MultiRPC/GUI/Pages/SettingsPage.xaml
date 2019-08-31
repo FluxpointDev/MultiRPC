@@ -258,7 +258,8 @@
                         Margin="0,0,5,0" Click="ButCheckUpdates_OnClick" />
             </StackPanel>
             <StackPanel Margin="0,5,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button Width="100" Style="{DynamicResource ButtonPurple}" Name="btnDebug" Click="ButDebug_OnClick" />
+                <Button Width="100" Style="{DynamicResource ButtonPurple}" Name="btnDebug" Margin="0,0,5,0" Click="ButDebug_OnClick" />
+                <Button Width="100" Style="{DynamicResource ButtonPurple}" Name="btnAdmin" Margin="0,0,5,0" Click="BtnAdmin_Click" Content="Admin Mode" />
             </StackPanel>
         </StackPanel>
     </Grid>

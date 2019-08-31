@@ -193,10 +193,10 @@ namespace MultiRPC
             //Show that we are going to load things™
             await MainPage._MainPage.frmRPCPreview.Dispatcher.InvokeAsync(async () =>
             {
-                await ((RPCPreview) MainPage._MainPage.frmRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType
+                await ((RPCPreview)MainPage._MainPage.frmRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType
                     .Loading);
                 MainPage._MainPage.rCon.Text = App.Text.Loading;
-                MainPage._MainPage.btnStart.Style = (Style) MainPage._MainPage.Resources["ButtonRed"];
+                MainPage._MainPage.btnStart.Style = (Style)MainPage._MainPage.Resources["ButtonRed"];
                 _pageUserWasOnWhenStarted = MainPage._MainPage.btnStart.Content.ToString();
                 MainPage._MainPage.btnStart.Content = App.Text.Shutdown;
             });

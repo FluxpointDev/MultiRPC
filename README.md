@@ -1,5 +1,5 @@
 # Info
-A windows app for managing Discord rich presence with the ability to set a custom status or default ones with an afk option too.
+![Image](https://gallery.blazedev.me/i/2019/08/08/65879d0a-me.jpg)
 
 This supports all versions of windows, linux/mac support coming soon using .net core
 
@@ -9,7 +9,7 @@ Ram usage: 50mb | Language: C# | GUI: Wpf
 
 # Support 
 
-Contact me Builderb#0001 or join this [Discord Server](https://discord.gg/susQ6XA) for more info and support
+Contact me Builderb#0001 or join the Discord server https://discord.gg/TjF6QDC for more info and support
 
 # Install
 Install the setup from here https://multirpc.blazedev.me
@@ -18,13 +18,13 @@ Click more info and run anyway (windows limitation)
 
 ![Image](https://i.imgur.com/jV9jIte.png)
 
-![Image](https://i.imgur.com/FgrdIAU.png)
+![Image](https://i.imgur.com/fNdwVn4.png)
 
 # MultiRPC
 
 Default rpc profile change the text and select any images or set the tooltip
 
-![Image](https://i.imgur.com/NctHudZ.png)
+![Image](https://i.imgur.com/UpqlwSd.png)
 
 # Custom
 

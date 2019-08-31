@@ -29,7 +29,7 @@ namespace MultiRPC.JsonClasses
         public static string OpenFileLocalLocation = Path.Combine(ConfigFolder, OpenFileName);
 
         public static string MultiRPCStartLink =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), "Programs", "Discord Universe",
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                 "MultiRPC.appref-ms");
 
         static FileLocations()

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using DiscordRPC.Logging;
+using MultiRPC.GUI.Pages;
 
 namespace MultiRPC.Functions
 {
@@ -103,6 +106,15 @@ namespace MultiRPC.Functions
 
         public void Error(string message, params object[] args)
         {
+            if (args.Contains("Access to the path is denied."))
+            {
+                MainPage._MainPage.frmRPCPreview.Dispatcher.Invoke(() =>
+                {
+                    RPC.Shutdown();
+                    MessageBox.Show("Your Discord client is running under administrator, MultiRPC needs admin approval to run.\n" +
+                        "Go to settings and click on Admin Mode.", "Admin Required", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
+            }
             LogText += LogEvent($"RPC {App.Text.Error}", RPCMessage(message, args));
         }
 

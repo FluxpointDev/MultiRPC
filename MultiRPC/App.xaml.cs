@@ -20,7 +20,7 @@ namespace MultiRPC
         public const string MultiRPCWebsiteRoot = "https://multirpc.blazedev.me";
         public const int RetryCount = 10; //How many times to attempt downloading files
         public const string AppDev = "Builder#0001";
-        public const string ServerInviteCode = "susQ6XA";
+        public const string ServerInviteCode = "TjF6QDC";
         public static UIText Text;
         public static Logging Logging;
         public static bool StartedWithJumpListLogic;
@@ -96,7 +96,6 @@ namespace MultiRPC
                 _ = CustomPage.StartCustomProfileLogic(e.Args[1], true);
             }
 #endif
-
             FileWatch.Create();
             SettingsPage.UIText = new List<UIText>();
             GetLangFiles();
