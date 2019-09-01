@@ -7,6 +7,9 @@
     <LangVersion>preview</LangVersion>
     <AssemblyName>MultiRPC</AssemblyName>
     <RootNamespace>MultiRPC</RootNamespace>
+    <ApplicationIcon>MultiRPCIcon.ico</ApplicationIcon>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <VersionPrefix>5.2.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -24,6 +27,9 @@
     <Content Include="Assets\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Assets\Themes\DesignerTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -36,7 +42,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
+  
   <ItemGroup>
     <Compile Remove="Assets\LottieAnimations\**" />
     <Content Remove="Assets\LottieAnimations\**" />
@@ -64,21 +70,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="App.config" />
     <Compile Remove="Functions\ClickOnceUpdater.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <None Remove="Assets\MultiRPCLogo.ai" />
     <Content Remove="Assets\Loading.gif" />
     <Content Remove="Assets\MultiRPCLogo.ai" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="App.config" />
-    <None Remove="Assets\MultiRPCLogo.ai" />
-    <None Remove="multirpc.VisualElementsManifest.xml" />
-  </ItemGroup>
   
   <ItemGroup>
+    <Content Include="Properties\app.manifest" />
     <Resource Include="Assets\Loading.gif" />
     <Resource Include="MultiRPCIcon.ico" />
   </ItemGroup>
