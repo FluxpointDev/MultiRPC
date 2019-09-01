@@ -14,7 +14,7 @@ using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for ThemeEditorPage.xaml
+    /// Interaction logic for ThemeEditorPage.xaml
     /// </summary>
     public partial class ThemeEditorPage : Page
     {
@@ -108,7 +108,7 @@ namespace MultiRPC.GUI.Pages
         }
 
         /// <summary>
-        ///     This updates the UI everywhere with the theme
+        /// This updates the UI everywhere with the theme
         /// </summary>
         /// <returns>A great looking MultiRPC (I hope anyway...)</returns>
         public static async Task UpdateGlobalUI(string themeFile = null)
@@ -191,14 +191,11 @@ namespace MultiRPC.GUI.Pages
                 InstalledThemes._InstalledThemes.ThemeNameThatBeingEdited = (string) themeDictionary["ThemeName"];
                 tbThemeBeingMadeName.Text = InstalledThemes._InstalledThemes.ThemeNameThatBeingEdited;
             }
-            else
+            else if (InstalledThemes._InstalledThemes?.ThemeNames?.Count > 0)
             {
-                if (InstalledThemes._InstalledThemes.ThemeNames?.Count != 0)
-                {
-                    tbThemeBeingMadeName.Text =
-                        $"{themeDictionary["ThemeName"]} " +
-                        (InstalledThemes._InstalledThemes.wpInstalledThemes.Children.Count + 1);
-                }
+                tbThemeBeingMadeName.Text =
+                    $"{themeDictionary["ThemeName"]} " +
+                    (InstalledThemes._InstalledThemes.wpInstalledThemes.Children.Count + 1);
             }
 
             GC.Collect();

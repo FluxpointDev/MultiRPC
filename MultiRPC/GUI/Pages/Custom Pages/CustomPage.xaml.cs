@@ -13,7 +13,7 @@ using MultiRPC.JsonClasses;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for CustomPage.xaml
+    /// Interaction logic for CustomPage.xaml
     /// </summary>
     public partial class CustomPage : Page
     {

@@ -14,7 +14,7 @@ using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for SettingsPage.xaml
+    /// Interaction logic for SettingsPage.xaml
     /// </summary>
     public partial class SettingsPage : Page
     {
@@ -129,6 +129,7 @@ namespace MultiRPC.GUI.Pages
             rAppDev.ToolTip = new ToolTip(App.Text.ClickToCopy);
             tblHideTaskbarIcon.Text = App.Text.HideTaskbarIcon;
             tblShowPageTooltips.Text = App.Text.ShowPageTooltips;
+            btnAdmin.Content = App.Text.Admin;
 
             return Task.CompletedTask;
         }
@@ -336,7 +337,7 @@ namespace MultiRPC.GUI.Pages
         {
             try
             {
-                var processInfo = new ProcessStartInfo(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)
+                var processInfo = new ProcessStartInfo(System.Reflection.Assembly.GetExecutingAssembly().CodeBase.Replace(".dll", ".exe")) //Net Core tell's us the location of the dll, not the exe so we point it back to the exe
                 {
                     UseShellExecute = true,
                     Verb = "runas"

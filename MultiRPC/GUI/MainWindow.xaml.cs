@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,7 +22,7 @@ using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 namespace MultiRPC.GUI
 {
     /// <summary>
-    ///     Interaction logic for MainWindow.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -34,9 +35,15 @@ namespace MultiRPC.GUI
         public object ToReturn { get; private set; }
         protected long WindowID; //This is so we can know that the window we look for is the window we are looking for
 
+        public static bool IsAdministrator =>
+           new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+
         public MainWindow()
         {
             InitializeComponent();
+
+            Title += (IsAdministrator ? " (Administrator)" : "");
+            tblTitle.Text = Title;
             if (this != Application.Current.MainWindow)
             {
                 return;
@@ -59,7 +66,7 @@ namespace MultiRPC.GUI
             InitializeComponent();
             StartLogic(page);
             ShowInTaskbar = false;
-            Title = "MultiRPC - " + page.Title;
+            Title = $"MultiRPC - {page.Title} {(IsAdministrator ? "(Administrator)" : "")}";
             tblTitle.Text = Title;
 
             if (!minButton)

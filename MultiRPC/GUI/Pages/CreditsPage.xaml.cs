@@ -14,7 +14,7 @@ using static MultiRPC.JsonClasses.FileLocations;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for CreditsPage.xaml
+    /// Interaction logic for CreditsPage.xaml
     /// </summary>
     public partial class CreditsPage : Page
     {

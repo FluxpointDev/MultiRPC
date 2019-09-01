@@ -5,7 +5,7 @@ using System.Windows.Controls;
 namespace MultiRPC.GUI
 {
     /// <summary>
-    ///     Interaction logic for MessageBoxPage.xaml
+    /// Interaction logic for MessageBoxPage.xaml
     /// </summary>
     public partial class MessageBoxPage : Page
     {

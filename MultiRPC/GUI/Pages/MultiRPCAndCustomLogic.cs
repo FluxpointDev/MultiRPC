@@ -26,7 +26,7 @@ namespace MultiRPC.GUI.Pages
         public static Task<string> CheckImageText(TextBox textBox)
         {
             var text = textBox.Text;
-            if (!Checks.UnderAmountOfBytes(text, 128))
+            if (!text.UnderAmountOfBytes(128))
             {
                 textBox.Undo();
             }

@@ -40,10 +40,12 @@ namespace MultiRPC.GUI.Pages
         public MasterCustomPage(double pageWidth)
         {
             InitializeComponent();
+
+            LoadProfiles();
             _MasterCustomPage = this;
             Width = pageWidth;
 
-            TriggerWatch.Start();
+            //TriggerWatch.Start();
             MakeJumpList();
 
             _tabPage = new TabPage(new[]
@@ -59,7 +61,7 @@ namespace MultiRPC.GUI.Pages
                     Page = new TriggerPage(pageWidth)
                 }
             });
-            for (var i = 0; i < Profiles.Count; i++)
+            for (var i = 0; i < Profiles?.Count; i++)
             {
                 MakeMenuButton(Profiles.ElementAt(i).Key);
             }
@@ -79,6 +81,31 @@ namespace MultiRPC.GUI.Pages
             tbProfiles.Visibility = tbProfiles.Items.Count == 1 ? Visibility.Collapsed : Visibility.Visible;
 
             frmContent.Content = _tabPage;
+        }
+
+        private void LoadProfiles()
+        {
+            if (Profiles != null)
+            {
+                return;
+            }
+
+            if (File.Exists(FileLocations.ProfilesFileLocalLocation))
+            {
+                using (var reader = File.OpenText(FileLocations.ProfilesFileLocalLocation))
+                {
+                    Profiles = (Dictionary<string, CustomProfile>)App.JsonSerializer.Deserialize(reader,
+                        typeof(Dictionary<string, CustomProfile>));
+                }
+            }
+            else
+            {
+                Profiles = new Dictionary<string, CustomProfile>
+                {
+                    {App.Text.Custom, new CustomProfile {Name = App.Text.Custom}}
+                };
+                SaveProfiles();
+            }
         }
 
         private string MakeProfileName(string name = null)
@@ -169,6 +196,11 @@ namespace MultiRPC.GUI.Pages
 
         private static Task MakeJumpList()
         {
+            if (Profiles == null)
+            {
+                return Task.CompletedTask;
+            }
+
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
             {
                 var jumpList = new JumpList();

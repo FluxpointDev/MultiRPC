@@ -205,5 +205,8 @@
   "ThemeEditor": "Theme Editor",
   "ThemeIcons": "Theme Icons",
   "CustomTriggers": "Custom Triggers",
-  "CustomPage": "Custom Page"
+  "CustomPage": "Custom Page",
+  "Admin": "Admin Mode",
+  "NeedAdmin": "Your Discord client is running under administrator, MultiRPC needs admin approval to run.\nGo to settings and click on Admin Mode.",
+  "AdminRequired": "Admin Required"
 }

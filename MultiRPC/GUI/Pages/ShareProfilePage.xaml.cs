@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for ProfileSharePage.xaml
+    /// Interaction logic for ProfileSharePage.xaml
     /// </summary>
     public partial class ShareProfilePage : Page
     {

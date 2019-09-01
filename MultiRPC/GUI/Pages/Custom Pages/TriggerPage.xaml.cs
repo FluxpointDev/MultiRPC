@@ -24,6 +24,10 @@ namespace MultiRPC.GUI.Pages
         {
             InitializeComponent();
 
+#if DEBUG
+            gridContent.IsEnabled = true;
+            gridToAdd.Visibility = Visibility.Collapsed;
+#endif
             Width = pageWidth;
             _TriggerPage = this;
             btnMonday.Tag = DayOfWeek.Monday;
@@ -199,10 +203,12 @@ namespace MultiRPC.GUI.Pages
         private void BtnFolderName_OnClick(object sender, RoutedEventArgs e)
         {
             //Find a better way of getting Folder
-            var openFileDialog = new OpenFileDialog();
-            openFileDialog.CheckFileExists = false;
-            openFileDialog.ValidateNames = false;
-            openFileDialog.FileName = "Don't Edit this part";
+            var openFileDialog = new OpenFileDialog
+            {
+                CheckFileExists = false,
+                ValidateNames = false,
+                FileName = "Don't Edit this part"
+            };
             if (openFileDialog.ShowDialog(App.Current.MainWindow).Value)
             {
                 txtFolderLocation.Text = openFileDialog.FileName.Remove(openFileDialog.FileName.LastIndexOf('\\'));

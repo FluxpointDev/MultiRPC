@@ -33,7 +33,7 @@ namespace MultiRPC.JsonClasses
             ThemeMetadata = new Metadata
             {
                 ThemeName = "Dark",
-                MultiRPCVersion = Assembly.GetExecutingAssembly().GetName().Version
+                MultiRPCVersion = Version.SysVersionToMultiVersion(Assembly.GetExecutingAssembly().GetName().Version)
             }
         };
 
@@ -57,7 +57,7 @@ namespace MultiRPC.JsonClasses
             ThemeMetadata = new Metadata
             {
                 ThemeName = "Light",
-                MultiRPCVersion = Assembly.GetExecutingAssembly().GetName().Version
+                MultiRPCVersion = Version.SysVersionToMultiVersion(Assembly.GetExecutingAssembly().GetName().Version)
             }
         };
 
@@ -81,13 +81,15 @@ namespace MultiRPC.JsonClasses
             ThemeMetadata = new Metadata
             {
                 ThemeName = "Russia",
-                MultiRPCVersion = Assembly.GetExecutingAssembly().GetName().Version
+                MultiRPCVersion = Version.SysVersionToMultiVersion(Assembly.GetExecutingAssembly().GetName().Version)
             }
         };
 
         public Colours ThemeColours;
-        public Icons ThemeIcons;
         public Metadata ThemeMetadata;
+#if DEBUG
+        public Icons ThemeIcons;
+#endif
 
         static Theme()
         {
@@ -126,7 +128,7 @@ namespace MultiRPC.JsonClasses
                             theme.ThemeColours = JsonConvert.DeserializeObject<Colours>(writer.ReadToEnd());
                         }
                     }
-                    catch
+                    catch (Exception e)
                     {
                         App.Logging.Application(
                             $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeColours}");
@@ -139,13 +141,14 @@ namespace MultiRPC.JsonClasses
                             theme.ThemeMetadata = JsonConvert.DeserializeObject<Metadata>(writer.ReadToEnd());
                         }
                     }
-                    catch
+                    catch (Exception e)
                     {
                         App.Logging.Application(
                             $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeMetadata}");
                     }
 
-                    if (theme.ThemeMetadata.MultiRPCVersion >= Assembly.GetExecutingAssembly().GetName().Version)
+#if DEBUG
+                    if (iconEntry != null && theme.ThemeMetadata.MultiRPCVersion >= Version.SysVersionToMultiVersion(Assembly.GetExecutingAssembly().GetName().Version))
                     {
                         try
                         {
@@ -160,6 +163,7 @@ namespace MultiRPC.JsonClasses
                                 $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeIcons}");
                         }
                     }
+#endif
                 }
             }
             else
@@ -283,6 +287,7 @@ namespace MultiRPC.JsonClasses
                             $"{App.Text.SomethingHappenedWhile} {App.Text.Saving} {fileLocation} {App.Text.ThemeMetadata}");
                     }
 
+#if DEBUG
                     var iconEntry = archive.CreateEntry("iconEntry.json");
                     try
                     {
@@ -296,6 +301,7 @@ namespace MultiRPC.JsonClasses
                         App.Logging.Application(
                             $"{App.Text.SomethingHappenedWhile} {App.Text.Saving} {fileLocation} {App.Text.ThemeIcons}");
                     }
+#endif
                 }
             }
 
@@ -342,6 +348,7 @@ namespace MultiRPC.JsonClasses
             public string ThemeName;
         }
 
+#if DEBUG
         public class Icons
         {
             public string AddIconFileType;
@@ -375,5 +382,6 @@ namespace MultiRPC.JsonClasses
             public string ThemeIconSelectedFileType;
             public string WarningIconFileType;
         }
+#endif
     }
 }

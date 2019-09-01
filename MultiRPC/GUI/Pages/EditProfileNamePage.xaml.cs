@@ -9,7 +9,7 @@ using MultiRPC.JsonClasses;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for EditProfileNamePage.xaml
+    /// Interaction logic for EditProfileNamePage.xaml
     /// </summary>
     public partial class EditProfileNamePage : Page
     {

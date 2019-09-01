@@ -18,7 +18,7 @@ using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for MainPage.xaml
+    /// Interaction logic for MainPage.xaml
     /// </summary>
     public partial class MainPage : Page
     {

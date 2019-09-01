@@ -12,7 +12,7 @@ using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for MultiRPCPage.xaml
+    /// Interaction logic for MultiRPCPage.xaml
     /// </summary>
     public partial class MultiRPCPage : Page
     {
@@ -26,7 +26,7 @@ namespace MultiRPC.GUI.Pages
             UpdateText();
             _MultiRPCPage = this;
 
-            _preview = new RPCPreview(RPCPreview.ViewType.Blank, backgroundName: "Purple", foreground: Brushes.White);
+            _preview = new RPCPreview(RPCPreview.ViewType.Default2, backgroundName: "Purple", foreground: Brushes.White);
             frmRPCPreview.Content = _preview;
 
             tbText1.Text = App.Config.MultiRPC.Text1;
@@ -90,7 +90,7 @@ namespace MultiRPC.GUI.Pages
             }
         }
 
-        public Task UpdateText()
+        public async Task UpdateText()
         {
             tblText1.Text = App.Text.Text1 + ":";
             tblText2.Text = App.Text.Text2 + ":";
@@ -100,8 +100,6 @@ namespace MultiRPC.GUI.Pages
             tblSmallText.Text = App.Text.SmallText + ":";
             tblElapasedTime.Text = App.Text.ShowElapsedTime + ":";
             tblWhatWillLookLike.Text = App.Text.WhatItWillLookLike;
-
-            return Task.CompletedTask;
         }
 
         public async Task<bool> CanRunRPC()

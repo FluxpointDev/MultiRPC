@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -7,7 +8,7 @@ namespace MultiRPC.JsonClasses
     public class Config
     {
         /// <summary> What language is to be shown </summary>
-        public string ActiveLanguage = "en-gb";
+        public string ActiveLanguage = CultureInfo.CurrentUICulture.Name;
 
         /// <summary> What theme to use </summary>
         public string ActiveTheme = Path.Combine("Assets", "Themes", "DarkTheme" + Theme.ThemeExtension);

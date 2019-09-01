@@ -5,7 +5,7 @@ using MultiRPC.JsonClasses;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for ChangelogPage.xaml
+    /// Interaction logic for ChangelogPage.xaml
     /// </summary>
     public partial class ChangelogPage : Page
     {

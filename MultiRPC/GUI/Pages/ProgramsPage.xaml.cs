@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for ProgramsPage.xaml
+    /// Interaction logic for ProgramsPage.xaml
     /// </summary>
     public partial class ProgramsPage : Page
     {

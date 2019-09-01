@@ -14,7 +14,7 @@ using MultiRPC.JsonClasses;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for InstalledThemes.xaml
+    /// Interaction logic for InstalledThemes.xaml
     /// </summary>
     public partial class InstalledThemes : Page
     {

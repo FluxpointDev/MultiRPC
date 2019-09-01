@@ -111,8 +111,7 @@ namespace MultiRPC.Functions
                 MainPage._MainPage.frmRPCPreview.Dispatcher.Invoke(() =>
                 {
                     RPC.Shutdown();
-                    MessageBox.Show("Your Discord client is running under administrator, MultiRPC needs admin approval to run.\n" +
-                        "Go to settings and click on Admin Mode.", "Admin Required", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(App.Text.NeedAdmin, App.Text.AdminRequired, MessageBoxButton.OK, MessageBoxImage.Information);
                 });
             }
             LogText += LogEvent($"RPC {App.Text.Error}", RPCMessage(message, args));

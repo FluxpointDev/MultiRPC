@@ -208,5 +208,8 @@
         public string ThemeIcons;
         public string CustomTriggers;
         public string CustomPage;
+        public string Admin;
+        public string NeedAdmin;
+        public string AdminRequired;
     }
 }

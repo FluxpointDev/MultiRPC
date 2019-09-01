@@ -8,7 +8,7 @@ using TabItem = MultiRPC.GUI.Controls.TabItem;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for MasterThemeEditorPage.xaml
+    /// Interaction logic for MasterThemeEditorPage.xaml
     /// </summary>
     public partial class MasterThemeEditorPage : Page
     {

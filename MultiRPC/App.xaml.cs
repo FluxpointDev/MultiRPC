@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 namespace MultiRPC
 {
     /// <summary>
-    ///     Interaction logic for App.xaml
+    /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
@@ -52,7 +52,7 @@ namespace MultiRPC
                 Theme.Save(Theme.Russia, russiaThemeLocation);
             }
 
-            TriggerWatch.Start();
+            //TriggerWatch.Start();
             Startup += App_Startup;
         }
 
@@ -136,7 +136,7 @@ namespace MultiRPC
                     break;
                 }
 
-                if (text != null && text.LanguageTag == "en-gb")
+                if (text != null && text.LanguageTag == "en-GB")
                 {
                     engbInt = i;
                 }

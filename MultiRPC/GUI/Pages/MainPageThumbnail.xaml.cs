@@ -12,7 +12,7 @@ using MultiRPC.JsonClasses;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for MainPage.xaml
+    /// Interaction logic for MainPage.xaml
     /// </summary>
     public partial class MainPageThumbnail : Page
     {

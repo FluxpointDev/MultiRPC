@@ -14,7 +14,7 @@ using System.Extra;
 namespace MultiRPC.GUI.Views
 {
     /// <summary>
-    ///     Interaction logic for RPCPreview.xaml
+    /// Interaction logic for RPCPreview.xaml
     /// </summary>
     public partial class RPCPreview : UserControl
     {
@@ -24,7 +24,6 @@ namespace MultiRPC.GUI.Views
             Default2,
             Loading,
             Error,
-            Blank,
             RichPresence
         }
 
@@ -194,16 +193,6 @@ namespace MultiRPC.GUI.Views
             recLargeImage.Margin = new Thickness(0);
             switch (view)
             {
-                case ViewType.Blank:
-                {
-                    tblTitle.Text = "MultiRPC";
-                    tblText1.Visibility = Visibility.Visible;
-                    tblText2.Visibility = Visibility.Visible;
-                    tblTime.Text = "";
-                    recLargeImage.Fill =
-                        new ImageBrush((ImageSource) Application.Current.Resources["MultiRPCLogoDrawingImage"]);
-                }
-                    break;
                 case ViewType.Default:
                 {
                     tblTitle.Text = "MultiRPC";
@@ -268,7 +257,7 @@ namespace MultiRPC.GUI.Views
         }
 
         /// <summary>
-        ///     Update the Image
+        /// Update the Image
         /// </summary>
         /// <param name="onSmallImage">If to target the small image</param>
         /// <param name="image">Image</param>

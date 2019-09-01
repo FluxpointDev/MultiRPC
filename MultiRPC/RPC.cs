@@ -34,12 +34,12 @@ namespace MultiRPC
         private static string _pageUserWasOnWhenStarted;
 
         /// <summary>
-        ///     Has rpc failed
+        /// Has rpc failed
         /// </summary>
         private static bool _failed;
 
         /// <summary>
-        ///     Is afk rpc status on
+        /// Is afk rpc status on
         /// </summary>
         public static bool AFK;
 
@@ -94,12 +94,8 @@ namespace MultiRPC
                     SmallImageText = profile.SmallText
                 }
                 : null;
-            if (richPresence.Assets != assets)
-            {
-                return false;
-            }
 
-            return true;
+            return richPresence.Assets == assets;
         }
 
         public static Task UpdateType(RPCType type)
@@ -402,20 +398,23 @@ namespace MultiRPC
 
             AFK = false;
 
-            MasterCustomPage._MasterCustomPage.Dispatcher.Invoke(() =>
+            if (MasterCustomPage._MasterCustomPage != null)
             {
-                if (MasterCustomPage._MasterCustomPage != null)
+                MasterCustomPage._MasterCustomPage.Dispatcher.Invoke(() =>
                 {
-                    for (var i = 0; i < MasterCustomPage.ProfileButtons.Count; i++)
+                    if (MasterCustomPage._MasterCustomPage != null)
                     {
-                        MasterCustomPage.ProfileButtons[i].IsEnabled = true;
-                    }
+                        for (var i = 0; i < MasterCustomPage.ProfileButtons.Count; i++)
+                        {
+                            MasterCustomPage.ProfileButtons[i].IsEnabled = true;
+                        }
 
-                    MasterCustomPage._MasterCustomPage.imgProfileAdd.IsEnabled = true;
-                    MasterCustomPage._MasterCustomPage.imgProfileDelete.IsEnabled = true;
-                }
-            });
-            CustomPage._CustomPage.Dispatcher.Invoke(() => CustomPage._CustomPage.tbClientID.IsEnabled = true);
+                        MasterCustomPage._MasterCustomPage.imgProfileAdd.IsEnabled = true;
+                        MasterCustomPage._MasterCustomPage.imgProfileDelete.IsEnabled = true;
+                    }
+                });
+                CustomPage._CustomPage.Dispatcher.Invoke(() => CustomPage._CustomPage.tbClientID.IsEnabled = true);
+            }
 
             IsRPCRunning = false;
         }

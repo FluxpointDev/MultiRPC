@@ -51,6 +51,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -80,6 +81,7 @@
     <ManifestKeyFile>MultiRPC_TemporaryKey.pfx</ManifestKeyFile>
     <SignManifests>true</SignManifests>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -131,6 +133,8 @@
     <Compile Include="Functions\Animations.cs" />
     <Compile Include="Functions\BitmapDownloader.cs" />
     <Compile Include="Functions\Checks.cs" />
+    <Compile Include="Functions\ClickOnceUpdater.cs" />
+    <Compile Include="Functions\IUpdate.cs" />
     <Compile Include="Functions\TriggerWatch.cs" />
     <Compile Include="Functions\FileWatch.cs" />
     <Compile Include="Functions\Updater.cs" />
@@ -193,6 +197,7 @@
     <Compile Include="JsonClasses\CustomProfile.cs" />
     <Compile Include="JsonClasses\FileLocations.cs" />
     <Compile Include="JsonClasses\Theme.cs" />
+    <Compile Include="JsonClasses\Version.cs" />
     <Compile Include="JsonClasses\UIText.cs" />
     <Compile Include="RPC.cs" />
   </ItemGroup>

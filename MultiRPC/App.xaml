@@ -292,7 +292,7 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                                 <TextBlock Foreground="White" Text="{TemplateBinding Content}"
-                                           x:Name="contentPresenter" Focusable="False"
+                                           x:Name="contentPresenter" Focusable="False" TextWrapping="Wrap"  TextAlignment="Center"
                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                            Margin="10,3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
@@ -328,7 +328,7 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                                 <TextBlock Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding Content}"
-                                           x:Name="contentPresenter" Focusable="False"
+                                           x:Name="contentPresenter" Focusable="False" TextWrapping="Wrap"  TextAlignment="Center"
                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                            Margin="10,3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
@@ -366,7 +366,7 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                                 <TextBlock Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding Content}"
-                                           x:Name="contentPresenter" Focusable="False"
+                                           x:Name="contentPresenter" Focusable="False" TextWrapping="Wrap"  TextAlignment="Center"
                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                            Margin="10,3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
@@ -402,7 +402,7 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                                 <TextBlock Foreground="White" Text="{TemplateBinding Content}"
-                                           x:Name="contentPresenter" Focusable="False"
+                                           x:Name="contentPresenter" Focusable="False" TextWrapping="Wrap"  TextAlignment="Center"
                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                            Margin="10,3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
@@ -435,7 +435,7 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                                 <TextBlock Foreground="White" Text="{TemplateBinding Content}"
-                                           x:Name="contentPresenter" Focusable="False"
+                                           x:Name="contentPresenter" Focusable="False" TextWrapping="Wrap" TextAlignment="Center"
                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                            Margin="10,3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />

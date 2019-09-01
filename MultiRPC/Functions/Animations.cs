@@ -26,6 +26,9 @@ namespace MultiRPC.Functions
                 propertyPath = new PropertyPath(UIElement.OpacityProperty);
             }
 
+            //storyboard ??= new Storyboard();
+            //propertyPath ??= new PropertyPath(UIElement.OpacityProperty);
+
             var fadeAnimation = new DoubleAnimation
             {
                 From = from,
@@ -54,6 +57,8 @@ namespace MultiRPC.Functions
                 propertyPath = new PropertyPath(FrameworkElement.MarginProperty);
             }
 
+            //propertyPath ??= new PropertyPath(FrameworkElement.MarginProperty);
+    
             var storyboard = new Storyboard();
             var fadeAnimation = new ThicknessAnimation
             {
