@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Windows;
 using System.Windows.Threading;
 using MultiRPC.Functions;
@@ -31,6 +32,8 @@ namespace MultiRPC
             Formatting = Formatting.Indented
         };
 
+        public static bool IsAdministrator =>
+           new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
         public App()
         {

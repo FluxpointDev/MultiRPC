@@ -42,6 +42,7 @@ namespace MultiRPC.GUI.Pages
                 cbAutoStart.SelectedItem = item;
             }
 
+            btnAdmin.IsEnabled = !App.IsAdministrator;
             cbAfkTime.IsChecked = App.Config.AFKTime;
             cbDiscordCheck.IsChecked = !App.Config.DiscordCheck;
             cbTokenCheck.IsChecked = !App.Config.CheckToken;
