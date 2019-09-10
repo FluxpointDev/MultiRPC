@@ -193,5 +193,20 @@
   "Getting": "obteniendo",
   "CouldntDownload": "No se pudo obtener",
   "CouldntDelete": "No se pudo eliminar",
-  "ProcessFindError": "Algo sucedió al encontrar procesos de Discord, y dejará de mostrar gridCheckForDiscord"
+  "ProcessFindError": "Algo sucedió al encontrar procesos de Discord, y dejará de mostrar gridCheckForDiscord",
+  "Log": "Log",
+  "Credits": "Credits",
+  "Programs": "Programs",
+  "Page": "page",
+  "ShowPageTooltips": "Show page buttons Tooltips",
+  "TempDisableDiscordCheck": "Temporary disable discord checking",
+  "InternetBack": "Internet is back",
+  "InternetLost": "Internet has been lost",
+  "ThemeEditor": "Theme Editor",
+  "ThemeIcons": "Theme Icons",
+  "CustomTriggers": "Custom Triggers",
+  "CustomPage": "Custom Page",
+  "Admin": "Admin Mode",
+  "NeedAdmin": "Your Discord client is running under administrator, MultiRPC needs admin approval to run.\nGo to settings and click on Admin Mode.",
+  "AdminRequired": "Admin Required"
 }

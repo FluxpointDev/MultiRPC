@@ -12,7 +12,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Controls/MultiRPCAndCustomDictionary.xaml" />
+                <ResourceDictionary Source="../../Controls/MultiRPCAndCustomDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="{x:Type Image}" x:Key="HelpIcon">
                 <Setter Property="Width" Value="23" />
@@ -37,36 +37,8 @@
         </Grid.ColumnDefinitions>
 
         <Rectangle Grid.ColumnSpan="2" Grid.Row="1" Fill="{DynamicResource AccentColour1SCBrush}" />
-        <Border CornerRadius="15,15,0,0" Grid.ColumnSpan="2" Grid.Row="1"
-                Background="{DynamicResource AccentColour2SCBrush}" />
+        <Border Style="{DynamicResource maskStyle}" Grid.ColumnSpan="2" Grid.Row="1" />
 
-        <Grid Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Background="{DynamicResource AccentColour1SCBrush}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <ToolBar Margin="5,0,0,0" Background="{DynamicResource AccentColour1SCBrush}"
-                     Foreground="{DynamicResource TextColourSCBrush}" x:Name="tbProfiles" />
-            <StackPanel Margin="0,5" Grid.Row="1" Orientation="Horizontal">
-                <TextBlock FontWeight="SemiBold" FontSize="16"
-                           Text="If you see this then the program hasn't click the first profile (oops)"
-                           Name="tblProfileName" Margin="10,0,5,0" />
-                <Rectangle Margin="0,2" Fill="{DynamicResource AccentColour3SCBrush}" Width="0.25"
-                           VerticalAlignment="Stretch" />
-                <Image Name="imgProfileEdit" Opacity="0.6" Source="{DynamicResource PencilIconDrawingImage}"
-                       MouseDown="ImgProfileEdit_OnMouseDown" MouseEnter="Img_OnMouseEnter"
-                       MouseLeave="Img_OnMouseLeave" />
-                <Image Name="imgProfileShare" Opacity="0.6" Source="{DynamicResource ShareIconDrawingImage}"
-                       MouseDown="ImgProfileShare_OnMouseDown" MouseEnter="Img_OnMouseEnter"
-                       MouseLeave="Img_OnMouseLeave" />
-                <Image Name="imgProfileAdd" Opacity="0.6" Source="{DynamicResource AddIconDrawingImage}"
-                       MouseDown="ImgProfileAdd_OnMouseDown" MouseEnter="Img_OnMouseEnter"
-                       MouseLeave="Img_OnMouseLeave" />
-                <Image Name="imgProfileDelete" Opacity="0.6" Source="{DynamicResource DeleteIconDrawingImage}"
-                       MouseDown="ImgProfileDelete_OnMouseDown" MouseEnter="Img_OnMouseEnter"
-                       MouseLeave="Img_OnMouseLeave" />
-            </StackPanel>
-        </Grid>
         <StackPanel Margin="10" Grid.Row="1">
             <Grid Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>

@@ -73,11 +73,15 @@ namespace MultiRPC.Functions
         public void ImageError(BitmapImage img, ExceptionEventArgs ex)
         {
             if (ex == null)
+            {
                 LogText += LogEvent(App.Text.ImageError,
                     $"{App.Text.FailedToDownload} ({img.UriSource.AbsoluteUri}) {App.Text.NetworkError}");
+            }
             else
+            {
                 LogText += LogEvent(App.Text.ImageError,
                     $"{App.Text.FailedToDownload} ({img.UriSource.AbsoluteUri}) {ex.ErrorException.Message}");
+            }
         }
 
         public string LogEvent(string name, string message)
@@ -107,8 +111,7 @@ namespace MultiRPC.Functions
                 MainPage._MainPage.frmRPCPreview.Dispatcher.Invoke(() =>
                 {
                     RPC.Shutdown();
-                    MessageBox.Show("Your Discord client is running under administrator, MultiRPC needs admin approval to run.\n" +
-                        "Go to settings and click on Admin Mode.", "Admin Required", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(App.Text.NeedAdmin, App.Text.AdminRequired, MessageBoxButton.OK, MessageBoxImage.Information);
                 });
             }
             LogText += LogEvent($"RPC {App.Text.Error}", RPCMessage(message, args));

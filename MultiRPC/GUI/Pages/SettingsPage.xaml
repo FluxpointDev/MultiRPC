@@ -174,6 +174,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="5" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock Name="tblDiscordCheck" HorizontalAlignment="Right" VerticalAlignment="Center"
@@ -200,6 +202,11 @@
                            VerticalAlignment="Center" Margin="0,0,5,0" />
                 <CheckBox Name="cbHideTaskbarIcon" Checked="CbHideTaskbarIcon_OnChecked"
                           Unchecked="CbHideTaskbarIcon_OnChecked" Grid.Row="8" Grid.Column="1"
+                          HorizontalAlignment="Left" VerticalAlignment="Center" />
+                <TextBlock Name="tblShowPageTooltips" Grid.Row="10" HorizontalAlignment="Right"
+                           VerticalAlignment="Center" Margin="0,0,5,0" />
+                <CheckBox Name="cbShowPageTooltips" Checked="CbShowPageTooltips_OnChecked"
+                          Unchecked="CbShowPageTooltips_OnChecked" Grid.Row="10" Grid.Column="1"
                           HorizontalAlignment="Left" VerticalAlignment="Center" />
             </Grid>
         </StackPanel>
@@ -233,8 +240,8 @@
             </StackPanel>
             <Border Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1"
                     CornerRadius="4" Background="{DynamicResource AccentColour1SCBrush}" />
-            <TextBlock TextWrapping="Wrap" Name="tblDonateMessage" Margin="12" HorizontalAlignment="Center"
-                       VerticalAlignment="Center" Grid.Row="1" />
+            <TextBlock TextWrapping="Wrap" Name="tblDonateMessage" Margin="15" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" Grid.Row="1" MaxWidth="250" />
         </Grid>
 
         <StackPanel Margin="0" Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left">
@@ -252,7 +259,7 @@
             </StackPanel>
             <StackPanel Margin="0,5,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
                 <Button Width="100" Style="{DynamicResource ButtonPurple}" Name="btnDebug" Margin="0,0,5,0" Click="ButDebug_OnClick" />
-                <Button Width="100" Style="{DynamicResource ButtonPurple}" Name="btnAdmin" Margin="0,0,5,0" Click="BtnAdmin_Click" Content="Admin Mode" />
+                <Button Width="100" Style="{DynamicResource ButtonPurple}" Name="btnAdmin" Margin="0,0,5,0" Click="BtnAdmin_Click" />
             </StackPanel>
         </StackPanel>
     </Grid>

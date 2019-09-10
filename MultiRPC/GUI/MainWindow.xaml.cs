@@ -1,13 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
@@ -24,26 +21,29 @@ using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 namespace MultiRPC.GUI
 {
     /// <summary>
-    ///     Interaction logic for MainWindow.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const int WM_NCLBUTTONDOWN = 0xA1;
-        private const int HT_CAPTION = 0x2;
         private static bool firstRun = true;
         private readonly Storyboard _openStoryboard = new Storyboard();
         private Storyboard _closeStoryboard;
         private DateTime _timeWindowWasDeactivated;
         public TaskbarIcon TaskbarIcon;
 
-        protected object ToReturn;
+        public object ToReturn { get; private set; }
         protected long WindowID; //This is so we can know that the window we look for is the window we are looking for
 
         public MainWindow()
         {
             InitializeComponent();
+
+            Title += (App.IsAdministrator ? " (Administrator)" : "");
+            tblTitle.Text = Title;
             if (this != Application.Current.MainWindow)
+            {
                 return;
+            }
 
             var mainPage = new MainPage();
             StartLogic(mainPage);
@@ -62,27 +62,27 @@ namespace MultiRPC.GUI
             InitializeComponent();
             StartLogic(page);
             ShowInTaskbar = false;
-            Title = "MultiRPC - " + page.Title;
+            Title = $"MultiRPC - {page.Title} {(App.IsAdministrator ? "(Administrator)" : "")}";
             tblTitle.Text = Title;
 
             if (!minButton)
+            {
                 btnMin.Visibility = Visibility.Collapsed;
+            }
         }
 
-        [DllImport("user32.dll")]
-        private static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-
-        [DllImport("user32.dll")]
-        private static extern bool ReleaseCapture();
-
         private void MakeWinAnimation(Storyboard storyboard, double from = 1, double to = 0,
-            bool addEventHandler = true, object parameter = null, Duration lengthToRun = new Duration())
+            bool addEventHandler = false, object parameter = null, Duration lengthToRun = new Duration())
         {
             if (!lengthToRun.HasTimeSpan)
+            {
                 lengthToRun = new Duration(TimeSpan.FromSeconds(0.4));
+            }
 
             if (parameter == null)
+            {
                 parameter = OpacityProperty;
+            }
 
             if (string.IsNullOrWhiteSpace(Name))
             {
@@ -102,34 +102,26 @@ namespace MultiRPC.GUI
             Storyboard.SetTargetName(winOpacityAnimation, Name);
             Storyboard.SetTargetProperty(winOpacityAnimation, new PropertyPath(parameter));
             if (addEventHandler)
+            {
                 storyboard.Completed += OpenCloseStoryboard_Completed;
+            }
         }
 
         public static MainWindow GetWindow(long windowID)
         {
             for (var i = 0; i < Application.Current.Windows.Count; i++)
+            {
                 if (Application.Current.Windows[i] is MainWindow mainWindow && mainWindow.WindowID == windowID)
+                {
                     return mainWindow;
+                }
+            }
 
             return null;
         }
 
         private void StartLogic(Page page)
         {
-            if (page.MinWidth > Width)
-            {
-                MinWidth = page.MinWidth;
-                Width = MinWidth;
-            }
-
-            if (page.MinHeight + 30 > Height)
-            {
-                MinHeight = page.MinHeight + 30;
-                Height = MinHeight;
-            }
-
-            MaxHeight = page.MaxHeight;
-            MaxWidth = page.MaxWidth;
             frmContent.Content = page;
         }
 
@@ -137,25 +129,37 @@ namespace MultiRPC.GUI
         {
             var timeSpan = DateTime.Now.Subtract(_timeWindowWasDeactivated);
             if (timeSpan.TotalSeconds < 1 || WindowState == WindowState.Minimized)
+            {
                 WindowState = WindowState == WindowState.Normal ? WindowState.Minimized : WindowState.Normal;
+            }
 
             if (WindowState == WindowState.Normal)
+            {
                 Activate();
+            }
         }
 
-        public static Task<object> OpenWindow(Page page, bool isDialog, long tick, bool minButton)
+        public static Task<object> OpenWindow(Page page, bool isDialog, long tick, bool minButton,
+            Action<Window> otherSetup = null)
         {
             var window = new MainWindow(page, minButton)
             {
                 WindowID = tick,
-                Owner = App.Current.MainWindow,
+                Owner = Application.Current.MainWindow,
                 ResizeMode = ResizeMode.CanMinimize,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
             window.Loaded += Window_Loaded;
+            otherSetup?.Invoke(window); //This allows pages that need more hooks to get hooked
 
-            if (isDialog) window.ShowDialog();
-            else window.Show();
+            if (isDialog)
+            {
+                window.ShowDialog();
+            }
+            else
+            {
+                window.Show();
+            }
 
             return Task.FromResult(window.ToReturn);
         }
@@ -165,18 +169,20 @@ namespace MultiRPC.GUI
             ((MainWindow) sender).Activate();
         }
 
-        public static Task CloseWindow(long windowID, object _return = null)
+        public static Task CloseWindow(long windowID, object returnObject = null)
         {
             for (var i = 0; i < Application.Current.Windows.Count; i++)
+            {
                 if (Application.Current.Windows[i] is MainWindow mainWindow && mainWindow.WindowID == windowID)
                 {
-                    mainWindow.ToReturn = _return;
+                    mainWindow.ToReturn = returnObject;
                     mainWindow.ShowInTaskbar = false;
                     mainWindow._closeStoryboard = new Storyboard();
-                    mainWindow.MakeWinAnimation(mainWindow._closeStoryboard);
+                    mainWindow.MakeWinAnimation(mainWindow._closeStoryboard, addEventHandler: true);
                     mainWindow._closeStoryboard.Begin(mainWindow);
                     break;
                 }
+            }
 
             return Task.CompletedTask;
         }
@@ -200,45 +206,11 @@ namespace MultiRPC.GUI
             }
         }
 
-        public static Task MakeJumpList()
-        {
-            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
-            {
-                var jumpList = new JumpList();
-
-                for (var i = 0; i < 10; i++)
-                {
-                    if (i > CustomPage.Profiles.Count - 1)
-                        break;
-
-                    //Configure a new JumpTask
-                    var jumpTask = new JumpTask
-                    {
-                        // Set the JumpTask properties.
-                        ApplicationPath = FileLocations.MultiRPCStartLink,
-                        Arguments = $"-custom \"{CustomPage.Profiles.ElementAt(i).Key}\"",
-                        IconResourcePath = FileLocations.MultiRPCStartLink,
-                        Title = CustomPage.Profiles.ElementAt(i).Key,
-                        Description = $"{App.Text.Load} '{CustomPage.Profiles.ElementAt(i).Key}'",
-                        CustomCategory = App.Text.CustomProfiles
-                    };
-                    jumpList.JumpItems.Add(jumpTask);
-                }
-
-                JumpList.SetJumpList(Application.Current, jumpList);
-            }
-
-            return Task.CompletedTask;
-        }
-
         private void RecHandle_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var hwnd = new WindowInteropHelper(this).Handle;
-                ReleaseCapture();
-                SendMessage(hwnd, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-                hwnd = new IntPtr(0);
+                DragMove();
             }
         }
 
@@ -251,27 +223,30 @@ namespace MultiRPC.GUI
         {
             ShowInTaskbar = false;
             _closeStoryboard = new Storyboard();
-            MakeWinAnimation(_closeStoryboard);
+            MakeWinAnimation(_closeStoryboard, addEventHandler: true);
             _closeStoryboard.Begin(this);
         }
 
         private void OpenCloseStoryboard_Completed(object sender, EventArgs e)
         {
-            if (_closeStoryboard != null)
-                Close();
+            Close();
         }
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (Application.Current.MainWindow != this)
+            {
                 return;
+            }
 
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 1)
+            {
                 TaskbarItemInfo = new TaskbarItemInfo
                 {
                     Description = "MultiRPC",
                     ThumbnailClipMargin = new Thickness(ActualWidth - 265, 41, 9, ActualHeight - 126)
                 };
+            }
         }
 
         private void Close_OnMouseEnter(object sender, MouseEventArgs e)
@@ -288,12 +263,9 @@ namespace MultiRPC.GUI
         {
             if (frmContent.Content != null && Application.Current.MainWindow == this)
             {
-                var runCode = true;
-                if (RPC.RPCClient != null)
-                    if (!RPC.RPCClient.Disposed && RPC.RPCClient.IsInitialized)
-                        runCode = false;
-
+                var runCode = !RPC.IsRPCRunning;
                 var content = ((Frame) sender).Content;
+
                 if (runCode)
                 {
                     switch (content)
@@ -301,7 +273,7 @@ namespace MultiRPC.GUI
                         case MultiRPCPage _:
                             ((MainPage) frmContent.Content).btnStart.Content = $"{App.Text.Start} MultiRPC";
                             break;
-                        case CustomPage _:
+                        case MasterCustomPage _:
                             ((MainPage) frmContent.Content).btnStart.Content = App.Text.StartCustom;
                             break;
                     }
@@ -312,14 +284,17 @@ namespace MultiRPC.GUI
                     switch (content)
                     {
                         case MultiRPCPage _ when RPC.Type != RPC.RPCType.MultiRPC:
-                        case CustomPage _ when RPC.Type != RPC.RPCType.Custom:
+                        case MasterCustomPage _ when RPC.Type != RPC.RPCType.Custom:
                             ((MainPage) frmContent.Content).btnUpdate.IsEnabled = false;
                             break;
                         default:
                         {
-                            if (!(content is CustomPage) && !(content is MultiRPCPage))
-                                ((MainPage) frmContent.Content).btnUpdate.IsEnabled = false;
-                            break;
+                            if (!(content is MasterCustomPage) && !(content is MultiRPCPage))
+                                {
+                                    ((MainPage) frmContent.Content).btnUpdate.IsEnabled = false;
+                                }
+
+                                break;
                         }
                     }
                 }
@@ -332,18 +307,26 @@ namespace MultiRPC.GUI
                 WindowsContent.BorderThickness,
                 propertyPath: new PropertyPath(Border.BorderThicknessProperty));
             if (TaskbarIcon != null)
+            {
                 TaskbarIcon.TrayToolTip = new ToolTip(!IsActive ? App.Text.ShowMultiRPC : App.Text.HideMultiRPC);
+            }
+
             if (!IsActive)
+            {
                 _timeWindowWasDeactivated = DateTime.Now;
+            }
         }
 
         private void MainWindow_OnStateChanged(object sender, EventArgs e)
         {
-            Animations.ThicknessAnimation(WindowsContent, WindowState == WindowState.Maximized ? new Thickness(7) : new Thickness(0),
+            Animations.ThicknessAnimation(WindowsContent,
+                WindowState == WindowState.Maximized ? new Thickness(7) : new Thickness(0),
                 WindowsContent.Margin);
 
             if (Icon != null && App.Config.HideTaskbarIconWhenMin)
-                ShowInTaskbar = WindowState != WindowState.Minimized; 
+            {
+                ShowInTaskbar = WindowState != WindowState.Minimized;
+            }
         }
 
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)

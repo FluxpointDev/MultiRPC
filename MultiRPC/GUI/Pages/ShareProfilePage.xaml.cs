@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for ProfileSharePage.xaml
+    /// Interaction logic for ProfileSharePage.xaml
     /// </summary>
     public partial class ShareProfilePage : Page
     {
@@ -22,14 +22,11 @@ namespace MultiRPC.GUI.Pages
             _profile = profile;
             _windowID = windowID;
             Title = App.Text.ProfileShare;
-            if (RPC.RPCClient != null && RPC.RPCClient.IsInitialized && !RPC.RPCClient.Disposed)
-                btnImport.IsEnabled = false;
         }
 
         private void ButImport_OnClick(object sender, RoutedEventArgs e)
         {
             var profileBase64 = JsonConvert.SerializeObject(tbShare.Text);
-            Clipboard.SetText(profileBase64 = Utils.Base64Encode(profileBase64));
             MainWindow.CloseWindow(_windowID, profileBase64);
         }
 
@@ -38,7 +35,12 @@ namespace MultiRPC.GUI.Pages
             var profileBase64 = JsonConvert.SerializeObject(_profile);
             Clipboard.SetText(profileBase64 = Utils.Base64Encode(profileBase64));
             tbShare.Text = profileBase64;
-            await CustomMessageBox.Show(App.Text.ProfileCopyMessage, window: MainWindow.GetWindow(_windowID));
+            await CustomMessageBox.Show(App.Text.ProfileCopyMessage, MainWindow.GetWindow(_windowID));
+        }
+
+        private void TbShare_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            btnImport.IsEnabled = !RPC.IsRPCRunning && !string.IsNullOrWhiteSpace(tbShare.Text);
         }
     }
 }

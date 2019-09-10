@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d"
       MinHeight="200" MinWidth="400"
+      MaxWidth="400"
       Title="Share Profile">
 
     <Grid Margin="10">
@@ -14,9 +15,10 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBox TextWrapping="Wrap" Name="tbShare" Height="NaN" VerticalAlignment="Stretch"
-                 HorizontalAlignment="Stretch" Background="{DynamicResource AccentColour1SCBrush}" Margin="0,0,0,10" />
+                 HorizontalAlignment="Stretch" Background="{DynamicResource AccentColour1SCBrush}" Margin="0,0,0,10"
+                 TextChanged="TbShare_OnTextChanged" />
         <Button Name="btnImport" Click="ButImport_OnClick" Style="{DynamicResource ButtonGreen}" Grid.Row="1"
-                HorizontalAlignment="Left" />
+                HorizontalAlignment="Left" IsEnabled="False" />
         <Button Name="btnExport" Click="ButExport_OnClick" Style="{DynamicResource ButtonGreen}" Grid.Row="1"
                 HorizontalAlignment="Right" />
     </Grid>

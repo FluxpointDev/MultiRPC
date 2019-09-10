@@ -10,12 +10,47 @@
                 <ResourceDictionary Source="Assets/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <Geometry x:Key="MultiRPCLogoGeometry">F1 M1000,1000z M0,0z M617.94,676C617.94,676 602.7,657.79 589.94,642.12 645.42,626.45 666.59,592.12 666.59,592.12A242.81,242.81,0,0,1,617.89,617.12A304.4,304.4,0,0,1,556.49,635.33A296.72,296.72,0,0,1,446.8,634.9A322.36,322.36,0,0,1,384.55,616.69A248.08,248.08,0,0,1,353.63,602.29C352.36,601.45 351.09,601.02 349.82,600.18 348.98,599.75 348.55,599.33 348.13,599.33 340.51,595.09 336.27,592.13 336.27,592.13 336.27,592.13 356.6,625.59 410.38,641.68 397.68,657.77 382.01,676.4 382.01,676.4 288.42,673.4 252.84,612.46 252.84,612.46 252.84,477.37 313.84,367.68 313.84,367.68 374.84,322.37 432.41,323.68 432.41,323.68L436.65,328.76C360.42,350.36 325.65,383.81 325.65,383.81 325.65,383.81 334.97,378.73 350.65,371.96 396,352 432,346.91 446.85,345.22A41.11,41.11,0,0,1,454.05,344.37A358.13,358.13,0,0,1,539.6,343.52A352.22,352.22,0,0,1,667.07,383.75C667.07,383.75,633.61,352,561.62,330.39L567.55,323.62C567.55,323.62 625.55,322.35 686.12,367.62 686.12,367.62 747.12,477.31 747.12,612.4 747.12,611.97 711.54,672.96 617.95,675.92z M577.59,479.89C553.45,479.89 534.4,500.64 534.4,526.47 534.4,552.3 553.88,573.05 577.59,573.05 601.73,573.05 620.79,552.3 620.79,526.47 620.79,500.64 601.31,479.89 577.59,479.89z M423.02,479.89C398.88,479.89 379.82,500.64 379.82,526.47 379.82,552.3 399.3,573.05 423.02,573.05 447.16,573.05 466.22,552.3 466.22,526.47 466.64,500.64 447.16,479.89 423,479.89z</Geometry>
+            <DrawingGroup x:Key="MultiRPCLogoDrawingGroup" ClipGeometry="M0,0 V1000 H1000 V0 H0 Z">
+                <GeometryDrawing>
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry RadiusX="0" RadiusY="0" Rect="0,0,1000,1000" />
+                    </GeometryDrawing.Geometry>
+                    <GeometryDrawing.Brush>
+                        <LinearGradientBrush StartPoint="1091.51,158.49" EndPoint="-91.51,841.51"
+                                             MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                            <GradientStop Color="#FF00FFED" Offset="0" />
+                            <GradientStop Color="#FF0077E9" Offset="1" />
+                        </LinearGradientBrush>
+                    </GeometryDrawing.Brush>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource MultiRPCLogoGeometry}" />
+            </DrawingGroup>
+            <DrawingImage x:Key="MultiRPCLogoDrawingImage" Drawing="{StaticResource MultiRPCLogoDrawingGroup}" />
+
             <SolidColorBrush Color="#FFF13333" x:Key="Red" />
             <SolidColorBrush Color="#6A7EC4" x:Key="Purple" />
             <SolidColorBrush Color="#FFEEAD37" x:Key="Orange" />
+            <SolidColorBrush Color="#FF43B581" x:Key="Green" />
+
+            <Style TargetType="Border" x:Key="maskStyle">
+                <Setter Property="Background" Value="{DynamicResource AccentColour2SCBrush}" />
+                <Setter Property="CornerRadius" Value="15,15,0,0" />
+            </Style>
 
             <Style TargetType="Hyperlink">
                 <Setter Property="Foreground" Value="{DynamicResource TextColourSCBrush}" />
+            </Style>
+
+            <Style TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{DynamicResource TextColourSCBrush}" />
+                <Setter Property="FontSize" Value="12" />
+            </Style>
+            <Style x:Key="SubTitle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+            <Style x:Key="Title" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="FontSize" Value="25" />
             </Style>
 
             <Style TargetType="ScrollViewer">
@@ -257,7 +292,7 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                                 <TextBlock Foreground="White" Text="{TemplateBinding Content}"
-                                           x:Name="contentPresenter" Focusable="False"
+                                           x:Name="contentPresenter" Focusable="False" TextWrapping="Wrap"  TextAlignment="Center"
                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                            Margin="10,3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
@@ -293,7 +328,7 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                                 <TextBlock Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding Content}"
-                                           x:Name="contentPresenter" Focusable="False"
+                                           x:Name="contentPresenter" Focusable="False" TextWrapping="Wrap"  TextAlignment="Center"
                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                            Margin="10,3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
@@ -331,7 +366,7 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                                 <TextBlock Foreground="{TemplateBinding Foreground}" Text="{TemplateBinding Content}"
-                                           x:Name="contentPresenter" Focusable="False"
+                                           x:Name="contentPresenter" Focusable="False" TextWrapping="Wrap"  TextAlignment="Center"
                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                            Margin="10,3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
@@ -367,7 +402,7 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                                 <TextBlock Foreground="White" Text="{TemplateBinding Content}"
-                                           x:Name="contentPresenter" Focusable="False"
+                                           x:Name="contentPresenter" Focusable="False" TextWrapping="Wrap"  TextAlignment="Center"
                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                            Margin="10,3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
@@ -391,7 +426,7 @@
             </Style>
 
             <Style TargetType="Button" x:Key="ButtonGreen">
-                <Setter Property="Background" Value="#FF43B581" />
+                <Setter Property="Background" Value="{DynamicResource Green}" />
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Template">
                     <Setter.Value>
@@ -400,7 +435,7 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                                 <TextBlock Foreground="White" Text="{TemplateBinding Content}"
-                                           x:Name="contentPresenter" Focusable="False"
+                                           x:Name="contentPresenter" Focusable="False" TextWrapping="Wrap" TextAlignment="Center"
                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                            Margin="10,3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
@@ -609,10 +644,6 @@
                 </Setter>
             </Style>
 
-            <Style TargetType="TextBlock">
-                <Setter Property="Foreground" Value="{DynamicResource TextColourSCBrush}" />
-                <Setter Property="FontSize" Value="12" />
-            </Style>
             <Style TargetType="Frame">
                 <Setter Property="NavigationUIVisibility" Value="Hidden" />
             </Style>

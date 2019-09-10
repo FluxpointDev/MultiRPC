@@ -33,7 +33,7 @@ namespace MultiRPC.JsonClasses
             ThemeMetadata = new Metadata
             {
                 ThemeName = "Dark",
-                MultiRPCVersion = Assembly.GetExecutingAssembly().GetName().Version
+                MultiRPCVersion = Version.SysVersionToMultiVersion(Assembly.GetExecutingAssembly().GetName().Version)
             }
         };
 
@@ -57,7 +57,7 @@ namespace MultiRPC.JsonClasses
             ThemeMetadata = new Metadata
             {
                 ThemeName = "Light",
-                MultiRPCVersion = Assembly.GetExecutingAssembly().GetName().Version
+                MultiRPCVersion = Version.SysVersionToMultiVersion(Assembly.GetExecutingAssembly().GetName().Version)
             }
         };
 
@@ -81,17 +81,22 @@ namespace MultiRPC.JsonClasses
             ThemeMetadata = new Metadata
             {
                 ThemeName = "Russia",
-                MultiRPCVersion = Assembly.GetExecutingAssembly().GetName().Version
+                MultiRPCVersion = Version.SysVersionToMultiVersion(Assembly.GetExecutingAssembly().GetName().Version)
             }
         };
 
         public Colours ThemeColours;
         public Metadata ThemeMetadata;
+#if DEBUG
+        public Icons ThemeIcons;
+#endif
 
         static Theme()
         {
             if (!Directory.Exists(Path.Combine("Assets", "Themes")))
+            {
                 Directory.CreateDirectory(Path.Combine("Assets", "Themes"));
+            }
         }
 
         public static Task<Theme> Load(string filepath)
@@ -115,6 +120,7 @@ namespace MultiRPC.JsonClasses
                 {
                     var coloursEntry = archive.GetEntry("colours.json");
                     var metadataEntry = archive.GetEntry("metadataEntry.json");
+                    var iconEntry = archive.GetEntry("iconEntry.json");
                     try
                     {
                         using (var writer = new StreamReader(coloursEntry.Open()))
@@ -122,7 +128,7 @@ namespace MultiRPC.JsonClasses
                             theme.ThemeColours = JsonConvert.DeserializeObject<Colours>(writer.ReadToEnd());
                         }
                     }
-                    catch
+                    catch (Exception e)
                     {
                         App.Logging.Application(
                             $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeColours}");
@@ -135,11 +141,29 @@ namespace MultiRPC.JsonClasses
                             theme.ThemeMetadata = JsonConvert.DeserializeObject<Metadata>(writer.ReadToEnd());
                         }
                     }
-                    catch
+                    catch (Exception e)
                     {
                         App.Logging.Application(
                             $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeMetadata}");
                     }
+
+#if DEBUG
+                    if (iconEntry != null && theme.ThemeMetadata.MultiRPCVersion >= Version.SysVersionToMultiVersion(Assembly.GetExecutingAssembly().GetName().Version))
+                    {
+                        try
+                        {
+                            using (var writer = new StreamReader(iconEntry.Open()))
+                            {
+                                theme.ThemeIcons = JsonConvert.DeserializeObject<Icons>(writer.ReadToEnd());
+                            }
+                        }
+                        catch
+                        {
+                            App.Logging.Application(
+                                $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeIcons}");
+                        }
+                    }
+#endif
                 }
             }
             else
@@ -151,7 +175,7 @@ namespace MultiRPC.JsonClasses
             return Task.FromResult(theme);
         }
 
-        public static string ThemeFileLocation(Theme theme)
+        public static string GetThemeFileLocation(Theme theme)
         {
             return Path.Combine(FileLocations.ThemesFolder, theme.ThemeMetadata.ThemeName + ThemeExtension);
         }
@@ -215,7 +239,9 @@ namespace MultiRPC.JsonClasses
         public static Task Save(Theme theme, string fileLocation = null)
         {
             if (string.IsNullOrWhiteSpace(fileLocation))
-                fileLocation = ThemeFileLocation(theme);
+            {
+                fileLocation = GetThemeFileLocation(theme);
+            }
 
             FileStream fileStream;
             try
@@ -260,6 +286,22 @@ namespace MultiRPC.JsonClasses
                         App.Logging.Application(
                             $"{App.Text.SomethingHappenedWhile} {App.Text.Saving} {fileLocation} {App.Text.ThemeMetadata}");
                     }
+
+#if DEBUG
+                    var iconEntry = archive.CreateEntry("iconEntry.json");
+                    try
+                    {
+                        using (var writer = new StreamWriter(iconEntry.Open()))
+                        {
+                            App.JsonSerializer.Serialize(writer, theme.ThemeIcons);
+                        }
+                    }
+                    catch
+                    {
+                        App.Logging.Application(
+                            $"{App.Text.SomethingHappenedWhile} {App.Text.Saving} {fileLocation} {App.Text.ThemeIcons}");
+                    }
+#endif
                 }
             }
 
@@ -282,13 +324,20 @@ namespace MultiRPC.JsonClasses
             public SolidColorBrush NavButtonIconColourSelected;
             public Color TextColour;
 
-            public SolidColorBrush AccentColour1SCBrush => new SolidColorBrush(AccentColour1);
-            public SolidColorBrush AccentColour2SCBrush => new SolidColorBrush(AccentColour2);
-            public SolidColorBrush AccentColour2HoverSCBrush => new SolidColorBrush(AccentColour2Hover);
-            public SolidColorBrush AccentColour3SCBrush => new SolidColorBrush(AccentColour3);
-            public SolidColorBrush AccentColour4SCBrush => new SolidColorBrush(AccentColour4);
-            public SolidColorBrush AccentColour5SCBrush => new SolidColorBrush(AccentColour5);
-            public SolidColorBrush TextColourSCBrush => new SolidColorBrush(TextColour);
+            //Ignore because we make it with the color so no point in having it in the json file
+            [JsonIgnore] public SolidColorBrush AccentColour1SCBrush => new SolidColorBrush(AccentColour1);
+
+            [JsonIgnore] public SolidColorBrush AccentColour2SCBrush => new SolidColorBrush(AccentColour2);
+
+            [JsonIgnore] public SolidColorBrush AccentColour2HoverSCBrush => new SolidColorBrush(AccentColour2Hover);
+
+            [JsonIgnore] public SolidColorBrush AccentColour3SCBrush => new SolidColorBrush(AccentColour3);
+
+            [JsonIgnore] public SolidColorBrush AccentColour4SCBrush => new SolidColorBrush(AccentColour4);
+
+            [JsonIgnore] public SolidColorBrush AccentColour5SCBrush => new SolidColorBrush(AccentColour5);
+
+            [JsonIgnore] public SolidColorBrush TextColourSCBrush => new SolidColorBrush(TextColour);
         }
 
         public class Metadata
@@ -298,5 +347,41 @@ namespace MultiRPC.JsonClasses
 
             public string ThemeName;
         }
+
+#if DEBUG
+        public class Icons
+        {
+            public string AddIconFileType;
+            public string AlertIconFileType;
+            public string BrowserIconFileType;
+            public string CreditsIconFileType;
+            public string CreditsIconSelectedFileType;
+            public string CustomIconFileType;
+            public string CustomIconSelectedFileType;
+            public string DebugIconFileType;
+            public string DebugIconSelectedFileType;
+            public string DeleteIconFileType;
+            public string DiscordColourIconFileType;
+            public string DiscordIconFileType;
+            public string DiscordIconSelectedFileType;
+            public string DownloadIconFileType;
+            public string GithubIconFileType;
+            public string HeartIconFileType;
+            public string HelpIconFileType;
+            public string InfoIconFileType;
+            public string LogsIconFileType;
+            public string LogsIconSelectedFileType;
+            public string PencilIconFileType;
+            public string ProgramsIconFileType;
+            public string ProgramsIconSelectedFileType;
+            public string SettingsIconFileType;
+            public string SettingsIconSelectedFileType;
+            public string ShareIconFileType;
+            public string ShieldIconFileType;
+            public string ThemeIconFileType;
+            public string ThemeIconSelectedFileType;
+            public string WarningIconFileType;
+        }
+#endif
     }
 }

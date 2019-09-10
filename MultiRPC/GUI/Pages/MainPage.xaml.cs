@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Extra;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -7,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 using MultiRPC.Functions;
 using MultiRPC.GUI.Views;
@@ -15,7 +18,7 @@ using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for MainPage.xaml
+    /// Interaction logic for MainPage.xaml
     /// </summary>
     public partial class MainPage : Page
     {
@@ -27,6 +30,7 @@ namespace MultiRPC.GUI.Pages
             InitializeComponent();
 
             rUsername.Text = App.Config.LastUser;
+            tblVersion.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             _MainPage = this;
 
             frmRPCPreview.Content = new RPCPreview(RPCPreview.ViewType.Default);
@@ -34,26 +38,72 @@ namespace MultiRPC.GUI.Pages
 #if DEBUG
             btnPrograms.Visibility = Visibility.Visible;
 #endif
+            NetworkChange.NetworkAddressChanged += AddressChangedCallback;
+            AddressChangedCallback(null, null);
+        }
+
+        private async void AddressChangedCallback(object sender, EventArgs e)
+        {
+            if (Utils.NetworkIsAvailable())
+            {
+                await gridInternetConnectivity.Dispatcher.InvokeAsync(async () =>
+                {
+                    gridInternetConnectivity.SetResourceReference(Panel.BackgroundProperty, "Green");
+                    tblInternetConnectivity.Text = App.Text.InternetBack + "!!";
+                    await Task.Delay(3000);
+                    gridInternetConnectivity.Height = 0;
+                });
+            }
+            else
+            {
+                await gridInternetConnectivity.Dispatcher.InvokeAsync(() =>
+                {
+                    gridInternetConnectivity.Height = double.NaN;
+                    tblInternetConnectivity.Text = App.Text.InternetLost + "!!";
+                    gridInternetConnectivity.SetResourceReference(Panel.BackgroundProperty, "Red");
+                });
+            }
+        }
+
+        private async void DiscordCheckFadeOutAnimation()
+        {
+            if (App.Config.AutoStart == "MultiRPC" || App.Config.AutoStart == App.Text.No)
+            {
+                btnMultiRPC.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            }
+            else
+            {
+                btnCustom.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            }
+
+            await Animations.DoubleAnimation(gridCheckForDiscord, 0, gridCheckForDiscord.Opacity);
+            gridCheckForDiscord.Visibility = Visibility.Collapsed;
         }
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
+            DateTime startDateTime;
+
+            async void ShowTempDisableButton()
+            {
+                if (btnDisableDiscordCheck.Opacity == 0 && DateTime.Now.Subtract(startDateTime).TotalSeconds >= 5)
+                {
+                    await Animations.DoubleAnimation(btnDisableDiscordCheck, 1, btnDisableDiscordCheck.Opacity);
+                }
+            }
+
             Updater.Check();
             if (!App.Config.DiscordCheck)
             {
-                if (App.Config.AutoStart == "MultiRPC" || App.Config.AutoStart == App.Text.No)
-                    btnMultiRPC.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                else
-                    btnCustom.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                gridCheckForDiscord.Visibility = Visibility.Collapsed;
+                DiscordCheckFadeOutAnimation();
             }
             else
             {
-                tblVersion.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 tblMadeBy.Text = $"{App.Text.MadeBy}: {App.AppDev}";
                 rDiscordServer.Text = App.Text.DiscordServer + ": ";
                 rServerLink.Text = App.ServerInviteCode;
-                hylServerLinkUri.NavigateUri = new System.Uri(Uri.Combine("https://discord.gg", App.ServerInviteCode));
+                hylServerLinkUri.NavigateUri = new[] { "https://discord.gg", App.ServerInviteCode }.CombineToUri();
+                startDateTime = DateTime.Now;
 
                 int processCount;
                 var discordClient = "";
@@ -88,6 +138,7 @@ namespace MultiRPC.GUI.Pages
                     if (processCount == 0)
                     {
                         tblDiscordClientMessage.Text = App.Text.CantFindDiscord;
+                        ShowTempDisableButton();
                         await Task.Delay(750);
                         goto FindClient;
                     }
@@ -95,48 +146,69 @@ namespace MultiRPC.GUI.Pages
                     if (processCount < 4)
                     {
                         tblDiscordClientMessage.Text = $"{discordClient} {App.Text.IsLoading}....";
+                        ShowTempDisableButton();
                         await Task.Delay(750);
                         goto FindClient;
                     }
 
-                    if (App.Config.AutoStart == "MultiRPC" || App.Config.AutoStart == App.Text.No)
-                        btnMultiRPC.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                    else
-                        btnCustom.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                    gridCheckForDiscord.Visibility = Visibility.Collapsed;
+                    DiscordCheckFadeOutAnimation();
                 }
                 catch
                 {
                     App.Logging.Application(App.Text.ProcessFindError);
-                    if (App.Config.AutoStart == "MultiRPC" || App.Config.AutoStart == App.Text.No)
-                        btnMultiRPC.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                    else
-                        btnCustom.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                    gridCheckForDiscord.Visibility = Visibility.Collapsed;
+                    DiscordCheckFadeOutAnimation();
                 }
             }
+        }
+
+        public Task UpdateTooltips()
+        {
+            btnMultiRPC.ToolTip = !App.Config.ShowPageTooltips ? null : new ToolTip("MultiRPC" + " " + App.Text.Page);
+            btnCustom.ToolTip =
+                !App.Config.ShowPageTooltips ? null : new ToolTip(App.Text.Custom + " " + App.Text.Page);
+            btnSettings.ToolTip = !App.Config.ShowPageTooltips
+                ? null
+                : new ToolTip(App.Text.Settings + " " + App.Text.Page);
+            btnLogs.ToolTip = !App.Config.ShowPageTooltips ? null : new ToolTip(App.Text.Log + " " + App.Text.Page);
+            btnCredits.ToolTip = !App.Config.ShowPageTooltips
+                ? null
+                : new ToolTip(App.Text.Credits + " " + App.Text.Page);
+            btnThemeEditor.ToolTip =
+                !App.Config.ShowPageTooltips ? null : new ToolTip(App.Text.Theme + " " + App.Text.Page);
+            btnDebug.ToolTip = !App.Config.ShowPageTooltips ? null : new ToolTip(App.Text.Debug + " " + App.Text.Page);
+            btnPrograms.ToolTip = !App.Config.ShowPageTooltips
+                ? null
+                : new ToolTip(App.Text.Programs + " " + App.Text.Page);
+            return Task.CompletedTask;
         }
 
         public Task UpdateText()
         {
             if (btnStart.Background != Application.Current.Resources["Red"])
+            {
                 switch (frmContent.Content)
                 {
                     case MultiRPCPage _:
                         btnStart.Content = $"{App.Text.Start} MultiRPC";
                         break;
-                    case CustomPage _:
+                    case MasterCustomPage _:
                         btnStart.Content = App.Text.StartCustom;
                         break;
                     default:
                         if (btnStart.Content != null)
+                        {
                             btnStart.Content = btnStart.Content.ToString().Contains("MultiRPC")
                                 ? $"{App.Text.Start} MultiRPC"
                                 : App.Text.StartCustom;
+                        }
+
                         break;
                 }
+            }
             else
+            {
                 btnStart.Content = App.Text.Shutdown;
+            }
 
             btnUpdate.Content = App.Text.UpdatePresence;
             rStatus.Text = App.Text.Status + ": ";
@@ -145,16 +217,24 @@ namespace MultiRPC.GUI.Pages
             btnAuto.Content = App.Text.Auto;
             btnAfk.Content = App.Text.Afk;
             tblAfkText.Text = App.Text.AfkText + ": ";
+            btnDisableDiscordCheck.Content = App.Text.TempDisableDiscordCheck;
             var preview = (RPCPreview) frmRPCPreview.Content;
             if (preview != null && preview.CurrentViewType != RPCPreview.ViewType.RichPresence)
+            {
                 preview.UpdateUIViewType(preview.CurrentViewType);
+            }
+
+            UpdateTooltips();
 
             return Task.CompletedTask;
         }
 
         private void ChangePage_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_selectedButton?.Tag != null && frmContent.Content == ((Button) sender).Tag) return;
+            if (_selectedButton?.Tag != null && frmContent.Content == ((Button) sender).Tag)
+            {
+                return;
+            }
 
             string ImageName(string s, bool selected = false)
             {
@@ -174,17 +254,20 @@ namespace MultiRPC.GUI.Pages
             ((Image) _selectedButton.Content).Source =
                 (DrawingImage) Application.Current.Resources[ImageName(((Image) _selectedButton.Content).Name, true)];
 
+            var pageWidth = btnMultiRPC.Tag != null ? ((MultiRPCPage) btnMultiRPC.Tag).ActualWidth : ActualWidth;
+
             if (_selectedButton.Tag == null)
+            {
                 switch (((Button) sender).Name)
                 {
                     case "btnMultiRPC":
                         btnMultiRPC.Tag = new MultiRPCPage();
                         break;
                     case "btnCustom":
-                        btnCustom.Tag = new CustomPage();
+                        btnCustom.Tag = new MasterCustomPage(pageWidth);
                         break;
                     case "btnLogs":
-                        btnLogs.Tag = new LogsPage();
+                        btnLogs.Tag = new LogsPage(pageWidth);
                         break;
                     case "btnCredits":
                         btnCredits.Tag = new CreditsPage();
@@ -196,12 +279,22 @@ namespace MultiRPC.GUI.Pages
                         btnDebug.Tag = new DebugPage();
                         break;
                     case "btnThemeEditor":
-                        btnThemeEditor.Tag = new ThemeEditorPage();
+                        btnThemeEditor.Tag = new MasterThemeEditorPage();
                         break;
                     case "btnPrograms":
                         btnPrograms.Tag = new ProgramsPage();
                         break;
                 }
+            }
+
+            //var drawingImage = new DrawingImage();
+            //var image = new ImageDrawing();
+            //var imageBitmap = new BitmapImage(new System.Uri("Assets/150x150Logo.png", UriKind.Relative));
+            //image.ImageSource = imageBitmap;
+            //image.Rect = new Rect(new Size(imageBitmap.Width, imageBitmap.Height));
+            //drawingImage.Drawing = image;
+
+            //((Image) _selectedButton.Content).Source = drawingImage;
 
             frmContent.Navigate(_selectedButton.Tag);
         }
@@ -262,9 +355,10 @@ namespace MultiRPC.GUI.Pages
                     mainRpcPage.TbText1_OnTextChanged(mainRpcPage.tbText1, null);
                     mainRpcPage.CanRunRPC();
                 }
-                else if (_MainPage.frmContent.Content is CustomPage customPage)
+                else if (_MainPage.frmContent.Content is MasterCustomPage masterCustomPage)
                 {
                     RPC.UpdateType(RPC.RPCType.Custom);
+                    var customPage = masterCustomPage.CustomPage;
                     customPage.TbText1_OnTextChanged(customPage.tbText1, null);
                     customPage.CanRunRPC(true);
                 }
@@ -284,7 +378,10 @@ namespace MultiRPC.GUI.Pages
                 RPC.AFK = true;
 
                 if (RPC.IDToUse != 469643793851744257)
+                {
                     RPC.Shutdown();
+                }
+
                 RPC.IDToUse = 469643793851744257;
                 RPC.Update();
                 tbAfkReason.Text = "";
@@ -304,7 +401,7 @@ namespace MultiRPC.GUI.Pages
 
         private void HylServerLinkUri_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(Uri.Combine("https://discord.gg", App.ServerInviteCode));
+            Process.Start(new [] { "https://discord.gg", App.ServerInviteCode }.Combine());
             e.Handled = true;
         }
 
@@ -316,8 +413,13 @@ namespace MultiRPC.GUI.Pages
 
         private void ChangePage_OnMouseUp(object sender, MouseEventArgs e)
         {
-            var button = (Button)sender;
-            Animations.ThicknessAnimation(button, new Thickness(0), button.Margin);
+            var button = (Button) sender;
+            Animations.ThicknessAnimation(button, new Thickness(0), button.Margin, ease: new BounceEase());
+        }
+
+        private void BtnDisableDiscordCheck_OnClick(object sender, RoutedEventArgs e)
+        {
+            DiscordCheckFadeOutAnimation();
         }
     }
 }

@@ -6,7 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:MultiRPC.GUI.Pages"
       mc:Ignorable="d"
-      MinHeight="526" MinWidth="735"
+      MaxHeight="508"
       Title="MainPage"
       Loaded="MainPage_Loaded">
     <Page.Resources>
@@ -108,7 +108,7 @@
             </Grid.ColumnDefinitions>
 
             <!--Nav bar-->
-            <ScrollViewer Grid.RowSpan="2" VerticalScrollBarVisibility="Hidden">
+            <ScrollViewer Grid.RowSpan="2" VerticalScrollBarVisibility="Hidden" Name="scvPages">
                 <Grid Background="{DynamicResource AccentColour1SCBrush}">
                     <StackPanel Margin="8,10,8,0">
                         <Button Style="{DynamicResource NavButton}" Name="btnMultiRPC" Click="ChangePage_OnClick"
@@ -182,6 +182,11 @@
 
             <!--Status bar-->
             <Grid Grid.Column="1" Background="{DynamicResource AccentColour1SCBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0">
                         <Button Height="40" Width="110" Name="btnStart" FontSize="11"
@@ -209,7 +214,7 @@
                     </StackPanel>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0"
-                            Orientation="Horizontal">
+                            Orientation="Horizontal" Grid.Column="2">
                     <StackPanel>
                         <Button IsEnabled="False" Height="40" Width="50" Name="btnAuto" FontSize="11"
                                 Style="{DynamicResource ButtonPurple}" Margin="0,0,0,5" />
@@ -222,8 +227,7 @@
 
             <!--C O N T E N T-->
             <Rectangle Grid.Column="1" Grid.Row="1" Fill="{DynamicResource AccentColour1SCBrush}" />
-            <Border Name="mask" CornerRadius="15,15,0,0" Grid.Column="1" Grid.Row="1"
-                    Background="{DynamicResource AccentColour2SCBrush}" />
+            <Border Name="mask" Style="{DynamicResource maskStyle}" Grid.Column="1" Grid.Row="1" />
             <Frame Name="frmContent" Grid.Column="1" Grid.Row="1">
                 <Frame.OpacityMask>
                     <VisualBrush Visual="{Binding ElementName=mask}" />
@@ -254,7 +258,12 @@
                 <Image Width="50" Name="imgLoading" gif:AnimationBehavior.SourceUri="../../Assets/Loading.gif"
                        gif:AnimationBehavior.RepeatBehavior="Forever" gif:AnimationBehavior.AnimateInDesignMode="True"
                        gif:AnimationBehavior.AutoStart="True" />
+                <Button Margin="0,5,0,0" Name="btnDisableDiscordCheck" Opacity="0"
+                        Click="BtnDisableDiscordCheck_OnClick" />
             </StackPanel>
+        </Grid>
+        <Grid VerticalAlignment="Bottom" Name="gridInternetConnectivity" Background="{DynamicResource Red}" Height="0">
+            <TextBlock Name="tblInternetConnectivity" HorizontalAlignment="Center" Margin="0,5" />
         </Grid>
     </Grid>
 </Page>

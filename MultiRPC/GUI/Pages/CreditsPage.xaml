@@ -11,12 +11,13 @@
         <Style TargetType="Image">
             <Setter Property="Width" Value="20" />
         </Style>
-        <Style TargetType="ScrollViewer">
-            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Style TargetType="ScrollViewer" BasedOn="{StaticResource {x:Type ScrollViewer}}">
+            <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
         </Style>
         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="Margin" Value="10" />
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
         <Style x:Key="Title" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="VerticalAlignment" Value="Top" />

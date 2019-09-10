@@ -5,7 +5,7 @@ using MultiRPC.JsonClasses;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for ChangelogPage.xaml
+    /// Interaction logic for ChangelogPage.xaml
     /// </summary>
     public partial class ChangelogPage : Page
     {
@@ -13,7 +13,9 @@ namespace MultiRPC.GUI.Pages
         {
             InitializeComponent();
             if (File.Exists(FileLocations.ChangelogFileLocalLocation))
+            {
                 tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
+            }
 
             Title = App.Text.Changelog;
         }

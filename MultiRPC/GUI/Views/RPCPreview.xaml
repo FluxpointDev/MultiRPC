@@ -12,7 +12,7 @@
         </Style>
     </UserControl.Resources>
 
-    <Border CornerRadius="5" x:Name="gridBackground" Width="255" MaxWidth="355" Height="85"
+    <Border CornerRadius="5" x:Name="gridBackground" MinWidth="255" MaxWidth="355" Height="85"
             Background="{DynamicResource AccentColour2SCBrush}">
         <Grid>
             <Grid.ColumnDefinitions>

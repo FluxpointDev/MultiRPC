@@ -1,5 +1,4 @@
-﻿using System.Deployment.Application;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -11,13 +10,13 @@ using MultiRPC.JsonClasses;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for UpdatePage.xaml
+    /// Interaction logic for UpdatePage.xaml
     /// </summary>
     public partial class UpdatePage : Page
     {
         private readonly long _windowID;
 
-        public UpdatePage(UpdateCheckInfo info, long windowID)
+        public UpdatePage(string newVersion, long windowID)
         {
             InitializeComponent();
             if (App.Config.AutoUpdate)
@@ -33,13 +32,12 @@ namespace MultiRPC.GUI.Pages
 
             tblCurrentVersion.Text =
                 App.Text.CurrentVersion + ": " + Assembly.GetExecutingAssembly().GetName().Version;
-            if (info != null)
-                tblNewVersion.Text = App.Text.NewVersion + ": " + info.AvailableVersion;
-            else
-                tblNewVersion.Text = App.Text.NewVersion + ": " + "???";
+            tblNewVersion.Text = App.Text.NewVersion + ": " + (newVersion ?? "???");
 
             if (File.Exists(FileLocations.ChangelogFileLocalLocation))
+            {
                 tbChangelogText.Text = File.ReadAllText(FileLocations.ChangelogFileLocalLocation);
+            }
 
             _windowID = windowID;
             Title = App.Text.Update;
@@ -58,14 +56,17 @@ namespace MultiRPC.GUI.Pages
         {
             if (!App.Config.AutoUpdate)
             {
-                MainWindow.CloseWindow(_windowID, true);
+                await MainWindow.CloseWindow(_windowID, true);
                 await Task.Delay(250);
-                Updater.Start();
+                Updater.Update();
             }
             else
             {
                 if (File.Exists(FileLocations.MultiRPCStartLink))
-                    Process.Start(FileLocations.MultiRPCStartLink);
+                {
+                    Process.Start(FileLocations.MultiRPCStartLink, "--fromupdate");
+                }
+
                 Application.Current.Shutdown();
             }
         }

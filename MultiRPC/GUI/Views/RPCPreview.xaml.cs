@@ -9,12 +9,12 @@ using DiscordRPC.Message;
 using MultiRPC.Functions;
 using XamlAnimatedGif;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
-using Uri = System.Extra.Uri;
+using System.Extra;
 
 namespace MultiRPC.GUI.Views
 {
     /// <summary>
-    ///     Interaction logic for RPCPreview.xaml
+    /// Interaction logic for RPCPreview.xaml
     /// </summary>
     public partial class RPCPreview : UserControl
     {
@@ -24,7 +24,6 @@ namespace MultiRPC.GUI.Views
             Default2,
             Loading,
             Error,
-            Blank,
             RichPresence
         }
 
@@ -56,14 +55,17 @@ namespace MultiRPC.GUI.Views
                 if (!string.IsNullOrEmpty(msg.Presence.Assets.LargeImageKey))
                 {
                     recLargeImage.Visibility = Visibility.Visible;
-                    var largeImage = BitmapDownloader
-                        .DownloadImage(new System.Uri(Uri.Combine("https://cdn.discordapp.com/app-assets",
-                            msg.ApplicationID,
-                            msg.Presence.Assets.LargeImageID + ".png"))).ConfigureAwait(false)
-                        .GetAwaiter().GetResult();
+                    var largeImage = (new [] {
+                        "https://cdn.discordapp.com/app-assets",
+                        msg.ApplicationID,
+                        msg.Presence.Assets.LargeImageID + ".png" }.CombineToUri()).DownloadImage()
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
+
                     recLargeImage.Fill = new ImageBrush(largeImage);
                     if (!string.IsNullOrEmpty(msg.Presence.Assets.LargeImageText))
+                    {
                         recLargeImage.ToolTip = new ToolTip(msg.Presence.Assets.LargeImageText);
+                    }
                 }
                 else
                 {
@@ -73,14 +75,19 @@ namespace MultiRPC.GUI.Views
                 if (!string.IsNullOrEmpty(msg.Presence.Assets.SmallImageKey) &&
                     recLargeImage.Visibility == Visibility.Visible)
                 {
-                    var smallImage = BitmapDownloader
-                        .DownloadImage(new System.Uri(Uri.Combine("https://cdn.discordapp.com/app-assets",
+                    var smallImage = new [] {
+                            "https://cdn.discordapp.com/app-assets",
                             msg.ApplicationID,
-                            msg.Presence.Assets.SmallImageID + ".png"))).ConfigureAwait(false)
+                            msg.Presence.Assets.SmallImageID + ".png"}
+                            .CombineToUri()
+                            .DownloadImage()
+                        .ConfigureAwait(false)
                         .GetAwaiter().GetResult();
                     ellSmallImage.Fill = new ImageBrush(smallImage);
                     if (!string.IsNullOrEmpty(msg.Presence.Assets.SmallImageText))
+                    {
                         ellSmallImage.ToolTip = new ToolTip(msg.Presence.Assets.SmallImageText);
+                    }
                 }
                 else
                 {
@@ -153,18 +160,32 @@ namespace MultiRPC.GUI.Views
 
             CurrentViewType = view;
             if (background == null && string.IsNullOrWhiteSpace(backgroundName))
+            {
                 backgroundName = "AccentColour2SCBrush";
+            }
+
             if (!string.IsNullOrWhiteSpace(backgroundName))
+            {
                 UpdateBackground(backgroundName);
+            }
             else
+            {
                 UpdateBackground(background);
+            }
 
             if (foreground == null && string.IsNullOrWhiteSpace(foregroundName))
+            {
                 foregroundName = "TextColourSCBrush";
+            }
+
             if (!string.IsNullOrWhiteSpace(foregroundName))
+            {
                 UpdateForeground(foregroundName);
+            }
             else
+            {
                 UpdateForeground(foreground);
+            }
 
             imgLoading.Visibility = Visibility.Collapsed;
             recLargeImage.Visibility = Visibility.Visible;
@@ -172,16 +193,6 @@ namespace MultiRPC.GUI.Views
             recLargeImage.Margin = new Thickness(0);
             switch (view)
             {
-                case ViewType.Blank:
-                {
-                    tblTitle.Text = "MultiRPC";
-                    tblText1.Visibility = Visibility.Visible;
-                    tblText2.Visibility = Visibility.Visible;
-                    tblTime.Text = "";
-                    recLargeImage.Fill =
-                        new ImageBrush((ImageSource) Application.Current.Resources["MultiRPCLogoDrawingImage"]);
-                }
-                    break;
                 case ViewType.Default:
                 {
                     tblTitle.Text = "MultiRPC";
@@ -246,7 +257,7 @@ namespace MultiRPC.GUI.Views
         }
 
         /// <summary>
-        ///     Update the Image
+        /// Update the Image
         /// </summary>
         /// <param name="onSmallImage">If to target the small image</param>
         /// <param name="image">Image</param>
@@ -263,7 +274,9 @@ namespace MultiRPC.GUI.Views
                 recLargeImage.Fill = image;
                 recLargeImage.Visibility = Visibility.Visible;
                 if (gridSmallImage.Visibility == Visibility.Collapsed && ellSmallImage.Fill != null)
+                {
                     gridSmallImage.Visibility = Visibility.Visible;
+                }
             }
 
             if (onSmallImage && image?.ImageSource == null)
@@ -275,7 +288,9 @@ namespace MultiRPC.GUI.Views
             {
                 ellSmallImage.Fill = image;
                 if (recLargeImage.Visibility != Visibility.Collapsed)
+                {
                     gridSmallImage.Visibility = Visibility.Visible;
+                }
             }
         }
     }

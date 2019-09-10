@@ -6,7 +6,7 @@ using MultiRPC.Functions;
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for UpdateFailedPage.xaml
+    /// Interaction logic for UpdateFailedPage.xaml
     /// </summary>
     public partial class UpdateFailedPage : Page
     {
@@ -27,7 +27,7 @@ namespace MultiRPC.GUI.Pages
         private void ButRetryUpdate_OnClick(object sender, RoutedEventArgs e)
         {
             MainWindow.CloseWindow(_windowID);
-            Updater.Start();
+            Updater.Update();
         }
 
         private void ButRetryOnNextStartUp_OnClick(object sender, RoutedEventArgs e)

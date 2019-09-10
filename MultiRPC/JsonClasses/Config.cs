@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -7,7 +8,7 @@ namespace MultiRPC.JsonClasses
     public class Config
     {
         /// <summary> What language is to be shown </summary>
-        public string ActiveLanguage = "en-gb";
+        public string ActiveLanguage = CultureInfo.CurrentUICulture.Name;
 
         /// <summary> What theme to use </summary>
         public string ActiveTheme = Path.Combine("Assets", "Themes", "DarkTheme" + Theme.ThemeExtension);
@@ -16,7 +17,7 @@ namespace MultiRPC.JsonClasses
         public bool AFKTime = false;
 
         /// <summary> Enable starting rich presence when app loads </summary>
-        public string AutoStart = App.Text.No;
+        public string AutoStart = App.Text?.No;
 
         /// <summary> If to auto update the app </summary>
         public bool AutoUpdate = false;
@@ -48,10 +49,13 @@ namespace MultiRPC.JsonClasses
         /// <summary> Tells the app what custom button to press in code </summary>
         public int SelectedCustom = 0;
 
+        public bool ShowPageTooltips = true;
+
         /// <summary> Get the settings stored on disk </summary>
         public static Task<Config> Load()
         {
             if (File.Exists(FileLocations.ConfigFileLocalLocation))
+            {
                 using (var file = File.OpenText(FileLocations.ConfigFileLocalLocation))
                 {
                     var serializer = new JsonSerializer
@@ -61,6 +65,7 @@ namespace MultiRPC.JsonClasses
                     };
                     return Task.FromResult((Config) serializer.Deserialize(file, typeof(Config)));
                 }
+            }
 
             return Task.FromResult(new Config());
         }
@@ -90,8 +95,8 @@ namespace MultiRPC.JsonClasses
         public bool ShowTime = false;
         public int SmallKey;
         public string SmallText;
-        public string Text1 = App.Text.Hello;
-        public string Text2 = App.Text.World;
+        public string Text1 = App.Text?.Hello;
+        public string Text2 = App.Text?.World;
     }
 
     /// <summary> Disabled settings config </summary>

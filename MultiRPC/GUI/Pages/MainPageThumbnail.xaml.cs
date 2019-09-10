@@ -5,13 +5,14 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using MultiRPC.Functions;
 using MultiRPC.JsonClasses;
 
 namespace MultiRPC.GUI.Pages
 {
     /// <summary>
-    ///     Interaction logic for MainPage.xaml
+    /// Interaction logic for MainPage.xaml
     /// </summary>
     public partial class MainPageThumbnail : Page
     {
@@ -35,7 +36,9 @@ namespace MultiRPC.GUI.Pages
         {
             Resources.MergedDictionaries[0][solidBrushKey] = brush;
             if (!string.IsNullOrWhiteSpace(colourKey))
+            {
                 Resources.MergedDictionaries[0][colourKey] = brush.Color;
+            }
 
             await UpdateButtons();
         }
@@ -66,7 +69,9 @@ namespace MultiRPC.GUI.Pages
                 {
                     var buttonDrawings = (DrawingGroup) mainButtonDrawings[i];
                     for (var j = 0; j < buttonDrawings.Children.Count; j++)
+                    {
                         ((GeometryDrawing) buttonDrawings.Children[j]).Brush = brushToUpdateTo;
+                    }
                 }
             }
 
@@ -84,14 +89,14 @@ namespace MultiRPC.GUI.Pages
 
         private void ChangePage_OnMouseDown(object sender, MouseEventArgs e)
         {
-            var button = (Button)sender;
+            var button = (Button) sender;
             Animations.ThicknessAnimation(button, new Thickness(2), button.Margin);
         }
 
         private void ChangePage_OnMouseUp(object sender, MouseEventArgs e)
         {
-            var button = (Button)sender;
-            Animations.ThicknessAnimation(button, new Thickness(0), button.Margin);
+            var button = (Button) sender;
+            Animations.ThicknessAnimation(button, new Thickness(0), button.Margin, ease: new BounceEase());
         }
     }
 }

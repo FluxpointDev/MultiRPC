@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Principal;
 using System.Windows;
 using System.Windows.Threading;
 using MultiRPC.Functions;
@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 namespace MultiRPC
 {
     /// <summary>
-    ///     Interaction logic for App.xaml
+    /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
@@ -32,21 +32,38 @@ namespace MultiRPC
             Formatting = Formatting.Indented
         };
 
+        public static bool IsAdministrator =>
+           new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
         public App()
         {
             var darkThemeLocation = Path.Combine("Assets", "Themes", "DarkTheme" + Theme.ThemeExtension);
             var lightThemeLocation = Path.Combine("Assets", "Themes", "LightTheme" + Theme.ThemeExtension);
             var russiaThemeLocation = Path.Combine("Assets", "Themes", "RussiaTheme" + Theme.ThemeExtension);
-            if (!File.Exists(darkThemeLocation)) Theme.Save(Theme.Dark, darkThemeLocation);
-            if (!File.Exists(lightThemeLocation)) Theme.Save(Theme.Light, lightThemeLocation);
-            if (!File.Exists(russiaThemeLocation)) Theme.Save(Theme.Russia, russiaThemeLocation);
+            if (!File.Exists(darkThemeLocation))
+            {
+                Theme.Save(Theme.Dark, darkThemeLocation);
+            }
+
+            if (!File.Exists(lightThemeLocation))
+            {
+                Theme.Save(Theme.Light, lightThemeLocation);
+            }
+
+            if (!File.Exists(russiaThemeLocation))
+            {
+                Theme.Save(Theme.Russia, russiaThemeLocation);
+            }
+
+            //TriggerWatch.Start();
             Startup += App_Startup;
         }
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
 #if !DEBUG
+            var arg = AppDomain.CurrentDomain.SetupInformation.ActivationArguments?.ActivationData.ToString();
+            var args = arg?.Split(',');
             if (Process.GetProcessesByName("MultiRPC").Length > 1)
             {
                 if (File.Exists(FileLocations.OpenFileLocalLocation))
@@ -57,73 +74,93 @@ namespace MultiRPC
                     }
                     catch
                     {
-                        App.Logging.Application(App.Text.CouldntDelete + " " + FileLocations.OpenFileLocalLocation);
+                        Logging.Application(Text.CouldntDelete + " " + FileLocations.OpenFileLocalLocation);
                     }
                 }
-                if (e.Args.Length > 0)
+
+                if (args?.Length >= 2 && args[0] == "-custom")
                 {
-                    File.WriteAllLines(FileLocations.OpenFileLocalLocation, new List<string> { "LOADCUSTOM", e.Args[1] });
+                    File.WriteAllLines(FileLocations.OpenFileLocalLocation,
+                        new List<string> {"LOADCUSTOM", args[1]});
                 }
                 else
                 {
                     File.Create(FileLocations.OpenFileLocalLocation);
                 }
-                Current.Shutdown();
+
+                if (args == null || args.Length == 0 || args[0] != "--fromupdate")
+                {
+                    Current.Shutdown();
+                }
             }
-            else if (e.Args.Length > 1 && e.Args[0] == "-custom")
+            else if (args?.Length >= 2 && args[0] == "-custom")
             {
                 StartedWithJumpListLogic = true;
-                _ = CustomPage.JumpListLogic(e.Args[1], true);
+                _ = CustomPage.StartCustomProfileLogic(e.Args[1], true);
             }
 #endif
             FileWatch.Create();
             SettingsPage.UIText = new List<UIText>();
-            GetLangFiles().ConfigureAwait(false).GetAwaiter().GetResult();
-            UITextUpdate().ConfigureAwait(false).GetAwaiter().GetResult();
+            GetLangFiles();
             Config = Config.Load().Result;
-            UITextUpdate().ConfigureAwait(false).GetAwaiter().GetResult();
+            UITextUpdate();
             Logging = new Logging();
             File.AppendAllText(FileLocations.ErrorFileLocalLocation,
                 $"\r\n------------------------------------------------------------------------------------------------\r\n{Text.ErrorsFrom} {DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}");
             DispatcherUnhandledException += App_DispatcherUnhandledException;
         }
 
-        private Task UITextUpdate()
+        private void UITextUpdate()
         {
+            var engbInt = 0;
+            var foundText = false;
             for (var i = 0; i < SettingsPage.UIText.Count; i++)
             {
                 var text = SettingsPage.UIText[i];
-                if (Config != null)
+                if (Config != null && text != null && text.LanguageTag == Config.ActiveLanguage)
                 {
-                    if (text.LanguageName == Config.ActiveLanguage)
+                    Text = text;
+                    foundText = true;
+                    if (string.IsNullOrWhiteSpace(Config.AutoStart))
                     {
-                        Text = text;
-                        break;
+                        Config.AutoStart = Text.No;
                     }
+
+                    if (string.IsNullOrWhiteSpace(Config.MultiRPC.Text1))
+                    {
+                        Config.MultiRPC.Text1 = Text.Hello;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(Config.MultiRPC.Text2))
+                    {
+                        Config.MultiRPC.Text2 = Text.World;
+                    }
+
+                    break;
                 }
-                else
+
+                if (text != null && text.LanguageTag == "en-GB")
                 {
-                    if (text.LanguageTag == "en-gb")
-                    {
-                        Text = text;
-                        break;
-                    }
+                    engbInt = i;
                 }
             }
 
-            return Task.CompletedTask;
+            if (!foundText)
+            {
+                Text = SettingsPage.UIText[engbInt];
+            }
         }
 
-        private Task GetLangFiles()
+        private void GetLangFiles()
         {
             var langFiles = Directory.EnumerateFiles("Lang").ToArray();
             for (var i = 0; i < langFiles.LongLength; i++)
+            {
                 using (var reader = File.OpenText(langFiles[i]))
                 {
                     SettingsPage.UIText.Add((UIText) JsonSerializer.Deserialize(reader, typeof(UIText)));
                 }
-
-            return Task.CompletedTask;
+            }
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

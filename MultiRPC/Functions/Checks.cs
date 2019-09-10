@@ -4,9 +4,9 @@ namespace MultiRPC.Functions
 {
     public static class Checks
     {
-        public static bool UnderAmountOfBytes(string s, int ByteLength)
+        public static bool UnderAmountOfBytes(this string s, int byteLength)
         {
-            return ByteLength > Encoding.ASCII.GetBytes(s).Length;
+            return byteLength > Encoding.ASCII.GetBytes(s).Length;
         }
     }
 }

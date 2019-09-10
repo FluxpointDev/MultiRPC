@@ -51,6 +51,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -80,6 +81,7 @@
     <ManifestKeyFile>MultiRPC_TemporaryKey.pfx</ManifestKeyFile>
     <SignManifests>true</SignManifests>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -103,6 +105,7 @@
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -130,10 +133,16 @@
     <Compile Include="Functions\Animations.cs" />
     <Compile Include="Functions\BitmapDownloader.cs" />
     <Compile Include="Functions\Checks.cs" />
+    <Compile Include="Functions\ClickOnceUpdater.cs" />
+    <Compile Include="Functions\IUpdate.cs" />
+    <Compile Include="Functions\TriggerWatch.cs" />
     <Compile Include="Functions\FileWatch.cs" />
     <Compile Include="Functions\Updater.cs" />
     <Compile Include="Functions\Uri.Extra.cs" />
     <Compile Include="Functions\Utils.cs" />
+    <Compile Include="GUI\Controls\TabPage.xaml.cs">
+      <DependentUpon>TabPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Controls\ToolTip.cs" />
     <Compile Include="GUI\MessageBox\CustomMessageBox.cs" />
     <Compile Include="GUI\MessageBox\MessageBoxPage.xaml.cs">
@@ -142,14 +151,26 @@
     <Compile Include="GUI\Pages\ChangelogPage.xaml.cs">
       <DependentUpon>ChangelogPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Pages\Custom Pages\MasterCustomPage.xaml.cs">
+      <DependentUpon>MasterCustomPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\Custom Pages\TriggerPage.xaml.cs">
+      <DependentUpon>TriggerPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Pages\DebugPage.xaml.cs">
       <DependentUpon>DebugPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Pages\EditProfileNamePage.xaml.cs">
       <DependentUpon>EditProfileNamePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Pages\Theme Pages\InstalledThemes.xaml.cs">
+      <DependentUpon>InstalledThemes.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Pages\MainPageThumbnail.xaml.cs">
       <DependentUpon>MainPageThumbnail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pages\Theme Pages\MasterThemeEditorPage.xaml.cs">
+      <DependentUpon>MasterThemeEditorPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Pages\MultiRPCAndCustomLogic.cs" />
     <Compile Include="GUI\Pages\ProgramsPage.xaml.cs">
@@ -158,7 +179,7 @@
     <Compile Include="GUI\Pages\ShareProfilePage.xaml.cs">
       <DependentUpon>ShareProfilePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Pages\ThemeEditorPage.xaml.cs">
+    <Compile Include="GUI\Pages\Theme Pages\ThemeEditorPage.xaml.cs">
       <DependentUpon>ThemeEditorPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Pages\UpdateFailedPage.xaml.cs">
@@ -176,6 +197,7 @@
     <Compile Include="JsonClasses\CustomProfile.cs" />
     <Compile Include="JsonClasses\FileLocations.cs" />
     <Compile Include="JsonClasses\Theme.cs" />
+    <Compile Include="JsonClasses\Version.cs" />
     <Compile Include="JsonClasses\UIText.cs" />
     <Compile Include="RPC.cs" />
   </ItemGroup>
@@ -186,7 +208,7 @@
     <Compile Include="GUI\Pages\CreditsPage.xaml.cs">
       <DependentUpon>CreditsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Pages\CustomPage.xaml.cs">
+    <Compile Include="GUI\Pages\Custom Pages\CustomPage.xaml.cs">
       <DependentUpon>CustomPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Pages\LogsPage.xaml.cs">
@@ -282,6 +304,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="GUI\Controls\TabPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GUI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -294,13 +320,25 @@
     <Page Include="GUI\Pages\CreditsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\Pages\CustomPage.xaml">
+    <Page Include="GUI\Pages\Custom Pages\CustomPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\Custom Pages\MasterCustomPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\Custom Pages\TriggerPage.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Pages\DebugPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Pages\EditProfileNamePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\Theme Pages\InstalledThemes.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Pages\LogsPage.xaml">
@@ -311,6 +349,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="GUI\Pages\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Pages\Theme Pages\MasterThemeEditorPage.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Pages\MultiRPCPage.xaml">
@@ -326,7 +368,7 @@
     <Page Include="GUI\Pages\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GUI\Pages\ThemeEditorPage.xaml">
+    <Page Include="GUI\Pages\Theme Pages\ThemeEditorPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -342,7 +384,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DiscordRichPresence">
-      <Version>1.0.95</Version>
+      <Version>1.0.108</Version>
     </PackageReference>
     <PackageReference Include="Extended.Wpf.Toolkit">
       <Version>3.5.0</Version>
@@ -351,10 +393,10 @@
       <Version>1.0.8</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.1</Version>
+      <Version>12.0.2</Version>
     </PackageReference>
     <PackageReference Include="XamlAnimatedGif">
-      <Version>1.2.1</Version>
+      <Version>1.2.2</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

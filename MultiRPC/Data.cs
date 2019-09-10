@@ -41,7 +41,11 @@ namespace MultiRPC
 
         public static string GetImageValue(string imageKey)
         {
-            if (string.IsNullOrWhiteSpace(imageKey)) return "";
+            if (string.IsNullOrWhiteSpace(imageKey))
+            {
+                return "";
+            }
+
             MultiRPCImages.TryGetValue(imageKey, out var uri);
             return uri;
         }
