@@ -61,9 +61,9 @@ namespace MultiRPC
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
-#if !DEBUG
-            var arg = AppDomain.CurrentDomain.SetupInformation.ActivationArguments?.ActivationData.ToString();
-            var args = arg?.Split(',');
+            #if !DEBUG
+            //var arg = AppDomain.CurrentDomain.SetupInformation.ActivationArguments?.ActivationData.ToString();
+            var args = new string[] { };
             if (Process.GetProcessesByName("MultiRPC").Length > 1)
             {
                 if (File.Exists(FileLocations.OpenFileLocalLocation))

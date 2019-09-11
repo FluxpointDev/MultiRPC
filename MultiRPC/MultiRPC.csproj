@@ -28,13 +28,13 @@
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>https://multirpc.blazedev.me/</InstallUrl>
     <UpdateUrl>https://multirpc.blazedev.me/</UpdateUrl>
-    <SupportUrl>https://discord.gg/susQ6XA</SupportUrl>
+    <SupportUrl>https://discord.gg/TjF6QDC</SupportUrl>
     <PublisherName>Discord Universe</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>5.3.0.0</ApplicationVersion>
+    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationVersion>5.3.1.3</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
