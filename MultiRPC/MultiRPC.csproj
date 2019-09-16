@@ -106,6 +106,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -240,7 +241,6 @@
     <Content Include="multirpc.VisualElementsManifest.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Assets\ServerIcon.jpg" />
     <Resource Include="Assets\ClientIDHelp.jpg" />
     <Resource Include="Assets\LargeTextHelp.jpg" />
     <Resource Include="Assets\SmallAndLargeKeyHelp.jpg" />

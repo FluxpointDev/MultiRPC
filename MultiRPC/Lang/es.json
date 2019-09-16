@@ -56,7 +56,7 @@
   "Download": "Descarga",
   "DiscordServer": "Servidor de Discord",
   "JoinForFunBotsAndSupport": "¡Únete para bots divertidos y soporte!",
-  "JoinServerMessage": "Discord Universe es un lugar divertido para pasar el rato con otros usuarios, hablar sobre juegos, anime o desarrollo.\n\nTambién tenemos muchos bots de alta calidad hechos por mí u otros desarrolladores populares, desde anime hasta música y memes, así que disfruta jugando con ellos.\r\n\r\nEsto también sirve como servidor de soporte para muchos de mis proyectos, así que no tengas miedo de pasar a saludar ;)",
+  "JoinServerMessage": "Fluxpoint es un lugar divertido para pasar el rato con otros usuarios, hablar sobre juegos, anime o desarrollo.\n\nTambién tenemos muchos bots de alta calidad hechos por mí u otros desarrolladores populares, desde anime hasta música y memes, así que disfruta jugando con ellos.\r\n\r\nEsto también sirve como servidor de soporte para muchos de mis proyectos, así que no tengas miedo de pasar a saludar ;)",
   "Settings": "Ajustes",
   "AutoStart": "Autoencendido",
   "AfkTime": "Tiempo ausente",
@@ -208,5 +208,6 @@
   "CustomPage": "Custom Page",
   "Admin": "Admin Mode",
   "NeedAdmin": "Your Discord client is running under administrator, MultiRPC needs admin approval to run.\nGo to settings and click on Admin Mode.",
-  "AdminRequired": "Admin Required"
+  "AdminRequired": "Admin Required",
+  "ShareHelp": "Click on \"Export\" to generate a code that you can share with other MultiRPC users or post one in the field and click \"Import\""
 }

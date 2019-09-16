@@ -211,5 +211,6 @@
         public string Admin;
         public string NeedAdmin;
         public string AdminRequired;
+        public string ShareHelp;
     }
 }

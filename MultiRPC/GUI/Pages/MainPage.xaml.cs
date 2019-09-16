@@ -401,7 +401,7 @@ namespace MultiRPC.GUI.Pages
 
         private void HylServerLinkUri_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(new [] { "https://discord.gg", App.ServerInviteCode }.Combine());
+            new [] { "https://discord.gg", App.ServerInviteCode }.Combine().OpenWebsite();
             e.Handled = true;
         }
 

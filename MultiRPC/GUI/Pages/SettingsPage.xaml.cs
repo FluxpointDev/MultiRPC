@@ -149,8 +149,8 @@ namespace MultiRPC.GUI.Pages
 
         private async void Image_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Process.Start(((Image) sender).Tag.ToString());
             var image = (Image) sender;
+            image.Tag.ToString().OpenWebsite();
             await Animations.DoubleAnimation(image, 1, image.Opacity);
             Animations.DoubleAnimation(image, 0.8, image.Opacity);
         }
@@ -161,7 +161,7 @@ namespace MultiRPC.GUI.Pages
                 App.Text.DiscordServer,
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
-            Process.Start(new [] { "https://discord.gg", App.ServerInviteCode }.Combine());
+            new[] { "https://discord.gg", App.ServerInviteCode }.Combine().OpenWebsite();
         }
 
         private void CbClient_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -225,7 +225,7 @@ namespace MultiRPC.GUI.Pages
 
         private void ButPatreon_OnClick(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://www.patreon.com/builderb");
+            "https://www.patreon.com/builderb".OpenWebsite();
         }
 
         private void ButChangelog_OnClick(object sender, RoutedEventArgs e)

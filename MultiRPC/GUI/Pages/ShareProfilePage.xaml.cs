@@ -19,6 +19,7 @@ namespace MultiRPC.GUI.Pages
             InitializeComponent();
             btnExport.Content = App.Text.Export;
             btnImport.Content = App.Text.Import;
+            tblHelp.Text = App.Text.ShareHelp;
             _profile = profile;
             _windowID = windowID;
             Title = App.Text.ProfileShare;

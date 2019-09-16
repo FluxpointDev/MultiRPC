@@ -9,7 +9,7 @@
     <RootNamespace>MultiRPC</RootNamespace>
     <ApplicationIcon>MultiRPCIcon.ico</ApplicationIcon>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-    <VersionPrefix>5.2.0</VersionPrefix>
+    <VersionPrefix>5.3.1.3</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

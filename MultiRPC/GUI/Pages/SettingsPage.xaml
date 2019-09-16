@@ -82,7 +82,7 @@
             <StackPanel Style="{DynamicResource Content}">
                 <StackPanel>
                     <TextBlock Name="tblJoinForFunBotsAndSupport" />
-                    <Image Name="imgJoinForFunBotsAndSupport" Source="../../Assets/ServerIcon.jpg"
+                    <Image Name="imgJoinForFunBotsAndSupport" Source="{DynamicResource FluxpointDevelopmentIconDrawingImage}"
                            MouseEnter="Image_OnMouseEnter" MouseLeave="Image_OnMouseLeave"
                            MouseLeftButtonDown="Server_OnMouseDown" />
                 </StackPanel>
@@ -95,7 +95,7 @@
                 <StackPanel>
                     <TextBlock Name="tblWebsiteDiscord" />
                     <Image Name="imgWebsiteDiscord" Tag="https://discordapp.com/"
-                           Source="{DynamicResource DiscordColourIconDrawingImage}" MouseEnter="Image_OnMouseEnter"
+                           Source="{DynamicResource BrowserIconDrawingImage}" MouseEnter="Image_OnMouseEnter"
                            MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Margin="10,0">

@@ -61,9 +61,8 @@ namespace MultiRPC
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
-            #if !DEBUG
-            //var arg = AppDomain.CurrentDomain.SetupInformation.ActivationArguments?.ActivationData.ToString();
-            var args = new string[] { };
+#if !DEBUG
+            var args = e.Args?.ToList() ?? System.Extra.Uri.GetQueryStringParameters() ?? new List<string>();
             if (Process.GetProcessesByName("MultiRPC").Length > 1)
             {
                 if (File.Exists(FileLocations.OpenFileLocalLocation))
@@ -78,25 +77,25 @@ namespace MultiRPC
                     }
                 }
 
-                if (args?.Length >= 2 && args[0] == "-custom")
+                if (args.Contains("-custom") && args.IndexOf("-custom") + 1 >= args.Count)
                 {
                     File.WriteAllLines(FileLocations.OpenFileLocalLocation,
-                        new List<string> {"LOADCUSTOM", args[1]});
+                        new List<string> { "LOADCUSTOM", args.ElementAt(args.IndexOf("-custom") + 1) });
                 }
                 else
                 {
                     File.Create(FileLocations.OpenFileLocalLocation);
                 }
 
-                if (args == null || args.Length == 0 || args[0] != "--fromupdate")
+                if (!args.Contains("--fromupdate"))
                 {
                     Current.Shutdown();
                 }
             }
-            else if (args?.Length >= 2 && args[0] == "-custom")
+            else if (args.Contains("-custom") && args.IndexOf("-custom") + 1 >= args.Count)
             {
                 StartedWithJumpListLogic = true;
-                _ = CustomPage.StartCustomProfileLogic(e.Args[1], true);
+                _ = CustomPage.StartCustomProfileLogic(args.ElementAt(args.IndexOf("-custom") + 1), true);
             }
 #endif
             FileWatch.Create();

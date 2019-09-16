@@ -137,7 +137,7 @@ namespace MultiRPC.GUI.Pages
 
         private void LinkUri_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(e.Uri.OriginalString);
+            e.Uri.OpenWebsite();
             e.Handled = true;
         }
     }

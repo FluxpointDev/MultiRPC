@@ -11,15 +11,17 @@
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBox TextWrapping="Wrap" Name="tbShare" Height="NaN" VerticalAlignment="Stretch"
-                 HorizontalAlignment="Stretch" Background="{DynamicResource AccentColour1SCBrush}" Margin="0,0,0,10"
+        <TextBlock Name="tblHelp" TextWrapping="Wrap" />
+        <TextBox TextWrapping="Wrap" Name="tbShare" Height="NaN" VerticalAlignment="Stretch" Grid.Row="1"
+                 HorizontalAlignment="Stretch" Background="{DynamicResource AccentColour1SCBrush}" Margin="0,10"
                  TextChanged="TbShare_OnTextChanged" />
-        <Button Name="btnImport" Click="ButImport_OnClick" Style="{DynamicResource ButtonGreen}" Grid.Row="1"
+        <Button Name="btnImport" Click="ButImport_OnClick" Style="{DynamicResource ButtonGreen}" Grid.Row="2"
                 HorizontalAlignment="Left" IsEnabled="False" />
-        <Button Name="btnExport" Click="ButExport_OnClick" Style="{DynamicResource ButtonGreen}" Grid.Row="1"
+        <Button Name="btnExport" Click="ButExport_OnClick" Style="{DynamicResource ButtonGreen}" Grid.Row="2"
                 HorizontalAlignment="Right" />
     </Grid>
 </Page>
