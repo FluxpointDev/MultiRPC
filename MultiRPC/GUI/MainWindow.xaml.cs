@@ -36,29 +36,60 @@ namespace MultiRPC.GUI
 
         public MainWindow()
         {
-            InitializeComponent();
-
-            Title += (App.IsAdministrator ? " (Administrator)" : "");
-            tblTitle.Text = Title;
-            if (this != Application.Current.MainWindow)
+            if (App.Config.Debug)
             {
-                return;
+                try
+                {
+                    InitializeComponent();
+                    Title += (App.IsAdministrator ? " (Administrator)" : "");
+                    tblTitle.Text = Title;
+                    if (this != Application.Current.MainWindow)
+                    {
+                        return;
+                    }
+
+                    var mainPage = new MainPage();
+                    StartLogic(mainPage);
+                    mainPage.frmContent.Navigated += MainPagefrmContent_OnNavigated;
+
+                    TaskbarIcon = new TaskbarIcon
+                    {
+                        IconSource = Icon
+                    };
+                    TaskbarIcon.TrayLeftMouseDown += IconOnTrayLeftMouseDown;
+                    TaskbarIcon.TrayToolTip = new ToolTip(App.Text.HideMultiRPC);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "Main app error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-
-            var mainPage = new MainPage();
-            StartLogic(mainPage);
-            mainPage.frmContent.Navigated += MainPagefrmContent_OnNavigated;
-
-            TaskbarIcon = new TaskbarIcon
+            else
             {
-                IconSource = Icon
-            };
-            TaskbarIcon.TrayLeftMouseDown += IconOnTrayLeftMouseDown;
-            TaskbarIcon.TrayToolTip = new ToolTip(App.Text.HideMultiRPC);
+                InitializeComponent();
+                Title += (App.IsAdministrator ? " (Administrator)" : "");
+                tblTitle.Text = Title;
+                if (this != Application.Current.MainWindow)
+                {
+                    return;
+                }
+
+                var mainPage = new MainPage();
+                StartLogic(mainPage);
+                mainPage.frmContent.Navigated += MainPagefrmContent_OnNavigated;
+
+                TaskbarIcon = new TaskbarIcon
+                {
+                    IconSource = Icon
+                };
+                TaskbarIcon.TrayLeftMouseDown += IconOnTrayLeftMouseDown;
+                TaskbarIcon.TrayToolTip = new ToolTip(App.Text.HideMultiRPC);
+            }
         }
 
         private MainWindow(Page page, bool minButton = true)
         {
+            
             InitializeComponent();
             StartLogic(page);
             ShowInTaskbar = false;
@@ -195,14 +226,36 @@ namespace MultiRPC.GUI
                 App.Config.Save();
             }
 
-            ThemeEditorPage.UpdateGlobalUI();
-            MakeWinAnimation(_openStoryboard, 0, 1);
-            _openStoryboard.Begin(this);
-
-            if (firstRun)
+            if (App.Config.Debug)
             {
-                MainPage._MainPage.frmRPCPreview.Content = new RPCPreview(RPCPreview.ViewType.Default);
-                firstRun = false;
+                try
+                {
+                    ThemeEditorPage.UpdateGlobalUI();
+                    MakeWinAnimation(_openStoryboard, 0, 1);
+                    _openStoryboard.Begin(this);
+
+                    if (firstRun)
+                    {
+                        MainPage._MainPage.frmRPCPreview.Content = new RPCPreview(RPCPreview.ViewType.Default);
+                        firstRun = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "UI error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                ThemeEditorPage.UpdateGlobalUI();
+                MakeWinAnimation(_openStoryboard, 0, 1);
+                _openStoryboard.Begin(this);
+
+                if (firstRun)
+                {
+                    MainPage._MainPage.frmRPCPreview.Content = new RPCPreview(RPCPreview.ViewType.Default);
+                    firstRun = false;
+                }
             }
         }
 
@@ -261,40 +314,91 @@ namespace MultiRPC.GUI
 
         private void MainPagefrmContent_OnNavigated(object sender, NavigationEventArgs e)
         {
-            if (frmContent.Content != null && Application.Current.MainWindow == this)
+            if (App.Config.Debug)
             {
-                var runCode = !RPC.IsRPCRunning;
-                var content = ((Frame) sender).Content;
-
-                if (runCode)
+                try
                 {
-                    switch (content)
+                    if (frmContent.Content != null && Application.Current.MainWindow == this)
                     {
-                        case MultiRPCPage _:
-                            ((MainPage) frmContent.Content).btnStart.Content = $"{App.Text.Start} MultiRPC";
-                            break;
-                        case MasterCustomPage _:
-                            ((MainPage) frmContent.Content).btnStart.Content = App.Text.StartCustom;
-                            break;
+                        var runCode = !RPC.IsRPCRunning;
+                        var content = ((Frame)sender).Content;
+
+                        if (runCode)
+                        {
+                            switch (content)
+                            {
+                                case MultiRPCPage _:
+                                    ((MainPage)frmContent.Content).btnStart.Content = $"{App.Text.Start} MultiRPC";
+                                    break;
+                                case MasterCustomPage _:
+                                    ((MainPage)frmContent.Content).btnStart.Content = App.Text.StartCustom;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            ((MainPage)frmContent.Content).btnUpdate.IsEnabled = true;
+                            switch (content)
+                            {
+                                case MultiRPCPage _ when RPC.Type != RPC.RPCType.MultiRPC:
+                                case MasterCustomPage _ when RPC.Type != RPC.RPCType.Custom:
+                                    ((MainPage)frmContent.Content).btnUpdate.IsEnabled = false;
+                                    break;
+                                default:
+                                    {
+                                        if (!(content is MasterCustomPage) && !(content is MultiRPCPage))
+                                        {
+                                            ((MainPage)frmContent.Content).btnUpdate.IsEnabled = false;
+                                        }
+
+                                        break;
+                                    }
+                            }
+                        }
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    ((MainPage) frmContent.Content).btnUpdate.IsEnabled = true;
-                    switch (content)
-                    {
-                        case MultiRPCPage _ when RPC.Type != RPC.RPCType.MultiRPC:
-                        case MasterCustomPage _ when RPC.Type != RPC.RPCType.Custom:
-                            ((MainPage) frmContent.Content).btnUpdate.IsEnabled = false;
-                            break;
-                        default:
-                        {
-                            if (!(content is MasterCustomPage) && !(content is MultiRPCPage))
-                                {
-                                    ((MainPage) frmContent.Content).btnUpdate.IsEnabled = false;
-                                }
+                    MessageBox.Show(ex.ToString(), "Main app error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                if (frmContent.Content != null && Application.Current.MainWindow == this)
+                {
+                    var runCode = !RPC.IsRPCRunning;
+                    var content = ((Frame)sender).Content;
 
+                    if (runCode)
+                    {
+                        switch (content)
+                        {
+                            case MultiRPCPage _:
+                                ((MainPage)frmContent.Content).btnStart.Content = $"{App.Text.Start} MultiRPC";
                                 break;
+                            case MasterCustomPage _:
+                                ((MainPage)frmContent.Content).btnStart.Content = App.Text.StartCustom;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        ((MainPage)frmContent.Content).btnUpdate.IsEnabled = true;
+                        switch (content)
+                        {
+                            case MultiRPCPage _ when RPC.Type != RPC.RPCType.MultiRPC:
+                            case MasterCustomPage _ when RPC.Type != RPC.RPCType.Custom:
+                                ((MainPage)frmContent.Content).btnUpdate.IsEnabled = false;
+                                break;
+                            default:
+                                {
+                                    if (!(content is MasterCustomPage) && !(content is MultiRPCPage))
+                                    {
+                                        ((MainPage)frmContent.Content).btnUpdate.IsEnabled = false;
+                                    }
+
+                                    break;
+                                }
                         }
                     }
                 }
@@ -303,17 +407,42 @@ namespace MultiRPC.GUI
 
         private void MainWindow_OnActivateChanged(object sender, EventArgs e)
         {
-            Animations.ThicknessAnimation(WindowsContent, IsActive ? new Thickness(1) : new Thickness(0),
-                WindowsContent.BorderThickness,
-                propertyPath: new PropertyPath(Border.BorderThicknessProperty));
-            if (TaskbarIcon != null)
+            if (App.Config.Debug)
             {
-                TaskbarIcon.TrayToolTip = new ToolTip(!IsActive ? App.Text.ShowMultiRPC : App.Text.HideMultiRPC);
-            }
+                try
+                {
+                    Animations.ThicknessAnimation(WindowsContent, IsActive ? new Thickness(1) : new Thickness(0),
+                        WindowsContent.BorderThickness,
+                        propertyPath: new PropertyPath(Border.BorderThicknessProperty));
+                    if (TaskbarIcon != null)
+                    {
+                        TaskbarIcon.TrayToolTip = new ToolTip(!IsActive ? App.Text.ShowMultiRPC : App.Text.HideMultiRPC);
+                    }
 
-            if (!IsActive)
+                    if (!IsActive)
+                    {
+                        _timeWindowWasDeactivated = DateTime.Now;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "Main app error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
             {
-                _timeWindowWasDeactivated = DateTime.Now;
+                Animations.ThicknessAnimation(WindowsContent, IsActive ? new Thickness(1) : new Thickness(0),
+                       WindowsContent.BorderThickness,
+                       propertyPath: new PropertyPath(Border.BorderThicknessProperty));
+                if (TaskbarIcon != null)
+                {
+                    TaskbarIcon.TrayToolTip = new ToolTip(!IsActive ? App.Text.ShowMultiRPC : App.Text.HideMultiRPC);
+                }
+
+                if (!IsActive)
+                {
+                    _timeWindowWasDeactivated = DateTime.Now;
+                }
             }
         }
 

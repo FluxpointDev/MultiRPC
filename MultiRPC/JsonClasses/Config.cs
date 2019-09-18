@@ -7,6 +7,9 @@ namespace MultiRPC.JsonClasses
 {
     public class Config
     {
+        /// <summary> Debug test </summary>
+        public bool Debug = false;
+
         /// <summary> What language is to be shown </summary>
         public string ActiveLanguage = CultureInfo.CurrentUICulture.Name;
 
