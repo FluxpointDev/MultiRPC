@@ -103,7 +103,7 @@ namespace MultiRPC
             FileWatch.Create();
             SettingsPage.UIText = new List<UIText>();
             GetLangFiles();
-            Config = Config.Load().Result;
+            Config = Config.Load();
             if (Config.Debug)
             {
                 try

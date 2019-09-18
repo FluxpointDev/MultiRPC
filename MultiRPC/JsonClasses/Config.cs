@@ -1,6 +1,8 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 using Newtonsoft.Json;
 
 namespace MultiRPC.JsonClasses
@@ -55,22 +57,30 @@ namespace MultiRPC.JsonClasses
         public bool ShowPageTooltips = true;
 
         /// <summary> Get the settings stored on disk </summary>
-        public static Task<Config> Load()
+        public static Config Load()
         {
             if (File.Exists(FileLocations.ConfigFileLocalLocation))
             {
-                using (var file = File.OpenText(FileLocations.ConfigFileLocalLocation))
+                try
                 {
-                    var serializer = new JsonSerializer
+                    using (StreamReader file = File.OpenText(FileLocations.ConfigFileLocalLocation))
                     {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        Formatting = Formatting.Indented
-                    };
-                    return Task.FromResult((Config) serializer.Deserialize(file, typeof(Config)));
+                        JsonSerializer serializer = new JsonSerializer
+                        {
+                            NullValueHandling = NullValueHandling.Ignore,
+                            Formatting = Formatting.Indented
+                        };
+                        return (Config)serializer.Deserialize(file, typeof(Config));
+                    }
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "Startup error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return new Config();
                 }
             }
 
-            return Task.FromResult(new Config());
+            return new Config();
         }
 
         /// <summary> Save the config </summary>
