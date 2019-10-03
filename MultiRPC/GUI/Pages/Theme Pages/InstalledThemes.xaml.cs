@@ -284,8 +284,12 @@ namespace MultiRPC.GUI.Pages
             await MakeThemeUI(Theme.GetThemeFileLocation(themeContent));
         }
 
-        public async Task SetThemeStatusInUI(string status, StackPanel themesStackPanel = null,
-            Frame themesFrame = null, string[] doNotSetIfContains = null, bool removeActiveOnOtherTextBoxes = false,
+        public async Task SetThemeStatusInUI(
+            string status, 
+            StackPanel themesStackPanel = null,
+            Frame themesFrame = null, 
+            string[] doNotSetIfContains = null, 
+            bool removeActiveOnOtherTextBoxes = false,
             bool removeEditOnOtherTextBoxes = false)
         {
             //Go in each themeStackPanel and update the buttons text            

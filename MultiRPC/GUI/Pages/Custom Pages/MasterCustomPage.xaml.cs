@@ -92,11 +92,9 @@ namespace MultiRPC.GUI.Pages
 
             if (File.Exists(FileLocations.ProfilesFileLocalLocation))
             {
-                using (var reader = File.OpenText(FileLocations.ProfilesFileLocalLocation))
-                {
-                    Profiles = (Dictionary<string, CustomProfile>)App.JsonSerializer.Deserialize(reader,
-                        typeof(Dictionary<string, CustomProfile>));
-                }
+                using var reader = File.OpenText(FileLocations.ProfilesFileLocalLocation);
+                Profiles = (Dictionary<string, CustomProfile>)App.JsonSerializer.Deserialize(reader,
+typeof(Dictionary<string, CustomProfile>));
             }
             else
             {

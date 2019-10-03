@@ -63,15 +63,13 @@ namespace MultiRPC.JsonClasses
             {
                 try
                 {
-                    using (StreamReader file = File.OpenText(FileLocations.ConfigFileLocalLocation))
+                    using StreamReader file = File.OpenText(FileLocations.ConfigFileLocalLocation);
+                    JsonSerializer serializer = new JsonSerializer
                     {
-                        JsonSerializer serializer = new JsonSerializer
-                        {
-                            NullValueHandling = NullValueHandling.Ignore,
-                            Formatting = Formatting.Indented
-                        };
-                        return (Config)serializer.Deserialize(file, typeof(Config));
-                    }
+                        NullValueHandling = NullValueHandling.Ignore,
+                        Formatting = Formatting.Indented
+                    };
+                    return (Config)serializer.Deserialize(file, typeof(Config));
                 }
                 catch(Exception ex)
                 {

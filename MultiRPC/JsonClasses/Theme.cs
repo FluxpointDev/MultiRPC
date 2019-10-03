@@ -90,6 +90,10 @@ namespace MultiRPC.JsonClasses
 #if DEBUG
         public Icons ThemeIcons;
 #endif
+        /// <summary>
+        /// Icon file's content if the theme file has Icons.xaml
+        /// </summary>
+        public string XamlIconContent;
 
         static Theme()
         {
@@ -116,46 +120,44 @@ namespace MultiRPC.JsonClasses
                     return Task.FromResult(theme);
                 }
 
-                using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Read))
+                using var archive = new ZipArchive(fileStream, ZipArchiveMode.Read);
+                var coloursEntry = archive.GetEntry("colours.json");
+                var metadataEntry = archive.GetEntry("metadataEntry.json");
+                var iconEntry = archive.GetEntry("iconEntry.json");
+                var iconsEntry = archive.GetEntry("Icons.xaml");
+                try
                 {
-                    var coloursEntry = archive.GetEntry("colours.json");
-                    var metadataEntry = archive.GetEntry("metadataEntry.json");
-                    var iconEntry = archive.GetEntry("iconEntry.json");
-                    try
-                    {
-                        using (var writer = new StreamReader(coloursEntry.Open()))
-                        {
-                            theme.ThemeColours = JsonConvert.DeserializeObject<Colours>(writer.ReadToEnd());
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        App.Logging.Application(
-                            $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeColours}");
-                    }
+                    using var writer = new StreamReader(coloursEntry.Open());
+                    theme.ThemeColours = JsonConvert.DeserializeObject<Colours>(writer.ReadToEnd());
+                }
+                catch (Exception e)
+                {
+                    App.Logging.Error("Theme", e);
+                    App.Logging.Application(
+                        $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeColours}");
+                }
 
-                    try
-                    {
-                        using (var writer = new StreamReader(metadataEntry.Open()))
-                        {
-                            theme.ThemeMetadata = JsonConvert.DeserializeObject<Metadata>(writer.ReadToEnd());
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        App.Logging.Application(
-                            $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeMetadata}");
-                    }
+                try
+                {
+                    using var writer = new StreamReader(metadataEntry.Open());
+                    theme.ThemeMetadata = JsonConvert.DeserializeObject<Metadata>(writer.ReadToEnd());
+                }
+                catch (Exception e)
+                {
+                    App.Logging.Error("Theme", e);
+                    App.Logging.Application(
+                        $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeMetadata}");
+                }
 
 #if DEBUG
-                    if (iconEntry != null && theme.ThemeMetadata.MultiRPCVersion >= Version.SysVersionToMultiVersion(Assembly.GetExecutingAssembly().GetName().Version))
+                if (theme.ThemeMetadata.MultiRPCVersion >= Version.SysVersionToMultiVersion(Assembly.GetExecutingAssembly().GetName().Version))
+                {
+                    if (iconEntry != null) 
                     {
                         try
                         {
-                            using (var writer = new StreamReader(iconEntry.Open()))
-                            {
-                                theme.ThemeIcons = JsonConvert.DeserializeObject<Icons>(writer.ReadToEnd());
-                            }
+                            using var writer = new StreamReader(iconEntry.Open());
+                            theme.ThemeIcons = JsonConvert.DeserializeObject<Icons>(writer.ReadToEnd());
                         }
                         catch
                         {
@@ -163,14 +165,27 @@ namespace MultiRPC.JsonClasses
                                 $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeIcons}");
                         }
                     }
-#endif
+                    if (iconsEntry != null)
+                    {
+                        try
+                        {
+                            using var writer = new StreamReader(iconsEntry.Open());
+                            theme.XamlIconContent = writer.ReadToEnd();
+                        }
+                        catch
+                        {
+                            App.Logging.Application(
+                                $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeIcons}");
+                        }
+                    }
                 }
+#endif
             }
             else
             {
                 App.Logging.Application($"{filepath} {App.Text.DoesntExist}!!!");
             }
-
+            //Icons.xaml
 
             return Task.FromResult(theme);
         }
@@ -180,9 +195,8 @@ namespace MultiRPC.JsonClasses
             return Path.Combine(FileLocations.ThemesFolder, theme.ThemeMetadata.ThemeName + ThemeExtension);
         }
 
-        public static ResourceDictionary ThemeToResourceDictionary(Theme theme)
-        {
-            var themeDictionary = new ResourceDictionary
+        public static ResourceDictionary ThemeToResourceDictionary(Theme theme) =>
+            new ResourceDictionary
             {
                 {"AccentColour1", theme.ThemeColours.AccentColour1},
                 {"AccentColour1SCBrush", theme.ThemeColours.AccentColour1SCBrush},
@@ -206,9 +220,6 @@ namespace MultiRPC.JsonClasses
                 {"ThemeName", theme.ThemeMetadata.ThemeName},
                 {"MultiRPCVersion", theme.ThemeMetadata.MultiRPCVersion}
             };
-
-            return themeDictionary;
-        }
 
         public static Theme ResourceDictionaryToTheme(ResourceDictionary themeDictionary)
         {
@@ -255,55 +266,44 @@ namespace MultiRPC.JsonClasses
                 return Task.FromResult(theme);
             }
 
-            using (fileStream)
+            using var archive = new ZipArchive(fileStream, ZipArchiveMode.Create);
+            var coloursEntry = archive.CreateEntry("colours.json");
+            try
             {
-                using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Create))
-                {
-                    var coloursEntry = archive.CreateEntry("colours.json");
-                    try
-                    {
-                        using (var writer = new StreamWriter(coloursEntry.Open()))
-                        {
-                            App.JsonSerializer.Serialize(writer, theme.ThemeColours);
-                        }
-                    }
-                    catch
-                    {
-                        App.Logging.Application(
-                            $"{App.Text.SomethingHappenedWhile} {App.Text.Saving} {fileLocation} {App.Text.ThemeColours}");
-                    }
+                using var writer = new StreamWriter(coloursEntry.Open());
+                App.JsonSerializer.Serialize(writer, theme.ThemeColours);
+            }
+            catch
+            {
+                App.Logging.Application(
+                    $"{App.Text.SomethingHappenedWhile} {App.Text.Saving} {fileLocation} {App.Text.ThemeColours}");
+            }
 
-                    var metadataEntry = archive.CreateEntry("metadataEntry.json");
-                    try
-                    {
-                        using (var writer = new StreamWriter(metadataEntry.Open()))
-                        {
-                            App.JsonSerializer.Serialize(writer, theme.ThemeMetadata);
-                        }
-                    }
-                    catch
-                    {
-                        App.Logging.Application(
-                            $"{App.Text.SomethingHappenedWhile} {App.Text.Saving} {fileLocation} {App.Text.ThemeMetadata}");
-                    }
+            var metadataEntry = archive.CreateEntry("metadataEntry.json");
+            try
+            {
+                using var writer = new StreamWriter(metadataEntry.Open());
+                App.JsonSerializer.Serialize(writer, theme.ThemeMetadata);
+            }
+            catch
+            {
+                App.Logging.Application(
+                    $"{App.Text.SomethingHappenedWhile} {App.Text.Saving} {fileLocation} {App.Text.ThemeMetadata}");
+            }
 
 #if DEBUG
-                    var iconEntry = archive.CreateEntry("iconEntry.json");
-                    try
-                    {
-                        using (var writer = new StreamWriter(iconEntry.Open()))
-                        {
-                            App.JsonSerializer.Serialize(writer, theme.ThemeIcons);
-                        }
-                    }
-                    catch
-                    {
-                        App.Logging.Application(
-                            $"{App.Text.SomethingHappenedWhile} {App.Text.Saving} {fileLocation} {App.Text.ThemeIcons}");
-                    }
-#endif
-                }
+            var iconEntry = archive.CreateEntry("iconEntry.json");
+            try
+            {
+                using var writer = new StreamWriter(iconEntry.Open());
+                App.JsonSerializer.Serialize(writer, theme.ThemeIcons);
             }
+            catch
+            {
+                App.Logging.Application(
+                    $"{App.Text.SomethingHappenedWhile} {App.Text.Saving} {fileLocation} {App.Text.ThemeIcons}");
+            }
+#endif
 
             return Task.CompletedTask;
         }

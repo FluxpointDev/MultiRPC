@@ -48,15 +48,13 @@ namespace MultiRPC.GUI.Pages
             var creditsFileFI = new FileInfo(CreditsFileLocalLocation);
             if (!updateText)
             {
-                using (var reader = creditsFileFI.OpenText())
+                using var reader = creditsFileFI.OpenText();
+                _creditsList = (CreditsList)App.JsonSerializer.Deserialize(reader, typeof(CreditsList));
+                if (_creditsList != null)
                 {
-                    _creditsList = (CreditsList) App.JsonSerializer.Deserialize(reader, typeof(CreditsList));
-                    if (_creditsList != null)
-                    {
-                        tblCommunityAdmins.Text = string.Join("\r\n\r\n", _creditsList.Admins);
-                        tblPatreonDonators.Text = string.Join("\r\n\r\n", _creditsList.Patreon);
-                        tblPaypalDonators.Text = string.Join("\r\n\r\n", _creditsList.Paypal);
-                    }
+                    tblCommunityAdmins.Text = string.Join("\r\n\r\n", _creditsList.Admins);
+                    tblPatreonDonators.Text = string.Join("\r\n\r\n", _creditsList.Patreon);
+                    tblPaypalDonators.Text = string.Join("\r\n\r\n", _creditsList.Paypal);
                 }
             }
 

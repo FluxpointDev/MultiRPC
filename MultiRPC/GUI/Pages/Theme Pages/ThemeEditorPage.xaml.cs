@@ -92,8 +92,7 @@ namespace MultiRPC.GUI.Pages
             await Theme.Save(themeFileContent);
             var themeFile = Theme.GetThemeFileLocation(themeFileContent);
 
-            Frame frame = null;
-            frame = await InstalledThemes._InstalledThemes.MakeThemeUI(themeFile, _themeThatBeingEditedIntLocation);
+            var frame = await InstalledThemes._InstalledThemes.MakeThemeUI(themeFile, _themeThatBeingEditedIntLocation);
             _themeThatBeingEditedIntLocation = -1;
 
             //Clear and reset the Theme UI that is shown when making a theme
@@ -126,12 +125,13 @@ namespace MultiRPC.GUI.Pages
                 //We want to at least have a theme so this doesn't happen: https://1drv.ms/u/s!AhwsT7MDO4OvgtsoUYv7Tmq7KWDleA
             }
 
+            var theme = await Theme.Load(themeFile);
             //Get rid of the old and in with the new ~~theme~~
             Application.Current.Resources.MergedDictionaries.Clear();
             Application.Current.Resources.MergedDictionaries.Add(
-                Theme.ThemeToResourceDictionary(await Theme.Load(themeFile)));
+                Theme.ThemeToResourceDictionary(theme));
             Application.Current.Resources.MergedDictionaries.Add(
-                (ResourceDictionary) XamlReader.Parse(File.ReadAllText(Path.Combine("Assets", "Icons.xaml"))));
+                (ResourceDictionary) XamlReader.Parse(theme.XamlIconContent ?? File.ReadAllText(Path.Combine("Assets", "Icons.xaml"))));
             MainPage._MainPage.RerenderButtons();
 
             ((MainWindow) Application.Current.MainWindow).TaskbarIcon.TrayToolTip = new ToolTip(

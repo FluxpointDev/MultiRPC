@@ -203,10 +203,8 @@ namespace MultiRPC
             var langFiles = Directory.EnumerateFiles("Lang").ToArray();
             for (var i = 0; i < langFiles.LongLength; i++)
             {
-                using (var reader = File.OpenText(langFiles[i]))
-                {
-                    SettingsPage.UIText.Add((UIText) JsonSerializer.Deserialize(reader, typeof(UIText)));
-                }
+                using var reader = File.OpenText(langFiles[i]);
+                SettingsPage.UIText.Add((UIText)JsonSerializer.Deserialize(reader, typeof(UIText)));
             }
         }
 

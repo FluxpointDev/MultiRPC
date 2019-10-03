@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Input;
 using MultiRPC.GUI.Controls;
 using TabItem = MultiRPC.GUI.Controls.TabItem;
 

@@ -64,12 +64,10 @@ namespace MultiRPC.Functions
                         NewVersion = info.AvailableVersion.ToString();
                         try
                         {
-                            using (var client = new WebClient())
-                            {
-                                await client.DownloadFileTaskAsync(
-                                    new[] { App.MultiRPCWebsiteRoot, "Changelog.txt" }.CombineToUri(),
-                                    FileLocations.ChangelogFileLocalLocation);
-                            }
+                            using var client = new WebClient();
+                            await client.DownloadFileTaskAsync(
+new[] { App.MultiRPCWebsiteRoot, "Changelog.txt" }.CombineToUri(),
+FileLocations.ChangelogFileLocalLocation);
                         }
                         catch
                         {
