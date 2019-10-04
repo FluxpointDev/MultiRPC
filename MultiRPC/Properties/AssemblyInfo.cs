@@ -8,7 +8,7 @@ using System.Windows;
 [assembly: AssemblyTitle("MultiRPC")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Discord Universe")]
+[assembly: AssemblyCompany("Fluxpoint Development")]
 [assembly: AssemblyProduct("MultiRPC")]
 [assembly: AssemblyCopyright("Copyright ©  2019 xXBuilderBXx")]
 [assembly: AssemblyTrademark("")]
@@ -49,5 +49,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("5.3.1.9")]
-[assembly: AssemblyFileVersion("5.3.1.9")]
+[assembly: AssemblyVersion("5.4.0.0")]
+[assembly: AssemblyFileVersion("5.4.0.0")]
