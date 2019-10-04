@@ -149,9 +149,9 @@ namespace MultiRPC.JsonClasses
                         $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeMetadata}");
                 }
 
-#if DEBUG
                 if (theme.ThemeMetadata.MultiRPCVersion >= Version.SysVersionToMultiVersion(Assembly.GetExecutingAssembly().GetName().Version))
                 {
+#if DEBUG
                     if (iconEntry != null) 
                     {
                         try
@@ -165,6 +165,7 @@ namespace MultiRPC.JsonClasses
                                 $"{App.Text.SomethingHappenedWhile} {App.Text.Getting} {filepath} {App.Text.ThemeIcons}");
                         }
                     }
+#endif
                     if (iconsEntry != null)
                     {
                         try
@@ -179,13 +180,11 @@ namespace MultiRPC.JsonClasses
                         }
                     }
                 }
-#endif
             }
             else
             {
                 App.Logging.Application($"{filepath} {App.Text.DoesntExist}!!!");
             }
-            //Icons.xaml
 
             return Task.FromResult(theme);
         }
