@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Extra;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -220,6 +221,7 @@ namespace MultiRPC.GUI
 
         private void MainWindow_ContentRendered(object sender, EventArgs e)
         {
+           
             if (!File.Exists(App.Config.ActiveTheme))
             {
                 App.Config.ActiveTheme = Path.Combine("Assets", "Themes", "DarkTheme" + Theme.ThemeExtension);

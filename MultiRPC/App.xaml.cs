@@ -19,7 +19,7 @@ namespace MultiRPC
     /// </summary>
     public partial class App : Application
     {
-        public const string MultiRPCWebsiteRoot = "https://multirpc.blazedev.me";
+        public const string MultiRPCWebsiteRoot = "https://multirpc.fluxpoint.dev";
         public const int RetryCount = 10; //How many times to attempt downloading files
         public const string AppDev = "Builder#0001";
         public const string ServerInviteCode = "TjF6QDC";

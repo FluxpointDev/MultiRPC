@@ -58,7 +58,7 @@
             <StackPanel Style="{DynamicResource Content}">
                 <StackPanel>
                     <TextBlock Name="tblWebsiteMultiRPC" />
-                    <Image Name="imgWebsiteMultiRPC" Tag="https://stats.blazedev.me"
+                    <Image Name="imgWebsiteMultiRPC" Tag="https://fluxpoint.dev"
                            Source="{DynamicResource BrowserIconDrawingImage}" MouseEnter="Image_OnMouseEnter"
                            MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown" />
                 </StackPanel>
@@ -70,7 +70,7 @@
                 </StackPanel>
                 <StackPanel Grid.Column="2">
                     <TextBlock Text="Github" />
-                    <Image Name="imgGithubRPC" Tag="https://github.com/xXBuilderBXx/MultiRPC"
+                    <Image Name="imgGithubRPC" Tag="https://github.com/FluxpointDev/MultiRPC"
                            Source="{DynamicResource GithubIconDrawingImage}" MouseEnter="Image_OnMouseEnter"
                            MouseLeave="Image_OnMouseLeave" MouseLeftButtonDown="Image_OnMouseDown" />
                 </StackPanel>
