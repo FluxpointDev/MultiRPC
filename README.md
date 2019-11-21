@@ -1,5 +1,5 @@
 # Info
-![Image](https://gallery.blazedev.me/i/2019/08/08/65879d0a-me.jpg)
+![Image](https://img.fluxpoint.dev/med/2531927730946048.jpg)
 
 This supports all versions of windows, linux/mac support coming soon using .net core
 
@@ -18,7 +18,7 @@ Click more info and run anyway (windows limitation)
 
 ![Image](https://i.imgur.com/jV9jIte.png)
 
-![Image](https://i.imgur.com/fNdwVn4.png)
+![Image](https://img.fluxpoint.dev/med/2531938422226944.png)
 
 # MultiRPC
 
