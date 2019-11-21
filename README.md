@@ -12,7 +12,7 @@ Ram usage: 50mb | Language: C# | GUI: Wpf
 Contact me Builderb#0001 or join the Discord server https://discord.gg/TjF6QDC for more info and support
 
 # Install
-Install the setup from here https://multirpc.blazedev.me
+Install the setup from here https://multirpc.fluxpoint.dev
 
 Click more info and run anyway (windows limitation)
 
