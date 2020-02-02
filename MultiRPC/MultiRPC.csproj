@@ -30,12 +30,12 @@
     <InstallUrl>https://multirpc.fluxpoint.dev/</InstallUrl>
     <UpdateUrl>https://multirpc.fluxpoint.dev/</UpdateUrl>
     <SupportUrl>https://discord.gg/TjF6QDC</SupportUrl>
-    <PublisherName>Discord Universe</PublisherName>
+    <PublisherName>Fluxpoint Development</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.html</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>3</ApplicationRevision>
-    <ApplicationVersion>5.4.2.3</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>5.4.3.0</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>

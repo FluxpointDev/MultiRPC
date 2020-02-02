@@ -21,7 +21,7 @@ namespace MultiRPC
     {
         public const string MultiRPCWebsiteRoot = "https://multirpc.fluxpoint.dev";
         public const int RetryCount = 10; //How many times to attempt downloading files
-        public const string AppDev = "Builder#0001";
+        public const string AppDev = "Builderb#0001";
         public const string ServerInviteCode = "TjF6QDC";
         public static UIText Text;
         public static Logging Logging;
