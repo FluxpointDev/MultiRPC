@@ -1,95 +1,95 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using MultiRPC.Core;
 
-namespace MultiRPC.GUI
+namespace MultiRPC.GUI.MessageBox
 {
     /// <summary>
     /// Interaction logic for MessageBoxPage.xaml
     /// </summary>
     public partial class MessageBoxPage : Page
     {
-        private readonly long WindowID;
+        private CustomMessageBox CustomMessageBox;
 
-        public MessageBoxPage(string messageBoxText, MessageBoxButton messageBoxButton, MessageBoxImage messageBoxImage,
-            long windowID)
+        public MessageBoxPage(string messageBoxText, MessageBoxButton messageBoxButton, MessageBoxImage messageBoxImage, CustomMessageBox customMessageBox)
         {
             InitializeComponent();
-            Name = "win" + DateTime.Now.Ticks;
-            RegisterName(Name, this);
 
-            WindowID = windowID;
-            btnNo.Content = App.Text.No;
-            btnYes.Content = App.Text.Yes;
-            btnOk.Content = App.Text.Ok;
-            btnCancel.Content = App.Text.Cancel;
+            CustomMessageBox = customMessageBox;
+
+            btnNo.Content = LanguagePicker.GetLineFromLanguageFile("No");
+            btnYes.Content = LanguagePicker.GetLineFromLanguageFile("Yes");
+            btnOk.Content = LanguagePicker.GetLineFromLanguageFile("Ok");
+            btnCancel.Content = LanguagePicker.GetLineFromLanguageFile("Cancel");
             tblMessageBoxText.Text = messageBoxText;
 
-            if (messageBoxButton == MessageBoxButton.OK)
+            switch (messageBoxButton)
             {
-                btnOk.Visibility = Visibility.Visible;
+                case MessageBoxButton.OK:
+                    btnOk.Visibility = Visibility.Visible;
+                    break;
+                case MessageBoxButton.OKCancel:
+                    btnOk.Visibility = Visibility.Visible;
+                    btnCancel.Visibility = Visibility.Visible;
+                    break;
+                case MessageBoxButton.YesNo:
+                    btnYes.Visibility = Visibility.Visible;
+                    btnNo.Visibility = Visibility.Visible;
+                    break;
+                case MessageBoxButton.YesNoCancel:
+                    btnYes.Visibility = Visibility.Visible;
+                    btnNo.Visibility = Visibility.Visible;
+                    btnCancel.Visibility = Visibility.Visible;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(messageBoxButton), messageBoxButton, null);
             }
 
-            if (messageBoxButton == MessageBoxButton.OKCancel)
+            switch ((int) messageBoxImage)
             {
-                btnOk.Visibility = Visibility.Visible;
-                btnCancel.Visibility = Visibility.Visible;
-            }
-
-            if (messageBoxButton == MessageBoxButton.YesNo)
-            {
-                btnYes.Visibility = Visibility.Visible;
-                btnNo.Visibility = Visibility.Visible;
-            }
-
-            if (messageBoxButton == MessageBoxButton.YesNoCancel)
-            {
-                btnYes.Visibility = Visibility.Visible;
-                btnNo.Visibility = Visibility.Visible;
-                btnCancel.Visibility = Visibility.Visible;
-            }
-
-            if ((int) messageBoxImage == 0)
-            {
-                imgMessageBoxImage.Visibility = Visibility.Collapsed;
-            }
-
-            if ((int) messageBoxImage == 64)
-            {
-                imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "InfoIconDrawingImage");
-            }
-            else if ((int) messageBoxImage == 48)
-            {
-                imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "WarningIconDrawingImage");
-            }
-            else if ((int) messageBoxImage == 16)
-            {
-                imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "AlertIconDrawingImage");
-            }
-            else if ((int) messageBoxImage == 32)
-            {
-                imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "HelpIconDrawingImage");
+                case 0:
+                    imgMessageBoxImage.Visibility = Visibility.Collapsed;
+                    break;
+                case 64:
+                    imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "InfoIconDrawingImage");
+                    break;
+                case 48:
+                    imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "WarningIconDrawingImage");
+                    break;
+                case 16:
+                    imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "AlertIconDrawingImage");
+                    break;
+                case 32:
+                    imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "HelpIconDrawingImage");
+                    break;
             }
         }
 
         private void ButOk_OnClick(object sender, RoutedEventArgs e)
         {
-            MainWindow.CloseWindow(WindowID, MessageBoxResult.OK);
+            CloseWindow(MessageBoxResult.OK);
         }
 
         private void ButYes_OnClick(object sender, RoutedEventArgs e)
         {
-            MainWindow.CloseWindow(WindowID, MessageBoxResult.Yes);
+            CloseWindow(MessageBoxResult.Yes);
         }
 
         private void ButNo_OnClick(object sender, RoutedEventArgs e)
         {
-            MainWindow.CloseWindow(WindowID, MessageBoxResult.No);
+            CloseWindow(MessageBoxResult.No);
         }
 
         private void ButCancel_OnClick(object sender, RoutedEventArgs e)
         {
-            MainWindow.CloseWindow(WindowID, MessageBoxResult.Cancel);
+            CloseWindow(MessageBoxResult.Cancel);
+        }
+
+        private void CloseWindow(MessageBoxResult result)
+        {
+            CustomMessageBox.Tag = result;
+            CustomMessageBox.Close();
         }
     }
 }

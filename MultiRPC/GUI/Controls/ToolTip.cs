@@ -8,9 +8,7 @@ namespace MultiRPC.GUI.Controls
     /// </summary>
     public class ToolTip : System.Windows.Controls.ToolTip
     {
-        /// <summary>
-        /// Tooltip with string parameter
-        /// </summary>
+        /// <inheritdoc cref="System.Windows.Controls.ToolTip"/>
         /// <param name="text">Text to show on the tooltip</param>
         public ToolTip(string text)
         {
@@ -18,6 +16,7 @@ namespace MultiRPC.GUI.Controls
             UISetup();
         }
 
+        /// <inheritdoc cref="System.Windows.Controls.ToolTip"/>
         public ToolTip()
         {
             UISetup();

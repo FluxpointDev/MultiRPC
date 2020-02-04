@@ -14,12 +14,12 @@
 
     <Border CornerRadius="5" x:Name="gridBackground" MinWidth="255" MaxWidth="355" Height="85"
             Background="{DynamicResource AccentColour2SCBrush}">
-        <Grid>
+        <Grid Margin="5,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid VerticalAlignment="Center" Margin="5,0,0,0">
+            <Grid VerticalAlignment="Center">
                 <Rectangle RadiusX="5" RadiusY="5" Name="recLargeImage" Height="75" Width="75" />
                 <Image Visibility="Collapsed" Name="imgLoading" Height="75" Width="75" />
                 <Grid Name="gridSmallImage" Margin="0,0,-5,-2.5" VerticalAlignment="Bottom" HorizontalAlignment="Right">

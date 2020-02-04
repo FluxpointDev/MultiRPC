@@ -1,18 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
 
-namespace MultiRPC.GUI
+namespace MultiRPC.GUI.MessageBox
 {
-    internal class CustomMessageBox : MainWindow
+    public class CustomMessageBox : MainWindow
     {
-        private CustomMessageBox(MessageBoxPage page, string title)
+        private CustomMessageBox(string title) : base(null)
         {
             InitializeComponent();
-            SizeToContent = SizeToContent.WidthAndHeight;
-            frmContent.Content = page;
-            MinHeight = page.MinHeight + 30;
-            MinWidth = page.MinWidth;
             tblTitle.Text = title;
             btnMin.Visibility = Visibility.Collapsed;
             ResizeMode = ResizeMode.CanMinimize;
@@ -22,12 +17,20 @@ namespace MultiRPC.GUI
 
         private static async Task<MessageBoxResult> _Show(string messageBoxText, string messageBoxTitle,
             MessageBoxButton messageBoxButton, MessageBoxImage messageBoxImage,
-            MessageBoxResult messageBoxResult = MessageBoxResult.None, Window ownerWindow = null)
+            MessageBoxResult messageBoxResult = MessageBoxResult.None)
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                var tick = DateTime.Now.Ticks;
-                var page = new MessageBoxPage(messageBoxText, messageBoxButton, messageBoxImage, tick);
+                var window = new CustomMessageBox(messageBoxTitle)
+                {
+                    Owner = App.Current.MainWindow
+                };
+                if (messageBoxButton == MessageBoxButton.YesNo)
+                {
+                    window.btnClose.IsEnabled = false;
+                }
+
+                var page = new MessageBoxPage(messageBoxText, messageBoxButton, messageBoxImage, window);
 
                 switch (messageBoxButton)
                 {
@@ -45,71 +48,54 @@ namespace MultiRPC.GUI
                         break;
                 }
 
-                var window = new CustomMessageBox(page, messageBoxTitle)
-                {
-                    WindowID = tick,
-                    Owner = ownerWindow
-                };
-                if (messageBoxButton == MessageBoxButton.YesNo)
-                {
-                    window.btnClose.IsEnabled = false;
-                }
-
+                window.frmContent.Navigate(page);
                 window.ShowDialog();
-                return window.ToReturn ?? DefaultReturn(messageBoxButton, messageBoxResult);
+                return window.Tag ?? DefaultReturn(messageBoxButton, messageBoxResult);
             });
             return messageBoxResult;
         }
 
-        private static MessageBoxResult DefaultReturn(MessageBoxButton button, MessageBoxResult defaultMessageBoxResult)
+        private static MessageBoxResult DefaultReturn(MessageBoxButton button, MessageBoxResult defaultMessageBoxResult) =>
+        button switch
         {
-            switch (button)
-            {
-                case MessageBoxButton.OKCancel:
-                    return MessageBoxResult.Cancel;
-                case MessageBoxButton.OK:
-                    return MessageBoxResult.OK;
-                case MessageBoxButton.YesNoCancel:
-                    return MessageBoxResult.Cancel;
-                case MessageBoxButton.YesNo:
-                    return MessageBoxResult.Yes;
-                default:
-                    return defaultMessageBoxResult;
-            }
+            MessageBoxButton.OKCancel => MessageBoxResult.Cancel,
+            MessageBoxButton.OK => MessageBoxResult.OK,
+            MessageBoxButton.YesNoCancel => MessageBoxResult.Cancel,
+            MessageBoxButton.YesNo => MessageBoxResult.Yes,
+            _ => defaultMessageBoxResult
+        };
+
+        /// <inheritdoc cref="System.Windows.MessageBox.Show(Window, string)"/>
+        public static async Task<MessageBoxResult> Show(string messageBoxText)
+        {
+            return await _Show(messageBoxText, "MultiRPC", MessageBoxButton.OK, MessageBoxImage.None);
         }
 
-        public static async Task<MessageBoxResult> Show(string messageBoxText, Window window = null)
-        {
-            return await _Show(messageBoxText, "MultiRPC", MessageBoxButton.OK, MessageBoxImage.None,
-                ownerWindow: window);
+        /// <inheritdoc cref="System.Windows.MessageBox.Show(Window, string, string)"/>
+        public static async Task<MessageBoxResult> Show(string messageBoxText, string caption)
+        { 
+            return await _Show(messageBoxText, caption, MessageBoxButton.OK, MessageBoxImage.None);
         }
 
-        public static async Task<MessageBoxResult> Show(string messageBoxText, string messageBoxTitle,
-            Window window = null)
+        /// <inheritdoc cref="System.Windows.MessageBox.Show(Window, string, string, MessageBoxButton)"/>
+        public static async Task<MessageBoxResult> Show(string messageBoxText, string caption,
+            MessageBoxButton button)
         {
-            return await _Show(messageBoxText, messageBoxTitle, MessageBoxButton.OK, MessageBoxImage.None,
-                ownerWindow: window);
+            return await _Show(messageBoxText, caption, button, MessageBoxImage.None);
         }
 
-        public static async Task<MessageBoxResult> Show(string messageBoxText, string messageBoxTitle,
-            MessageBoxButton messageBoxButton, Window window = null)
+        /// <inheritdoc cref="System.Windows.MessageBox.Show(Window, string, string, MessageBoxButton, MessageBoxImage)"/>
+        public static async Task<MessageBoxResult> Show(string messageBoxText, string caption,
+            MessageBoxButton button, MessageBoxImage icon)
         {
-            return await _Show(messageBoxText, messageBoxTitle, messageBoxButton, MessageBoxImage.None,
-                ownerWindow: window);
+            return await _Show(messageBoxText, caption, button, icon);
         }
 
-        public static async Task<MessageBoxResult> Show(string messageBoxText, string messageBoxTitle,
-            MessageBoxButton messageBoxButton, MessageBoxImage messageBoxImage, Window window = null)
+        /// <inheritdoc cref="System.Windows.MessageBox.Show(Window, string, string, MessageBoxButton, MessageBoxImage, MessageBoxResult)"/>
+        public static async Task<MessageBoxResult> Show(string messageBoxText, string caption,
+            MessageBoxButton button, MessageBoxImage icon, MessageBoxResult defaultResult)
         {
-            return await _Show(messageBoxText, messageBoxTitle, messageBoxButton, messageBoxImage, ownerWindow: window);
-        }
-
-        public static async Task<MessageBoxResult> Show(string messageBoxText, string messageBoxTitle,
-            MessageBoxButton messageBoxButton, MessageBoxImage messageBoxImage, MessageBoxResult defaultResult,
-            Window window = null)
-        {
-            return await _Show(messageBoxText, messageBoxTitle, messageBoxButton, messageBoxImage, defaultResult,
-                window);
+            return await _Show(messageBoxText, caption, button, icon);
         }
     }
 }

@@ -1,9 +1,0 @@
-﻿<!---https://docs.microsoft.com/en-us/previous-versions/windows/apps/dn449733(v=win.10)-->
-<Application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <VisualElements
-    BackgroundColor="#0077E9"
-    ShowNameOnSquare150x150Logo="on"
-    ForegroundText="light"
-    Square150x150Logo="Assets\150x150Logo.png"
-    Square70x70Logo="Assets\70x70Logo.png" />
-</Application>

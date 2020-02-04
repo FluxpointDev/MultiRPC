@@ -3,13 +3,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using DiscordRPC.Message;
-using MultiRPC.Functions;
-using XamlAnimatedGif;
+using MultiRPC.Core;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
-using System.Extra;
+using DiscordRPC.Message;
+using System.Linq;
+using MultiRPC.Core.Rpc;
 
 namespace MultiRPC.GUI.Views
 {
@@ -18,280 +17,330 @@ namespace MultiRPC.GUI.Views
     /// </summary>
     public partial class RPCPreview : UserControl
     {
+        Uri LargeImageUri = null;
+        Uri SmallImageUri = null;
+
+        public RPCPreview()
+        {
+            InitializeComponent();
+            UpdateText();
+            Settings.Current.LanguageChanged += (_,__) => UpdateText();
+        }
+
         public enum ViewType
         {
             Default,
-            Default2,
             Loading,
             Error,
+            Preview,
             RichPresence
         }
 
-        public ViewType CurrentViewType;
+        private ViewType currentView = ViewType.Default;
 
-        public RPCPreview(ViewType view, string error = "", SolidColorBrush background = null,
-            SolidColorBrush foreground = null, string backgroundName = null, string foregroundName = null)
+        public ViewType CurrentView
         {
-            InitializeComponent();
-            UpdateUIViewType(view, error, background, foreground, backgroundName, foregroundName);
+            get => currentView;
+            set
+            {
+                currentView = value;
+                if (CurrentView == ViewType.RichPresence) 
+                {
+                    Rpc.RpcUpdated += Rpc_RpcUpdated;
+                }
+                else
+                {
+                    Rpc.RpcUpdated -= Rpc_RpcUpdated;
+                }
+
+                if (value == ViewType.Preview)
+                {
+                    UpdateBackground("Purple");
+                    UpdateForeground(new SolidColorBrush(Colors.White));
+                }
+                Dispatcher.Invoke(() => UpdateText());
+            }
         }
 
-        public RPCPreview(PresenceMessage msg)
+        private void Rpc_RpcUpdated(object sender, PresenceMessage e) => Dispatcher.Invoke(() => UpdateText(e));
+
+        public void UpdateText(PresenceMessage e = default, CustomProfile customProfile = default, DefaultSettings defaultSettings = default)
         {
-            InitializeComponent();
-
-            CurrentViewType = ViewType.RichPresence;
-            UpdateBackground("Purple");
-            UpdateForeground(Brushes.White);
-            tblTitle.Text = msg.Name;
-            tblText1.Text = msg.Presence.Details;
-            tblText2.Text = msg.Presence.State;
-            UpdateTextVisibility();
-            tblTime.Visibility = Visibility.Visible;
-
-            if (msg.Presence.HasAssets())
+            //ToDo: Clean this up
+            if (!IsInitialized)
             {
-                recLargeImage.Visibility = Visibility.Collapsed;
-                if (!string.IsNullOrEmpty(msg.Presence.Assets.LargeImageKey))
-                {
-                    recLargeImage.Visibility = Visibility.Visible;
-                    var largeImage = (new [] {
-                        "https://cdn.discordapp.com/app-assets",
-                        msg.ApplicationID,
-                        msg.Presence.Assets.LargeImageID + ".png" }.CombineToUri()).DownloadImage()
-                        .ConfigureAwait(false).GetAwaiter().GetResult();
+                return;
+            }
 
-                    recLargeImage.Fill = new ImageBrush(largeImage);
-                    if (!string.IsNullOrEmpty(msg.Presence.Assets.LargeImageText))
-                    {
-                        recLargeImage.ToolTip = new ToolTip(msg.Presence.Assets.LargeImageText);
-                    }
-                }
-                else
+            if (CurrentView == ViewType.Preview)
+            {
+                if (customProfile != null) 
                 {
-                    recLargeImage.Fill = null;
-                }
+                    tblText1.Text = customProfile.Text1;
+                    tblText2.Text = customProfile.Text2;
 
-                if (!string.IsNullOrEmpty(msg.Presence.Assets.SmallImageKey) &&
-                    recLargeImage.Visibility == Visibility.Visible)
-                {
-                    var smallImage = new [] {
-                            "https://cdn.discordapp.com/app-assets",
-                            msg.ApplicationID,
-                            msg.Presence.Assets.SmallImageID + ".png"}
-                            .CombineToUri()
-                            .DownloadImage()
-                        .ConfigureAwait(false)
-                        .GetAwaiter().GetResult();
-                    ellSmallImage.Fill = new ImageBrush(smallImage);
-                    if (!string.IsNullOrEmpty(msg.Presence.Assets.SmallImageText))
-                    {
-                        ellSmallImage.ToolTip = new ToolTip(msg.Presence.Assets.SmallImageText);
-                    }
+                    UpdateImages(default(Uri), //Just so it knows to use the method we want it to use
+                        largeImageText: customProfile.LargeText, 
+                        smallImageText: customProfile.SmallText);
                 }
-                else
+                else if (defaultSettings != null)
                 {
-                    gridSmallImage.Visibility = Visibility.Collapsed;
+                    tblText1.Text = defaultSettings.Text1;
+                    tblText2.Text = defaultSettings.Text2;
+
+                    UpdateImages(
+                        Data.MultiRPCImages.Values.ElementAt(defaultSettings.LargeKey),
+                        Data.MultiRPCImages.Values.ElementAt(defaultSettings.SmallKey),
+                        largeImageText: defaultSettings.LargeText,
+                        smallImageText: defaultSettings.SmallText);
                 }
+                return;
+            }
+
+            var presence = e?.Presence ?? Rpc.Client?.CurrentPresence;
+
+            imgLoading.Visibility = Visibility.Collapsed;
+            recLargeImage.Visibility = Visibility.Visible;
+            recLargeImage.Margin = new Thickness(0);
+
+            if (CurrentView != ViewType.RichPresence) 
+            {
+                gridSmallImage.Visibility = Visibility.Collapsed;
+            }
+
+            if (CurrentView == ViewType.RichPresence)
+            {
+                UpdateBackground("Purple");
+                UpdateForeground(Brushes.White);
+            }
+            else if (CurrentView == ViewType.Error)
+            {
+                UpdateBackground("Red");
             }
             else
             {
-                recLargeImage.Visibility = Visibility.Collapsed;
-                gridSmallImage.Visibility = Visibility.Collapsed;
+                UpdateBackground("AccentColour2SCBrush");
+                UpdateForeground("TextColourSCBrush");
+            }
+
+            switch (CurrentView)
+            {
+                case ViewType.Default:
+                    {
+                        tblTitle.Text = "MultiRPC";
+
+                        tblText1.Text = LanguagePicker.GetLineFromLanguageFile("ThankYouForUsing");
+                        tblText2.Text = LanguagePicker.GetLineFromLanguageFile("ThisProgram");
+
+                        tblText1.Visibility = Visibility.Visible;
+                        tblText2.Visibility = Visibility.Visible;
+
+                        tblTime.Text = "";
+                        var image = App.Current.Resources["MultiRPCLogoDrawingImage"];
+                        recLargeImage.Fill =
+                            new ImageBrush((ImageSource)image);
+                    }
+                    break;
+                case ViewType.Loading:
+                    {
+                        tblTitle.Text = LanguagePicker.GetLineFromLanguageFile("Loading") + "...";
+                        tblText1.Text = "";
+                        tblText2.Text = "";
+                        //AnimationBehavior.SetSourceUri(imgLoading,
+                        //    new System.Uri("../../Assets/Loading.gif", UriKind.Relative));
+                        //AnimationBehavior.SetRepeatBehavior(imgLoading, RepeatBehavior.Forever);
+                        imgLoading.Visibility = Visibility.Visible;
+                        recLargeImage.Visibility = Visibility.Collapsed;
+                    }
+                    break;
+                case ViewType.Error:
+                    {
+                        tblTitle.Text = LanguagePicker.GetLineFromLanguageFile("Error") + "!";
+                        tblTitle.Foreground = new SolidColorBrush(Colors.White);
+
+                        tblText1.Text = LanguagePicker.GetLineFromLanguageFile("AttemptingToReconnect");
+                        tblText1.Foreground = new SolidColorBrush(Colors.White);
+                        tblText1.Visibility = Visibility.Visible;
+
+                        tblText2.Text = "";
+                        tblText2.Visibility = Visibility.Collapsed;
+                        gridBackground.SetResourceReference(Panel.BackgroundProperty, "Red");
+                        imgLoading.SetResourceReference(Image.SourceProperty, "DeleteIconDrawingImage");
+                        imgLoading.Visibility = Visibility.Visible;
+
+                        recLargeImage.Visibility = Visibility.Collapsed;
+                    }
+                    break;
+                case ViewType.RichPresence:
+                    {
+                        tblTitle.Text = e?.Name ?? tblTitle.Text;
+
+                        if (presence == null)
+                        {
+                            break;
+                        }
+
+                        tblText1.Text = presence.Details;
+                        tblText2.Text = presence.State;
+                        UpdateTextVisibility();
+                        tblTime.Visibility = Visibility.Visible;
+
+                        UpdateImages(presence.Assets?.LargeImageID, presence.Assets?.SmallImageID, 
+                            presence.Assets.LargeImageText, presence.Assets.SmallImageText, ulong.Parse(Rpc.Client.ApplicationID));
+
+                        UpdateTime();
+                    }
+                    break;
             }
         }
 
-        private Task UpdateBackground(SolidColorBrush background)
+        public void UpdateTextVisibility()
         {
-            gridBackground.Background = background;
-            ellSmallImageBackground.Fill = background;
-
-            return Task.CompletedTask;
+            tblText1.Visibility = string.IsNullOrWhiteSpace(tblText1.Text) ? Visibility.Collapsed : Visibility.Visible;
+            tblText2.Visibility = string.IsNullOrWhiteSpace(tblText2.Text) ? Visibility.Collapsed : Visibility.Visible;
         }
 
-        private Task UpdateForeground(SolidColorBrush foreground)
+        private async void UpdateTime()
+        {
+            async void updateTime() 
+            {
+                while ((Rpc.RichPresence?.Timestamps?.Start.HasValue ?? false) && Rpc.HasConnection)
+                {
+                    var ts = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - Rpc.RichPresence.Timestamps.Start.Value.Ticks);
+                    tblTime.Text = tblTime.Text = $"{(ts.Hours > 0 ? ts.Hours.ToString().PadLeft(2, '0') + ":" : "")}{ts.Minutes.ToString().PadLeft(2, '0')}:{ts.Seconds.ToString().PadLeft(2, '0')}";
+
+                    await Task.Delay(1000);
+                }
+            }
+            updateTime();
+
+            while ((Rpc.RichPresence?.Timestamps?.Start.HasValue ?? false) && Rpc.Client.IsInitialized)
+            {
+                tblTime.Text = "";
+
+                await Task.Delay(1000);
+                updateTime();
+            }
+
+            tblTime.Text = "";
+        }
+
+        private void UpdateForeground(SolidColorBrush foreground)
         {
             tblTitle.Foreground = foreground;
             tblText1.Foreground = foreground;
             tblText2.Foreground = foreground;
             tblTime.Foreground = foreground;
-
-            return Task.CompletedTask;
         }
 
-        private Task UpdateBackground(string background)
-        {
-            gridBackground.SetResourceReference(Panel.BackgroundProperty, background);
-            ellSmallImageBackground.SetResourceReference(Shape.FillProperty, background);
-
-            return Task.CompletedTask;
-        }
-
-        private Task UpdateForeground(string foreground)
+        private void UpdateForeground(string foreground)
         {
             tblTitle.SetResourceReference(TextBlock.ForegroundProperty, foreground);
             tblText1.SetResourceReference(TextBlock.ForegroundProperty, foreground);
             tblText2.SetResourceReference(TextBlock.ForegroundProperty, foreground);
             tblTime.SetResourceReference(TextBlock.ForegroundProperty, foreground);
-
-            return Task.CompletedTask;
         }
 
-        public Task UpdateTime(TimeSpan ts)
+        private void UpdateBackground(SolidColorBrush background)
         {
-            if (CurrentViewType == ViewType.Error)
-            {
-                tblTime.Text = "";
-                return Task.CompletedTask;
-            }
-
-            tblTime.Text = ts.Hours == 0
-                ? $"{ts.Minutes.ToString().PadLeft(2, '0')}:{ts.Seconds.ToString().PadLeft(2, '0')}"
-                : $"{ts.Hours.ToString().PadLeft(2, '0')}:{ts.Minutes.ToString().PadLeft(2, '0')}:{ts.Seconds.ToString().PadLeft(2, '0')}";
-
-            return Task.CompletedTask;
+            gridBackground.Background = background;
+            ellSmallImageBackground.Fill = background;
         }
 
-        public async Task UpdateUIViewType(ViewType view, string error = "", SolidColorBrush background = null,
-            SolidColorBrush foreground = null, string backgroundName = null, string foregroundName = null)
+        private void UpdateBackground(string background)
         {
-            ellSmallImage.ToolTip = null;
-            recLargeImage.ToolTip = null;
+            gridBackground.SetResourceReference(Panel.BackgroundProperty, background);
+            ellSmallImageBackground.SetResourceReference(Shape.FillProperty, background);
+        }
 
-            CurrentViewType = view;
-            if (background == null && string.IsNullOrWhiteSpace(backgroundName))
+        private void UpdateImages(
+            Uri largeImageUri = null,
+            Uri smallImageUri = null,
+            string largeImageText = "",
+            string smallImageText = "")
+        {
+            if (largeImageUri != null &&
+                LargeImageUri != largeImageUri)
             {
-                backgroundName = "AccentColour2SCBrush";
-            }
-
-            if (!string.IsNullOrWhiteSpace(backgroundName))
-            {
-                UpdateBackground(backgroundName);
-            }
-            else
-            {
-                UpdateBackground(background);
-            }
-
-            if (foreground == null && string.IsNullOrWhiteSpace(foregroundName))
-            {
-                foregroundName = "TextColourSCBrush";
-            }
-
-            if (!string.IsNullOrWhiteSpace(foregroundName))
-            {
-                UpdateForeground(foregroundName);
-            }
-            else
-            {
-                UpdateForeground(foreground);
-            }
-
-            imgLoading.Visibility = Visibility.Collapsed;
-            recLargeImage.Visibility = Visibility.Visible;
-            gridSmallImage.Visibility = Visibility.Collapsed;
-            recLargeImage.Margin = new Thickness(0);
-            switch (view)
-            {
-                case ViewType.Default:
+                var largeImage = largeImageUri.GetBitmap().ConfigureAwait(false).GetAwaiter();
+                largeImage.OnCompleted(() => Dispatcher.Invoke(() =>
                 {
-                    tblTitle.Text = "MultiRPC";
-                    tblText1.Text = App.Text.ThankYouForUsing;
-                    tblText1.Visibility = Visibility.Visible;
-                    tblText2.Text = App.Text.ThisProgram;
-                    tblText2.Visibility = Visibility.Visible;
-                    tblTime.Text = "";
-                    recLargeImage.Fill =
-                        new ImageBrush((ImageSource) Application.Current.Resources["MultiRPCLogoDrawingImage"]);
-                }
-                    break;
-                case ViewType.Default2:
-                {
-                    tblTitle.Text = "MultiRPC";
-                    tblText1.Text = App.Text.Hello;
-                    tblText1.Visibility = Visibility.Visible;
-                    tblText2.Text = App.Text.World;
-                    tblText2.Visibility = Visibility.Visible;
-                    recLargeImage.Fill =
-                        new ImageBrush((ImageSource) Application.Current.Resources["MultiRPCLogoDrawingImage"]);
-                }
-                    break;
-                case ViewType.Loading:
-                {
-                    tblTitle.Text = $"{App.Text.Loading}...";
-                    tblText1.Text = "";
-                    tblText2.Text = "";
-                    AnimationBehavior.SetSourceUri(imgLoading,
-                        new System.Uri("../../Assets/Loading.gif", UriKind.Relative));
-                    AnimationBehavior.SetRepeatBehavior(imgLoading, RepeatBehavior.Forever);
-                    imgLoading.Visibility = Visibility.Visible;
-                    recLargeImage.Visibility = Visibility.Collapsed;
-                }
-                    break;
-                case ViewType.Error:
-                {
-                    tblTitle.Text = $"{App.Text.Error}!";
-                    tblTitle.Foreground = new SolidColorBrush(Colors.White);
-                    tblText1.Text = error;
-                    tblText1.Foreground = new SolidColorBrush(Colors.White);
-                    gridBackground.SetResourceReference(Panel.BackgroundProperty, "Red");
-                    imgLoading.Source = (DrawingImage) Application.Current.Resources["DeleteIconDrawingImage"];
-                    imgLoading.Visibility = Visibility.Visible;
-                    recLargeImage.Visibility = Visibility.Collapsed;
-                }
-                    break;
+                    if (recLargeImage.Fill is ImageBrush imageBrush)
+                    {
+                        imageBrush.ImageSource = largeImage.GetResult();
+                    }
+                    else
+                    {
+                        recLargeImage.Fill = new ImageBrush(largeImage.GetResult());
+                    }
+                    recLargeImage.Visibility = Visibility.Visible;
+                    gridSmallImage.Visibility =
+                        smallImageUri == null || ((recLargeImage.Fill as ImageBrush)?.ImageSource ?? null) == null ?
+                        Visibility.Collapsed :
+                        Visibility.Visible;
+                }));
             }
-        }
-
-        private Visibility TextShouldBeVisible(TextBlock textBlock)
-        {
-            return !string.IsNullOrWhiteSpace(textBlock.Text) ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        public Task UpdateTextVisibility()
-        {
-            tblText1.Visibility = TextShouldBeVisible(tblText1);
-            tblText2.Visibility = TextShouldBeVisible(tblText2);
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Update the Image
-        /// </summary>
-        /// <param name="onSmallImage">If to target the small image</param>
-        /// <param name="image">Image</param>
-        public void UpdateImage(bool onSmallImage, ImageBrush image)
-        {
-            if (!onSmallImage && image?.ImageSource == null)
+            else if (largeImageUri == null)
             {
-                recLargeImage.Fill = null;
+                if (recLargeImage.Fill is ImageBrush imageBrush)
+                {
+                    imageBrush.ImageSource = null;
+                }
+                else
+                {
+                    recLargeImage.Fill = new ImageBrush();
+                }
                 recLargeImage.Visibility = Visibility.Collapsed;
                 gridSmallImage.Visibility = Visibility.Collapsed;
             }
-            else if (!onSmallImage)
+            recLargeImage.ToolTip = !string.IsNullOrWhiteSpace(largeImageText) ? new ToolTip(largeImageText) : null;
+            LargeImageUri = largeImageUri;
+
+            if (smallImageUri != null &&
+                SmallImageUri != smallImageUri)
             {
-                recLargeImage.Fill = image;
-                recLargeImage.Visibility = Visibility.Visible;
-                if (gridSmallImage.Visibility == Visibility.Collapsed && ellSmallImage.Fill != null)
+                var smallImage = smallImageUri.GetBitmap().ConfigureAwait(false).GetAwaiter();
+                smallImage.OnCompleted(() => Dispatcher.Invoke(() =>
                 {
-                    gridSmallImage.Visibility = Visibility.Visible;
+                    if (ellSmallImage.Fill is ImageBrush smallImageBrush)
+                    {
+                        smallImageBrush.ImageSource = smallImage.GetResult();
+                    }
+                    else
+                    {
+                        ellSmallImage.Fill = new ImageBrush(smallImage.GetResult());
+                    }
+                }));
+            }
+            else if (smallImageUri == null)
+            {
+                if (ellSmallImage.Fill is ImageBrush imageBrush)
+                {
+                    imageBrush.ImageSource = null;
+                }
+                else
+                {
+                    ellSmallImage.Fill = new ImageBrush();
                 }
             }
 
-            if (onSmallImage && image?.ImageSource == null)
-            {
-                ellSmallImage.Fill = null;
-                gridSmallImage.Visibility = Visibility.Collapsed;
-            }
-            else if (onSmallImage)
-            {
-                ellSmallImage.Fill = image;
-                if (recLargeImage.Visibility != Visibility.Collapsed)
-                {
-                    gridSmallImage.Visibility = Visibility.Visible;
-                }
-            }
+            SmallImageUri = smallImageUri;
+            ellSmallImage.ToolTip = !string.IsNullOrWhiteSpace(smallImageText) &&
+                ((recLargeImage.Fill as ImageBrush) ?? null) != null ?
+                new ToolTip(smallImageText) : null;
         }
+
+
+        private void UpdateImages(
+            ulong? largeImageID = 0, 
+            ulong? smallImageID = 0,
+            string largeImageText = "", 
+            string smallImageText = "", 
+            ulong applicationID = Constants.MultiRPCID) =>
+            UpdateImages(
+                (largeImageID ?? ulong.MinValue) != ulong.MinValue ? new Uri($"https://cdn.discordapp.com/app-assets/{applicationID}/{largeImageID}.png") : null,
+                (smallImageID ?? ulong.MinValue) != ulong.MinValue ? new Uri($"https://cdn.discordapp.com/app-assets/{applicationID}/{smallImageID}.png") : null,
+                largeImageText, 
+                smallImageText);
     }
 }

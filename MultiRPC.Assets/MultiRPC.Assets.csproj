@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="LottieAnimations\**" />
+    <Compile Remove="Other\**" />
+    <Compile Remove="Svg files\**" />
+    <EmbeddedResource Remove="LottieAnimations\**" />
+    <EmbeddedResource Remove="Other\**" />
+    <EmbeddedResource Remove="Svg files\**" />
+    <None Remove="LottieAnimations\**" />
+    <None Remove="Other\**" />
+    <None Remove="Svg files\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="150x150Logo.png" />
+    <None Remove="70x70Logo.png" />
+    <None Remove="ClientIDHelp.jpg" />
+    <None Remove="LargeTextHelp.jpg" />
+    <None Remove="Loading.gif" />
+    <None Remove="MultiRPCLogo.ai" />
+    <None Remove="SmallAndLargeKeyHelp.jpg" />
+    <None Remove="SmallTextHelp.jpg" />
+    <None Remove="Text1Help.jpg" />
+    <None Remove="Text2Help.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="150x150Logo.png" />
+    <EmbeddedResource Include="70x70Logo.png" />
+    <EmbeddedResource Include="ClientIDHelp.jpg" />
+    <EmbeddedResource Include="LargeTextHelp.jpg" />
+    <EmbeddedResource Include="SmallAndLargeKeyHelp.jpg" />
+    <EmbeddedResource Include="SmallTextHelp.jpg" />
+    <EmbeddedResource Include="Text1Help.jpg" />
+    <EmbeddedResource Include="Text2Help.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Loading.gif" />
+  </ItemGroup>
+
+</Project>
