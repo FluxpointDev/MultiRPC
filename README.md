@@ -1,17 +1,14 @@
-# Info
 ![Image](https://img.fluxpoint.dev/med/2531927730946048.jpg)
 
-This supports all versions of windows, linux/mac support coming soon using .net core
+This supports all versions of windows, linux/mac support currently in progress!
 
-Translations, themes and custom theme support now available!
-
-Ram usage: 50mb | Language: C# | GUI: Wpf
+Ram usage: 50mb | Language: C# | GUI: [WPF](https://github.com/dotnet/wpf) (Windows), [Avalonia UI](https://avaloniaui.net/) (Cross platform)
 
 # Support 
 
-Contact me Builderb#0001 or join the Discord server https://discord.gg/TjF6QDC for more info and support
+Builderb#0001 or join the [Discord server](https://discord.gg/TjF6QDC) for more information and support
 
-# Install
+# Install (Wpf Version)
 Install the setup from here https://multirpc.fluxpoint.dev
 
 Click more info and run anyway (windows limitation)
@@ -19,6 +16,9 @@ Click more info and run anyway (windows limitation)
 ![Image](https://i.imgur.com/jV9jIte.png)
 
 ![Image](https://img.fluxpoint.dev/med/2531938422226944.png)
+
+# Install (Avalonia UI Version)
+Comming soon
 
 # MultiRPC
 
