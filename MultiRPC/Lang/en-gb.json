@@ -209,5 +209,7 @@
   "Admin": "Admin Mode",
   "NeedAdmin": "Your Discord client is running under administrator, MultiRPC needs admin approval to run.\nGo to settings and click on Admin Mode.",
   "AdminRequired": "Admin Required",
-  "ShareHelp": "Click on \"Export\" to generate a code that you can share with other MultiRPC users or post one in the field and click \"Import\""
+  "ShareHelp": "Click on \"Export\" to generate a code that you can share with other MultiRPC users or post one in the field and click \"Import\"",
+  "StartTimer": "Start Timer",
+  "StopTimer": "Stop Timer"
 }

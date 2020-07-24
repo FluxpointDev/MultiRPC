@@ -7,9 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
 using Microsoft.Win32;
+using DayOfWeek = MultiRPC.JsonClasses.DayOfWeek;
 
 namespace MultiRPC.GUI.Pages
 {
@@ -19,7 +18,10 @@ namespace MultiRPC.GUI.Pages
     public partial class TriggerPage : Page
     {
         public static TriggerPage _TriggerPage;
-
+        public static DayOfWeek ActiveDay = DayOfWeek.Monday;
+        public static Button ActiveButton;
+        public static CustomProfile ActiveProfile;
+        
         public TriggerPage(double pageWidth)
         {
             InitializeComponent();
@@ -39,45 +41,58 @@ namespace MultiRPC.GUI.Pages
             btnSunday.Tag = DayOfWeek.Sunday;
         }
 
+        private void UpdateText()
+        {
+            UpdateTimerButton();
+        }
+
+        private void UpdateTimerButton()
+        {
+            btnStartTimer.Content = 
+                MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].Triggers.IsUsingTimer ? 
+                    App.Text.StopTimer : App.Text.StartTimer;
+        }
+        
         private void DayButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (((Button)sender).Background == App.Current.Resources["AccentColour1SCBrush"])
-            {
-                MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].Triggers.Time.Days.Add((DayOfWeek)((Button)sender).Tag);
-                ((Button)sender).SetResourceReference(ButtonBase.BackgroundProperty, "AccentColour2SCBrush");
-            }
-            else
-            {
-                MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].Triggers.Time.Days.Remove((DayOfWeek)((Button)sender).Tag);
-                ((Button)sender).SetResourceReference(ButtonBase.BackgroundProperty, "AccentColour1SCBrush");
-            }
-
-            MasterCustomPage.SaveProfiles();
+            var but = (Button) sender;
+            var newActiveDay = (DayOfWeek) but.Tag;
+            ActiveDay = newActiveDay;
+            
+            ActiveButton?.SetResourceReference(Control.BackgroundProperty, "AccentColour2SCBrush");
+            ActiveButton = but;
+            ActiveButton.SetResourceReference(Control.BackgroundProperty, "AccentColour1SCBrush");
+            UpdateTimerTimes(MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].Triggers.Times.First(x => x.Date == ActiveDay));
         }
 
-        private string GetNumber(CustomProfile profile, DayOfWeek dayOfWeek)
+        public void UpdateTimerTimes(Day day)
         {
-            return profile.Triggers.Time.Days.Contains(dayOfWeek) ? "2" : "1";
+            txtEndTime.Text =
+                $"{day.EndTime.Hours:00}:{day.EndTime.Minutes:00}:{day.EndTime.Seconds:00}";
+            txtStartTime.Text =
+                $"{day.StartTime.Hours:00}:{day.StartTime.Minutes:00}:{day.StartTime.Seconds:00}";
         }
 
-        public async void CustomProfileButton_Click(object sender, RoutedEventArgs e)
+        private void UpdateTime(object sender, EventArgs args) => 
+            UpdateTimer(MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()]);
+        
+        public void CustomProfileButton_Click(object sender, RoutedEventArgs e)
         {
+            if (ActiveProfile != null)
+            {
+                ActiveProfile.Triggers.PropertyChanged -= UpdateTime;
+            }
+            
             var profile = MasterCustomPage.Profiles[((Button)sender).Content.ToString()];
+            ActiveProfile = profile;
+            ActiveProfile.Triggers.PropertyChanged += UpdateTime;
 
-            btnMonday.SetResourceReference(Control.BackgroundProperty, $"AccentColour{GetNumber(profile, DayOfWeek.Monday)}SCBrush");
-            btnTuesday.SetResourceReference(Control.BackgroundProperty, $"AccentColour{GetNumber(profile, DayOfWeek.Tuesday)}SCBrush");
-            btnWednesday.SetResourceReference(Control.BackgroundProperty, $"AccentColour{GetNumber(profile, DayOfWeek.Wednesday)}SCBrush");
-            btnThursday.SetResourceReference(Control.BackgroundProperty, $"AccentColour{GetNumber(profile, DayOfWeek.Thursday)}SCBrush");
-            btnFriday.SetResourceReference(Control.BackgroundProperty, $"AccentColour{GetNumber(profile, DayOfWeek.Friday)}SCBrush");
-            btnSaturday.SetResourceReference(Control.BackgroundProperty, $"AccentColour{GetNumber(profile, DayOfWeek.Saturday)}SCBrush");
-            btnSunday.SetResourceReference(Control.BackgroundProperty, $"AccentColour{GetNumber(profile, DayOfWeek.Sunday)}SCBrush");
+            UpdateTimerButton();
+            txtTimerLength.IsEnabled = !profile.Triggers.IsUsingTimer;
 
             txtTimerLength.Text =
                 $"{profile.Triggers.TimerLength.Hours:00}:{profile.Triggers.TimerLength.Minutes:00}:{profile.Triggers.TimerLength.Seconds:00}";
-            txtEndTime.Text =
-                $"{profile.Triggers.Time.EndTime.Hours:00}:{profile.Triggers.Time.EndTime.Minutes:00}:{profile.Triggers.Time.EndTime.Seconds:00}";
-            txtStartTime.Text =
-                $"{profile.Triggers.Time.StartTime.Hours:00}:{profile.Triggers.Time.StartTime.Minutes:00}:{profile.Triggers.Time.StartTime.Seconds:00}";
+            UpdateTimerTimes(profile.Triggers.Times.First(x => x.Date == ActiveDay));
 
             txtFolderLocation.Text = profile.Triggers.FolderChange;
             txtFileLocation.Text = profile.Triggers.FileChange;
@@ -99,7 +114,7 @@ namespace MultiRPC.GUI.Pages
                 return;
             }
 
-            if (TimeSpan.TryParseExact(time, "h\\:mm\\:ss", new NumberFormatInfo(), out TimeSpan span))
+            if (TimeSpan.TryParseExact(time, "h\\:mm\\:ss", new NumberFormatInfo(), out var span))
             {
                 editLogic(span);
                 errorTbl.Visibility = Visibility.Collapsed;
@@ -144,7 +159,6 @@ namespace MultiRPC.GUI.Pages
             }
         }
 
-
         private void TxtTimerLength_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             TimespanLogic(
@@ -162,7 +176,7 @@ namespace MultiRPC.GUI.Pages
                 txtEndTime.Text,
                 (timeSpan) =>
                 {
-                    MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].Triggers.Time.EndTime = timeSpan;
+                    MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].Triggers.Times.First(x => x.Date == ActiveDay).EndTime = timeSpan;
                 },
                 tblEndTimeInvalid);
         }
@@ -173,7 +187,7 @@ namespace MultiRPC.GUI.Pages
                 txtStartTime.Text,
                 (timeSpan) =>
                 {
-                    MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].Triggers.Time.StartTime = timeSpan;
+                    MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].Triggers.Times.First(x => x.Date == ActiveDay).StartTime = timeSpan;
                 },
                 tblStartTimeInvalid);
         }
@@ -202,7 +216,7 @@ namespace MultiRPC.GUI.Pages
 
         private void BtnFolderName_OnClick(object sender, RoutedEventArgs e)
         {
-            //Find a better way of getting Folder
+            //TODO: Use select folder dia 
             var openFileDialog = new OpenFileDialog
             {
                 CheckFileExists = false,
@@ -227,18 +241,17 @@ namespace MultiRPC.GUI.Pages
 
         private void CboProcess_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count != 0)
+            if (e.AddedItems.Count == 0) return;
+            
+            try
             {
-                try
-                {
-                    var processLocation = ((Process) e.AddedItems[0]).MainModule?.FileName;
-                    txtProcessLocation.Text = processLocation;
-                }
-                catch (Exception exception)
-                {
-                    App.Logging.Error("Application", exception);
-                    tblCanNotGetProcessLocation.Visibility = Visibility.Visible;
-                }
+                var processLocation = ((Process)e.AddedItems[0])?.MainModule?.FileName;
+                txtProcessLocation.Text = Path.GetFileName(processLocation);
+            }
+            catch (Exception exception)
+            {
+                App.Logging.Error("Application", exception);
+                tblCanNotGetProcessLocation.Visibility = Visibility.Visible;
             }
         }
 
@@ -247,7 +260,7 @@ namespace MultiRPC.GUI.Pages
             //This for some reason this doesn't get some of them :thonk:
             var processName = new List<string>();
             var processes = new List<Process>(Process.GetProcesses().AsEnumerable());
-            for (int i = 0; i < processes.LongCount(); i++)
+            for (var i = 0; i < processes.LongCount(); i++)
             {
                 if (processName.Contains(processes[i].ProcessName))
                 {
@@ -267,7 +280,7 @@ namespace MultiRPC.GUI.Pages
             openFileDialog.Filter = "Programs | *.exe";
             if (openFileDialog.ShowDialog(App.Current.MainWindow).Value)
             {
-                txtProcessLocation.Text = openFileDialog.FileName.Split('\\').Last();
+                txtProcessLocation.Text = Path.GetFileName(openFileDialog.FileName);
             }
         }
 
@@ -291,6 +304,19 @@ namespace MultiRPC.GUI.Pages
                 tblCanNotGetProcessLocation,
                 false, 
                 true);
+        }
+
+        private void UpdateTimer(CustomProfile profile)
+        {
+            txtTimerLength.IsEnabled = !profile.Triggers.IsUsingTimer;
+            UpdateTimerButton();
+        }
+        
+        private void BtnStartTimer_OnClick(object sender, RoutedEventArgs e)
+        {
+            var profile = MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()];
+            profile.Triggers.IsUsingTimer = btnStartTimer.Content == App.Text.StartTimer;
+            UpdateTimer(profile);
         }
     }
 }

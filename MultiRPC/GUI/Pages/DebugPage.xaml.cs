@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using MultiRPC.GUI.Views;
+using MultiRPC.JsonClasses;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI.Pages
@@ -13,7 +14,14 @@ namespace MultiRPC.GUI.Pages
     public partial class DebugPage : Page
     {
         public static DebugPage _DebugPage;
-
+        private readonly CustomProfile DebugProfile = new CustomProfile
+        {
+            Text1 = App.Text.Testing,
+            Text2 = App.Text.DebugMode,
+            LargeKey = "debug",
+            LargeText = App.Text.BeepBoop
+        };
+        
         public DebugPage()
         {
             InitializeComponent();
@@ -36,7 +44,11 @@ namespace MultiRPC.GUI.Pages
         private void ButDebugStartRPC_OnClick(object sender, RoutedEventArgs e)
         {
             ((RPCPreview) MainPage._MainPage.frmRPCPreview.Content).UpdateUIViewType(RPCPreview.ViewType.Loading);
-            RPC.SetPresence(App.Text.Testing, App.Text.DebugMode, "debug", App.Text.BeepBoop, "", "", false);
+
+            DebugProfile.Text1 = App.Text.Testing;
+            DebugProfile.Text2 = App.Text.DebugMode;
+            DebugProfile.LargeText = App.Text.BeepBoop;
+            RPC.SetPresence(DebugProfile);
             RPC.IDToUse = 450894077165043722;
             RPC.Start();
         }

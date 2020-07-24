@@ -56,13 +56,11 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="5"/>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="5"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="5"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="5"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -70,16 +68,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.ColumnSpan="2" Text="Time" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,0,0,10" Style="{DynamicResource Title}" />
 
-                    <TextBlock Grid.Row="1" Text="Start Time: " VerticalAlignment="Center"/>
-                    <TextBox Name="txtStartTime" TextChanged="TxtStartTime_OnTextChanged" Grid.Row="1" Grid.Column="1" Text="00:00:00"/>
-                    <TextBlock Visibility="Collapsed" Name="tblStartTimeInvalid" TextWrapping="Wrap" Grid.ColumnSpan="2" Grid.Row="2" Text="Invalid time (time must be Hour:Minute:Second (.e.g. 02:10:3 for 2 hours, 10 minutes and 3 seconds))"/>
-
-                    <TextBlock Grid.Row="4" Text="End Time: " VerticalAlignment="Center"/>
-                    <TextBox Name="txtEndTime" TextChanged="TxtEndTime_OnTextChanged" Grid.Row="4" Grid.Column="1" Text="00:00:00"/>
-                    <TextBlock Visibility="Collapsed" Name="tblEndTimeInvalid" TextWrapping="Wrap" Grid.ColumnSpan="2" Grid.Row="5" Text="Invalid time (time must be Hour:Minute:Second (.e.g. 02:10:3 for 2 hours, 10 minutes and 3 seconds))"/>
-
-                    <TextBlock Grid.Row="7" Grid.ColumnSpan="2" Style="{DynamicResource SubTitle}" Text="Days" HorizontalAlignment="Center"/>
-                    <WrapPanel Grid.Row="9" Grid.ColumnSpan="2">
+                    <WrapPanel Grid.Row="1" Grid.ColumnSpan="2">
                         <Button Name="btnMonday" Click="DayButton_OnClick" Content="Mon" Style="{DynamicResource daysButton}" />
                         <Button Name="btnTuesday" Click="DayButton_OnClick" Content="Tu" Style="{DynamicResource daysButton}" />
                         <Button Name="btnWednesday" Click="DayButton_OnClick" Content="We" Style="{DynamicResource daysButton}" />
@@ -88,6 +77,14 @@
                         <Button Name="btnSaturday" Click="DayButton_OnClick" Content="Sa" Style="{DynamicResource daysButton}" />
                         <Button Name="btnSunday" Click="DayButton_OnClick" Content="Su" Style="{DynamicResource daysButton}" />
                     </WrapPanel>
+                    
+                    <TextBlock Grid.Row="2" Text="Start Time: " VerticalAlignment="Center"/>
+                    <TextBox Name="txtStartTime" TextChanged="TxtStartTime_OnTextChanged" Grid.Row="2" Grid.Column="1" Text="00:00:00"/>
+                    <TextBlock Visibility="Collapsed" Name="tblStartTimeInvalid" TextWrapping="Wrap" Grid.ColumnSpan="2" Grid.Row="3" Text="Invalid time (time must be Hour:Minute:Second (.e.g. 02:10:3 for 2 hours, 10 minutes and 3 seconds))"/>
+
+                    <TextBlock Grid.Row="5" Text="End Time: " VerticalAlignment="Center"/>
+                    <TextBox Name="txtEndTime" TextChanged="TxtEndTime_OnTextChanged" Grid.Row="5" Grid.Column="1" Text="00:00:00"/>
+                    <TextBlock Visibility="Collapsed" Name="tblEndTimeInvalid" TextWrapping="Wrap" Grid.ColumnSpan="2" Grid.Row="6" Text="Invalid time (time must be Hour:Minute:Second (.e.g. 02:10:3 for 2 hours, 10 minutes and 3 seconds))"/>
                 </Grid>
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
@@ -109,8 +106,8 @@
 
                     <TextBlock Grid.Row="4" HorizontalAlignment="Right" Text="Length: " VerticalAlignment="Center"/>
                     <TextBox Name="txtTimerLength" TextChanged="TxtTimerLength_OnTextChanged" Grid.Row="4" Grid.Column="1" Text="00:00:00"/>
-                    <TextBlock Visibility="Collapsed" Name="tblTimerInvalid" TextWrapping="Wrap" Grid.ColumnSpan="3" Grid.Row="5" Text="Invalid time (time must be Hour:Minute:Second (.e.g. 02:10:3 for 2 hours, 10 minutes and 3 seconds))"/>
-                    <Button Content="Start Timer" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                    <TextBlock Visibility="Collapsed" Name="tblTimerInvalid" TextWrapping="Wrap" Grid.ColumnSpan="3" Grid.Row="5" Text="Invalid time (time must be Hour:Minute:Second (.e.g. 02:10:03 for 2 hours, 10 minutes and 3 seconds))"/>
+                    <Button Name="btnStartTimer" Click="BtnStartTimer_OnClick" Content="Start Timer" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Left" Margin="5,0,0,0"/>
                 </Grid>
             </Grid>
 

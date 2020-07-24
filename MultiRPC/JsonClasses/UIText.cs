@@ -212,5 +212,7 @@
         public string NeedAdmin;
         public string AdminRequired;
         public string ShareHelp;
+        public string StartTimer;
+        public string StopTimer;
     }
 }
