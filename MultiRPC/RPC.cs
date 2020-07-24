@@ -24,7 +24,8 @@ namespace MultiRPC
         public const ulong MultiRPCID = 450894077165043722;
 
         public static RPCType Type;
-        public static RichPresence Presence = new RichPresence();
+        public static RichPresence Presence { get; private set; } = new RichPresence();
+        private static RichPresence BackupPresence;
 
         private static DateTime _startTime;
         private static Timer _uptime;
@@ -183,7 +184,7 @@ namespace MultiRPC
 
             if (!AFK)
             {
-                MainPage._MainPage.btnUpdate.IsEnabled = true;
+                await MainPage._MainPage.Dispatcher.InvokeAsync(() => MainPage._MainPage.btnUpdate.IsEnabled = true);
             }
 
             //Show that we are going to load things™
@@ -212,65 +213,70 @@ namespace MultiRPC
 
             if (MasterCustomPage._MasterCustomPage != null)
             {
-                //Disable buttons unless it's the same ClientID (still not allowed to mess with the Client ID tho)
-                var profileClientID = !AFK && MasterCustomPage.CurrentButton != null &&
-                                      MainPage._MainPage.frmContent.Content is MasterCustomPage
-                    ? MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].ClientID
-                    : "0";
-
-                for (var i = 0; i < MasterCustomPage.ProfileButtons.Count; i++)
+                MasterCustomPage._MasterCustomPage.Dispatcher.InvokeAsync(() =>
                 {
-                    if (profileClientID == "0" || MasterCustomPage.Profiles[MasterCustomPage.ProfileButtons[i].Content.ToString()]
-                            .ClientID != profileClientID)
-                    {
-                        MasterCustomPage.ProfileButtons[i].IsEnabled = false;
-                    }
-                }
+                    //Disable buttons unless it's the same ClientID (still not allowed to mess with the Client ID tho)
+                    var profileClientID = !AFK && MasterCustomPage.CurrentButton != null &&
+                                          MainPage._MainPage.frmContent.Content is MasterCustomPage
+                        ? MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].ClientID
+                        : "0";
 
-                MasterCustomPage._MasterCustomPage.imgProfileAdd.IsEnabled = false;
-                MasterCustomPage._MasterCustomPage.imgProfileDelete.IsEnabled = false;
-                CustomPage._CustomPage.tbClientID.IsEnabled = false;
+                    for (var i = 0; i < MasterCustomPage.ProfileButtons.Count; i++)
+                    {
+                        if (profileClientID == "0" || MasterCustomPage.Profiles[MasterCustomPage.ProfileButtons[i].Content.ToString()]
+                            .ClientID != profileClientID)
+                        {
+                            MasterCustomPage.ProfileButtons[i].IsEnabled = false;
+                        }
+                    }
+
+                    MasterCustomPage._MasterCustomPage.imgProfileAdd.IsEnabled = false;
+                    MasterCustomPage._MasterCustomPage.imgProfileDelete.IsEnabled = false;
+                });
+                CustomPage._CustomPage.Dispatcher.InvokeAsync(() => 
+                    CustomPage._CustomPage.tbClientID.IsEnabled = false);
             }
 
             IsRPCRunning = true;
         }
 
-        public static void SetPresence(string text1, string text2, string largeKey, string largeText, string smallKey,
-            string smallText, bool showTime)
-        {
-            SetPresence(new CustomProfile
-            {
-                LargeKey = largeKey,
-                Text1 = text1,
-                Text2 = text2,
-                LargeText = largeText,
-                SmallKey = smallKey,
-                SmallText = smallText,
-                ShowTime = showTime
-            });
-        }
-
-        private static void SetPresence(CustomProfile profile)
+        public static void SetPresence(string text1, string text2, string largeKey, string largeText, string smallKey, string smallText, bool showTime, bool fromTrigger = false)
         {
             if (AFK)
             {
                 return;
             }
 
-            Presence.Details = profile.Text1;
-            Presence.State = profile.Text2;
+            if (fromTrigger)
+            {
+                BackupPresence ??= Presence;
+            }
+            else if (BackupPresence != null)
+            {
+                Presence = BackupPresence;
+                BackupPresence = null;
+                
+                return;
+            }
+            
+            Presence.Details = text1;
+            Presence.State = text2;
             Presence.Assets =
-                !string.IsNullOrWhiteSpace(profile.LargeKey) || !string.IsNullOrWhiteSpace(profile.SmallKey)
+                !string.IsNullOrWhiteSpace(largeKey) || !string.IsNullOrWhiteSpace(smallKey)
                     ? new Assets
                     {
-                        LargeImageKey = profile.LargeKey,
-                        LargeImageText = profile.LargeText,
-                        SmallImageKey = profile.SmallKey,
-                        SmallImageText = profile.SmallText
+                        LargeImageKey = largeKey,
+                        LargeImageText = largeText,
+                        SmallImageKey = smallKey,
+                        SmallImageText = smallText
                     }
                     : null;
-            Presence.Timestamps = profile.ShowTime ? new Timestamps() : null;
+            Presence.Timestamps = showTime ? new Timestamps() : null;
         }
+
+        public static void SetPresence(CustomProfile profile, bool fromTrigger = false) => 
+            SetPresence(profile?.Text1, profile?.Text2, profile?.LargeKey,
+                profile?.LargeText, profile?.SmallKey, profile?.SmallText, profile?.ShowTime ?? false, fromTrigger);
 
         public static async void Update()
         {
@@ -291,7 +297,7 @@ namespace MultiRPC
 
         private static async void Client_OnReady(object sender, ReadyMessage args)
         {
-            var user = $"{args.User.Username}#{args.User.Discriminator.ToString("0000")}";
+            var user = $"{args.User.Username}#{args.User.Discriminator:0000}";
             if (App.Config.LastUser != user)
             {
                 App.Config.LastUser = user;

@@ -46,9 +46,9 @@ namespace MultiRPC.GUI.Pages
             if (!RPC.IsRPCRunning)
             {
                 RPC.IDToUse = RPC.MultiRPCID;
-                RPC.UpdateType(RPC.RPCType.MultiRPC);
+                await RPC.UpdateType(RPC.RPCType.MultiRPC);
                 RPC.SetPresence(tbText1.Text, tbText2.Text, cbLargeKey.Text.ToLower(), tbLargeText.Text,
-                    cbSmallKey.Text.ToLower(), tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+                    cbSmallKey.Text.ToLower(), tbSmallText.Text, cbElapasedTime.IsChecked.GetValueOrDefault());
             }
 
             if (!_haveDoneAutoStart && App.Config.AutoStart == "MultiRPC" && !App.StartedWithJumpListLogic)

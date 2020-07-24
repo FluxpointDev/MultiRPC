@@ -80,8 +80,7 @@ namespace MultiRPC.GUI.Pages
             if (!RPC.IsRPCRunning)
             {
                 RPC.UpdateType(RPC.RPCType.Custom);
-                RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text,
-                    tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+                RPC.SetPresence(MasterCustomPage.Profiles[MasterCustomPage._MasterCustomPage.tblProfileName.Text]);
             }
 
             if (!_haveDoneAutoStart)
@@ -103,68 +102,66 @@ namespace MultiRPC.GUI.Pages
         {
             if (!RPC.IsRPCRunning || RPC.Type == RPC.RPCType.Custom)
             {
-                RPC.SetPresence(tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text, tbSmallKey.Text,
-                    tbSmallText.Text, cbElapasedTime.IsChecked.Value);
+                RPC.SetPresence(MasterCustomPage.Profiles[MasterCustomPage._MasterCustomPage.tblProfileName.Text]);
             }
         }
 
         private void TbLargeText_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             MultiRPCAndCustomLogic.CheckImageText((TextBox) sender);
+            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, largeText: tbLargeText.Text);
             SetPresence();
-            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
-                tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
             CanRunRPC();
         }
 
         private void TbSmallText_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             MultiRPCAndCustomLogic.CheckImageText((TextBox) sender);
+            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, smallText: tbSmallText.Text);
             SetPresence();
-            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
-                tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
             CanRunRPC();
         }
 
-        public async void TbText1_OnTextChanged(object sender, TextChangedEventArgs e)
+        public void TbText1_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            var text = await MultiRPCAndCustomLogic.CheckImageText((TextBox) sender);
+            MultiRPCAndCustomLogic.CheckImageText((TextBox) sender);
 
+            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, tbText1.Text);
             SetPresence();
-            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
-                tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
             CanRunRPC();
         }
 
-        private async void TbText2_OnTextChanged(object sender, TextChangedEventArgs e)
+        private void TbText2_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            var text = await MultiRPCAndCustomLogic.CheckImageText((TextBox) sender);
+            MultiRPCAndCustomLogic.CheckImageText((TextBox) sender);
 
+            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, text2: tbText2.Text);
             SetPresence();
-            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
-                tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
             CanRunRPC();
         }
 
         private void CbElapasedTime_OnChecked(object sender, RoutedEventArgs e)
         {
             MultiRPCAndCustomLogic.UpdateTimestamps((CheckBox) sender);
-            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
-                tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
+            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, showTime: cbElapasedTime.IsChecked);
         }
 
         private void TbLargeKey_OnTextChanged(object sender, TextChangedEventArgs e)
         {
+            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, largeKey: tbLargeKey.Text);
             SetPresence();
-            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
-                tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
         }
 
         private void TbSmallKey_OnTextChanged(object sender, TextChangedEventArgs e)
         {
+            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, smallKey: tbSmallKey.Text);
             SetPresence();
-            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
-                tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
+        }
+
+        private void TbClientID_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text,  clientID: tbClientID.Text);
+            CanRunRPC(true);
         }
 
         public async Task<bool> CanRunRPC(bool tokenTextChanged = false)
@@ -172,15 +169,7 @@ namespace MultiRPC.GUI.Pages
             return await MultiRPCAndCustomLogic.CanRunRPC(tbText1, tbText2, tbSmallText, tbLargeText, tbClientID,
                 tokenTextChanged);
         }
-
-        //Custom Page Code
-        private void TbClientID_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            UpdateProfile(MasterCustomPage._MasterCustomPage.tblProfileName.Text, tbText1.Text, tbText2.Text, tbLargeKey.Text, tbLargeText.Text,
-                tbSmallKey.Text, tbSmallText.Text, tbClientID.Text, cbElapasedTime.IsChecked.Value);
-            CanRunRPC(true);
-        }
-
+        
         public static async Task StartCustomProfileLogic(string buttonName, bool fromStartUp = false)
         {
             if (fromStartUp)
@@ -302,23 +291,23 @@ namespace MultiRPC.GUI.Pages
             return Task.CompletedTask;
         }
 
-        private Task UpdateProfile(string profileName, string text1, string text2, string largeKey,
-            string largeText, string smallKey, string smallText, string clientID, bool showTime)
+        private Task UpdateProfile(string profileName, string text1 = null, string text2 = null, string largeKey = null,
+            string largeText = null, string smallKey = null, string smallText = null, string clientID = null, bool? showTime = null)
         {
-            var oldProfile = MasterCustomPage.Profiles[profileName];
-            MasterCustomPage.Profiles[profileName] = new CustomProfile
+            if (!IsLoaded)
             {
-                LargeKey = largeKey,
-                Text1 = text1,
-                Text2 = text2,
-                LargeText = largeText,
-                SmallKey = smallKey,
-                SmallText = smallText,
-                ShowTime = showTime,
-                ClientID = clientID,
-                Name = profileName,
-                Triggers = oldProfile.Triggers
-            };
+                return Task.CompletedTask;
+            }
+            
+            var profile = MasterCustomPage.Profiles[profileName];
+            profile.LargeKey = largeKey ?? profile.LargeKey;
+            profile.Text1 = text1 ?? profile.Text1;
+            profile.Text2 = text2 ?? profile.Text2;
+            profile.LargeText = largeText ?? profile.LargeText;
+            profile.SmallKey = smallKey ?? profile.SmallKey;
+            profile.SmallText = smallText ?? profile.SmallText;
+            profile.ShowTime = showTime ?? profile.ShowTime;
+            profile.ClientID = clientID ?? profile.ClientID;
             MasterCustomPage.SaveProfiles();
 
             return Task.CompletedTask;

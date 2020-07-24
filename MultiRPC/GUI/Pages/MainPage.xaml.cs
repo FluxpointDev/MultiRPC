@@ -13,6 +13,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 using MultiRPC.Functions;
 using MultiRPC.GUI.Views;
+using MultiRPC.JsonClasses;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI.Pages
@@ -24,7 +25,13 @@ namespace MultiRPC.GUI.Pages
     {
         public static MainPage _MainPage;
         private Button _selectedButton;
-
+        private readonly CustomProfile AfkProfile = new CustomProfile
+        {
+            LargeKey = "cat",
+            LargeText = App.Text.SleepyCat,
+            ShowTime = App.Config.AFKTime
+        };
+        
         public MainPage()
         {
             InitializeComponent();
@@ -374,7 +381,9 @@ namespace MultiRPC.GUI.Pages
         {
             if (!string.IsNullOrWhiteSpace(tbAfkReason.Text))
             {
-                RPC.SetPresence(tbAfkReason.Text, "", "cat", App.Text.SleepyCat, "", "", App.Config.AFKTime);
+                AfkProfile.LargeText = App.Text.SleepyCat;
+                AfkProfile.ShowTime = App.Config.AFKTime;
+                RPC.SetPresence(AfkProfile);
                 RPC.AFK = true;
 
                 if (RPC.IDToUse != 469643793851744257)
