@@ -38,6 +38,8 @@ namespace MultiRPC
 
         public App()
         {
+            ProcessWatcher.Start();
+            
             var darkThemeLocation = Path.Combine("Assets", "Themes", "DarkTheme" + Theme.ThemeExtension);
             var lightThemeLocation = Path.Combine("Assets", "Themes", "LightTheme" + Theme.ThemeExtension);
             var russiaThemeLocation = Path.Combine("Assets", "Themes", "RussiaTheme" + Theme.ThemeExtension);

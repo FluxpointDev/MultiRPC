@@ -65,8 +65,7 @@ namespace MultiRPC.JsonClasses
         }
 
         public readonly DayOfWeek Date;
-
-        //TODO: See why this isn't triggering
+        
         private async Task TriggerBasedOnTime()
         {
             if (EndTime == TimeSpan.Zero || Date == DayOfWeek.NotSet)
