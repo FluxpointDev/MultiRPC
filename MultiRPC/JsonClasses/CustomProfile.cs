@@ -55,7 +55,7 @@ namespace MultiRPC.JsonClasses
                 t.StopShowingProfile += (_, __) => StopShowingProfile();
             }
 
-            
+            //TODO: Make it check if the file/folder has a lock on it, if so we can track it
             //TODO: Only do this when we got something to work with
             FolderWatcher.Created += (sender, args) => ShowProfile();
             FolderWatcher.Changed += (sender, args) => ShowProfile();
@@ -82,7 +82,7 @@ namespace MultiRPC.JsonClasses
         /// <summary>
         /// Trigger when a process is started/close
         /// </summary>
-        public string Process = null; //TODO
+        public string Process = null;
 
         private string folderChange = "";
         /// <summary>
