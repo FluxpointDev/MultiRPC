@@ -21,11 +21,13 @@ namespace MultiRPC.JsonClasses
         [JsonConstructor]
         public Day(TimeSpan startTime, TimeSpan endTime, DayOfWeek date)
         {
+            Date = date;
             StartTime = startTime;
             EndTime = endTime;
-            Date = date;
         }
 
+        public bool IsActive;
+        
         private TimeSpan startTime = TimeSpan.Zero;
         public TimeSpan StartTime
         {
@@ -103,6 +105,7 @@ namespace MultiRPC.JsonClasses
             
             ShowProfile?.Invoke(this, EventArgs.Empty);
 
+            IsActive = true;
             try
             {
                 await Task.Delay(timeToKeepAlive, CancellationTokenSource.Token);
@@ -111,7 +114,7 @@ namespace MultiRPC.JsonClasses
             {
                 App.Logging.Application("Looks like something changed while doing this profile");
             }
-            
+            IsActive = false;
             StopShowingProfile?.Invoke(this, EventArgs.Empty);
         }
 

@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using DiscordRPC;
 using MultiRPC.Functions;
+using MultiRPC.JsonClasses;
 using ToolTip = MultiRPC.GUI.Controls.ToolTip;
 
 namespace MultiRPC.GUI.Pages
@@ -201,5 +202,106 @@ namespace MultiRPC.GUI.Pages
 
             return isEnabled;
         }
+        
+                public static async Task<bool> CanRunRPC(string tbText1, string tbText2, string tbSmallText,
+                    string tbLargeText, string tbClientID = null)
+                {
+                    bool isEnabled = !(tbText1.Length == 1);
+
+                    if (tbText2.Length == 1)
+                    {
+                        isEnabled = false;
+                    }
+
+                    if (tbSmallText.Length == 1)
+                    {
+                        isEnabled = false;
+                    }
+
+                    if (tbLargeText.Length == 1)
+                    {
+                        isEnabled = false;
+                    }
+
+
+                    CustomProfile profile = null;
+                    MasterCustomPage.CurrentButton?.Dispatcher.InvokeAsync(() =>
+                    {
+                        profile = MasterCustomPage.Profiles != null && MasterCustomPage.CurrentButton != null
+                            ? MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()]
+                            : null;
+                    });
+                    if (profile != null)
+                    {
+                        if (!RPC.IsRPCRunning)
+                        {
+                            MainPage._MainPage.btnUpdate.IsEnabled = false;
+                            MainPage._MainPage.btnStart.IsEnabled = false;
+                        }
+
+                        var isValidCode =
+                            ulong.TryParse(tbClientID, NumberStyles.Any, new NumberFormatInfo(), out var ID);
+
+                        if (App.Config.CheckToken)
+                        {
+                            if (tbClientID.Length != 18 || !isValidCode)
+                            {
+                                RPC.IDToUse = 0;
+                                isEnabled = false;
+                            }
+                            else
+                            {
+                                await Task.Delay(1000);
+                                HttpResponseMessage T = null;
+                                try
+                                {
+                                    var Client = new HttpClient();
+                                    T = await Client.PostAsync("https://discordapp.com/api/oauth2/token/rpc",
+                                        new FormUrlEncodedContent(new Dictionary<string, string>
+                                        {
+                                            {"client_id", ID.ToString()}
+                                        }));
+                                }
+                                catch
+                                {
+                                    if (MainPage._MainPage.frmContent.Content is MasterCustomPage && RPC.Type == RPC.RPCType.Custom)
+                                    {
+                                        App.Logging.Error("API", App.Text.DiscordAPIDown);
+                                        isEnabled = false;
+                                    }
+                                }
+
+                                if (MainPage._MainPage.frmContent.Content is MasterCustomPage && RPC.Type == RPC.RPCType.Custom &&
+                                    T != null && profile.ClientID ==
+                                    MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].ClientID)
+                                {
+                                    if (T.StatusCode == HttpStatusCode.BadRequest)
+                                    {
+                                        App.Logging.Error("API", App.Text.ClientIDIsNotValid);
+                                        isEnabled = false;
+                                    }
+                                    else if (T.StatusCode != HttpStatusCode.Unauthorized)
+                                    {
+                                        var response = T.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                                        App.Logging.Error("API", $"{App.Text.APIError} {response}");
+                                        isEnabled = false;
+                                    }
+                                    else
+                                    {
+                                        if (MainPage._MainPage.frmContent.Content is MasterCustomPage)
+                                        {
+                                            RPC.IDToUse = ID;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (MainPage._MainPage.frmContent.Content is MasterCustomPage)
+                        {
+                            RPC.IDToUse = ID;
+                        }
+                    }
+                    return isEnabled;
+                }
     }
 }

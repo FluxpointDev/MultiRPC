@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,6 +34,8 @@ namespace MultiRPC
         public static ulong IDToUse;
         private static DiscordRpcClient RPCClient;
         private static string _pageUserWasOnWhenStarted;
+
+        public static event EventHandler RPCShutdown;
 
         /// <summary>
         /// Has rpc failed
@@ -423,6 +426,7 @@ namespace MultiRPC
             }
 
             IsRPCRunning = false;
+            RPCShutdown?.Invoke(null, EventArgs.Empty);
         }
     }
 }

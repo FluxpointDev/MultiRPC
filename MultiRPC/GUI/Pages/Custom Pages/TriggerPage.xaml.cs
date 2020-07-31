@@ -5,9 +5,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
+using Ookii.Dialogs.Wpf;
 using DayOfWeek = MultiRPC.JsonClasses.DayOfWeek;
 
 namespace MultiRPC.GUI.Pages
@@ -18,18 +20,15 @@ namespace MultiRPC.GUI.Pages
     public partial class TriggerPage : Page
     {
         public static TriggerPage _TriggerPage;
-        public static DayOfWeek ActiveDay = DayOfWeek.Monday;
-        public static Button ActiveButton;
-        public static CustomProfile ActiveProfile;
+
+        private static DayOfWeek ActiveDay = DayOfWeek.Monday;
+        private static Button ActiveButton;
+        private static CustomProfile ActiveProfile;
+        private bool TimerLengthLogicRunning;
         
         public TriggerPage(double pageWidth)
         {
             InitializeComponent();
-
-#if DEBUG
-            gridContent.IsEnabled = true;
-            gridToAdd.Visibility = Visibility.Collapsed;
-#endif
             Width = pageWidth;
             _TriggerPage = this;
             btnMonday.Tag = DayOfWeek.Monday;
@@ -39,15 +38,55 @@ namespace MultiRPC.GUI.Pages
             btnFriday.Tag = DayOfWeek.Friday;
             btnSaturday.Tag = DayOfWeek.Saturday;
             btnSunday.Tag = DayOfWeek.Sunday;
+            
+            Loaded += async (sender, args) =>
+            {
+                UpdateText();
+
+                if (App.Config.HadTriggerWarning) return;
+                await CustomMessageBox.Show(App.Text.TriggerWarning);
+                App.Config.HadTriggerWarning = true;
+                await App.Config.Save();
+            };
         }
 
-        private void UpdateText()
+        public void UpdateText()
         {
             UpdateTimerButton();
+            txtTime.Text = App.Text.Time;
+
+            btnMonday.Content = App.Text.Mon;
+            btnTuesday.Content = App.Text.Tu;
+            btnWednesday.Content = App.Text.We;
+            btnThursday.Content = App.Text.Th;
+            btnFriday.Content = App.Text.Fr;
+            btnSaturday.Content = App.Text.Sa;
+            btnSunday.Content = App.Text.Su;
+
+            tblStartTime.Text = $"{App.Text.StartTime}: ";
+            tblEndTime.Text = $"{App.Text.EndTime}: ";
+            tblStartTimeInvalid.Text = App.Text.TimeInvalid;
+            tblEndTimeInvalid.Text = App.Text.TimeInvalid;
+            tblTimerInvalid.Text = App.Text.TimeInvalid;
+            txtTimer.Text = App.Text.Timer;
+            tblLength.Text = $"{App.Text.Length}: ";
+            btnFileLocation.Content = App.Text.SelectFile;
+            tblFileChange.Text = App.Text.FileChange;
+            tblFile.Text = $"{App.Text.File}: ";
+            tblFolder.Text = $"{App.Text.Folder}: ";
+            tblFolderChange.Text = App.Text.FolderChange;
+            tblProcessOpenedActivated.Text = App.Text.ProcessOpenedActivated;
+            tblProcess.Text = $"{App.Text.Process}: ";
+            btnSelectExe.Content = App.Text.SelectExe;
+            tblCanNotGetFindFile.Text = App.Text.CantFindFile;
+            btnFolderLocation.Content = App.Text.SelectFolder;
+            tblCanNotGetFindFolder.Text = App.Text.CantFindFolder;
+            tblCanNotGetProcessLocation.Text = App.Text.CantFindExe;
         }
 
         private void UpdateTimerButton()
         {
+            btnStartTimer.IsEnabled = ActiveProfile.Triggers.TimerLength != TimeSpan.Zero;
             btnStartTimer.Content = 
                 MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].Triggers.IsUsingTimer ? 
                     App.Text.StopTimer : App.Text.StartTimer;
@@ -59,13 +98,13 @@ namespace MultiRPC.GUI.Pages
             var newActiveDay = (DayOfWeek) but.Tag;
             ActiveDay = newActiveDay;
             
-            ActiveButton?.SetResourceReference(Control.BackgroundProperty, "AccentColour2SCBrush");
+            (ActiveButton ?? btnMonday).SetResourceReference(Control.BackgroundProperty, "AccentColour2SCBrush");
             ActiveButton = but;
             ActiveButton.SetResourceReference(Control.BackgroundProperty, "AccentColour1SCBrush");
             UpdateTimerTimes(MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].Triggers.Times.First(x => x.Date == ActiveDay));
         }
 
-        public void UpdateTimerTimes(Day day)
+        private void UpdateTimerTimes(Day day)
         {
             txtEndTime.Text =
                 $"{day.EndTime.Hours:00}:{day.EndTime.Minutes:00}:{day.EndTime.Seconds:00}";
@@ -90,8 +129,7 @@ namespace MultiRPC.GUI.Pages
             UpdateTimerButton();
             txtTimerLength.IsEnabled = !profile.Triggers.IsUsingTimer;
 
-            txtTimerLength.Text =
-                $"{profile.Triggers.TimerLength.Hours:00}:{profile.Triggers.TimerLength.Minutes:00}:{profile.Triggers.TimerLength.Seconds:00}";
+            UpdateTimerLength();
             UpdateTimerTimes(profile.Triggers.Times.First(x => x.Date == ActiveDay));
 
             txtFolderLocation.Text = profile.Triggers.FolderChange;
@@ -99,6 +137,27 @@ namespace MultiRPC.GUI.Pages
             txtProcessLocation.Text = profile.Triggers.Process;
         }
 
+        private async Task UpdateTimerLength()
+        {
+            if (TimerLengthLogicRunning)
+            {
+                return;
+            }
+            TimerLengthLogicRunning = true;
+
+            while (ActiveProfile.Triggers.IsUsingTimer && ActiveProfile.Triggers.TimeTimerStarted != null)
+            {
+                var time = ActiveProfile.Triggers.TimerLength
+                    .Subtract(DateTime.Now.Subtract(ActiveProfile.Triggers.TimeTimerStarted.Value));
+                txtTimerLength.Text =
+                    $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}";
+                await Task.Delay(1000);
+            }
+            txtTimerLength.Text =
+                $"{ActiveProfile.Triggers.TimerLength.Hours:00}:{ActiveProfile.Triggers.TimerLength.Minutes:00}:{ActiveProfile.Triggers.TimerLength.Seconds:00}";
+            TimerLengthLogicRunning = false;
+        }
+        
         private void TimespanLogic(string time, Action<TimeSpan> editLogic, TextBlock errorTbl)
         {
             if (MasterCustomPage.CurrentButton == null)
@@ -161,9 +220,14 @@ namespace MultiRPC.GUI.Pages
 
         private void TxtTimerLength_OnTextChanged(object sender, TextChangedEventArgs e)
         {
+            if (TimerLengthLogicRunning)
+            {
+                return;
+            }
+            
             TimespanLogic(
             txtTimerLength.Text, 
-            (timeSpan) =>
+            timeSpan =>
             {
                 MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].Triggers.TimerLength = timeSpan;
             }, 
@@ -174,7 +238,7 @@ namespace MultiRPC.GUI.Pages
         {
             TimespanLogic(
                 txtEndTime.Text,
-                (timeSpan) =>
+                timeSpan =>
                 {
                     MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].Triggers.Times.First(x => x.Date == ActiveDay).EndTime = timeSpan;
                 },
@@ -185,7 +249,7 @@ namespace MultiRPC.GUI.Pages
         {
             TimespanLogic(
                 txtStartTime.Text,
-                (timeSpan) =>
+                timeSpan =>
                 {
                     MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()].Triggers.Times.First(x => x.Date == ActiveDay).StartTime = timeSpan;
                 },
@@ -216,16 +280,10 @@ namespace MultiRPC.GUI.Pages
 
         private void BtnFolderName_OnClick(object sender, RoutedEventArgs e)
         {
-            //TODO: Use select folder dia 
-            var openFileDialog = new OpenFileDialog
-            {
-                CheckFileExists = false,
-                ValidateNames = false,
-                FileName = "Don't Edit this part"
-            };
+            var openFileDialog = new VistaFolderBrowserDialog();
             if (openFileDialog.ShowDialog(App.Current.MainWindow).Value)
             {
-                txtFolderLocation.Text = openFileDialog.FileName.Remove(openFileDialog.FileName.LastIndexOf('\\'));
+                txtFolderLocation.Text = openFileDialog.SelectedPath;
             }
         }
 
@@ -247,6 +305,7 @@ namespace MultiRPC.GUI.Pages
             {
                 var processLocation = ((Process)e.AddedItems[0])?.MainModule?.FileName;
                 txtProcessLocation.Text = Path.GetFileName(processLocation);
+                ProcessWatcher.Start();
             }
             catch (Exception exception)
             {
@@ -258,18 +317,17 @@ namespace MultiRPC.GUI.Pages
         private void CboProcess_OnDropDownOpened(object sender, EventArgs e)
         {
             //This for some reason this doesn't get some of them :thonk:
-            var processName = new List<string>();
+            var processesNames = new List<string>();
             var processes = new List<Process>(Process.GetProcesses().AsEnumerable());
             for (var i = 0; i < processes.LongCount(); i++)
             {
-                if (processName.Contains(processes[i].ProcessName))
+                var process = processes[i];
+                if (processesNames.Contains(process.ProcessName))
                 {
-                    processes.Remove(processes[i]);
+                    processes.Remove(process);
+                    i--;
                 }
-                else
-                {
-                    processName.Add(processes[i].ProcessName);
-                }
+                processesNames.Add(process.ProcessName);
             }
             cboProcess.ItemsSource = processes;
         }
@@ -308,6 +366,7 @@ namespace MultiRPC.GUI.Pages
 
         private void UpdateTimer(CustomProfile profile)
         {
+            btnStartTimer.IsEnabled = profile.Triggers.TimerLength != TimeSpan.Zero;
             txtTimerLength.IsEnabled = !profile.Triggers.IsUsingTimer;
             UpdateTimerButton();
         }
@@ -316,6 +375,7 @@ namespace MultiRPC.GUI.Pages
         {
             var profile = MasterCustomPage.Profiles[MasterCustomPage.CurrentButton.Content.ToString()];
             profile.Triggers.IsUsingTimer = btnStartTimer.Content == App.Text.StartTimer;
+            UpdateTimerLength();
             UpdateTimer(profile);
         }
     }

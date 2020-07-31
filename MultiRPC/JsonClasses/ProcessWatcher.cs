@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,8 +13,24 @@ namespace MultiRPC.JsonClasses
     //for pointing me to how to do things ♥
     public static class ProcessWatcher
     {
-        public static void Start()
+        private static bool Loaded = false;
+        
+        //Processes that we are waiting to close™
+        private static List<string> ActiveProcesses = new List<string>();
+        
+        public static async Task Start()
         {
+            if (Loaded)
+            {
+                return;
+            }
+            Loaded = true;
+            
+            while (MasterCustomPage.Profiles == null)
+            {
+                await Task.Delay(1000);
+            }
+            
             if (App.IsAdministrator)
             {
                 WaitForProcessAdmin();
@@ -26,42 +43,66 @@ namespace MultiRPC.JsonClasses
 
         static async void WaitForProcess()
         {
-            while (MasterCustomPage.Profiles == null)
-            {
-                await Task.Delay(1000);
-            }
-            
             while (true)
             {
-                foreach (var process in Process.GetProcesses())
+                foreach (var profile in 
+                    MasterCustomPage.Profiles.Where(x => !string.IsNullOrEmpty(x.Value.Triggers.Process)))
                 {
-                    var fileName = "";
-                    try
+                    if (CheckProcesses(profile.Value))
                     {
-                        fileName = process.MainModule?.FileName;
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        continue;
-                    }
-                    var (_, profile) =
-                        MasterCustomPage.Profiles.FirstOrDefault(x => x.Value.Triggers.Process == Path.GetFileName(fileName));
-
-                    if (fileName == "7zFM.exe")
-                    {
-                        Debugger.Break();
-                    }
-                    
-                    if (profile != null)
-                    {
-                        SetupTrigger(process, profile);
                         break;
                     }
                 }
                 
                 await Task.Delay(App.Config.ProcessWaitingTime * 1000);
             }
+            // ReSharper disable once FunctionNeverReturns
+        }
+
+        static void WaitForProcessAdmin()
+        {
+            try
+            {
+                //Check for anything
+                foreach (var profile in
+                    MasterCustomPage.Profiles.Where(x => !string.IsNullOrEmpty(x.Value.Triggers.Process)))
+                {
+                    if (CheckProcesses(profile.Value))
+                    {
+                        break;
+                    }
+                }
+                
+                var startWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'"));
+                startWatch.EventArrived += NewProcess;
+                startWatch.Start();
+
+                //var stopWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM __InstanceDeletionEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'"));
+                //stopWatch.EventArrived += stopWatch_EventArrived;
+                //stopWatch.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        static bool CheckProcesses(CustomProfile profile)
+        {
+            if (ActiveProcesses.Contains(profile.Triggers.Process))
+            {
+                return false;
+            }
+            
+            var openProcesses = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(profile.Triggers.Process));
+            if (openProcesses.Length > 0)
+            {
+                SetupTrigger(openProcesses[0], profile);
+                ActiveProcesses.Add(profile.Triggers.Process);
+                return true;
+            }
+
+            return false;
         }
 
         static void SetupTrigger(Process process, CustomProfile profile)
@@ -77,39 +118,22 @@ namespace MultiRPC.JsonClasses
             process.Exited += (o, args) =>
             {
                 profile.Triggers.StopShowingProfile();
+                ActiveProcesses.Remove(profile.Triggers.Process);
             };
         }
         
-        static void WaitForProcessAdmin()
-        {
-            try
-            {
-                var startWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM __InstanceCreationEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'"));
-                startWatch.EventArrived += NewProcess;
-                startWatch.Start();
-
-                //var stopWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM __InstanceDeletionEvent WITHIN 1 WHERE TargetInstance ISA 'Win32_Process'"));
-                //stopWatch.EventArrived += stopWatch_EventArrived;
-                //stopWatch.Start();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-        }
-
         static void NewProcess(object sender, EventArrivedEventArgs e)
         {
             try
             {
                 var proc = GetProcessInfo(e);
-                var (_, profile) = MasterCustomPage.Profiles.FirstOrDefault(x => x.Value.Triggers.Process == proc.ProcessName);
-                if (profile != null && proc.PID > -1)
+                var profile = MasterCustomPage.Profiles.FirstOrDefault(x => x.Value.Triggers.Process == proc.ProcessName);
+                if (profile.Value != null && proc.PID > -1)
                 {
                     var process = Process.GetProcessById(proc.PID);
                     if (process != null)
                     {
-                        SetupTrigger(process, profile);
+                        SetupTrigger(process, profile.Value);
                     }
                 }
             }
