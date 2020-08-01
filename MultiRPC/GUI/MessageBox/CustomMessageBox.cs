@@ -48,7 +48,7 @@ namespace MultiRPC.GUI
                 var window = new CustomMessageBox(page, messageBoxTitle)
                 {
                     WindowID = tick,
-                    Owner = ownerWindow
+                    Owner = ownerWindow ?? App.Current.MainWindow
                 };
                 if (messageBoxButton == MessageBoxButton.YesNo)
                 {

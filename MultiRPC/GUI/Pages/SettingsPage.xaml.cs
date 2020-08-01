@@ -291,6 +291,7 @@ namespace MultiRPC.GUI.Pages
                 ThemeEditorPage._ThemeEditorPage?.UpdateText();
                 InstalledThemes._InstalledThemes?.UpdateText(oldEditingWord, oldActiveWord);
                 DebugPage._DebugPage?.UpdateText();
+                TriggerPage._TriggerPage?.UpdateText();
 
                 if (!string.IsNullOrWhiteSpace(MainPage._MainPage.tblInternetConnectivity.Text))
                 {

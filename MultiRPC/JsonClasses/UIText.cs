@@ -214,5 +214,31 @@
         public string ShareHelp;
         public string StartTimer;
         public string StopTimer;
+        public string Time;
+        public string Mon;
+        public string Tu;
+        public string We;
+        public string Th;
+        public string Fr;
+        public string Sa;
+        public string Su;
+        public string StartTime;
+        public string TimeInvalid;
+        public string Timer;
+        public string Length;
+        public string TriggerWarning;
+        public string CantFindFile;
+        public string EndTime;
+        public string SelectFile;
+        public string FileChange;
+        public string File;
+        public string Folder;
+        public string FolderChange;
+        public string ProcessOpenedActivated;
+        public string SelectExe;
+        public string Process;
+        public string SelectFolder;
+        public string CantFindFolder;
+        public string CantFindExe;
     }
 }

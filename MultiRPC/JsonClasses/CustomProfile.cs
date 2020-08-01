@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -29,43 +31,73 @@ namespace MultiRPC.JsonClasses
 
     public class Trigger : INotifyPropertyChanged
     {
-        //TODO: Make it be able to handle when the user shutdowns the RPC Client 
-        
-        private FileSystemWatcher FileWatcher = new FileSystemWatcher("..");
-        private FileSystemWatcher FolderWatcher = new FileSystemWatcher("..");
+        private FileSystemWatcher? FileWatcher = null;
+        private FileSystemWatcher? FolderWatcher = null;
         private CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
         private bool wasRPCRunningBeforeStarting;
-        
-        public Trigger()
-        {
-            Times = new ReadOnlyCollection<Day>(new List<Day>
-            {
-                new Day(DayOfWeek.Monday),
-                new Day(DayOfWeek.Tuesday),
-                new Day(DayOfWeek.Wednesday),
-                new Day(DayOfWeek.Thursday),
-                new Day(DayOfWeek.Friday),
-                new Day(DayOfWeek.Saturday),
-                new Day(DayOfWeek.Sunday),
-            });
 
+        [OnDeserialized]
+        internal void OnDeserializedMethod(StreamingContext context)
+        {
             foreach (var t in Times)
             {
                 t.ShowProfile += (_, __) => ShowProfile(true);
                 t.StopShowingProfile += (_, __) => StopShowingProfile();
+                if (t.IsActive)
+                {
+                    ShowProfile(true);
+                }
             }
-
+        }
+        
+        static Trigger() => RPC.RPCShutdown += (sender, args) =>
+        {
+            ActiveTriggers.Clear();
+        };
+        
+        public Trigger()
+        {
+            foreach (var t in Times)
+            {
+                t.ShowProfile += (_, __) => ShowProfile(true);
+                t.StopShowingProfile += (_, __) => StopShowingProfile();
+                if (t.IsActive)
+                {
+                    ShowProfile(true);
+                }
+            }
+        }
+        
+        private void SetupFolderWatcher(bool skipCheck = false)
+        {
+            if (!skipCheck && FolderWatcher != null)
+            {
+                return;
+            }
+            FolderWatcher = new FileSystemWatcher("..");
             
-            //TODO: Only do this when we got something to work with
             FolderWatcher.Created += (sender, args) => ShowProfile();
             FolderWatcher.Changed += (sender, args) => ShowProfile();
             FolderWatcher.Deleted += (sender, args) => ShowProfile();
             FolderWatcher.Renamed += (sender, args) => ShowProfile();
-            FolderWatcher.Error += (sender, args) => ShowProfile(); //TODO: Re-setup
+            FolderWatcher.Error += (sender, args) => SetupFolderWatcher(true);
+            
+            SetFolderChange(IsFolderChangeUsable);
+        }
 
-            FileWatcher.NotifyFilter = 
-                NotifyFilters.LastAccess | NotifyFilters.FileName | 
-                NotifyFilters.LastWrite | NotifyFilters.Attributes;
+        private void SetupFileWatcher(bool skipCheck = false)
+        {
+            if (!skipCheck && FileWatcher != null)
+            {
+                return;
+            }
+
+            FileWatcher = new FileSystemWatcher("..")
+            {
+                NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.FileName |
+                               NotifyFilters.LastWrite | NotifyFilters.Attributes
+            };
+
             FileWatcher.Changed += (sender, args) => ShowProfile();
             FileWatcher.Renamed += (sender, args) =>
             {
@@ -74,15 +106,32 @@ namespace MultiRPC.JsonClasses
                 MasterCustomPage.SaveProfiles();
                 ShowProfile();
             };
-            FileWatcher.Error += (sender, args) => ShowProfile(); //TODO: Re-setup
+            FileWatcher.Error += (sender, args) => SetupFileWatcher(true);
+            
+            SetFileChange(IsFileChangeUsable);
         }
         
         public static List<Trigger> ActiveTriggers = new List<Trigger>();
-        
+
+        private string process = null;
         /// <summary>
         /// Trigger when a process is started/close
         /// </summary>
-        public string Process = null; //TODO
+        public string Process
+        {
+            get => process;
+            set
+            {
+                process = value;
+
+                if (!string.IsNullOrWhiteSpace(process))
+                {
+                    ProcessWatcher.Start();
+                }
+                
+                OnPropertyChanged();
+            }
+        }
 
         private string folderChange = "";
         /// <summary>
@@ -95,12 +144,26 @@ namespace MultiRPC.JsonClasses
             {
                 folderChange = value;
 
-                FolderWatcher.EnableRaisingEvents = !string.IsNullOrWhiteSpace(FolderChange) && Directory.Exists(FolderChange);
-                FolderWatcher.Path = FolderWatcher.EnableRaisingEvents ? value : "..";
+                var usable = IsFolderChangeUsable;
+                if (usable)
+                {
+                    SetupFolderWatcher();
+                }
+                SetFolderChange(usable);
+
                 OnPropertyChanged();
             }
         }
 
+        private bool IsFolderChangeUsable => !string.IsNullOrWhiteSpace(FolderChange) && Directory.Exists(FolderChange);
+        
+        private void SetFolderChange(bool enable)
+        {
+            if (FolderWatcher == null) return;
+            FolderWatcher.EnableRaisingEvents = enable;
+            FolderWatcher.Path = FolderWatcher.EnableRaisingEvents ? FolderChange : "..";
+        }
+        
         private string fileChange = "";
         //FileWatcher.Filter = args.Name;
         /// <summary>
@@ -112,20 +175,43 @@ namespace MultiRPC.JsonClasses
             set
             {
                 fileChange = value;
+                
+                var usable = IsFileChangeUsable;
+                if (usable)
+                {
+                    SetupFileWatcher();
+                }
+                SetFileChange(usable);
 
-                FileWatcher.EnableRaisingEvents = !string.IsNullOrWhiteSpace(FileChange) && File.Exists(FileChange);
-                FileWatcher.Path = FileWatcher.EnableRaisingEvents ? Path.GetDirectoryName(value) : "..";
-                FileWatcher.Filter = FileWatcher.EnableRaisingEvents ? Path.GetFileName(value) : "..";
                 OnPropertyChanged();
             }
         }
 
+        private bool IsFileChangeUsable => !string.IsNullOrWhiteSpace(FileChange) && File.Exists(FileChange);
+
+        private void SetFileChange(bool enable)
+        {
+            if (FileWatcher == null) return;
+            FileWatcher.EnableRaisingEvents = enable;
+            FileWatcher.Path = FileWatcher.EnableRaisingEvents ? Path.GetDirectoryName(FileChange) : "..";
+            FileWatcher.Filter = FileWatcher.EnableRaisingEvents ? Path.GetFileName(FileChange) : "..";
+        }
+        
+        private TimeSpan timerLength = TimeSpan.Zero;
+
         /// <summary>
         /// Amount of time that this profile should show for
         /// </summary>
-        public TimeSpan TimerLength = TimeSpan.Zero;
+        public TimeSpan TimerLength
+        {
+            get => timerLength;
+            set
+            {
+                timerLength = value;
+                OnPropertyChanged();
+            }
+        }
 
-        //TODO: Use this as a way for the UI to track timing™
         public DateTime? TimeTimerStarted = null;
         
         private bool isUsingTimer;
@@ -158,17 +244,37 @@ namespace MultiRPC.JsonClasses
         /// <summary>
         /// Times when this Profile should get triggered
         /// </summary>
-        public ReadOnlyCollection<Day> Times;
-
-        public async void ShowProfile(bool trackTrigger = false)
+        public ReadOnlyCollection<Day> Times = new ReadOnlyCollection<Day>(new List<Day>
         {
+            new Day(DayOfWeek.Monday),
+            new Day(DayOfWeek.Tuesday),
+            new Day(DayOfWeek.Wednesday),
+            new Day(DayOfWeek.Thursday),
+            new Day(DayOfWeek.Friday),
+            new Day(DayOfWeek.Saturday),
+            new Day(DayOfWeek.Sunday),
+        });
+
+        public async Task ShowProfile(bool trackTrigger = false)
+        {
+            while (MasterCustomPage.Profiles == null)
+            {
+                await Task.Delay(1000);
+            }
+            
             //See if we are trying to use the same profile
             var profile = MasterCustomPage.Profiles.First(x => x.Value.Triggers == this).Value;
             if (RPC.Equals(RPC.Presence, profile) && RPC.IsRPCRunning)
             {
                 return;
             }
-            
+
+            if (!await MultiRPCAndCustomLogic.CanRunRPC(profile.Text1, profile.Text2,
+                profile.SmallText, profile.LargeText, profile.ClientID))
+            {
+                return;
+            }
+
             if (trackTrigger)
             {
                 ActiveTriggers.Add(this);
@@ -211,7 +317,7 @@ namespace MultiRPC.JsonClasses
             RPC.IDToUse = clientID;
             if (ActiveTriggers.Count > 0)
             {
-                RPC.SetPresence(MasterCustomPage.Profiles.First(x => x.Value.Triggers == ActiveTriggers[^1]).Value, true);
+                RPC.SetPresence(MasterCustomPage.Profiles.First(x => x.Value.Triggers == ActiveTriggers[ActiveTriggers.Count - 1]).Value, true);
             }
             else
             {
