@@ -56,9 +56,6 @@ namespace MultiRPC.JsonClasses
 
         public bool ShowPageTooltips = true;
 
-        //TODO: Make it so this can be changed in GUI
-        public int ProcessWaitingTime = 2;
-        
         /// <summary> Get the settings stored on disk </summary>
         public static Config Load()
         {
