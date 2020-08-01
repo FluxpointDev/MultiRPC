@@ -35,6 +35,11 @@ namespace MultiRPC.GUI.Pages
             return Task.FromResult(textBox.Text);
         }
 
+        internal class ClientCheck
+        {
+            public string message = "";
+        }
+
         public static async Task<bool> CanRunRPC(TextBox tbText1, TextBox tbText2, TextBox tbSmallText,
             TextBox tbLargeText, TextBox tbClientID = null, bool tokenTextChanged = false)
         {
@@ -121,11 +126,9 @@ namespace MultiRPC.GUI.Pages
                         try
                         {
                             var Client = new HttpClient();
-                            T = await Client.PostAsync("https://discordapp.com/api/oauth2/token/rpc",
-                                new FormUrlEncodedContent(new Dictionary<string, string>
-                                {
-                                    {"client_id", ID.ToString()}
-                                }));
+                            T = await Client.GetAsync("https://discordapp.com/api/v6/oauth2/applications/" + ID.ToString() + "/rpc");
+
+
                         }
                         catch
                         {
@@ -149,23 +152,29 @@ namespace MultiRPC.GUI.Pages
                                 tbClientID.SetResourceReference(Control.BorderBrushProperty, "Red");
                                 isEnabled = false;
                             }
-                            else if (T.StatusCode != HttpStatusCode.Unauthorized)
-                            {
-                                var response = T.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                                App.Logging.Error("API", $"{App.Text.APIError} {response}");
-                                tbClientID.ToolTip = new ToolTip($"{App.Text.APIIssue}!");
-                                tbClientID.SetResourceReference(Control.BorderBrushProperty, "Red");
-                                isEnabled = false;
-                            }
                             else
                             {
-                                if (MainPage._MainPage.frmContent.Content is MasterCustomPage)
-                                {
-                                    RPC.IDToUse = ID;
-                                }
+                                var response = T.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                                ClientCheck Check = Newtonsoft.Json.JsonConvert.DeserializeObject<ClientCheck>(response);
 
-                                tbClientID.SetResourceReference(Control.BorderBrushProperty, "AccentColour4SCBrush");
-                                tbClientID.ToolTip = null;
+                                if (Check != null && Check.message != "")
+                                {
+                                    App.Logging.Error("API", App.Text.ClientIDIsNotValid);
+                                    tbClientID.ToolTip = new ToolTip(App.Text.ClientIDIsNotValid);
+                                    tbClientID.SetResourceReference(Control.BorderBrushProperty, "Red");
+                                    isEnabled = false;
+                                }
+                                else
+                                {
+
+                                    if (MainPage._MainPage.frmContent.Content is MasterCustomPage)
+                                    {
+                                        RPC.IDToUse = ID;
+                                    }
+
+                                    tbClientID.SetResourceReference(Control.BorderBrushProperty, "AccentColour4SCBrush");
+                                    tbClientID.ToolTip = null;
+                                }
                             }
                         }
                     }
