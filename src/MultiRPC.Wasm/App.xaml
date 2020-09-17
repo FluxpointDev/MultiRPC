@@ -1,0 +1,22 @@
+﻿<Application
+    x:Class="MultiRPC.Shared.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MultiRPC.Shared"
+    xmlns:imaging="clr-namespace:Windows.UI.Xaml.Media.Imaging;assembly=Uno.UI">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///CommonStyling.xaml"/>
+                <ResourceDictionary>
+                    <ImageBrush x:Key="MultiRPCIcon">
+                        <ImageBrush.ImageSource>
+                            <imaging:BitmapImage UriSource="Assets/MultiRPCLogo.png"></imaging:BitmapImage>
+                        </ImageBrush.ImageSource>
+                    </ImageBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
