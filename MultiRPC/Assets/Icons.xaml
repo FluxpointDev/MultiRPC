@@ -619,35 +619,24 @@
     <DrawingImage x:Key="ProgramsIconSelectedDrawingImage" Drawing="{StaticResource ProgramsIconSelectedDrawingGroup}" />
 
     <DrawingImage x:Key="FluxpointDevelopmentIconDrawingImage">
-        <DrawingImage.Drawing>
-            <DrawingGroup ClipGeometry="M0,0 V367 H370 V0 H0 Z">
-                <DrawingGroup Opacity="1">
-                    <DrawingGroup Opacity="1">
-                        <GeometryDrawing Brush="#FFB59940">
-                            <GeometryDrawing.Geometry>
-                                <EllipseGeometry RadiusX="185" RadiusY="183.5" Center="185,183.5" />
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                        <DrawingGroup Opacity="1">
-                            <GeometryDrawing Brush="#FF6600CC">
-                                <GeometryDrawing.Geometry>
-                                    <EllipseGeometry RadiusX="178" RadiusY="178" Center="185,183.5" />
-                                </GeometryDrawing.Geometry>
-                            </GeometryDrawing>
-                            <GeometryDrawing Brush="#FFB59940">
-                                <GeometryDrawing.Geometry>
-                                    <EllipseGeometry RadiusX="168" RadiusY="168" Center="185,183.5" />
-                                </GeometryDrawing.Geometry>
-                            </GeometryDrawing>
-                        </DrawingGroup>
-                    </DrawingGroup>
-                    <DrawingGroup Opacity="1">
-                        <GeometryDrawing Brush="#FF6600CC" Geometry="F1 M370,367z M0,0z M165.2,17.4C180,36.4 186.7,58.3 174,87.2 161.3,116.1 127.5,161.3 100.4,209.7 46.1,306.6 163.5,355.4 173.2,356.4 182.9,357.3 126,319.4 144,261.7 162,204 203.5,171.6 215.2,127.6 226.9,83.6 135.6,-20.5 165.2,17.4L165.2,17.4z" />
-                        <GeometryDrawing Brush="#FF6600CC" Geometry="F1 M370,367z M0,0z M230.9,131.6C233.8,137.8 235.2,149.2 232,162.7 228.7,176.2 224.1,186.2 214,202.6 209,210.8 197.6,226.6 191.7,235.7 185.8,244.8 184,247.2 174.4,264.7 155.3,299.7 193.8,334.2 186.5,322.3 179.2,310.4 189.4,287.3 199.6,271.8 209.8,256.3 216.7,249.1 226.7,234.1 236.7,219.1 246.7,195.6 246.8,182.6 246.9,169.6 246.2,165.4 241.2,151.4 236.3,137.5 225,119.1 230.9,131.6L230.9,131.6z" />
-                        <GeometryDrawing Brush="#FF6600CC" Geometry="F1 M370,367z M0,0z M206.2,350.9C202,359 200.8,333.8 208.3,311.9 215.8,290 230.7,277.4 246.3,250.1 254.1,236.4 260.8,222.7 263.5,210.5 266.2,198.3 266.1,187.8 262.4,181.3 255.1,168.3 262.7,180.2 266.3,185.8 269.9,191.4 270.1,192.3 272.4,196.4 274.7,200.5 276.2,204.3 276.9,206.4 277.6,208.4 280,213.5 280.8,227.9 281.6,242.3 272.4,276.7 241.4,307.7 210.5,338.6 210.5,342.8 206.2,350.9L206.2,350.9z" />
-                    </DrawingGroup>
-                </DrawingGroup>
-            </DrawingGroup>
-        </DrawingImage.Drawing>
+      <DrawingImage.Drawing>
+        <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+          <GeometryDrawing Brush="#FF2F3136">
+            <GeometryDrawing.Geometry>
+              <EllipseGeometry RadiusX="488" RadiusY="488" Center="509.49,512.89" />
+            </GeometryDrawing.Geometry>
+          </GeometryDrawing>
+          <GeometryDrawing Brush="#FF949FDF" Geometry="F1 M1024,1024z M0,0z M767.82,523.15L744.82,603.77 516.61,603.77 539.61,523.14 450.31,523.14 427.31,603.76 401.42,694.46 306.17,1028 395.47,1028 490.7,694.43 718.91,694.43 718.91,694.43C768.23,694.43,819.8,653.85,834.1,603.75L834.1,603.75 857.1,523.13z" />
+          <GeometryDrawing Geometry="F1 M1024,1024z M0,0z M466.42,466.65L555.72,466.65 783.93,466.7 873.23,466.7 873.23,466.7C887.53,416.6,859.14,375.99,809.82,375.98L809.82,375.98 581.61,375.98 492.31,375.98 492.31,375.98 466.42,466.68z">
+            <GeometryDrawing.Brush>
+              <LinearGradientBrush StartPoint="671.68,375.95" EndPoint="671.68,466.74" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                <GradientStop Color="#FF947BDF" Offset="0" />
+                <GradientStop Color="#FF949FDF" Offset="1" />
+              </LinearGradientBrush>
+            </GeometryDrawing.Brush>
+          </GeometryDrawing>
+          <GeometryDrawing Brush="#FF947BDF" Geometry="F1 M1024,1024z M0,0z M480.62,222.25L480.62,222.25C431.3,222.25,379.73,262.84,365.43,312.93L365.43,312.93 347.43,375.93 175.58,375.87 149.69,466.57 321.53,466.63 228.9,791.13 32.05,791.07 6.18,881.76 41.35,881.85 58.35,881.85 203.02,881.85C252.34,881.85,303.92,841.26,318.22,791.17L318.22,791.17 409.13,472.71 409.13,472.71 447.13,339.71 447.13,339.71 454.73,313 990.62,313.14 1016.51,222.44z" />
+        </DrawingGroup>
+      </DrawingImage.Drawing>
     </DrawingImage>
-</ResourceDictionary>
+  </ResourceDictionary>
