@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace MultiRPC.Shared.UI
@@ -10,7 +11,8 @@ namespace MultiRPC.Shared.UI
             Loading += LocalizablePage_Loading;
         }
 
-        private void LocalizablePage_Loading(Windows.UI.Xaml.FrameworkElement sender, object args) => UpdateText();
+        private void LocalizablePage_Loading(FrameworkElement sender, object args) =>
+            UpdateText();
 
         public virtual void UpdateText() => throw new NotImplementedException();
     }

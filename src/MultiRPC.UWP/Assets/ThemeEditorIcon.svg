@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 56 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(0.056,0,0,0.056,0,0)">
+        <circle cx="405.7" cy="594.3" r="405.7" style="fill:url(#_Linear1);"/>
+    </g>
+    <g transform="matrix(0.056,0,0,0.056,0,0)">
+        <circle cx="468.6" cy="531.4" r="405.7" style="fill:url(#_Linear2);"/>
+    </g>
+    <g transform="matrix(0.056,0,0,0.056,0,0)">
+        <circle cx="531.4" cy="468.6" r="405.7" style="fill:url(#_Linear3);"/>
+    </g>
+    <g transform="matrix(0.056,0,0,0.056,0,0)">
+        <circle cx="594.3" cy="405.7" r="405.7" style="fill:url(#_Linear4);"/>
+    </g>
+    <defs>
+        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(811.4,0,0,811.4,0,594.3)"><stop offset="0" style="stop-color:white;stop-opacity:1"/><stop offset="1" style="stop-color:rgb(155,155,155);stop-opacity:1"/></linearGradient>
+        <linearGradient id="_Linear2" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(811.32,0,0,811.32,62.8934,531.447)"><stop offset="0" style="stop-color:rgb(243,243,243);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(141,141,141);stop-opacity:1"/></linearGradient>
+        <linearGradient id="_Linear3" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(811.32,0,0,811.32,125.787,468.553)"><stop offset="0" style="stop-color:rgb(230,230,230);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(128,128,128);stop-opacity:1"/></linearGradient>
+        <linearGradient id="_Linear4" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(811.32,0,0,811.32,188.68,405.66)"><stop offset="0" style="stop-color:rgb(218,218,218);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(115,115,115);stop-opacity:1"/></linearGradient>
+    </defs>
+</svg>

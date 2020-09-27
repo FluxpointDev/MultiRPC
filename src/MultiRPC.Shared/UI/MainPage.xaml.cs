@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MultiRPC.Core;
 using static MultiRPC.Core.LanguagePicker;
 using System.Collections.Generic;
+using Windows.UI.Xaml.Media;
+using System;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 namespace MultiRPC.Shared.UI
@@ -14,7 +16,7 @@ namespace MultiRPC.Shared.UI
     public sealed partial class MainPage : LocalizablePage
     {
         readonly List<ToolTip> ToolTips = new List<ToolTip>();
-        Button activateButton = null;
+        Button activateButton;
 
         public MainPage()
         {
@@ -30,9 +32,15 @@ namespace MultiRPC.Shared.UI
             foreach (var page in pages)
             {
                 var icon = await AssetManager.GetAsset(page.IconLocation, 56, 56);
-                var btn = new Button { Content = icon };
-                btn.Style = 
-                    (Style)this.Resources[$"{(activateButton == null ? "Active" : "")}PageButton"];
+                var btn = new Button
+                {
+                    Content = new Image()
+                    {
+                        Source = icon as ImageSource,
+                        Margin = new Thickness(3)
+                    },
+                    Style = (Style)this.Resources[$"{(activateButton == null ? "Active" : "")}PageButton"]
+                };
                 btn.Click += Btn_Click;
 
                 ToolTip toolTip = new ToolTip
@@ -56,6 +64,7 @@ namespace MultiRPC.Shared.UI
 
         private void Btn_Click(object sender, RoutedEventArgs e)
         {
+            //TODO: Make it get the active logo
             if (activateButton != null)
             {
                 activateButton.Style = (Style)this.Resources["PageButton"];
@@ -74,7 +83,7 @@ namespace MultiRPC.Shared.UI
             }
         }
 
-        private string GetTooltipString(ISidePage page) => 
+        private static string GetTooltipString(ISidePage page) => 
             $"{GetLineFromLanguageFile(page.LocalizableName) ?? @"¯\_(ツ)_/¯"} {GetLineFromLanguageFile("Page")}";
     }
 }

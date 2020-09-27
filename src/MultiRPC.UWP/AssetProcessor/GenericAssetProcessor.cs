@@ -14,23 +14,12 @@ namespace MultiRPC.UWP.AssetProcessor
     /// </summary>
     class GenericAssetProcessor : IAssetProcessor
     {
+        //TODO: Add some kind of caching
         public virtual string AssetTarget => "N/A";
 
         public virtual Task<Stream> GetAsset(string assetPath, params object[] args) => throw new NotImplementedException();
 
-        public async Task<object> ProcessAsset(Stream assetStream, params object[] args)
-        {
-            var image = new Image()
-            {
-                Stretch = Stretch.Uniform,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(3),
-            };
-
-            image.Source = await MakeImageSource(assetStream, args);
-            return image;
-        }
+        public async Task<object> ProcessAsset(Stream assetStream, params object[] args) => await MakeImageSource(assetStream, args);
 
         public async virtual Task<ImageSource> MakeImageSource(Stream assetStream, params object[] args)
         {
@@ -43,7 +32,7 @@ namespace MultiRPC.UWP.AssetProcessor
             }
 
             var s = assetStream.AsRandomAccessStream();
-            await svgImage.SetSourceAsync(s).AsTask();
+            await svgImage.SetSourceAsync(s);
 
             return svgImage;
         }

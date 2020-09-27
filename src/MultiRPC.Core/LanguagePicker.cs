@@ -23,9 +23,9 @@ namespace MultiRPC.Core
 
             //TODO: Get active language
             var fileLocation = Path.Combine(Constants.LanguageFolder, "en-gb.json");
-            if (await fileSystem.FileExists(fileLocation).ConfigureAwait(false))
+            if (await fileSystem.FileExists(fileLocation))
             {
-                var fileContents = await fileSystem.ReadAllTextAsync(fileLocation).ConfigureAwait(false);
+                var fileContents = await fileSystem.ReadAllTextAsync(fileLocation);
                 if (string.IsNullOrWhiteSpace(fileContents))
                 {
                     Serilog.Log.Logger.Warning("Unable to get lanuage contents");

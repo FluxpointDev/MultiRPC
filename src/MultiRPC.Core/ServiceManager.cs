@@ -1,12 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿#nullable enable
+
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using MultiRPC.Core.Rpc;
 
 namespace MultiRPC.Core
 {
-    public class ServiceManager
+    public static class ServiceManager
     {
         public static ServiceCollection Service = new ServiceCollection();
 
@@ -16,11 +19,12 @@ namespace MultiRPC.Core
 
         //TODO: Use source generator for this so we don't have to
         //update this when we have a new Required service
-        static Type[] RequiredServices = new[]
+        private static readonly Type[] RequiredServices = new[]
         {
             typeof(IAssetProcessor),
             typeof(IFileSystemAccess),
-            typeof(ISidePage)
+            typeof(ISidePage),
+            typeof(IRpcClient)
         };
 
         public static void ProcessService()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Diagnostics;
 
 namespace MultiRPC.Core.Extensions
@@ -22,7 +23,7 @@ namespace MultiRPC.Core.Extensions
         /// Opens the website in a web browser
         /// </summary>
         /// <param name="uriString">website to open</param>
-        public static void OpenWebsite(this Uri uri)
+        public static void OpenWebsite([NotNull] this Uri uri)
         {
 #if NETCOREAPP
             Process.Start(new ProcessStartInfo("cmd", $"/c start {uri}")

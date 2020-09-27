@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MultiRPC.Core;
+using MultiRPC.Core.Rpc;
 using MultiRPC.Shared.UI;
 using MultiRPC.Shared.UI.Pages;
 using MultiRPC.Shared.UI.Pages.Debug;
@@ -7,8 +8,12 @@ using MultiRPC.UWP.AssetProcessor;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace MultiRPC.UWP
@@ -27,17 +32,41 @@ namespace MultiRPC.UWP
             //Application.Current.DebugSettings
             //  .IsTextPerformanceVisualizationEnabled = true;
 
-            ServiceManager.Service.AddSingleton<ISidePage, MultiRPCPage>();
-            ServiceManager.Service.AddSingleton<ISidePage, RPCViewTestPage>();
-            ServiceManager.Service.AddSingleton<ISidePage, MultiRPCPage2>();
+            //These pages have to be added first as they have multiple implementations for different things
+            //but we need to only have one instance of them pages
+            ServiceManager.Service.AddSingleton<MultiRPCPage>();
+            ServiceManager.Service.AddSingleton<CustomPage>();
 
+            //Add their IRpcPage imp first
+            ServiceManager.Service.AddSingleton<IRpcPage>(x => x.GetRequiredService<MultiRPCPage>());
+            ServiceManager.Service.AddSingleton<IRpcPage>(x => x.GetRequiredService<CustomPage>());
+
+            //Now add their SidePage imp with the other pages
+            ServiceManager.Service.AddSingleton<ISidePage>(x => x.GetRequiredService<MultiRPCPage>());
+            ServiceManager.Service.AddSingleton<ISidePage>(x => x.GetRequiredService<CustomPage>());
+            ServiceManager.Service.AddSingleton<ISidePage, SettingsPage>();
+            ServiceManager.Service.AddSingleton<ISidePage, LoggingPage>();
+            ServiceManager.Service.AddSingleton<ISidePage, CreditsPage>();
+            ServiceManager.Service.AddSingleton<ISidePage, ThemeEditorPage>();
+
+#if DEBUG
+            //Add any debugging pages into here
+            ServiceManager.Service.AddSingleton<ISidePage, RPCViewTestPage>();
+#endif
+            //Add the FileSystemAccess service because UWP be a pain and make their own and not using System.IO
+            //like everyone else 😑
             ServiceManager.Service.AddSingleton<IFileSystemAccess, FileSystemAccess>();
 
+            //Add our asset processors so we can use assets xP
             ServiceManager.Service.AddSingleton<IAssetProcessor, PageIconProcessor>();
             ServiceManager.Service.AddSingleton<IAssetProcessor, LogoProcessor>();
             ServiceManager.Service.AddSingleton<IAssetProcessor, GifProcessor>();
             ServiceManager.Service.AddSingleton<IAssetProcessor, IconProcessor>();
 
+            //Add our RpcClient
+            ServiceManager.Service.AddSingleton<IRpcClient, RpcClient>();
+
+            //Now to process everything ready for the Client to use them
             ServiceManager.ProcessService();
 
             InitializeComponent();
@@ -51,18 +80,16 @@ namespace MultiRPC.UWP
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
-
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (rootFrame == null)
+            if (!(Window.Current.Content is Frame rootFrame))
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                if (e?.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: Load state from previously suspended application
                 }
@@ -71,7 +98,7 @@ namespace MultiRPC.UWP
                 Window.Current.Content = rootFrame;
             }
 
-            if (e.PrelaunchActivated == false)
+            if (e?.PrelaunchActivated == false)
             {
                 if (rootFrame.Content == null)
                 {
@@ -79,9 +106,13 @@ namespace MultiRPC.UWP
                     // configuring the new page by passing required information as a navigation
                     // parameter
                     rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    RpcPageManager.Load();
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
+
+                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                coreTitleBar.ExtendViewIntoTitleBar = false;
             }
         }
 
@@ -107,15 +138,6 @@ namespace MultiRPC.UWP
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
-        }
-    }
-
-    //TODO: Get rid of this once we got all the pages, just need it for testing nav
-    public class MultiRPCPage2 : MultiRPCPage
-    {
-        public MultiRPCPage2() 
-        {
-            Content = new TextBlock() { Text = "Wew" };
         }
     }
 }

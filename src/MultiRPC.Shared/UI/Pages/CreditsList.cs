@@ -1,4 +1,4 @@
-﻿namespace MultiRPC.Core
+﻿namespace MultiRPC.Shared.UI.Pages
 {
     public class CreditsList
     {

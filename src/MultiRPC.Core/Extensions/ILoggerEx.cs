@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using JetBrains.Annotations;
+using Serilog;
 using System;
 
 namespace MultiRPC.Core.Extensions
@@ -9,7 +10,7 @@ namespace MultiRPC.Core.Extensions
     public static class ILoggerEx
     {
         /// <inheritdoc cref="ILogger.Error(Exception, string)"/>
-        public static void Error(this ILogger logger, Exception exception) =>
+        public static void Error([NotNull] this ILogger logger, [NotNull] Exception exception) =>
             logger.Error(exception.Message);
     }
 }

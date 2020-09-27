@@ -26,7 +26,7 @@ namespace MultiRPC.UWP.AssetProcessor
             // Set the SVG source to the selected file and give it the size of the button
             BitmapImage bitmapImage = new BitmapImage();
             var s = assetStream.AsRandomAccessStream();
-            await bitmapImage.SetSourceAsync(s).AsTask();
+            await bitmapImage.SetSourceAsync(s);
 
             return bitmapImage;
         }

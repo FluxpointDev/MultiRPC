@@ -21,6 +21,25 @@
                     TintLuminosityOpacity="0.8"
                     FallbackColor="#2c2e30"/>
 
+                    <AcrylicBrush x:Key="Purple"
+                    BackgroundSource="HostBackdrop"
+                    TintColor="#6A7EC4"
+                    TintOpacity="0.8"
+                    TintLuminosityOpacity="0.85"
+                    FallbackColor="#6A7EC4"/>
+                    <AcrylicBrush x:Key="Red"
+                    BackgroundSource="HostBackdrop"
+                    TintColor="#FFF13333"
+                    TintOpacity="0.8"
+                    TintLuminosityOpacity="0.85"
+                    FallbackColor="#FFF13333"/>
+
+                    <AcrylicBrush x:Key="ActivePageButtonColour"
+                    BackgroundSource="HostBackdrop"
+                    TintColor="#00aceb"
+                    TintOpacity="0.8"
+                    TintLuminosityOpacity="0.85"
+                    FallbackColor="#00aceb"/>
                     <ImageBrush x:Key="MultiRPCIcon">
                         <ImageBrush.ImageSource>
                             <SvgImageSource UriSource="ms-appx:///Assets/MultiRPCLogo.svg" />

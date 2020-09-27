@@ -13,11 +13,27 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\CreditsList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\CreditsPage.xaml.cs">
+      <DependentUpon>CreditsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\CustomPage.xaml.cs">
+      <DependentUpon>CustomPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\Debug\RPCViewTestPage.xaml.cs">
       <DependentUpon>RPCViewTestPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\LoggingPage.xaml.cs">
+      <DependentUpon>LoggingPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\MultiRPCPage.xaml.cs">
       <DependentUpon>MultiRPCPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\ThemeEditorPage.xaml.cs">
+      <DependentUpon>ThemeEditorPage.xaml</DependentUpon>
     </Compile>
     <!--<Compile Include="$(MSBuildThisFileDirectory)UI\View\RPCPreview.xaml.cs">
       <DependentUpon>RPCPreview.xaml</DependentUpon>
@@ -38,11 +54,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\Pages\CreditsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\Pages\CustomPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)UI\Pages\Debug\RPCViewTestPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\Pages\LoggingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)UI\Pages\MultiRPCPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\Pages\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\Pages\ThemeEditorPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

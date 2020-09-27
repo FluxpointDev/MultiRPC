@@ -48,7 +48,7 @@ namespace MultiRPC.UWP
 
         private async Task<StorageFile> GetFile(string path)
         {
-            var folder = await GetFolder(path);
+            var folder = await GetFolder(path).ConfigureAwait(false);
             if (folder == null)
             {
                 return null;
@@ -68,13 +68,13 @@ namespace MultiRPC.UWP
             return null;
         }
 
-        public async Task<bool> FileExists(string path) => IsFileAvailable(await GetFile(path));
+        public async Task<bool> FileExists(string path) => IsFileAvailable(await GetFile(path).ConfigureAwait(false));
 
         private bool IsFileAvailable(StorageFile file) => file != null && file.IsAvailable;
 
         public async Task<byte[]> ReadAllBytesAsync(string path)
         {
-            var file = await GetFile(path);
+            var file = await GetFile(path).ConfigureAwait(false);
             if (!IsFileAvailable(file))
             {
                 return null;
@@ -92,7 +92,7 @@ namespace MultiRPC.UWP
 
         public async Task<string[]> ReadAllLinesAsync(string path)
         {
-            var file = await GetFile(path);
+            var file = await GetFile(path).ConfigureAwait(false);
             if (!IsFileAvailable(file))
             {
                 return null;

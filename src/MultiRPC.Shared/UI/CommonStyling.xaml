@@ -1,8 +1,13 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
     <SolidColorBrush x:Key="Colour1" Color="#36393e"/>
     <SolidColorBrush x:Key="Colour2" Color="#2c2e30" />
+    <SolidColorBrush x:Key="ActivePageButtonColour" Color="#00aceb"/>
+
+    <SolidColorBrush x:Key="TextColour1" Color="White"/>
+    <SolidColorBrush x:Key="TextColour2" Color="White" />
 
     <SolidColorBrush Color="#FFF13333" x:Key="Red" />
     <SolidColorBrush Color="#6A7EC4" x:Key="Purple" />
@@ -12,9 +17,7 @@
     <Style TargetType="TextBlock">
         <Setter Property="FontSize" Value="12" />
     </Style>
-    
-    <!--TODO: Do TextBox styling-->
-    
+
     <Style x:Key="btnGreen" TargetType="Button" BasedOn="{StaticResource defaultbtn}">
         <Setter Property="Background" Value="{StaticResource Green}" />
     </Style>

@@ -5,17 +5,17 @@ namespace MultiRPC.Core
     /// <summary>
     /// Contains objects that will not change value at any time thoughout the span of the clients useage
     /// </summary>
-    public class Constants
+    public static class Constants
     {
         /// <summary>
         /// MultiRPC Application ID
         /// </summary>
-        public const ulong MultiRPCID = 450894077165043722;
+        public const long MultiRPCID = 450894077165043722;
 
         /// <summary>
         /// Afk's Application ID
         /// </summary>
-        public const ulong AfkID = 469643793851744257;
+        public const long AfkID = 469643793851744257;
 
         /// <summary>
         /// How many times you should attempt downloading files
