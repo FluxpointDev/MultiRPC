@@ -120,6 +120,9 @@ namespace MultiRPC.Core.Rpc
         public string ID { get; set; }
         public int Size { get; set; }
         public int MaxSize { get; set; }
+
+        //TODO: Add
+        public bool IsValid() => false;
     }
 
     public class Assets
@@ -133,6 +136,9 @@ namespace MultiRPC.Core.Rpc
         public string Match { get; set; }
         public string Join { get; set; }
         public string Spectate { get; set; }
+
+        //TODO: Add
+        public bool IsValid() => false;
     }
 
     public class Image
@@ -141,21 +147,27 @@ namespace MultiRPC.Core.Rpc
         {
         }
 
-        public Image(Uri uri) => Uri = uri;
-
         public string Key { get; set; }
         public string Text { get; set; }
 
         /// <summary>
         /// Where the image is stored, it's the <see cref="IRpcClient"/> job to set this
         /// </summary>
-        public Uri Uri { get; }
+        public Uri Uri { get; set; }
     }
 
     public class Timestamp
     {
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+        public DateTime? Start { get; set; } = null;
+        public DateTime? End { get; set; } = null;
+
+        /// <summary>
+        /// If we should set start when we start an rpc connection
+        /// </summary>
+        public bool SetStartOnRPCConnection { get; set; }
+
+        //TODO: Add
+        public bool IsValid() => true;
     }
 
     public class Invite

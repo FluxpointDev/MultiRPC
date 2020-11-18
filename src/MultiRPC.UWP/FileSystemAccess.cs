@@ -1,4 +1,5 @@
 ﻿using MultiRPC.Core;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace MultiRPC.UWP
 {
@@ -40,7 +42,7 @@ namespace MultiRPC.UWP
             }
             catch (Exception e)
             {
-                Serilog.Log.Logger.Error(e.Message);
+                Log.Logger.Error(e.Message);
             }
 
             return null;
@@ -62,7 +64,7 @@ namespace MultiRPC.UWP
             }
             catch (Exception e)
             {
-                Serilog.Log.Logger.Error(e.Message);
+                Log.Logger.Error(e.Message);
             }
 
             return null;
@@ -82,7 +84,7 @@ namespace MultiRPC.UWP
 
             var buffer = await FileIO.ReadBufferAsync(file).AsTask().ConfigureAwait(false);
             byte[] contents = null;
-            using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buffer))
+            using (var dataReader = DataReader.FromBuffer(buffer))
             {
                 contents = new byte[dataReader.UnconsumedBufferLength];
                 dataReader.ReadBytes(contents);
@@ -118,7 +120,7 @@ namespace MultiRPC.UWP
             throw new NotImplementedException();
         }
 
-        public async Task<Stream> GetFileStream(string path, bool writeAccess = false)
+        public async Task<Stream> GetFileStreamAsync(string path, bool writeAccess = false)
         {
             var file = await GetFile(path).ConfigureAwait(false);
             if (!IsFileAvailable(file))

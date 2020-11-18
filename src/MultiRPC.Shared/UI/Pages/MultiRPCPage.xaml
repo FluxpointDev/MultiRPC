@@ -50,13 +50,13 @@
             <ComboBox Grid.Row="2" Grid.Column="1" Name="cboLargeKey" SelectionChanged="cboLargeKey_SelectionChanged" />
 
             <TextBlock Name="tblLargeText" Grid.Row="3" />
-            <TextBox Grid.Row="3" Grid.Column="1" Name="txtLargeText" TextChanged="txtLargeText_TextChanged"/>
+            <TextBox Grid.Row="3" Grid.Column="1" Name="txtLargeText" TextChanged="txtLargeText_TextChanged" />
 
             <TextBlock Name="tblSmallKey" Grid.Row="4" />
             <ComboBox Grid.Row="4" Grid.Column="1" Name="cboSmallKey" SelectionChanged="cboSmallKey_SelectionChanged" />
 
             <TextBlock Name="tblSmallText" Grid.Row="5" />
-            <TextBox Grid.Row="5" Grid.Column="1" Name="txtSmallText" TextChanged="txtSmallText_TextChanged"/>
+            <TextBox Grid.Row="5" Grid.Column="1" Name="txtSmallText" TextChanged="txtSmallText_TextChanged" />
 
             <Grid Grid.Row="6" Grid.ColumnSpan="3" ColumnSpacing="5">
                 <Grid.ColumnDefinitions>
@@ -70,7 +70,7 @@
         <StackPanel Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
             <TextBlock Name="tblWhatWillLookLike" HorizontalAlignment="Left" FontWeight="SemiBold"
                                Margin="0,0,0,3" />
-            <views:RPCView Name="rpcView" CurrentView="RichPresence" RichPresence="{x:Bind RichPresence, Mode=OneWay}" />
+            <UserControl x:Name="ctcView" />
         </StackPanel>
     </Grid>
 </local:LocalizablePage>

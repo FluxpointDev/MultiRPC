@@ -1,25 +1,20 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Extensions.Logging.Console;
+using MultiRPC.Core;
+using MultiRPC.Shared.UI.Pages;
+using Microsoft.Extensions.DependencyInjection;
+using MultiRPC.Wasm.AssetProcessor;
+using MultiRPC.Core.Rpc;
+using MultiRPC.Shared.UI;
+using MultiRPC.Common.AssetProcessor;
+using MultiRPC.Common.RPC;
 
-namespace MultiRPC.Shared
+namespace MultiRPC.Wasm
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -33,11 +28,43 @@ namespace MultiRPC.Shared
         public App()
         {
             ConfigureFilters(Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
-            
-            InitializeComponent();
-            
-            
-            
+
+            //These pages have to be added first as they have multiple implementations for different things
+            //but we need to only have one instance of them pages
+            ServiceManager.Service.AddSingleton<MultiRPCPage>();
+            ServiceManager.Service.AddSingleton<CustomPage>();
+
+            //Add their IRpcPage imp first
+            ServiceManager.Service.AddSingleton<IRpcPage>(x => x.GetRequiredService<MultiRPCPage>());
+            ServiceManager.Service.AddSingleton<IRpcPage>(x => x.GetRequiredService<CustomPage>());
+
+            //Now add their SidePage imp with the other pages
+            ServiceManager.Service.AddSingleton<ISidePage>(x => x.GetRequiredService<MultiRPCPage>());
+            ServiceManager.Service.AddSingleton<ISidePage>(x => x.GetRequiredService<CustomPage>());
+            ServiceManager.Service.AddSingleton<ISidePage, SettingsPage>();
+            ServiceManager.Service.AddSingleton<ISidePage, LoggingPage>();
+            ServiceManager.Service.AddSingleton<ISidePage, CreditsPage>();
+            ServiceManager.Service.AddSingleton<ISidePage, ThemeEditorPage>();
+
+#if DEBUG
+            //Add any debugging pages into here
+            //ServiceManager.Service.AddSingleton<ISidePage, RPCViewTestPage>();
+#endif
+            //Add the FileSystemAccess service because UWP be a pain and make their own and not using System.IO
+            //like everyone else 😑
+            ServiceManager.Service.AddSingleton<IFileSystemAccess, FileSystemAccess>();
+
+            //Add our asset processors so we can use assets xP
+            ServiceManager.Service.AddSingleton<IAssetProcessor, PageIconProcessor>();
+            ServiceManager.Service.AddSingleton<IAssetProcessor, LogoProcessor>();
+            ServiceManager.Service.AddSingleton<IAssetProcessor, GifProcessor>();
+
+            //Add our RpcClient
+            ServiceManager.Service.AddSingleton<IRpcClient, RpcClient>();
+
+            //Now to process everything ready for the Client to use them
+            ServiceManager.ProcessService();
+            RpcPageManager.Load();
             Suspending += OnSuspending;
         }
 
@@ -126,13 +153,13 @@ namespace MultiRPC.Shared
 				        {"Windows", LogLevel.Warning},
 
 				        // Debug JS interop
-				        // { "Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug },
+				        { "Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug },
 
 				        // Generic Xaml events
-				        // { "Windows.UI.Xaml", LogLevel.Debug },
-				        // { "Windows.UI.Xaml.VisualStateGroup", LogLevel.Debug },
-				        // { "Windows.UI.Xaml.StateTriggerBase", LogLevel.Debug },
-				        // { "Windows.UI.Xaml.UIElement", LogLevel.Debug },
+				        { "Windows.UI.Xaml", LogLevel.Debug },
+				        { "Windows.UI.Xaml.VisualStateGroup", LogLevel.Debug },
+				        { "Windows.UI.Xaml.StateTriggerBase", LogLevel.Debug },
+				        { "Windows.UI.Xaml.UIElement", LogLevel.Debug },
 
 				        // Layouter specific messages
 				        // { "Windows.UI.Xaml.Controls", LogLevel.Debug },

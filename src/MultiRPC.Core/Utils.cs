@@ -3,6 +3,7 @@ using System;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace MultiRPC.Core
 {
@@ -11,6 +12,11 @@ namespace MultiRPC.Core
     /// </summary>
     public static class Utils
     {
+        static Utils()
+        {
+            GetOSPlatform();
+        }
+
         /// <summary>
         /// Gets if the users device has a network connection
         /// </summary>
@@ -50,26 +56,32 @@ namespace MultiRPC.Core
         /// Gets what OS the user is running
         /// </summary>
         [NotNull]
-        public static OSPlatform OSPlatform { get; } = GetOSPlatform();
+        public static OSPlatform OSPlatform { get; private set; }
 
-        private static OSPlatform GetOSPlatform() 
+        private static async Task GetOSPlatform() 
         {
+            OSPlatform plat;
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return OSPlatform.Windows;
+                plat = OSPlatform.Windows;
             }
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                return OSPlatform.Linux;
+                plat = OSPlatform.Linux;
             }
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return OSPlatform.OSX;
+                plat = OSPlatform.OSX;
             }
 
-            throw new Exception(LanguagePicker.GetLineFromLanguageFile("CanNotGetOS"));
+            if (plat == null)
+            {
+                throw new Exception(await LanguagePicker.GetLineFromLanguageFile("CanNotGetOS"));
+            }
+            OSPlatform = plat;
         }
     }
 }

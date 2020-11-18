@@ -10,7 +10,7 @@ namespace MultiRPC.Core
 {
     public static class AssetManager
     {
-        public async static Task<object> GetAsset(string assetPath, params object[] args)
+        public static async Task<object> GetAsset(string assetPath, params object[] args)
         {
             var ogAssetPath = assetPath;
             var assetProcessors = ServiceManager.ServiceProvider.GetServices<IAssetProcessor>();
@@ -19,12 +19,13 @@ namespace MultiRPC.Core
                 var slashIndex = assetPath.LastIndexOf('/');
                 if (slashIndex == -1)
                 {
-                    throw new Exception($"There is no {nameof(IAssetProcessor)} capable of processing {ogAssetPath}");
+                    //throw new Exception($"There is no {nameof(IAssetProcessor)} capable of processing {ogAssetPath}");
                 }
 
                 assetPath = assetPath.Remove(slashIndex);
             }
             var processor = assetProcessors.First(x => x.AssetTarget == assetPath);
+
             var assetStream = await processor.GetAsset(ogAssetPath, args);
             if (assetStream == Stream.Null)
             {

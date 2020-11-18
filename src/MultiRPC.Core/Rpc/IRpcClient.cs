@@ -11,7 +11,17 @@ namespace MultiRPC.Core.Rpc
         /// </summary>
         bool IsRunning { get; }
 
-        void Start(long applicationID);
+        /// <summary>
+        /// What the status of the running client is
+        /// </summary>
+        ConnectionStatus Status { get; }
+
+        /// <summary>
+        /// What the rich (at least) should be
+        /// </summary>
+        RichPresence ActivePresence { get; }
+
+        void Start(long? applicationID);
 
         void Stop();
 
@@ -30,18 +40,20 @@ namespace MultiRPC.Core.Rpc
 
         Result AcceptInvite(long userID);
 
-        event EventHandler<string> OnActivityJoin;
+        event EventHandler<string> ActivityJoin;
 
-        event EventHandler<string> OnActivitySpectate;
+        event EventHandler<string> ActivitySpectate;
 
-        event EventHandler<User> OnActivityJoinRequest;
+        event EventHandler<User> ActivityJoinRequest;
 
-        event EventHandler<Invite> OnActivityInvite;
+        event EventHandler<Invite> ActivityInvite;
 
         /// <summary>
         /// Fires when we start loading in everything to get <see cref="Ready"/>
         /// </summary>
         event EventHandler Loading;
+
+        event EventHandler<RichPresence> PresenceUpdated;
 
         event EventHandler Ready;
 

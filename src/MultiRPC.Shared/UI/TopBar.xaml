@@ -23,7 +23,7 @@
             </Grid.RowDefinitions>
             
             <Button Height="40" Width="110" Style="{StaticResource btnGreen}" x:Name="btnStart" Click="btnStart_Click" />
-            <Button Height="40" Width="110" Grid.Row="1" x:Name="btnUpdatePresence" />
+            <Button Height="40" Width="110" Grid.Row="1" x:Name="btnUpdatePresence" IsEnabled="False" Click="btnUpdatePresence_Click" />
         </Grid>
         
         <Grid VerticalAlignment="Center" Grid.Column="1" RowSpacing="5">
@@ -37,7 +37,7 @@
             <TextBlock Grid.Row="1"><Run x:Name="rUser" /><Run x:Name="rUsername"/></TextBlock>
             <StackPanel Orientation="Horizontal" Grid.Row="2">
                 <TextBlock VerticalAlignment="Center" x:Name="tblAfk" />
-                <TextBox Width="150" MaxLength="25" Margin="3,0,-10,0" />
+                <TextBox Width="150" MaxLength="25" Margin="3,0,-10,0" Name="txtAfk" TextChanged="txtAfk_TextChanged" />
             </StackPanel>
         </Grid>
 
@@ -51,8 +51,8 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             
-            <Button Width="50" Height="40" x:Name="btnAuto" />
-            <Button Style="{StaticResource btnPurple}" Width="50" Height="40" Grid.Row="1" x:Name="btnAfk" />
+            <Button Width="50" Height="40" x:Name="btnAuto" IsEnabled="False" />
+            <Button Style="{StaticResource btnPurple}" Width="50" Height="40" Grid.Row="1" x:Name="btnAfk" Click="btnAfk_Click"  />
             <views:RPCView x:Name="rpcView" CurrentView="Default" Margin="10,0" Grid.Column="1" Grid.RowSpan="2" />
         </Grid>
     </Grid>

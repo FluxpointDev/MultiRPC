@@ -8,8 +8,42 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///CommonStyling.xaml"/>
+                <ResourceDictionary Source="../MultiRPC.Shared/UI/CommonStyling.xaml"/>
                 <ResourceDictionary>
+                    <SolidColorBrush x:Key="Colour1" Color="#36393e"/>
+                    <SolidColorBrush x:Key="Colour2" Color="#2c2e30" />
+                    <SolidColorBrush x:Key="ActivePageButtonColour" Color="#00aceb"/>
+
+                    <SolidColorBrush x:Key="TextColour1" Color="White"/>
+                    <SolidColorBrush x:Key="TextColour2" Color="White" />
+
+                    <SolidColorBrush Color="#FFF13333" x:Key="Red" />
+                    <SolidColorBrush Color="#6A7EC4" x:Key="Purple" />
+                    <SolidColorBrush Color="#FFEEAD37" x:Key="Orange" />
+                    <SolidColorBrush Color="#FF43B581" x:Key="Green" />
+
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="12" />
+                    </Style>
+
+                    <Style x:Key="btnGreen" TargetType="Button" BasedOn="{StaticResource defaultbtn}">
+                        <Setter Property="Background" Value="{StaticResource Green}" />
+                    </Style>
+
+                    <Style x:Key="btnRed" TargetType="Button" BasedOn="{StaticResource defaultbtn}">
+                        <Setter Property="Background" Value="{StaticResource Red}" />
+                    </Style>
+
+                    <Style x:Key="btnPurple" TargetType="Button" BasedOn="{StaticResource defaultbtn}">
+                        <Setter Property="Background" Value="{StaticResource Purple}" />
+                    </Style>
+    
+                    <Style TargetType="Button" x:Key="defaultbtn">
+                        <Setter Property="FontSize" Value="12" />
+                    </Style>
+
+                    <Style TargetType="Button" BasedOn="{StaticResource defaultbtn}"/>
+                    
                     <ImageBrush x:Key="MultiRPCIcon">
                         <ImageBrush.ImageSource>
                             <imaging:BitmapImage UriSource="Assets/MultiRPCLogo.png"></imaging:BitmapImage>

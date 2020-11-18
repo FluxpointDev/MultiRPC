@@ -1,11 +1,20 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using MultiRPC.Core;
 using static MultiRPC.Core.LanguagePicker;
 using System.Collections.Generic;
-using Windows.UI.Xaml.Media;
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+#if WINUI
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+#else
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+#endif
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 namespace MultiRPC.Shared.UI
@@ -15,37 +24,46 @@ namespace MultiRPC.Shared.UI
     /// </summary>
     public sealed partial class MainPage : LocalizablePage
     {
-        readonly List<ToolTip> ToolTips = new List<ToolTip>();
+        readonly List<ToolTip> ToolTips = new();
         Button activateButton;
 
         public MainPage()
         {
             InitializeComponent();
+
             topbar.Content = new TopBar();
 
-            Loading += MainPage_Loading;
+            //UWP/WinUI Loading
+            Loading += OnLoading;
+
+            //Wasm Loading
+            //Loading += OnLoading;
         }
 
-        private async void MainPage_Loading(FrameworkElement sender, object args)
+        private async void OnLoading(FrameworkElement sender, object args)
+        //private async void OnLoading(object sender, RoutedEventArgs e)
         {
+            //Get all the side pages 
             var pages = ServiceManager.ServiceProvider.GetServices<ISidePage>();
             foreach (var page in pages)
             {
+                //Make the button + ToolTip for button
                 var icon = await AssetManager.GetAsset(page.IconLocation, 56, 56);
                 var btn = new Button
                 {
-                    Content = new Image()
+                    Content = new Image
                     {
                         Source = icon as ImageSource,
                         Margin = new Thickness(3)
                     },
-                    Style = (Style)this.Resources[$"{(activateButton == null ? "Active" : "")}PageButton"]
+                    Style = (Style)this.Resources[$"{(activateButton == null ? "Active" : "")}PageButton"],
+                    Name = $"btn{page.LocalizableName}"
                 };
                 btn.Click += Btn_Click;
 
-                ToolTip toolTip = new ToolTip
+                ToolTip toolTip = new()
                 {
-                    Content = GetTooltipString(page)
+                    Content = await GetTooltipString(page)
                 };
                 toolTip.Tag = page;
                 ToolTipService.SetToolTip(btn, toolTip);
@@ -75,15 +93,15 @@ namespace MultiRPC.Shared.UI
             frmContent.Content = activateButton.Tag;
         }
 
-        public override void UpdateText()
+        public override async void UpdateText()
         {
             foreach (var tooltip in ToolTips)
             {
-                tooltip.Content = GetTooltipString(tooltip.Tag as ISidePage);
+                tooltip.Content = await GetTooltipString(tooltip.Tag as ISidePage);
             }
         }
 
-        private static string GetTooltipString(ISidePage page) => 
-            $"{GetLineFromLanguageFile(page.LocalizableName) ?? @"¯\_(ツ)_/¯"} {GetLineFromLanguageFile("Page")}";
+        private static async Task<string> GetTooltipString(ISidePage page) => 
+            $"{await GetLineFromLanguageFile(page.LocalizableName) ?? @"¯\_(ツ)_/¯"} {await GetLineFromLanguageFile("Page")}";
     }
 }

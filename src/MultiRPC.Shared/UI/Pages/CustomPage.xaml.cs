@@ -8,6 +8,9 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using static MultiRPC.Core.LanguagePicker;
+using System.ComponentModel;
+#if UNO
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -15,7 +18,15 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using static MultiRPC.Core.LanguagePicker;
+#elif WINUI
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
+#endif
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -33,17 +44,18 @@ namespace MultiRPC.Shared.UI.Pages
         }
 
         public event EventHandler Accessed;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public override void UpdateText()
+        public override async void UpdateText()
         {
-            tblID.Text = $"{GetLineFromLanguageFile("ClientID")}:";
-            tblText1.Text = $"{GetLineFromLanguageFile("Text1")}:";
-            tblText2.Text = $"{GetLineFromLanguageFile("Text2")}:";
-            tblLargeKey.Text = $"{GetLineFromLanguageFile("LargeKey")}:";
-            tblLargeText.Text = $"{GetLineFromLanguageFile("LargeText")}:";
-            tblSmallKey.Text = $"{GetLineFromLanguageFile("SmallKey")}:";
-            tblSmallText.Text = $"{GetLineFromLanguageFile("SmallText")}:";
-            tblElapasedTime.Text = $"{GetLineFromLanguageFile("ShowElapsedTime")}:";
+            tblID.Text = $"{await GetLineFromLanguageFile("ClientID")}:";
+            tblText1.Text = $"{await GetLineFromLanguageFile("Text1")}:";
+            tblText2.Text = $"{await GetLineFromLanguageFile("Text2")}:";
+            tblLargeKey.Text = $"{await GetLineFromLanguageFile("LargeKey")}:";
+            tblLargeText.Text = $"{await GetLineFromLanguageFile("LargeText")}:";
+            tblSmallKey.Text = $"{await GetLineFromLanguageFile("SmallKey")}:";
+            tblSmallText.Text = $"{await GetLineFromLanguageFile("SmallText")}:";
+            tblElapasedTime.Text = $"{await GetLineFromLanguageFile("ShowElapsedTime")}:";
         }
 
         public string IconLocation => "Icon/Page/Custom";
@@ -51,5 +63,7 @@ namespace MultiRPC.Shared.UI.Pages
         public string LocalizableName => "Custom";
 
         public RichPresence RichPresence => throw new NotImplementedException();
+
+        public bool AllowStartingRPC => throw new NotImplementedException();
     }
 }

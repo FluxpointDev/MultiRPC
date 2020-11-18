@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -107,7 +107,8 @@ namespace MultiRPC.Core
             }
         }
 
-        private string text1 = LanguagePicker.GetLineFromLanguageFile("Hello");
+        //TODO: Readd
+        private string text1 = "";//LanguagePicker.GetLineFromLanguageFile("Hello");
         /// <summary>
         /// The first line of text to show
         /// </summary>
@@ -127,7 +128,7 @@ namespace MultiRPC.Core
             }
         }
 
-        private string text2 = LanguagePicker.GetLineFromLanguageFile("World");
+        private string text2 = "";//LanguagePicker.GetLineFromLanguageFile("World");
         /// <summary>
         /// The second line of text to show
         /// </summary>

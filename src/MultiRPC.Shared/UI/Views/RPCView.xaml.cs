@@ -1,15 +1,30 @@
-﻿using MultiRPC.Core;
+using MultiRPC.Core;
 using MultiRPC.Core.Rpc;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using Windows.UI;
+using static MultiRPC.Core.LanguagePicker;
+#if WINUI
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI;
+#else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using static MultiRPC.Core.LanguagePicker;
+using Windows.UI;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
+#endif
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 namespace MultiRPC.Shared.UI.Views
@@ -20,8 +35,8 @@ namespace MultiRPC.Shared.UI.Views
     public sealed partial class RPCView : LocalizablePage, INotifyPropertyChanged
     {
         //TODO: Make this page not take up so much dam ram (cachingTM)
-        readonly ToolTip largeIconTooltip = new ToolTip();
-        readonly ToolTip smallIconTooltip = new ToolTip();
+        readonly ToolTip largeIconTooltip = new();
+        readonly ToolTip smallIconTooltip = new();
 
         public RPCView()
         {
@@ -44,11 +59,7 @@ namespace MultiRPC.Shared.UI.Views
             set
             {
                 currentView = value;
-
-                if (IsLoaded)
-                {
-                    UpdateText();
-                }
+                UpdateText();
             }
         }
 
@@ -58,12 +69,18 @@ namespace MultiRPC.Shared.UI.Views
             get => richPresence;
             set
             {
+                if (richPresence == value)
+                {
+                    return;
+                }
+
                 if (richPresence != null)
                 {
                     richPresence.PropertyChanged -= RichPresence_PropertyChanged;
                 }
                 richPresence = value;
                 richPresence.PropertyChanged += RichPresence_PropertyChanged;
+                UpdateText();
             }
         }
 
@@ -93,7 +110,7 @@ namespace MultiRPC.Shared.UI.Views
             get => text1;
             set
             {
-                text1 = value ?? RichPresence?.State ?? "";
+                text1 = value ?? RichPresence?.Details ?? "";
                 OnPropertyChanged();
             }
         }
@@ -104,7 +121,7 @@ namespace MultiRPC.Shared.UI.Views
             get => text2;
             set
             {
-                text2 = value ?? RichPresence?.Details;
+                text2 = value ?? RichPresence?.State;
                 OnPropertyChanged();
             }
         }
@@ -144,8 +161,14 @@ namespace MultiRPC.Shared.UI.Views
             }
         }
 
-        public async override void UpdateText()
+        public override async void UpdateText() => await
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, async () =>
         {
+            if (!IsLoaded)
+            {
+                return;
+            }
+
             var largeIconText = "";
             var smallIconText = "";
 
@@ -156,11 +179,11 @@ namespace MultiRPC.Shared.UI.Views
             {
                 case ViewType.Default:
                     {
-                        Title = GetLineFromLanguageFile("MultiRPC");
-                        Text1 = GetLineFromLanguageFile("ThankYouForUsing");
-                        Text2 = GetLineFromLanguageFile("ThisProgram");
+                        Title = await GetLineFromLanguageFile("MultiRPC");
+                        Text1 = await GetLineFromLanguageFile("ThankYouForUsing");
+                        Text2 = await GetLineFromLanguageFile("ThisProgram");
 
-                        LargeImage = new ImageBrush() 
+                        LargeImage = new ImageBrush()
                         {
                             ImageSource = await AssetManager.GetAsset("Icon/Logo") as ImageSource
                         };
@@ -171,9 +194,9 @@ namespace MultiRPC.Shared.UI.Views
                     break;
                 case ViewType.Default2:
                     {
-                        Title = GetLineFromLanguageFile("MultiRPC");
-                        Text1 = GetLineFromLanguageFile("Hello");
-                        Text2 = GetLineFromLanguageFile("World");
+                        Title = await GetLineFromLanguageFile("MultiRPC");
+                        Text1 = await GetLineFromLanguageFile("Hello");
+                        Text2 = await GetLineFromLanguageFile("World");
 
                         LargeImage = new ImageBrush()
                         {
@@ -186,10 +209,9 @@ namespace MultiRPC.Shared.UI.Views
                     break;
                 case ViewType.Loading:
                     {
-                        Title = GetLineFromLanguageFile("Loading") + "...";
-
-                        bgColour = (Brush)Application.Current.Resources["Purple"];
-                        forgroundColour = new SolidColorBrush(Colors.White);
+                        Title = await GetLineFromLanguageFile("Loading") + "...";
+                        Text1 = "";
+                        Text2 = "";
 
                         LargeImage = new ImageBrush()
                         {
@@ -202,13 +224,15 @@ namespace MultiRPC.Shared.UI.Views
                     break;
                 case ViewType.Error:
                     {
-                        Title = GetLineFromLanguageFile("Error") + "!";
-                        Text1 = GetLineFromLanguageFile("AttemptingToReconnect");
+                        Title = await GetLineFromLanguageFile("Error") + "!";
+                        Text1 = await GetLineFromLanguageFile("AttemptingToReconnect");
+                        Text2 = "";
 
-                        LargeImage = new ImageBrush()
+                        //TODO: Add Icon Processor
+                        /*LargeImage = new ImageBrush()
                         {
                             ImageSource = await AssetManager.GetAsset("Icon/Delete") as ImageSource
-                        };
+                        };*/
 
                         bgColour = (Brush)Application.Current.Resources["Red"];
                         forgroundColour = new SolidColorBrush(Colors.White);
@@ -219,6 +243,7 @@ namespace MultiRPC.Shared.UI.Views
                     break;
                 case ViewType.RichPresence:
                     {
+                        //TODO: See why images aren't showing up
                         var smallImageDownloaded = false;
                         var largeImageDownloaded = false;
 
@@ -227,7 +252,7 @@ namespace MultiRPC.Shared.UI.Views
 
                         if ((SmallImage as ImageBrush)?.ImageSource is BitmapImage smallbitmapImage)
                         {
-                            smallbitmapImage.ImageOpened += (object sender, RoutedEventArgs e) => 
+                            smallbitmapImage.ImageOpened += (object sender, RoutedEventArgs e) =>
                             {
                                 if (smallbitmapImage != (SmallImage as ImageBrush)?.ImageSource as BitmapImage)
                                 {
@@ -271,9 +296,9 @@ namespace MultiRPC.Shared.UI.Views
                         bgColour = (Brush)Application.Current.Resources["Purple"];
                         forgroundColour = new SolidColorBrush(Colors.White);
 
-                        Title = null;
-                        Text1 = null;
-                        Text2 = null;
+                        Title = RichPresence?.ApplicationName;
+                        Text1 = RichPresence?.Details;
+                        Text2 = RichPresence?.State;
                     }
                     break;
             }
@@ -294,7 +319,7 @@ namespace MultiRPC.Shared.UI.Views
 
             elpSmallBG.Fill = bgColour;
             UpdateLayout();
-        }
+        });
 
         public void ShouldBeVisible(Action task) => task();
 

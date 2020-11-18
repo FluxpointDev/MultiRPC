@@ -22,6 +22,6 @@ namespace MultiRPC.Core
 
         Task<bool> FileExists(string path);
 
-        Task<Stream> GetFileStream(string path, bool writeAccess = false);
+        Task<Stream> GetFileStreamAsync(string path, bool writeAccess = false);
     }
 }

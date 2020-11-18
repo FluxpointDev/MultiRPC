@@ -1,6 +1,11 @@
 ﻿using System;
-using Windows.UI.Xaml;
+#if WINUI
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+#else
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml;
+#endif
 
 namespace MultiRPC.Shared.UI
 {
@@ -8,10 +13,17 @@ namespace MultiRPC.Shared.UI
     {
         public LocalizablePage() : base()
         {
-            Loading += LocalizablePage_Loading;
+            //UWP/WINUI Loading
+            Loading += OnLoading;
+
+            //WASM Loading
+            //Loading += OnLoading;
+
+            //TODO: Make it trigger on lang change
         }
 
-        private void LocalizablePage_Loading(FrameworkElement sender, object args) =>
+        //private void OnLoading(object sender, RoutedEventArgs e) =>
+        private void OnLoading(FrameworkElement sender, object args) =>
             UpdateText();
 
         public virtual void UpdateText() => throw new NotImplementedException();

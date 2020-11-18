@@ -20,9 +20,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\CustomPage.xaml.cs">
       <DependentUpon>CustomPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\Debug\RPCViewTestPage.xaml.cs">
-      <DependentUpon>RPCViewTestPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\LoggingPage.xaml.cs">
       <DependentUpon>LoggingPage.xaml</DependentUpon>
     </Compile>
@@ -59,10 +56,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)UI\Pages\CustomPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)UI\Pages\Debug\RPCViewTestPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

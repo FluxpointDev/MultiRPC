@@ -4,6 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
     <NoWarn>NU1701</NoWarn>
+    <LangVersion>9</LangVersion>
+    <Configurations>Debug;Release;UNO;WINUI</Configurations>
   </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
@@ -11,20 +13,20 @@
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="Assets\SplashScreen.png" />
-    <None Remove="Assets\MultiRPCLogo.svg" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='UNO'">
+	  <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
+	  <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
+	  <DebugType>portable</DebugType>
+	  <DebugSymbols>true</DebugSymbols>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='WINUI'">
+	  <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
+	  <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
+	  <DebugType>portable</DebugType>
+	  <DebugSymbols>true</DebugSymbols>
+	</PropertyGroup>
   <ItemGroup>
     <UpToDateCheckInput Include="..\MultiRPC.Shared\**\*.xaml" />
-    <None Remove="App.xaml" />
-    <ApplicationDefinition Include="App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </ApplicationDefinition>
-    <UpToDateCheckInput Update="..\MultiRPC.Shared\UI\MultiRPCPage - .xaml">
-      <Link>MultiRPC.Shared\UI\MultiRPCPage - .xaml</Link>
-    </UpToDateCheckInput>
     <UpToDateCheckInput Update="..\MultiRPC.Shared\UI\View\MultiRPCPage.xaml">
       <Link>MultiRPC.Shared\UI\View\MultiRPCPage.xaml</Link>
     </UpToDateCheckInput>
@@ -49,17 +51,34 @@
   </ItemGroup>
   <ItemGroup>
     <!-- Note that for WebAssembly version 1.1.1 of the console logger required -->
+    <PackageReference Include="DiscordRichPresence" Version="1.0.150" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.7" />
     <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.2" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Uno.UI.RemoteControl" Version="3.0.11" />
-    <PackageReference Include="Uno.UI.WebAssembly" Version="3.0.11" />
-    <PackageReference Include="Uno.Wasm.Bootstrap" Version="1.3.4" />
-    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.3.4" />
+    <PackageReference Include="Uno.UI.RemoteControl" Version="3.3.0" />
+    <PackageReference Include="Uno.UI.WebAssembly" Version="3.3.0" />
+    <PackageReference Include="Uno.Wasm.Bootstrap" Version="2.0.0-dev.82" />
+    <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="2.0.0-dev.82" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MultiRPC.Core\MultiRPC.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\common\Rpc\**">
+      <Link>Rpc\**</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\common\Assets\*.*png" CopyToOutputDirectory="Always">
+      <LinkBase>Assets\</LinkBase>
+    </Content>
+    <Content Include="..\..\common\Lang\*.*" CopyToOutputDirectory="Always">
+      <LinkBase>Lang\</LinkBase>
+    </Content>
+    <Compile Include="..\..\common\AssetProcessor\*.*">
+      <LinkBase>AssetProcessor\</LinkBase>
     </Compile>
   </ItemGroup>
   <Import Project="..\MultiRPC.Shared\MultiRPC.Shared.projitems" Label="Shared" Condition="Exists('..\MultiRPC.Shared\MultiRPC.Shared.projitems')" />

@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MultiRPC.Common.AssetProcessor;
+using MultiRPC.Common.RPC;
 using MultiRPC.Core;
 using MultiRPC.Core.Rpc;
 using MultiRPC.Shared.UI;
 using MultiRPC.Shared.UI.Pages;
-using MultiRPC.Shared.UI.Pages.Debug;
+//using MultiRPC.Shared.UI.Pages.Debug;
 using MultiRPC.UWP.AssetProcessor;
 using System;
 using Windows.ApplicationModel;
@@ -51,7 +53,7 @@ namespace MultiRPC.UWP
 
 #if DEBUG
             //Add any debugging pages into here
-            ServiceManager.Service.AddSingleton<ISidePage, RPCViewTestPage>();
+            //ServiceManager.Service.AddSingleton<ISidePage, RPCViewTestPage>();
 #endif
             //Add the FileSystemAccess service because UWP be a pain and make their own and not using System.IO
             //like everyone else 😑
@@ -61,7 +63,6 @@ namespace MultiRPC.UWP
             ServiceManager.Service.AddSingleton<IAssetProcessor, PageIconProcessor>();
             ServiceManager.Service.AddSingleton<IAssetProcessor, LogoProcessor>();
             ServiceManager.Service.AddSingleton<IAssetProcessor, GifProcessor>();
-            ServiceManager.Service.AddSingleton<IAssetProcessor, IconProcessor>();
 
             //Add our RpcClient
             ServiceManager.Service.AddSingleton<IRpcClient, RpcClient>();

@@ -1,6 +1,8 @@
 ﻿using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using static MultiRPC.Core.LanguagePicker;
 
 namespace MultiRPC.Core
 {
@@ -12,20 +14,20 @@ namespace MultiRPC.Core
         static Data()
         {
             //TODO: Hook this up
-            throw new NotImplementedException();
             //Settings.Current.LanguageChanged += (_, __) => MultiRPCImages = MakeImagesDictionary();
+            MultiRPCImages = MakeImagesDictionary().Result;
         }
 
         /// <summary>
         /// All the MultiRPC keys with a Uri to preview the image
         /// </summary>
         [NotNull]
-        public static Dictionary<string, Uri> MultiRPCImages { get; private set; } = MakeImagesDictionary();
+        public static Dictionary<string, Uri> MultiRPCImages { get; private set; }
 
-        private static Dictionary<string, Uri> MakeImagesDictionary() =>
+        private static async Task<Dictionary<string, Uri>> MakeImagesDictionary() =>
         new Dictionary<string, Uri>
         {
-            {LanguagePicker.GetLineFromLanguageFile("NoImage"), null},
+            {await GetLineFromLanguageFile("NoImage"), null},
             {"Discord", new Uri("https://i.imgur.com/QN5WA4W.png") },
             {"MultiRPC", new Uri("https://i.imgur.com/d6OLF2z.png") },
             {"Firefox", new Uri("https://i.imgur.com/oTuovMT.png") },
@@ -42,12 +44,12 @@ namespace MultiRPC.Core
             {"Pepe", new Uri("https://i.imgur.com/7ybyrw7.png") },
             {"Trollface", new Uri("https://i.imgur.com/tanLvrt.png") },
             {"Doge", new Uri("https://i.imgur.com/ytpmvjg.png") },
-            {LanguagePicker.GetLineFromLanguageFile("Christmas"), new Uri("https://i.imgur.com/NF2enEO.png") },
-            {LanguagePicker.GetLineFromLanguageFile("Present"), new Uri("https://i.imgur.com/qMfJKt6.png") },
+            {await GetLineFromLanguageFile("Christmas"), new Uri("https://i.imgur.com/NF2enEO.png") },
+            {await GetLineFromLanguageFile("Present"), new Uri("https://i.imgur.com/qMfJKt6.png") },
             {"Neko", new Uri("https://i.imgur.com/l2RsYY7.png") },
-            {LanguagePicker.GetLineFromLanguageFile("Popcorn"), new Uri("https://i.imgur.com/xplfztu.png") },
+            {await GetLineFromLanguageFile("Popcorn"), new Uri("https://i.imgur.com/xplfztu.png") },
             {"Skype", new Uri("https://i.imgur.com/PjQFB6d.png") },
-            {LanguagePicker.GetLineFromLanguageFile("Games"), new Uri("https://i.imgur.com/lPrT5BG.png") },
+            {await GetLineFromLanguageFile("Games"), new Uri("https://i.imgur.com/lPrT5BG.png") },
             {"Steam", new Uri("https://i.imgur.com/bKxJ7Lj.png") },
             {"Minecraft", new Uri("https://i.imgur.com/vnw6Z8X.png") },
             {"Coke", new Uri("https://i.imgur.com/GAsmn3P.png") }

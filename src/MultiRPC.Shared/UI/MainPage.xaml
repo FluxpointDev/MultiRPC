@@ -8,6 +8,9 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+        <SolidColorBrush x:Key="Colour1" Color="#36393e"/>
+        <SolidColorBrush x:Key="Colour2" Color="#2c2e30" />
+    
         <Style x:Key="PageButton" TargetType="Button" BasedOn="{StaticResource defaultbtn}">
             <Setter Property="CornerRadius" Value="50"/>
             <Setter Property="Height" Value="56"/>
@@ -31,7 +34,7 @@
             </Grid.ColumnDefinitions>
 
             <Border CornerRadius="15,0,0,0" Grid.Row="1" Grid.Column="1" Background="{StaticResource Colour2}" />
-
+            
             <UserControl x:Name="topbar" VerticalAlignment="Center" Grid.Column="1"/>
 
             <ScrollViewer Grid.RowSpan="2" HorizontalAlignment="Center">
@@ -39,7 +42,9 @@
             </ScrollViewer>
 
             <ScrollViewer Grid.Row="1" Grid.Column="1">
-                <Frame x:Name="frmContent"/>
+                <Grid>
+                    <Frame x:Name="frmContent"/>
+                </Grid>
             </ScrollViewer>
         </Grid>
     </Page.Content>
