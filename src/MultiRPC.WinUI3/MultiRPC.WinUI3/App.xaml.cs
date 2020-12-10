@@ -22,6 +22,10 @@ using MultiRPC.Core.Rpc;
 using MultiRPC.Common.RPC;
 using MultiRPC.Common.AssetProcessor;
 using MultiRPC.WinUI3.AssetProcessor;
+using MultiRPC.Shared.UI;
+using Windows.UI.Core;
+using Windows.UI.Core.Preview;
+using MultiRPC.Core.Page;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -41,6 +45,9 @@ namespace MultiRPC.WinUI3
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            this.UnhandledException += App_UnhandledException;
+
+            ServiceManager.Service.AddSingleton(x => m_window.MainPage);
 
             //These pages have to be added first as they have multiple implementations for different things
             //but we need to only have one instance of them pages
@@ -80,6 +87,15 @@ namespace MultiRPC.WinUI3
             RpcPageManager.Load();
         }
 
+        private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            if (e.Exception.GetType() == typeof(NotImplementedException))
+            {
+                e.Handled = true;
+                m_window.ShowNotImplementedPage();
+            }
+        }
+
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -89,6 +105,11 @@ namespace MultiRPC.WinUI3
         {
             m_window = new MainWindow();
             m_window.Activate();
+        }
+
+        public void GoBack(int count = 1)
+        {
+            m_window.GoBack(count);
         }
 
         /// <summary>
@@ -103,6 +124,6 @@ namespace MultiRPC.WinUI3
             // Save application state and stop any background activity
         }
 
-        private Window m_window;
+        private MainWindow m_window;
     }
 }

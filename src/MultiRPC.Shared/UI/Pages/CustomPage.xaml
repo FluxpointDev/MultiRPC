@@ -37,25 +37,25 @@
         </Grid.RowDefinitions>
 
         <TextBlock Name="tblID" />
-        <TextBox Grid.Column="1" Name="tbID" />
+        <TextBox Grid.Column="1" Name="txtID" TextChanged="txtID_TextChanged" />
 
         <TextBlock Name="tblText1" Grid.Row="1" />
-        <TextBox Grid.Row="1" Grid.Column="1" Name="tbText1" />
+        <TextBox Grid.Row="1" Grid.Column="1" Name="txtText1" />
 
         <TextBlock Name="tblText2" Grid.Row="2" />
-        <TextBox Grid.Row="2" Grid.Column="1" Name="tbText2" />
+        <TextBox Grid.Row="2" Grid.Column="1" Name="txtText2" />
 
         <TextBlock Name="tblLargeKey" Grid.Row="3" />
         <TextBox Grid.Row="3" Grid.Column="1" Name="txtLargeKey" />
 
         <TextBlock Name="tblLargeText" Grid.Row="4" />
-        <TextBox Grid.Row="4" Grid.Column="1" Name="tbLargeText" />
+        <TextBox Grid.Row="4" Grid.Column="1" Name="txtLargeText" />
 
         <TextBlock Name="tblSmallKey" Grid.Row="5" />
         <TextBox Grid.Row="5" Grid.Column="1" Name="txtSmallKey" />
 
         <TextBlock Name="tblSmallText" Grid.Row="6" />
-        <TextBox Grid.Row="6" Grid.Column="1" Name="tbSmallText" />
+        <TextBox Grid.Row="6" Grid.Column="1" Name="txtSmallText" />
 
         <Grid Grid.Row="7" Grid.ColumnSpan="4" ColumnSpacing="5">
             <Grid.ColumnDefinitions>

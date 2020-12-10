@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using MultiRPC.Core.Rpc;
+using MultiRPC.Core.Page;
 
 namespace MultiRPC.Core
 {

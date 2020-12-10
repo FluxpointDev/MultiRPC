@@ -77,9 +77,26 @@ namespace MultiRPC.Shared.UI.Views
                 if (richPresence != null)
                 {
                     richPresence.PropertyChanged -= RichPresence_PropertyChanged;
+                    if (richPresence.Assets?.LargeImage != null)
+                    {
+                        richPresence.Assets.LargeImage.PropertyChanged -= RichPresence_PropertyChanged;
+                    }
+                    if (richPresence.Assets?.SmallImage != null)
+                    {
+                        richPresence.Assets.SmallImage.PropertyChanged -= RichPresence_PropertyChanged;
+                    }
                 }
                 richPresence = value;
                 richPresence.PropertyChanged += RichPresence_PropertyChanged;
+
+                if (richPresence.Assets.LargeImage != null)
+                {
+                    richPresence.Assets.LargeImage.PropertyChanged += RichPresence_PropertyChanged;
+                }
+                if (richPresence.Assets.SmallImage != null)
+                {
+                    richPresence.Assets.SmallImage.PropertyChanged += RichPresence_PropertyChanged;
+                }
                 UpdateText();
             }
         }

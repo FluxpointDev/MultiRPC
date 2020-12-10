@@ -7,6 +7,8 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using MultiRPC.Shared.UI;
 using MultiRPC.Core;
+using MultiRPC.Core.Page;
+using Windows.Foundation.Metadata;
 #if UNO
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -31,6 +33,7 @@ namespace MultiRPC.Shared.UI.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
+    [Experimental]
     public sealed partial class SettingsPage : LocalizablePage, ISidePage
     {
         public SettingsPage()

@@ -32,6 +32,7 @@ Global
 		src\MultiRPC.Shared\MultiRPC.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
 		src\MultiRPC.Shared\MultiRPC.Shared.projitems*{67dcd5e6-c9fb-4249-be2a-e9d9325d4f43}*SharedItemsImports = 4
 		src\MultiRPC.Shared\MultiRPC.Shared.projitems*{a1977866-4ff3-4baa-98ae-1358a54ba5fd}*SharedItemsImports = 4
+		src\MultiRPC.Shared\MultiRPC.Shared.projitems*{ef347bde-cb92-48eb-b508-125c2c0e1c16}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU

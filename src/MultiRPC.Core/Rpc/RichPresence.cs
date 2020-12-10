@@ -36,6 +36,11 @@ namespace MultiRPC.Core.Rpc
             Secret = Secret
         };
 
+        public (bool IsVaild, string[] PropertiesErrored) CheckValidation()
+        {
+            return new(true, null);
+        }
+
         public string ApplicationName { get; }
         public long ApplicationId { get; }
 
@@ -141,25 +146,54 @@ namespace MultiRPC.Core.Rpc
         public bool IsValid() => false;
     }
 
-    public class Image
+    public class Image : INotifyPropertyChanged
     {
-        public Image()
+        private string key;
+        public string Key
         {
+            get => key;
+            set
+            {
+                key = value;
+                OnPropertyChanged();
+            }
         }
 
-        public string Key { get; set; }
-        public string Text { get; set; }
+        private string text;
+        public string Text 
+        {
+            get => text;
+            set
+            {
+                text = value;
+                OnPropertyChanged();
+            }
+        }
 
+        private Uri uri;
         /// <summary>
         /// Where the image is stored, it's the <see cref="IRpcClient"/> job to set this
         /// </summary>
-        public Uri Uri { get; set; }
+        public Uri Uri 
+        {
+            get => uri;
+            set
+            {
+                uri = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string memName = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memName));
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 
     public class Timestamp
     {
-        public DateTime? Start { get; set; } = null;
-        public DateTime? End { get; set; } = null;
+        public DateTime? Start { get; set; }
+        public DateTime? End { get; set; }
 
         /// <summary>
         /// If we should set start when we start an rpc connection

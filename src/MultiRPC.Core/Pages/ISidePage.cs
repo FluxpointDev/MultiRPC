@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MultiRPC.Core
+namespace MultiRPC.Core.Page
 {
     /// <summary>
     /// Page that lives in the sidebar

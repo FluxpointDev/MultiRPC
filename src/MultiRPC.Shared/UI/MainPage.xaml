@@ -10,7 +10,7 @@
     <Page.Resources>
         <SolidColorBrush x:Key="Colour1" Color="#36393e"/>
         <SolidColorBrush x:Key="Colour2" Color="#2c2e30" />
-    
+
         <Style x:Key="PageButton" TargetType="Button" BasedOn="{StaticResource defaultbtn}">
             <Setter Property="CornerRadius" Value="50"/>
             <Setter Property="Height" Value="56"/>

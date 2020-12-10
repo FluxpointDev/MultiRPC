@@ -41,7 +41,7 @@
       <Platform>x86</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="WINUI|arm64">
-     <Configuration>UNO</Configuration>
+      <Configuration>UNO</Configuration>
       <Platform>arm64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="UNO|x64">

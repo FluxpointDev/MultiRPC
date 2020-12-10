@@ -6,7 +6,11 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using MultiRPC.Core.Page;
+using Windows.Foundation.Metadata;
+using System.Reflection;
 #if WINUI
+using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -40,6 +44,32 @@ namespace MultiRPC.Shared.UI
             //Loading += OnLoading;
         }
 
+        public event EventHandler<object> PageChanged;
+
+        public IRpcPage ActivePage => frmContent.Content as IRpcPage;
+
+        public void ShowNotImplementedPage()
+        {
+            frmContent.BackStack.Add(new PageStackEntry(typeof(NotImplementedPage), null, null));
+            frmContent.Content = new NotImplementedPage(true);
+        }
+
+        public void GoBack(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                frmContent.BackStack.RemoveAt(frmContent.BackStack.Count - 1);
+            }
+            foreach (var child in stpSideBar.Children)
+            {
+                if (child is Button btn && btn.Tag.GetType() == frmContent.BackStack[^1].SourcePageType)
+                {
+                    Btn_Click(child, null);
+                    break;
+                }
+            }
+        }
+
         private async void OnLoading(FrameworkElement sender, object args)
         //private async void OnLoading(object sender, RoutedEventArgs e)
         {
@@ -56,7 +86,7 @@ namespace MultiRPC.Shared.UI
                         Source = icon as ImageSource,
                         Margin = new Thickness(3)
                     },
-                    Style = (Style)this.Resources[$"{(activateButton == null ? "Active" : "")}PageButton"],
+                    Style = (Style)Resources[$"{(activateButton == null ? "Active" : "")}PageButton"],
                     Name = $"btn{page.LocalizableName}"
                 };
                 btn.Click += Btn_Click;
@@ -74,6 +104,7 @@ namespace MultiRPC.Shared.UI
 
                 if (activateButton == null)
                 {
+                    frmContent.BackStack.Add(new PageStackEntry(page.GetType(), null, null));
                     frmContent.Content = page;
                     activateButton = btn;
                 }
@@ -85,12 +116,26 @@ namespace MultiRPC.Shared.UI
             //TODO: Make it get the active logo
             if (activateButton != null)
             {
-                activateButton.Style = (Style)this.Resources["PageButton"];
+                activateButton.Style = (Style)Resources["PageButton"];
             }
 
             activateButton = (Button)sender;
-            activateButton.Style = (Style)this.Resources["ActivePageButton"];
-            frmContent.Content = activateButton.Tag;
+            activateButton.Style = (Style)Resources["ActivePageButton"];
+
+#if !DEBUG
+            //if (activateButton.Tag.GetType().GetCustomAttribute<ExperimentalAttribute>() == null)
+#endif
+            {
+                frmContent.BackStack.Add(new PageStackEntry(activateButton.Tag.GetType(), null, null));
+                frmContent.Content = activateButton.Tag;
+            }
+            /*else //TODO: Make it so users can access these pages if they *want* to
+            {
+                frmContent.BackStack.Add(new PageStackEntry(typeof(NotImplementedPage), null, null));
+                frmContent.Content = new NotImplementedPage(false);
+            }*/
+
+            PageChanged?.Invoke(this, frmContent.Content);
         }
 
         public override async void UpdateText()

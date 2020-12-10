@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Text;
 using System.Threading;
 
-namespace MultiRPC.Core
+namespace MultiRPC.Core.Page
 {
     public interface IRpcPage : INotifyPropertyChanged
     {

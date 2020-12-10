@@ -1,4 +1,5 @@
 ﻿using System;
+using Serilog;
 #if WINUI
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
@@ -23,8 +24,18 @@ namespace MultiRPC.Shared.UI
         }
 
         //private void OnLoading(object sender, RoutedEventArgs e) =>
-        private void OnLoading(FrameworkElement sender, object args) =>
-            UpdateText();
+        private void OnLoading(FrameworkElement sender, object args)
+        {
+            try
+            {
+                UpdateText();
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Error(e.Message);
+
+            }
+        }
 
         public virtual void UpdateText() => throw new NotImplementedException();
     }

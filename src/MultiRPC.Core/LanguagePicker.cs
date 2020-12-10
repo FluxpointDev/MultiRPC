@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +27,7 @@ namespace MultiRPC.Core
             {
                 fileSystem = ServiceManager.ServiceProvider.GetService<IFileSystemAccess>();
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Log.Logger.Error(e.Message);
                 return;
@@ -52,7 +53,7 @@ namespace MultiRPC.Core
                     LanguageJsonFileContent = EnglishLanguageJsonFileContent;
                     Log.Logger.Debug($"Parsed!");
                 }
-                catch (System.Exception e)
+                catch (Exception e)
                 {
                     Log.Logger.Error(e.Message);
                 }
