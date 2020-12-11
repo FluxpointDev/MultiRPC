@@ -22,14 +22,20 @@ namespace MultiRPC.Core.Rpc
             {
                 page.Accessed += (sender,__) =>
                 {
-                    if (CurrentPage?.RichPresence != null)
+                    if (CurrentPage != null)
                     {
-                        CurrentPage.RichPresence.PropertyChanged -= RichPresence_PropertyChanged;
+                        if (CurrentPage.RichPresence != null)
+                        {
+                            CurrentPage.RichPresence.PropertyChanged -= RichPresence_PropertyChanged;
+                        }
+                        CurrentPage.PropertyChanged -= OnPagePropertyChanged;
                     }
                     if (page?.RichPresence != null)
                     {
                         page.RichPresence.PropertyChanged += RichPresence_PropertyChanged;
                     }
+
+                    page.PropertyChanged += OnPagePropertyChanged;
 
                     if (RpcClient.IsRunning)
                     {
@@ -58,6 +64,9 @@ namespace MultiRPC.Core.Rpc
             RpcPageStore = null;
         }
 
+        private static void OnPagePropertyChanged(object sender, PropertyChangedEventArgs e) => 
+            PagePropertyChanged?.Invoke(sender, e);
+
         private static void RichPresence_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             //TODO: Add a timer to auto update rich presence
@@ -68,6 +77,8 @@ namespace MultiRPC.Core.Rpc
         private static IRpcPage RpcPageStore;
 
         public static IRpcPage CurrentPage { get; private set; }
+
+        public static event PropertyChangedEventHandler PagePropertyChanged;
 
         /// <summary>
         /// This is when we go to a new page that we are tracking for Rich Pre

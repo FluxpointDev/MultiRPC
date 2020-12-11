@@ -26,6 +26,7 @@ using MultiRPC.Shared.UI;
 using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using MultiRPC.Core.Page;
+using MultiRPC.Shared.UI.Pages.Custom;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.

@@ -23,7 +23,7 @@ namespace MultiRPC.Shared.UI
             //TODO: Make it trigger on lang change
         }
 
-        //private void OnLoading(object sender, RoutedEventArgs e) =>
+        //private void OnLoading(object sender, RoutedEventArgs args)
         private void OnLoading(FrameworkElement sender, object args)
         {
             try

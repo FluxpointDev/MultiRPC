@@ -2,9 +2,11 @@
 using MultiRPC.Common.AssetProcessor;
 using MultiRPC.Common.RPC;
 using MultiRPC.Core;
+using MultiRPC.Core.Page;
 using MultiRPC.Core.Rpc;
 using MultiRPC.Shared.UI;
 using MultiRPC.Shared.UI.Pages;
+using MultiRPC.Shared.UI.Pages.Custom;
 //using MultiRPC.Shared.UI.Pages.Debug;
 using MultiRPC.UWP.AssetProcessor;
 using System;
@@ -111,9 +113,14 @@ namespace MultiRPC.UWP
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
+            }
+        }
 
-                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-                coreTitleBar.ExtendViewIntoTitleBar = false;
+        public void GoBack(int count)
+        {
+            if (Window.Current.Content is MainPage mainPage)
+            {
+                mainPage.GoBack(count);
             }
         }
 

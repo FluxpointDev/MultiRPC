@@ -13,6 +13,8 @@ using MultiRPC.Core.Rpc;
 using MultiRPC.Shared.UI;
 using MultiRPC.Common.AssetProcessor;
 using MultiRPC.Common.RPC;
+using MultiRPC.Shared.UI.Pages.Custom;
+using MultiRPC.Core.Page;
 
 namespace MultiRPC.Wasm
 {
@@ -139,6 +141,13 @@ namespace MultiRPC.Wasm
             deferral.Complete();
         }
 
+        public void GoBack(int count) 
+        {
+            if (Window.Current.Content is MainPage mainPage)
+            {
+                mainPage.GoBack(count);
+            }
+        }
 
         /// <summary>
         /// Configures global logging

@@ -1,5 +1,5 @@
 ﻿<local:LocalizablePage
-    x:Class="MultiRPC.Shared.UI.Pages.CustomPage"
+    x:Class="MultiRPC.Shared.UI.Pages.Custom.CustomPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:MultiRPC.Shared.UI"
@@ -40,22 +40,22 @@
         <TextBox Grid.Column="1" Name="txtID" TextChanged="txtID_TextChanged" />
 
         <TextBlock Name="tblText1" Grid.Row="1" />
-        <TextBox Grid.Row="1" Grid.Column="1" Name="txtText1" />
+        <TextBox Grid.Row="1" Grid.Column="1" Name="txtText1" MaxLength="25" TextChanged="txtText1_TextChanged" />
 
         <TextBlock Name="tblText2" Grid.Row="2" />
-        <TextBox Grid.Row="2" Grid.Column="1" Name="txtText2" />
+        <TextBox Grid.Row="2" Grid.Column="1" Name="txtText2" MaxLength="25" TextChanged="txtText2_TextChanged" />
 
         <TextBlock Name="tblLargeKey" Grid.Row="3" />
-        <TextBox Grid.Row="3" Grid.Column="1" Name="txtLargeKey" />
+        <TextBox Grid.Row="3" Grid.Column="1" Name="txtLargeKey" TextChanged="txtLargeKey_SelectionChanged" />
 
         <TextBlock Name="tblLargeText" Grid.Row="4" />
-        <TextBox Grid.Row="4" Grid.Column="1" Name="txtLargeText" />
+        <TextBox Grid.Row="4" Grid.Column="1" Name="txtLargeText" MaxLength="25" TextChanged="txtLargeText_TextChanged" />
 
         <TextBlock Name="tblSmallKey" Grid.Row="5" />
-        <TextBox Grid.Row="5" Grid.Column="1" Name="txtSmallKey" />
+        <TextBox Grid.Row="5" Grid.Column="1" Name="txtSmallKey" TextChanged="txtSmallKey_SelectionChanged" />
 
         <TextBlock Name="tblSmallText" Grid.Row="6" />
-        <TextBox Grid.Row="6" Grid.Column="1" Name="txtSmallText" />
+        <TextBox Grid.Row="6" Grid.Column="1" Name="txtSmallText" MaxLength="25" TextChanged="txtSmallText_TextChanged" />
 
         <Grid Grid.Row="7" Grid.ColumnSpan="4" ColumnSpacing="5">
             <Grid.ColumnDefinitions>
@@ -63,7 +63,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <TextBlock Name="tblElapasedTime" />
-            <CheckBox Grid.Column="1" Name="cbElapasedTime" />
+            <CheckBox Grid.Column="1" Name="cbElapasedTime" Checked="cbElapasedTime_CheckedChanged" Unchecked="cbElapasedTime_CheckedChanged" />
         </Grid>
     </Grid>
 </local:LocalizablePage>

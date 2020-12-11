@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Serilog;
 using Serilog.Core;
 
@@ -40,15 +39,30 @@ namespace MultiRPC.Core.Rpc
             }
 
             var responseJSON = await responseMessage.Content.ReadAsStringAsync();
-            var response = JObject.Parse(responseJSON);
-            var error = response?.Value<string>("messgae");
+            var response = System.Text.Json.JsonSerializer.Deserialize<ClientCheckResult>(responseJSON);
 
-            if (!string.IsNullOrEmpty(error))
+            if (!string.IsNullOrEmpty(response.Message))
             {
-                return (false, $"{await LanguagePicker.GetLineFromLanguageFile("ClientIDIsNotValid")}\r\n{error}");
+                return (false, $"{await LanguagePicker.GetLineFromLanguageFile("ClientIDIsNotValid")}\r\n{response.Message}");
             }
 
-            return (true, response?.Value<string>("name"));
+            return (true, response.Name);
         }
+    }
+
+    public class ClientCheckResult 
+    {
+        [JsonConstructor]
+        public ClientCheckResult(string message, string name)
+        {
+            Message = message;
+            Name = name;
+        }
+
+        [JsonPropertyName("message")]
+        public string Message { get; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; }
     }
 }

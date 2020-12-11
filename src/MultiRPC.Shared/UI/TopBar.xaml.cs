@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using static MultiRPC.Core.LanguagePicker;
 using MultiRPC.Shared.UI.Views;
+using System.ComponentModel;
 #if WINUI
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
 #else
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 #endif
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -23,7 +25,7 @@ namespace MultiRPC.Shared.UI
     {
         public MainPage MainPage;
 
-        private readonly RichPresence AfkPresence = new RichPresence("Afk", Constants.AfkID) 
+        private readonly RichPresence AfkPresence = new("Afk", Constants.AfkID) 
         {
             Assets = new Assets
             { 
@@ -49,8 +51,14 @@ namespace MultiRPC.Shared.UI
             RpcClient.PresenceUpdated += RpcClient_PresenceUpdated;
 
             RpcPageManager.PageChanged += RpcPageManager_NewCurrentPage;
+            RpcPageManager.PagePropertyChanged += RpcPageManager_PagePropertyChanged;
 
             Loaded += TopBar_Loaded;
+        }
+
+        private void RpcPageManager_PagePropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            UpdateButtons();
         }
 
         private void TopBar_Loaded(object sender, RoutedEventArgs e)
@@ -164,7 +172,7 @@ namespace MultiRPC.Shared.UI
             btnAfk.IsEnabled = txtAfk.Text.Length != 1;
         }
 
-        private bool ButtonEnabled => MainPage.ActivePage == RpcPageManager.CurrentPage && RpcPageManager.CurrentPage.AllowStartingRPC;
+        private bool ButtonEnabled => MainPage.ActivePage == RpcPageManager.CurrentPage && RpcPageManager.CurrentPage.VaildRichPresence;
 
         private async void UpdateButtons()
         {
@@ -174,7 +182,7 @@ namespace MultiRPC.Shared.UI
 
             btnStart.Style = (Style)Application.Current.Resources[RpcClient.IsRunning ? "btnRed" : "btnGreen"];
             btnStart.Content = await StartText();
-            btnStart.IsEnabled = !RpcClient.IsRunning ? RpcPageManager.CurrentPage.AllowStartingRPC : true;
+            btnStart.IsEnabled = !RpcClient.IsRunning ? RpcPageManager.CurrentPage.VaildRichPresence : true;
         }
     }
 }

@@ -4,7 +4,7 @@ using static MultiRPC.Core.LanguagePicker;
 using System.ComponentModel;
 using MultiRPC.Core.Page;
 using System.Globalization;
-#if UNO
+#if UNO || WINDOWS_UWP
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -20,7 +20,7 @@ using Microsoft.UI.Xaml.Media;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace MultiRPC.Shared.UI.Pages
+namespace MultiRPC.Shared.UI.Pages.Custom
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -81,9 +81,9 @@ namespace MultiRPC.Shared.UI.Pages
 
         public string LocalizableName => "Custom";
 
-        public RichPresence RichPresence { get; private set; }
+        public RichPresence RichPresence { get; private set; } = new RichPresence("", 0);
 
-        public bool AllowStartingRPC => LastIDCheckStatus && txtText1.Text.Length != 1 && txtText2.Text.Length != 1 && txtLargeText.Text.Length != 1 && txtSmallText.Text.Length != 1;
+        public bool VaildRichPresence => LastIDCheckStatus && txtText1.Text.Length != 1 && txtText2.Text.Length != 1 && txtLargeText.Text.Length != 1 && txtSmallText.Text.Length != 1;
 
         private bool LastIDCheckStatus;
 
@@ -101,10 +101,10 @@ namespace MultiRPC.Shared.UI.Pages
         public void txtLargeText_TextChanged(object sender, TextChangedEventArgs args) =>
             RichPresence.Assets.LargeImage.Text = txtLargeText.Text;
 
-        public void cboLargeKey_SelectionChanged(object sender, TextChangedEventArgs args) =>
+        public void txtLargeKey_SelectionChanged(object sender, TextChangedEventArgs args) =>
             RichPresence.Assets.LargeImage.Key = txtLargeKey.Text;
 
-        public void cboSmallKey_SelectionChanged(object sender, TextChangedEventArgs args) =>
+        public void txtSmallKey_SelectionChanged(object sender, TextChangedEventArgs args) =>
             RichPresence.Assets.SmallImage.Key = txtSmallKey.Text;
 
         public void cbElapasedTime_CheckedChanged(object sender, RoutedEventArgs args)
@@ -122,7 +122,9 @@ namespace MultiRPC.Shared.UI.Pages
             var isValidCode =
                 long.TryParse(txtID.Text, NumberStyles.Any, new NumberFormatInfo(), out var id);
 
-            LastIDCheckStatus = isValidCode;
+            LastIDCheckStatus = false;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(VaildRichPresence)));
+
             if (!isValidCode || txtID.Text.Length != 18)
             {
                 txtID.SetValue(BorderBrushProperty, Application.Current.Resources["Red"]);
@@ -148,7 +150,7 @@ namespace MultiRPC.Shared.UI.Pages
                     RichPresence.Assets.LargeImage.PropertyChanged -= RichPresence_PropertyChanged;
                     RichPresence.Assets.SmallImage.PropertyChanged -= RichPresence_PropertyChanged;
                 }
-                RichPresence = new RichPresence(checkResult.resultMessage, id);
+                RichPresence = RichPresence.Clone(checkResult.resultMessage, id);
 
                 RichPresence.PropertyChanged += RichPresence_PropertyChanged;
                 RichPresence.Assets.LargeImage.PropertyChanged += RichPresence_PropertyChanged;
@@ -161,8 +163,10 @@ namespace MultiRPC.Shared.UI.Pages
 
                 //Show default things
                 txtID.SetValue(BorderBrushProperty, DefaultBorder);
-                ToolTipService.SetToolTip(txtID, null);
+                ToolTipService.SetToolTip(txtID, checkResult.resultMessage);
 
+                LastIDCheckStatus = true;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(VaildRichPresence)));
                 return;
             }
 

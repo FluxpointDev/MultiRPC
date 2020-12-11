@@ -21,7 +21,9 @@ namespace MultiRPC.Core.Rpc
         private void OnPropertyChanged([CallerMemberName] string memName = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(memName));
 
-        public RichPresence Clone() => new RichPresence(ApplicationName, ApplicationId)
+        public RichPresence Clone() => Clone(ApplicationName, ApplicationId);
+
+        public RichPresence Clone(string name, long id) => new RichPresence(name, id)
         {
             State = State,
             Details = Details,

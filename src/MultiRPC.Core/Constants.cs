@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 
 namespace MultiRPC.Core
 {
@@ -40,9 +40,9 @@ namespace MultiRPC.Core
         /// <summary>
         /// Serializer for json
         /// </summary>
-        public static JsonSerializer JsonSerializer { get; } = new JsonSerializer
+        public static JsonSerializerOptions JsonSerializer { get; } = new JsonSerializerOptions
         {
-            Formatting = Formatting.Indented
+            WriteIndented = true
         };
 
         /// <summary>

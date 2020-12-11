@@ -17,6 +17,7 @@ using Microsoft.UI.Xaml.Media;
 #else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media;
 #endif
 
@@ -62,7 +63,8 @@ namespace MultiRPC.Shared.UI
             }
             foreach (var child in stpSideBar.Children)
             {
-                if (child is Button btn && btn.Tag.GetType() == frmContent.BackStack[^1].SourcePageType)
+                if (child is Button btn && btn.Tag.GetType() == 
+                    frmContent.BackStack[frmContent.BackStack.Count - 1].SourcePageType)
                 {
                     Btn_Click(child, null);
                     break;

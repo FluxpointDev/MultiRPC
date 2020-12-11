@@ -1,4 +1,4 @@
-﻿using MultiRPC.Core.Rpc;
+using MultiRPC.Core.Rpc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,8 +25,8 @@ namespace MultiRPC.Core.Page
         public string LocalizableName { get; }
 
         /// <summary>
-        /// If we should allow the user to start the RPC Client
+        /// If the rich presence is vaild for use for a RPC Client
         /// </summary>
-        public bool AllowStartingRPC { get; }
+        public bool VaildRichPresence { get; }
     }
 }

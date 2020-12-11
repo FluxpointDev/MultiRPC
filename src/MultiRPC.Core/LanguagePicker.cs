@@ -1,10 +1,12 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
 using Serilog;
 
 namespace MultiRPC.Core
@@ -49,7 +51,7 @@ namespace MultiRPC.Core
                 try
                 {
                     Log.Logger.Debug($"Parsing");
-                    EnglishLanguageJsonFileContent = JObject.Parse(fileContents);
+                    EnglishLanguageJsonFileContent = JsonSerializer.Deserialize<Dictionary<string, string>>(fileContents);
                     LanguageJsonFileContent = EnglishLanguageJsonFileContent;
                     Log.Logger.Debug($"Parsed!");
                 }
@@ -60,8 +62,8 @@ namespace MultiRPC.Core
             }
         }
 
-        internal static JObject EnglishLanguageJsonFileContent;
-        internal static JObject LanguageJsonFileContent;
+        internal static Dictionary<string, string> EnglishLanguageJsonFileContent;
+        internal static Dictionary<string, string> LanguageJsonFileContent;
 
         /// <summary>
         /// Gets the line that the language file contains
@@ -74,7 +76,7 @@ namespace MultiRPC.Core
             Log.Logger.Debug($"Have contents: {LanguageJsonFileContent != null}");
 
             return !string.IsNullOrWhiteSpace(jsonName) ?
-            (LanguageJsonFileContent?.Value<string>(jsonName) ?? EnglishLanguageJsonFileContent?.Value<string>(jsonName)) :
+            (LanguageJsonFileContent?[jsonName] ?? EnglishLanguageJsonFileContent[jsonName]) :
             "N/A";
         }
     }

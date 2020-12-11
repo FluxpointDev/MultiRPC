@@ -103,7 +103,7 @@ namespace MultiRPC.Shared.UI.Pages
 
         public string LocalizableName => "MultiRPC";
 
-        public bool AllowStartingRPC => txtText1.Text.Length != 1 && txtText2.Text.Length != 1 && txtLargeText.Text.Length != 1 && txtSmallText.Text.Length != 1;
+        public bool VaildRichPresence => txtText1.Text.Length != 1 && txtText2.Text.Length != 1 && txtLargeText.Text.Length != 1 && txtSmallText.Text.Length != 1;
 
         public void txtText1_TextChanged(object sender, TextChangedEventArgs args) =>
             RichPresence.Details = txtText1.Text;
