@@ -9,6 +9,8 @@
     <Import_RootNamespace>MultiRPC.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\Custom\CustomPageContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\TabbedPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LocalizablePage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -16,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)UI\NotImplementedPage.xaml.cs">
       <DependentUpon>NotImplementedPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UI\PageContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\CreditsList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\Pages\CreditsPage.xaml.cs">
       <DependentUpon>CreditsPage.xaml</DependentUpon>
@@ -97,8 +100,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)UI\Pages\Custom\" />
   </ItemGroup>
 </Project>

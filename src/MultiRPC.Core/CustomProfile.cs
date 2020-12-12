@@ -50,7 +50,7 @@ namespace MultiRPC.Core
             }
         }
 
-        private bool showTime = false;
+        private bool showTime;
         /// <summary>
         /// If we should show the amount of time that the <see cref="Rpc.Rpc"/> started sending <see cref="DiscordRPC.RichPresence"/>'s
         /// </summary>

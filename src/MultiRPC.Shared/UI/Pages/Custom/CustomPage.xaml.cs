@@ -1,4 +1,4 @@
-﻿using MultiRPC.Core.Rpc;
+using MultiRPC.Core.Rpc;
 using System;
 using static MultiRPC.Core.LanguagePicker;
 using System.ComponentModel;
@@ -25,11 +25,11 @@ namespace MultiRPC.Shared.UI.Pages.Custom
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class CustomPage : LocalizablePage, ISidePage, IRpcPage
+    public sealed partial class CustomPage : TabbedPage, IRpcPage
     {
         private Brush DefaultBorder;
 
-        public CustomPage()
+        public CustomPage() : base(true)
         {
             this.InitializeComponent();
             Loaded += (sender, _) => Accessed?.Invoke(sender, null);

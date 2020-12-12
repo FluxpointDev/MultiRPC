@@ -54,6 +54,7 @@ namespace MultiRPC.WinUI3
             //but we need to only have one instance of them pages
             ServiceManager.Service.AddSingleton<MultiRPCPage>();
             ServiceManager.Service.AddSingleton<CustomPage>();
+            ServiceManager.Service.AddSingleton<CustomPageContainer>();
 
             //Add their IRpcPage imp first
             ServiceManager.Service.AddSingleton<IRpcPage>(x => x.GetRequiredService<MultiRPCPage>());
@@ -61,7 +62,7 @@ namespace MultiRPC.WinUI3
 
             //Now add their SidePage imp with the other pages
             ServiceManager.Service.AddSingleton<ISidePage>(x => x.GetRequiredService<MultiRPCPage>());
-            ServiceManager.Service.AddSingleton<ISidePage>(x => x.GetRequiredService<CustomPage>());
+            ServiceManager.Service.AddSingleton<ISidePage>(x => x.GetRequiredService<CustomPageContainer>());
             ServiceManager.Service.AddSingleton<ISidePage, SettingsPage>();
             ServiceManager.Service.AddSingleton<ISidePage, LoggingPage>();
             ServiceManager.Service.AddSingleton<ISidePage, CreditsPage>();

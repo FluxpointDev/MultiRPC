@@ -43,7 +43,7 @@
 
             <ScrollViewer Grid.Row="1" Grid.Column="1">
                 <Grid>
-                    <Frame x:Name="frmContent"/>
+                    <Frame x:Name="frmContent" />
                 </Grid>
             </ScrollViewer>
         </Grid>
