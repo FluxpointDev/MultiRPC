@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using MultiRPC.Core.Extensions;
 using Serilog;
-using Serilog.Core;
 
 namespace MultiRPC.Core.Rpc
 {
@@ -20,7 +18,7 @@ namespace MultiRPC.Core.Rpc
         /// <param name="id">ID to check</param>
         /// <returns>Fail: returns false with error message
         /// Success: returns true with name that is linked to that ID</returns>
-        public static async Task<(bool Successful, string? resultMessage)> CheckID(long id) 
+        public static async Task<(bool Successful, string? ResultMessage)> CheckID(long id) 
         {
             HttpResponseMessage? responseMessage;
             try
@@ -29,7 +27,7 @@ namespace MultiRPC.Core.Rpc
             }
             catch (Exception e)
             {
-                Log.Logger.Error(e.Message);
+                Log.Logger.Error(e);
                 return (false, LanguagePicker.GetLineFromLanguageFile("DiscordAPIDown"));
             }
 
@@ -41,12 +39,9 @@ namespace MultiRPC.Core.Rpc
             var responseJson = await responseMessage.Content.ReadAsStringAsync();
             var response = System.Text.Json.JsonSerializer.Deserialize<ClientCheckResult>(responseJson);
 
-            if (!string.IsNullOrEmpty(response?.Message))
-            {
-                return (false, $"{LanguagePicker.GetLineFromLanguageFile("ClientIDIsNotValid")}\r\n{response.Message}");
-            }
-
-            return (true, response?.Name);
+            return string.IsNullOrEmpty(response?.Message) ?
+                (false, $"{LanguagePicker.GetLineFromLanguageFile("ClientIDIsNotValid")}\r\n{response.Message}") 
+                : (true, response?.Name);
         }
     }
 

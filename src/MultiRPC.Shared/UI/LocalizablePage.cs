@@ -1,13 +1,14 @@
 ﻿using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using MultiRPC.Core.Extensions;
 using Serilog;
 
 namespace MultiRPC.Shared.UI
 {
     public abstract class LocalizablePage : Page
     {
-        public LocalizablePage()
+        public LocalizablePage() : base()
         {
             //UWP/WINUI Loading
             Loading += OnLoading;
@@ -23,7 +24,8 @@ namespace MultiRPC.Shared.UI
             }
             catch (Exception e)
             {
-                Log.Logger.Error(e.Message);
+                Log.Logger.Error(e);
+
             }
         }
 

@@ -25,13 +25,9 @@ namespace MultiRPC.Core
         //update this when we have a new Required service
         private static readonly Type[] RequiredServices =
         {
-            //typeof(IAssetProcessor),
-            //typeof(IFileSystemAccess),
-            typeof(ISidePage),
-            typeof(IRpcClient)
+            typeof(ISidePage)
         };
-
-        //IServiceProvider
+        
         public static void AddSingleton<T, T2>() 
             where T : class
             where T2 : class, T
@@ -80,6 +76,7 @@ namespace MultiRPC.Core
             {
                 throw new Exception($"{nameof(ServiceProvider)} has already been created");
             }
+            AddSingleton(new RpcClient());
 
             //Lets check for any services that we are missing and tell them what we are missing
             var missingServices = RequiredServices.Where(x => Service.All(y => x.Name != y.ServiceType.Name));

@@ -1,22 +1,25 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MultiRPC.Core.Page;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 
 namespace MultiRPC.Core.Rpc
 {
     public static class RpcPageManager
     {
-        private static IRpcClient RpcClient;
+        private static RpcClient RpcClient;
 
         /// <summary>
         /// This load up everything that we need
         /// </summary>
         public static void Load()
         {
-            RpcClient = ServiceManager.ServiceProvider.GetService<IRpcClient>();
+            if (ServiceManager.ServiceProvider == null)
+            {
+                throw new Exception(LanguagePicker.GetLineFromLanguageFile("ServiceProviderNotLoaded"));
+            }
+            
+            RpcClient = ServiceManager.ServiceProvider.GetRequiredService<RpcClient>();
             RpcClient.Disconnected += RpcClient_Disconnected;
             foreach (var page in ServiceManager.ServiceProvider.GetServices<IRpcPage>())
             {
@@ -24,18 +27,11 @@ namespace MultiRPC.Core.Rpc
                 {
                     if (CurrentPage != null)
                     {
-                        if (CurrentPage.RichPresence != null)
-                        {
-                            CurrentPage.RichPresence.PropertyChanged -= RichPresence_PropertyChanged;
-                        }
+                        CurrentPage.PropertyChanged -= RichPresence_PropertyChanged;
                         CurrentPage.PropertyChanged -= OnPagePropertyChanged;
+                        page.PropertyChanged += RichPresence_PropertyChanged;
+                        page.PropertyChanged += OnPagePropertyChanged;
                     }
-                    if (page?.RichPresence != null)
-                    {
-                        page.RichPresence.PropertyChanged += RichPresence_PropertyChanged;
-                    }
-
-                    page.PropertyChanged += OnPagePropertyChanged;
 
                     if (RpcClient.IsRunning)
                     {
@@ -51,7 +47,7 @@ namespace MultiRPC.Core.Rpc
             }
         }
 
-        private static void RpcClient_Disconnected(object sender, bool e)
+        private static void RpcClient_Disconnected(object sender, EventArgs e)
         {
             if (RpcPageStore == null)
             {
@@ -59,9 +55,9 @@ namespace MultiRPC.Core.Rpc
             }
 
             CurrentPage = RpcPageStore;
+            RpcPageStore = null;
             NewCurrentPage?.Invoke(sender, RpcPageStore);
             PageChanged?.Invoke(sender, RpcPageStore);
-            RpcPageStore = null;
         }
 
         private static void OnPagePropertyChanged(object sender, PropertyChangedEventArgs e) => 
@@ -74,20 +70,20 @@ namespace MultiRPC.Core.Rpc
         }
 
         //So we can keep track of the page that we need to get content from once we have stopped the connection
-        private static IRpcPage RpcPageStore;
+        private static IRpcPage? RpcPageStore;
 
-        public static IRpcPage CurrentPage { get; private set; }
+        public static IRpcPage? CurrentPage { get; private set; }
 
-        public static event PropertyChangedEventHandler PagePropertyChanged;
+        public static event PropertyChangedEventHandler? PagePropertyChanged;
 
         /// <summary>
         /// This is when we go to a new page that we are tracking for Rich Pre
         /// </summary>
-        public static event EventHandler<IRpcPage> NewCurrentPage;
+        public static event EventHandler<IRpcPage>? NewCurrentPage;
 
         /// <summary>
         /// This is when we go to a new page (Will also get called with NewCurrentPage)
         /// </summary>
-        public static event EventHandler<IRpcPage> PageChanged;
+        public static event EventHandler<IRpcPage>? PageChanged;
     }
 }

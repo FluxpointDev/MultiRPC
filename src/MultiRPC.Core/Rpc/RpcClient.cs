@@ -1,237 +1,107 @@
-﻿using MultiRPC.Core.Rpc;
-using System;
+﻿using System;
 using DiscordRPC;
-using RichPresence = MultiRPC.Core.Rpc.RichPresence;
-using User = MultiRPC.Core.Rpc.User;
-using JetBrains.Annotations;
+using DiscordRPC.Message;
 
 namespace MultiRPC.Core.Rpc
 {
-    public class RpcClient : IRpcClient
+    public class RpcClient
     {
-        private DiscordRpcClient Client;
+        private DiscordRpcClient? _client;
 
-        public bool IsRunning { get; private set; }
+        public bool IsRunning => Status != ConnectionStatus.Disconnected;
 
         public ConnectionStatus Status { get; private set; }
 
-        public RichPresence ActivePresence { get; private set; }
+        private string _presenceName = "Unknown";
+        private long _presenceId = 0;
+        public RichPresence? ActivePresence => _client?.CurrentPresence != null ? 
+            null 
+            : new RichPresence(_presenceName, _presenceId)
+            {
+                Presence = _client?.CurrentPresence!
+            };
 
-        public event EventHandler<string> ActivityJoin;
-        public event EventHandler<string> ActivitySpectate;
-        public event EventHandler<User> ActivityJoinRequest;
-        public event EventHandler<Invite> ActivityInvite; //TODO: Find out what I need to do to hook this up
-        public event EventHandler Ready;
-        public event EventHandler Errored;
-        public event EventHandler<bool> Disconnected;
-        public event EventHandler Loading;
-        public event EventHandler<RichPresence> PresenceUpdated;
+        public event EventHandler<ReadyMessage>? Ready;
+        public event EventHandler<ErrorMessage>? Errored;
+        public event EventHandler? Disconnected;
+        public event EventHandler? Loading;
+        public event EventHandler<RichPresence?>? PresenceUpdated;
 
-        public Result AcceptInvite(long userID)
+        public void ClearPresence()
         {
-            throw new NotImplementedException();
+            _client?.ClearPresence();
         }
 
-        public Result ClearPresence()
+        public void Start(long? applicationId, string? applicationName)
         {
-            ActivePresence = null;
-            Client?.ClearPresence();
-            return Result.Success;
-        }
-
-        public void RegisterCommand(string command)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RegisterSteam(int gameID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Result SendInvite(long userID, ActionType actionType, string message)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Result SendRequestReply(long userID, JoinRequestReply reply)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Start(long? applicationID)
-        {
-            if (IsRunning)
+            var id = applicationId ?? RpcPageManager.CurrentPage.RichPresence.ID;
+            var idS = id.ToString();
+            var name = applicationName ?? RpcPageManager.CurrentPage.RichPresence.Name;
+            
+            //If we are running already then stop it if we aren't
+            //using the same ID
+            if (IsRunning
+                && _client?.ApplicationID != idS)
             {
                 Stop();
             }
-            IsRunning = true;
+            _presenceId = id;
+            _presenceName = name;
 
-            Client = new DiscordRpcClient((applicationID ?? RpcPageManager.CurrentPage.RichPresence.ApplicationId).ToString()) //TODO: Add custom pipe support
+            _client = new DiscordRpcClient(idS) //TODO: Add custom pipe support
             {
-                SkipIdenticalPresence = false,
-                Logger = new RpcLogger()
+                SkipIdenticalPresence = false, 
+                Logger = new RpcLogger(), 
+                ShutdownOnly = true
             };
-            Client.ShutdownOnly = true;
 
-            UpdatePresence(ActivePresence ?? RpcPageManager.CurrentPage.RichPresence);
-            Client.OnPresenceUpdate += (sender, e) =>
+            UpdatePresence(RpcPageManager.CurrentPage.RichPresence);
+            _client.OnPresenceUpdate += (sender, e) =>
             {
-                if (ActivePresence.Assets?.LargeImage?.Key != null &&
-                    ActivePresence.Assets?.LargeImage?.Key == e.Presence.Assets?.LargeImageKey)
-                {
-                    ActivePresence.Assets.LargeImage.Uri = new Uri($"https://cdn.discordapp.com/app-assets/{ActivePresence.ApplicationId}/{e.Presence.Assets?.LargeImageID}.png");
-                }
-
-                if (ActivePresence.Assets?.SmallImage?.Key != null &&
-                    ActivePresence.Assets?.SmallImage?.Key == e.Presence.Assets?.SmallImageKey)
-                {
-                    ActivePresence.Assets.SmallImage.Uri = new Uri($"https://cdn.discordapp.com/app-assets/{ActivePresence.ApplicationId}/{e.Presence.Assets?.SmallImageID}.png");
-                }
-                PresenceUpdated?.Invoke(sender, ActivePresence.Clone());
+                PresenceUpdated?.Invoke(sender, ActivePresence);
             };
-            Client.OnReady += (sender, e) => 
+            _client.OnReady += (sender, e) => 
             {
                 Status = ConnectionStatus.Connected;
-                Ready?.Invoke(sender, null);
+                Ready?.Invoke(sender, e);
             };
-            Client.OnJoin += (sender, e) => ActivityJoin?.Invoke(sender, e.Secret);
-            Client.OnJoinRequested += (sender, e) => ActivityJoinRequest?.Invoke(sender, e.User.ToMultiRPCUser());
-            Client.OnSpectate += (sender, e) => ActivitySpectate?.Invoke(sender, e.Secret);
-            Client.OnError += (sender, e) =>
+            _client.OnError += (sender, e) =>
             {
                 Status = ConnectionStatus.Connecting;
-                Errored?.Invoke(this, null);
+                Errored?.Invoke(this, e);
             };
-            Client.Initialize();
+            _client.Initialize();
 
             Status = ConnectionStatus.Connecting;
-
             Loading?.Invoke(this, null);
         }
 
         public void Stop()
         {
-            IsRunning = false;
-
             ClearPresence();
-            Client?.Deinitialize();
-            Client?.Dispose();
+            _client?.Deinitialize();
+            _client?.Dispose();
             Status = ConnectionStatus.Disconnected;
+            _presenceId = 0;
+            _presenceName = "";
 
-            //TODO: See what the bool is for
-            Disconnected?.Invoke(this, true);
+            Disconnected?.Invoke(this, null);
         }
 
-        public Result UpdatePresence(RichPresence richPresence)
+        public void UpdatePresence(RichPresence? richPresence)
         {
             if (richPresence == null)
             {
-                return Result.Failed;
+                return;
             }
-
-            if (RpcPageManager.CurrentPage.RichPresence
-                  .Timestamp?.SetStartOnRPCConnection ?? false && 
-                RpcPageManager.CurrentPage.RichPresence
-                  .Timestamp.Start == null)
+            _presenceId = richPresence.ID;
+            _presenceName = richPresence.Name;
+            
+            if (!_client?.IsDisposed ?? false) 
             {
-                RpcPageManager.CurrentPage.RichPresence
-                .Timestamp.Start = DateTime.Now;
+                //TODO: Check ID is the same and restart if needed
+                _client?.SetPresence(richPresence.Presence);
             }
-
-            ActivePresence = richPresence;
-            if (!Client?.IsDisposed ?? false) 
-            {
-                Client?.SetPresence(richPresence.ToDiscordRPCPresence());
-            }
-
-            return Result.Success;
         }
-    }
-
-    public static class RpcClientEx
-    {
-        public static User ToMultiRPCUser([NotNull] this DiscordRPC.User user) => new()
-        {
-            Avatar = user.Avatar,
-            ID = long.Parse(user.ID.ToString()),
-            Discriminator = user.Discriminator.ToString(),
-            Username = user.Username
-        };
-
-        public static RichPresence ToMultiRPCPresence([NotNull] this DiscordRPC.RichPresence richPresence, string name, long id) =>
-            new(name, id)
-            {
-                Assets = richPresence.HasAssets() ? new Core.Rpc.Assets
-                {
-                    LargeImage = new Image 
-                    { 
-                        Key = richPresence.Assets.LargeImageKey,
-                        Text = richPresence.Assets.LargeImageText,
-                        Uri = richPresence.Assets?.LargeImageID > 0 ?
-                        new Uri($"https://cdn.discordapp.com/app-assets/{id}/{richPresence.Assets?.LargeImageID}.png") 
-                        : null
-                    },
-                    SmallImage = new Image
-                    {
-                        Key = richPresence.Assets.SmallImageKey,
-                        Text = richPresence.Assets.SmallImageText,
-                        Uri = richPresence.Assets?.SmallImageID > 0 ?
-                        new Uri($"https://cdn.discordapp.com/app-assets/{id}/{richPresence.Assets?.SmallImageID}.png")
-                        : null
-                    }
-                } : null,
-                Details = richPresence.Details,
-                State = richPresence.State,
-                Party = richPresence.HasParty() ? new Core.Rpc.Party
-                {
-                    ID = richPresence.Party.ID,
-                    MaxSize = richPresence.Party.Max,
-                    Size = richPresence.Party.Size
-                } : null,
-                Secret = richPresence.HasSecrets() ? new Secret
-                {
-                    Join = richPresence.Secrets.JoinSecret,
-                    Spectate = richPresence.Secrets.SpectateSecret,
-                    Match = richPresence.Secrets.MatchSecret                    
-                } : null,
-                Timestamp = richPresence.HasTimestamps() ? new Timestamp
-                {
-                    Start = richPresence.Timestamps.Start,
-                    End = richPresence.Timestamps.End
-                } : null
-            };
-
-        public static DiscordRPC.RichPresence ToDiscordRPCPresence([NotNull] this RichPresence richPresence) =>
-            new()
-            {
-                Assets = richPresence.Assets?.LargeImage != null || richPresence.Assets?.SmallImage != null ?
-                new DiscordRPC.Assets
-                {
-                    LargeImageKey = richPresence.Assets.LargeImage?.Key,
-                    LargeImageText = richPresence.Assets.LargeImage?.Text,
-                    SmallImageKey = richPresence.Assets.SmallImage?.Key,
-                    SmallImageText = richPresence.Assets.SmallImage?.Text,
-                } : null,
-                Details = richPresence.Details,
-                State = richPresence.State,
-                Party = richPresence.Party?.IsValid() ?? false ? new DiscordRPC.Party
-                {
-                    ID = richPresence.Party.ID,
-                    Size = richPresence.Party.Size,
-                    Max = richPresence.Party.MaxSize
-                } : null,
-                Secrets = richPresence.Secret?.IsValid() ?? false ? new Secrets
-                {
-                    JoinSecret = richPresence.Secret.Join,
-                    SpectateSecret = richPresence.Secret.Spectate,
-                    MatchSecret = richPresence.Secret.Match
-                } : null,
-                Timestamps = richPresence.Timestamp?.IsValid() ?? false ? new Timestamps
-                {
-                    End = richPresence.Timestamp.End,
-                    Start = richPresence.Timestamp.Start
-                } : null
-            };
     }
 }

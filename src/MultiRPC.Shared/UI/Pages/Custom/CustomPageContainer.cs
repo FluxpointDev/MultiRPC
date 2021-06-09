@@ -20,7 +20,7 @@ namespace MultiRPC.Shared.UI.Pages.Custom
 
             Tabs.HorizontalAlignment = HorizontalAlignment.Left;
             Tabs.Margin = new Thickness(0, 10, 0, 10);
-            this.Content = new StackPanel()
+            this.Content = new StackPanel
             {
                 Children =
                 {

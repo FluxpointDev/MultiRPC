@@ -78,9 +78,6 @@ namespace MultiRPC
             ServiceManager.AddSingleton<IAssetProcessor, PageIconProcessor>();
             ServiceManager.AddSingleton<IAssetProcessor, LogoProcessor>();
             ServiceManager.AddSingleton<IAssetProcessor, GifProcessor>();*/
-
-            //Add our RpcClient
-            ServiceManager.AddSingleton<IRpcClient, RpcClient>();
             
             //Now to process everything ready for the Client to use them
             ServiceManager.ProcessService();

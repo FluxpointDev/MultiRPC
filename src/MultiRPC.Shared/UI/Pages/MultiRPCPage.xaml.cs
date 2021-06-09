@@ -29,34 +29,27 @@ namespace MultiRPC.Shared.UI.Pages
             this.InitializeComponent();
             Loaded += (sender, _) =>
             {
-                /*ctcView.Content ??= new RPCView
-                {
-                    RichPresence = RichPresence, 
-                    CurrentView = RPCView.ViewType.RichPresence 
-                };*/
+                rpcView.RichPresence = RichPresence;
                 Accessed?.Invoke(sender, null);
             };
-            RichPresence.PropertyChanged += RichPresence_PropertyChanged;
-            RichPresence.Assets.LargeImage.PropertyChanged += RichPresence_PropertyChanged;
-            RichPresence.Assets.SmallImage.PropertyChanged += RichPresence_PropertyChanged;
         }
 
-        private async void RichPresence_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void RichPresence_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             DefaultBorder ??= txtText1.BorderBrush; //TODO: Find a better way
             var redBorder = Application.Current.Resources["Red"];
 
             switch (e.PropertyName)
             {
-                case nameof(RichPresence.Details):
+                case nameof(RichPresence.Presence.Details):
                     txtText1.SetValue(BorderBrushProperty, txtText1.Text.Length == 1 ? redBorder : DefaultBorder);
                     ToolTipService.SetToolTip(txtText1, txtText1.Text.Length == 1 ? GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
                     break;
-                case nameof(RichPresence.State):
+                case nameof(RichPresence.Presence.State):
                     txtText2.SetValue(BorderBrushProperty, txtText2.Text.Length == 1 ? redBorder : DefaultBorder);
                     ToolTipService.SetToolTip(txtText2, txtText2.Text.Length == 1 ? GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
                     break;
-                case nameof(RichPresence.Assets.LargeImage.Text): //Check Small + Large
+                case nameof(RichPresence.Presence.Assets.LargeImageText): //Check Small + Large
                     txtLargeText.SetValue(BorderBrushProperty, txtLargeText.Text.Length == 1 ? redBorder : DefaultBorder);
                     ToolTipService.SetToolTip(txtLargeText, txtLargeText.Text.Length == 1 ? GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
 
@@ -96,34 +89,35 @@ namespace MultiRPC.Shared.UI.Pages
         public bool VaildRichPresence => txtText1.Text.Length != 1 && txtText2.Text.Length != 1 && txtLargeText.Text.Length != 1 && txtSmallText.Text.Length != 1;
 
         public void txtText1_TextChanged(object sender, TextChangedEventArgs args) =>
-            RichPresence.Details = txtText1.Text;
+            RichPresence.Presence.Details = txtText1.Text;
 
         public void txtText2_TextChanged(object sender, TextChangedEventArgs args) =>
-            RichPresence.State = txtText2.Text;
+            RichPresence.Presence.State = txtText2.Text;
 
         public void txtSmallText_TextChanged(object sender, TextChangedEventArgs args) =>
-            RichPresence.Assets.SmallImage.Text = txtSmallText.Text;
+            RichPresence.Presence.Assets.SmallImageText = txtSmallText.Text;
 
         public void txtLargeText_TextChanged(object sender, TextChangedEventArgs args) =>
-            RichPresence.Assets.LargeImage.Text = txtLargeText.Text;
+            RichPresence.Presence.Assets.LargeImageText = txtLargeText.Text;
 
         public void cboLargeKey_SelectionChanged(object sender, RoutedEventArgs args)
         {
-            RichPresence.Assets.LargeImage.Key = cboLargeKey.SelectedItem.ToString().ToLower();
+            RichPresence.Presence.Assets.LargeImageKey = cboLargeKey.SelectedItem.ToString().ToLower();
             //RichPresence.Assets.LargeImage.Uri = Data.GetImageValue(cboLargeKey.SelectedItem.ToString());
         }
 
         public void cboSmallKey_SelectionChanged(object sender, RoutedEventArgs args)
         {
-            RichPresence.Assets.SmallImage.Key = cboSmallKey.SelectedItem.ToString().ToLower();
+            RichPresence.Presence.Assets.SmallImageKey = cboSmallKey.SelectedItem.ToString().ToLower();
             //RichPresence.Assets.SmallImage.Uri = Data.GetImageValue(cboSmallKey.SelectedItem.ToString());
         }
 
         public void cbElapasedTime_CheckedChanged(object sender, RoutedEventArgs args)
         {
-            RichPresence.Timestamp.Start = null;
-            RichPresence.Timestamp.SetStartOnRPCConnection = 
-                cbElapasedTime.IsChecked.GetValueOrDefault();
+            RichPresence.Presence.Timestamps.Start = 
+                cbElapasedTime.IsChecked.GetValueOrDefault() 
+                    ? DateTime.MinValue 
+                    : null;
         }
     }
 }

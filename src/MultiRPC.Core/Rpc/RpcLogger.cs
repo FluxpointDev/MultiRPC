@@ -1,7 +1,5 @@
 ﻿using DiscordRPC.Logging;
 using Serilog;
-using System;
-using System.Diagnostics;
 
 namespace MultiRPC.Core.Rpc
 {
@@ -11,22 +9,22 @@ namespace MultiRPC.Core.Rpc
 
         public void Error(string message, params object[] args)
         {
-            Log.Logger.Error(message, "Error");
+            Log.Logger.Error(message, args);
         }
 
         public void Info(string message, params object[] args)
         {
-            Log.Logger.Information(message, "Info");
+            Log.Logger.Information(message, args);
         }
 
         public void Trace(string message, params object[] args)
         {
-            Log.Logger.Debug(message, "Trace");
+            Log.Logger.Debug(message, args);
         }
 
         public void Warning(string message, params object[] args)
         {
-            Log.Logger.Warning(message, "Warning");
+            Log.Logger.Warning(message, args);
         }
     }
 }

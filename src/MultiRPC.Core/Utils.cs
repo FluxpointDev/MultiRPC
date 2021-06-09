@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Security.Principal;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;

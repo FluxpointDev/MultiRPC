@@ -53,7 +53,7 @@
             
             <Button Width="50" Height="40" x:Name="btnAuto" IsEnabled="False" />
             <Button Style="{StaticResource btnPurple}" Width="50" Height="40" Grid.Row="1" x:Name="btnAfk" Click="btnAfk_Click"  />
-            <!--<views:RPCView x:Name="rpcView" CurrentView="Default" Margin="10,0" Grid.Column="1" Grid.RowSpan="2" />-->
+            <views:RPCView x:Name="rpcView" CurrentView="Default" Margin="10,0" Grid.Column="1" Grid.RowSpan="2" />
         </Grid>
     </Grid>
 </local:LocalizablePage>

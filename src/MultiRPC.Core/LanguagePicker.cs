@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+using MultiRPC.Core.Extensions;
 using Serilog;
 
 namespace MultiRPC.Core
@@ -50,7 +48,7 @@ namespace MultiRPC.Core
                 }
                 catch (Exception e)
                 {
-                    Log.Logger.Error(e.Message);
+                    Log.Logger.Error(e);
                 }
             }
         }

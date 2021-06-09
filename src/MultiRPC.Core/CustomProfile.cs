@@ -1,12 +1,11 @@
 using JetBrains.Annotations;
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace MultiRPC.Core
 {
     /// <summary>
-    /// A Custom Profile for <see cref="Rpc.Rpc"/>
+    /// A Custom Profile for <see cref="Rpc"/>
     /// </summary>
     public class CustomProfile : INotifyPropertyChanged
     {

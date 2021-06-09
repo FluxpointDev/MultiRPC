@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace MultiRPC.Core
 {
@@ -88,19 +87,15 @@ namespace MultiRPC.Core
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                 "MultiRPC.appref-ms");
 
-        //TODO: See if this is working
         static FileLocations()
         {
-            var fileSystem = ServiceManager.ServiceProvider.GetService<IFileSystemAccess>();
-
-            if (!fileSystem.DirectoryExists(ConfigFolder))
+            if (!Directory.Exists(ConfigFolder))
             {
-                fileSystem.CreateDirectory(ConfigFolder);
+                Directory.CreateDirectory(ConfigFolder);
             }
-
-            if (!fileSystem.DirectoryExists(ThemesFolder))
+            if (!Directory.Exists(ThemesFolder))
             {
-                fileSystem.CreateDirectory(ThemesFolder);
+                Directory.CreateDirectory(ThemesFolder);
             }
         }
     }

@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using static MultiRPC.Core.LanguagePicker;
 using System.ComponentModel;
+using DiscordRPC;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using RichPresence = MultiRPC.Core.Rpc.RichPresence;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 namespace MultiRPC.Shared.UI
@@ -19,18 +21,18 @@ namespace MultiRPC.Shared.UI
     {
         public MainPage MainPage;
 
-        private readonly RichPresence AfkPresence = new("Afk", Constants.AfkID) 
+        private readonly RichPresence AfkPresence = new("Afk", Constants.AfkID)
         {
-            Assets = new Assets
-            { 
-                LargeImage = new Core.Rpc.Image
+            Presence = new DiscordRPC.RichPresence
+            {
+                Assets = new Assets
                 {
-                    Key = "cat"
+                    LargeImageKey = "cat"
                 }
             }
         };
 
-        private IRpcClient RpcClient;
+        private RpcClient RpcClient;
 
         public TopBar()
         {
@@ -152,12 +154,12 @@ namespace MultiRPC.Shared.UI
             {
                 RpcClient.Stop();
             }*/
-            AfkPresence.Details = txtAfk.Text;
+            AfkPresence.Presence.Details = txtAfk.Text;
             RpcClient.UpdatePresence(AfkPresence);
 
             if (!RpcClient.IsRunning)
             {
-                RpcClient.Start(AfkPresence.ApplicationId);
+                RpcClient.Start(AfkPresence.ID, AfkPresence.Name);
             }
         }
 

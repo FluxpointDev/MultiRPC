@@ -74,7 +74,7 @@
         <StackPanel Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
             <TextBlock Name="tblWhatWillLookLike" HorizontalAlignment="Left" FontWeight="SemiBold"
                                Margin="0,0,0,3" />
-            <UserControl x:Name="ctcView" />
+            <views:RPCView CurrentView="RichPresence" x:Name="rpcView" />
         </StackPanel>
     </Grid>
 </local:LocalizablePage>

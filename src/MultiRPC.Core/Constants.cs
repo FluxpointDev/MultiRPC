@@ -3,7 +3,7 @@
 namespace MultiRPC.Core
 {
     /// <summary>
-    /// Contains objects that will not change value at any time thoughout the span of the clients useage
+    /// Contains objects that will not change value at any time throughout the span of the clients usage
     /// </summary>
     public static class Constants
     {
@@ -25,7 +25,7 @@ namespace MultiRPC.Core
         /// <summary>
         /// The Uri to the MultiRPC web page
         /// </summary>
-        public const string MultiRPCWebsiteRoot = "https://multirpc.blazedev.me";
+        public const string MultiRPCWebsiteRoot = "https://fluxpoint.dev/multirpc";
 
         /// <summary>
         /// The app developer
