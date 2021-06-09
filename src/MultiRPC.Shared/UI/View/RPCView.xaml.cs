@@ -186,7 +186,7 @@ namespace MultiRPC.Shared.UI.Views
 
                         LargeImage = new ImageBrush()
                         {
-                            ImageSource = await AssetManager.GetAsset("Icon/Logo") as ImageSource
+                            //ImageSource = await AssetManager.GetAsset("Icon/Logo") as ImageSource
                         };
 
                         UpdateVisibility(regLarge, true);
@@ -201,7 +201,7 @@ namespace MultiRPC.Shared.UI.Views
 
                         LargeImage = new ImageBrush()
                         {
-                            ImageSource = await AssetManager.GetAsset("Icon/Logo") as ImageSource
+                            //ImageSource = await AssetManager.GetAsset("Icon/Logo") as ImageSource
                         };
 
                         UpdateVisibility(regLarge, true);
@@ -216,7 +216,7 @@ namespace MultiRPC.Shared.UI.Views
 
                         LargeImage = new ImageBrush()
                         {
-                            ImageSource = await AssetManager.GetAsset("Icon/Gif/Loading") as ImageSource
+                            //ImageSource = await AssetManager.GetAsset("Icon/Gif/Loading") as ImageSource
                         };
 
                         UpdateVisibility(regLarge, true);

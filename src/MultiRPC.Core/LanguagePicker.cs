@@ -15,31 +15,25 @@ namespace MultiRPC.Core
     /// </summary>
     public static class LanguagePicker
     {
-        static async Task GrabContents()
+        static LanguagePicker()
         {
-            //TODO: Add something to know if this is already happering and to just wait for that one to finish
+            GrabContents();
+        }
+        
+        static void GrabContents()
+        {
+            //TODO: Add something to know if this is already happening and to just wait for that one to finish
             if (EnglishLanguageJsonFileContent != null)
             {
                 return;
             }
 
-            IFileSystemAccess fileSystem;
-            try
-            {
-                fileSystem = ServiceManager.ServiceProvider.GetService<IFileSystemAccess>();
-            }
-            catch (Exception e)
-            {
-                Log.Logger.Error(e.Message);
-                return;
-            }
-
             //TODO: Get active language
             var fileLocation = Path.Combine(Constants.LanguageFolder, "en-gb.json");
-            //if (await fileSystem.FileExists(fileLocation))
+            if (File.Exists(fileLocation))
             {
                 Log.Logger.Debug("File exists, grabbing contents");
-                var fileContents = await fileSystem.ReadAllTextAsync(fileLocation);
+                var fileContents = File.ReadAllText(fileLocation);
                 Log.Logger.Debug("Grabbed contents");
                 if (string.IsNullOrWhiteSpace(fileContents))
                 {
@@ -49,10 +43,10 @@ namespace MultiRPC.Core
 
                 try
                 {
-                    Log.Logger.Debug($"Parsing");
+                    Log.Logger.Debug("Parsing");
                     EnglishLanguageJsonFileContent = JsonSerializer.Deserialize<Dictionary<string, string>>(fileContents);
                     LanguageJsonFileContent = EnglishLanguageJsonFileContent;
-                    Log.Logger.Debug($"Parsed!");
+                    Log.Logger.Debug("Parsed!");
                 }
                 catch (Exception e)
                 {

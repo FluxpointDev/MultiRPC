@@ -8,6 +8,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -15,7 +16,12 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using MultiRPC.Core;
+using MultiRPC.Core.Page;
+using MultiRPC.Core.Rpc;
 using MultiRPC.Shared.UI;
+using MultiRPC.Shared.UI.Pages;
+using MultiRPC.Shared.UI.Pages.Custom;
 
 namespace MultiRPC
 {
@@ -39,6 +45,46 @@ namespace MultiRPC
         {
             InitializeLogging();
             
+            //TODO: Readd
+            //ServiceManager.AddSingleton(x => m_window.MainPage);
+
+            //These pages have to be added first as they have multiple implementations for different things
+            //but we need to only have one instance of them pages
+            ServiceManager.AddSingleton<MultiRPCPage>();
+            ServiceManager.AddSingleton<CustomPage>();
+            ServiceManager.AddSingleton<CustomPageContainer>();
+
+            //Add their IRpcPage imp first
+            ServiceManager.AddSingleton<IRpcPage>(x => x.GetRequiredService<MultiRPCPage>());
+            ServiceManager.AddSingleton<IRpcPage>(x => x.GetRequiredService<CustomPage>());
+
+            //Now add their SidePage imp with the other pages
+            ServiceManager.AddSingleton<ISidePage>(x => x.GetRequiredService<MultiRPCPage>());
+            ServiceManager.AddSingleton<ISidePage>(x => x.GetRequiredService<CustomPageContainer>());
+            ServiceManager.AddSingleton<ISidePage, SettingsPage>();
+            ServiceManager.AddSingleton<ISidePage, LoggingPage>();
+            ServiceManager.AddSingleton<ISidePage, CreditsPage>();
+            ServiceManager.AddSingleton<ISidePage, ThemeEditorPage>();
+
+#if DEBUG
+            //Add any debugging pages into here
+            //ServiceManager.Service.AddSingleton<ISidePage, RPCViewTestPage>();
+#endif
+            //Add the FileSystemAccess service because UWP be a pain and make their own and not using System.IO
+            //like everyone else 😑
+            /*ServiceManager.AddSingleton<IFileSystemAccess, FileSystemAccess>();
+
+            //Add our asset processors so we can use assets xP
+            ServiceManager.AddSingleton<IAssetProcessor, PageIconProcessor>();
+            ServiceManager.AddSingleton<IAssetProcessor, LogoProcessor>();
+            ServiceManager.AddSingleton<IAssetProcessor, GifProcessor>();*/
+
+            //Add our RpcClient
+            ServiceManager.AddSingleton<IRpcClient, RpcClient>();
+            
+            //Now to process everything ready for the Client to use them
+            ServiceManager.ProcessService();
+            RpcPageManager.Load();
 
             this.InitializeComponent();
 

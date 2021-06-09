@@ -9,6 +9,14 @@
     <EmbeddedResource Include="..\MultiRPC.UWP\Package.appxmanifest" LogicalName="Package.appxmanifest" />
     <Content Include="..\MultiRPC.UWP\Assets\StoreLogo.png" Link="Assets\StoreLogo.png" />
     <Content Include="Assets\Fonts\uno-fluentui-assets.ttf" />
+    <None Remove="Lang\en-gb.json" />
+    <Content Include="Lang\es.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Lang\es.json" />
+    <Content Include="Lang\es.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Include="..\MultiRPC.Shared\**\*.xaml" />

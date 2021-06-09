@@ -25,12 +25,32 @@ namespace MultiRPC.Core
         //update this when we have a new Required service
         private static readonly Type[] RequiredServices =
         {
-            typeof(IAssetProcessor),
-            typeof(IFileSystemAccess),
+            //typeof(IAssetProcessor),
+            //typeof(IFileSystemAccess),
             typeof(ISidePage),
             typeof(IRpcClient)
         };
 
+        //IServiceProvider
+        public static void AddSingleton<T, T2>() 
+            where T : class
+            where T2 : class, T
+        {
+            Service.AddSingleton<T, T2>();
+        }
+        
+        public static void AddSingleton<T>(T x) 
+            where T : class
+        {
+            Service.AddSingleton(y => x);
+        }
+        
+        public static void AddSingleton<T>(Func<IServiceProvider, T> x) 
+            where T : class
+        {
+            Service.AddSingleton<T>(x);
+        }
+        
         public static void AddSingleton<T>() 
             where T : class
         {

@@ -29,11 +29,11 @@ namespace MultiRPC.Shared.UI.Pages
             this.InitializeComponent();
             Loaded += (sender, _) =>
             {
-                ctcView.Content ??= new RPCView
+                /*ctcView.Content ??= new RPCView
                 {
                     RichPresence = RichPresence, 
                     CurrentView = RPCView.ViewType.RichPresence 
-                };
+                };*/
                 Accessed?.Invoke(sender, null);
             };
             RichPresence.PropertyChanged += RichPresence_PropertyChanged;
