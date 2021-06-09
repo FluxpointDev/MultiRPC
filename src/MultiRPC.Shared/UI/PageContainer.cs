@@ -112,14 +112,17 @@ namespace MultiRPC.Shared.UI
             ActiveContent.Content = grid.Tag;
         }
 
-        public ScrollViewer MakeCorneredFrame() => new()
+        public Grid MakeCorneredFrame() => new()
         {
             Background = (Brush)Application.Current.Resources["Colour1"],
-            Content = new Border()
+            Children = 
             {
-                Background = (Brush)Application.Current.Resources["Colour2"],
-                Child = this.ActiveContent,
-                CornerRadius = new CornerRadius(15, 0, 0, 0)
+                new Border
+                {
+                    Background = (Brush)Application.Current.Resources["Colour2"],
+                    Child = ActiveContent,
+                    CornerRadius = new CornerRadius(15, 0, 0, 0)
+                }
             }
         };
 

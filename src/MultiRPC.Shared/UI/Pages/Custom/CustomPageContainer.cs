@@ -29,7 +29,7 @@ namespace MultiRPC.Shared.UI.Pages.Custom
                     new Grid()
                     {
                         Background = (Brush)Application.Current.Resources["Colour1"],
-                        Children = { this.Tabs }
+                        Children = { Tabs }
                     },
                     MakeCorneredFrame()
                 }

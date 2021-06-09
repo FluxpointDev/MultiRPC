@@ -37,11 +37,7 @@
                 <StackPanel Margin="8" x:Name="stpSideBar" Spacing="25"/>
             </ScrollViewer>
 
-            <ScrollViewer Grid.Row="1" Grid.Column="1">
-                <Grid>
-                    <Frame x:Name="frmContent" />
-                </Grid>
-            </ScrollViewer>
+            <Frame x:Name="frmContent" Grid.Row="1" Grid.Column="1" />
         </Grid>
     </Page.Content>
 </ui:LocalizablePage>
