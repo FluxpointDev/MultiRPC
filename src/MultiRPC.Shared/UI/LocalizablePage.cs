@@ -1,12 +1,7 @@
 ﻿using System;
-using Serilog;
-#if WINUI
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
-#else
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml;
-#endif
+using Microsoft.UI.Xaml.Controls;
+using Serilog;
 
 namespace MultiRPC.Shared.UI
 {
@@ -17,14 +12,10 @@ namespace MultiRPC.Shared.UI
             //UWP/WINUI Loading
             Loading += OnLoading;
 
-            //WASM Loading
-            //Loading += OnLoading;
-
             //TODO: Make it trigger on lang change
         }
 
-        //private void OnLoading(object sender, RoutedEventArgs args)
-        private void OnLoading(FrameworkElement sender, object args)
+        private void OnLoading(object sender, RoutedEventArgs args)
         {
             try
             {
@@ -37,6 +28,6 @@ namespace MultiRPC.Shared.UI
             }
         }
 
-        public virtual void UpdateText() => throw new NotImplementedException();
+        public abstract void UpdateText();
     }
 }

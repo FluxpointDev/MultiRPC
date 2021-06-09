@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -11,6 +9,7 @@ using Serilog;
 
 namespace MultiRPC.Core
 {
+    //TODO: Cleanup code
     /// <summary>
     /// Helps with grabbing language contents
     /// </summary>
@@ -62,22 +61,17 @@ namespace MultiRPC.Core
             }
         }
 
-        internal static Dictionary<string, string> EnglishLanguageJsonFileContent;
-        internal static Dictionary<string, string> LanguageJsonFileContent;
+        private static Dictionary<string, string> EnglishLanguageJsonFileContent;
+        private static Dictionary<string, string> LanguageJsonFileContent;
 
         /// <summary>
         /// Gets the line that the language file contains
         /// </summary>
         /// <param name="jsonName">Name of the line you want to grab</param>
-        public static async Task<string?> GetLineFromLanguageFile(string jsonName)
+        public static string GetLineFromLanguageFile(string jsonName)
         {
-            Log.Logger.Debug("Making sure that we got contents");
-            await GrabContents();
-            Log.Logger.Debug($"Have contents: {LanguageJsonFileContent != null}");
-
             return !string.IsNullOrWhiteSpace(jsonName) ?
-            (LanguageJsonFileContent?[jsonName] ?? EnglishLanguageJsonFileContent[jsonName]) :
-            "N/A";
+            (LanguageJsonFileContent?[jsonName] ?? EnglishLanguageJsonFileContent[jsonName]) : "N/A";
         }
     }
 }

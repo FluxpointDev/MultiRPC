@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
+    <OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup Condition="exists('..\MultiRPC.UWP')">
+    <EmbeddedResource Include="..\MultiRPC.UWP\Package.appxmanifest" LogicalName="Package.appxmanifest" />
+    <Content Include="..\MultiRPC.UWP\Assets\StoreLogo.png" Link="Assets\StoreLogo.png" />
+    <Content Include="Assets\Fonts\uno-fluentui-assets.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Include="..\MultiRPC.Shared\**\*.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0-preview.4.21253.7" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0-preview.4.21253.7" />
+    <PackageReference Include="Uno.WinUI.RemoteControl" Version="3.8.0-dev.461" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.WinUI.Skia.Gtk" Version="3.8.0-dev.461" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MultiRPC.Core\MultiRPC.Core.csproj" />
+  </ItemGroup>
+  <Import Project="..\MultiRPC.Shared\MultiRPC.Shared.projitems" Label="Shared" />
+</Project>

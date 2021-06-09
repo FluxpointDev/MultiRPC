@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MultiRPC.Shared.UI
 {
-    public class TabbedPage : LocalizablePage
+    public abstract partial class TabbedPage : LocalizablePage
     {
         public TabbedPage(bool defaultPage = false)
             : base()

@@ -14,7 +14,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 
 namespace MultiRPC.Shared.UI
 {
-    public class PageContainer : Page
+    public partial class PageContainer : Page
     {
         public PageContainer(TabbedPage[] pages)
         {
@@ -49,7 +49,7 @@ namespace MultiRPC.Shared.UI
                 };
                 var textBlock = new TextBlock
                 {
-                    Text = LanguagePicker.GetLineFromLanguageFile(pages[i].LocalizableName).Result
+                    Text = LanguagePicker.GetLineFromLanguageFile(pages[i].LocalizableName)
                 };
                 var rectangle = new Rectangle
                 {

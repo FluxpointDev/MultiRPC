@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MultiRPC.Core
 {
+    //TODO: See if this is still needed
     public interface IAssetProcessor : IRequired
     {
         /// <summary>

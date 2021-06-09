@@ -4,19 +4,9 @@ using static MultiRPC.Core.LanguagePicker;
 using System.ComponentModel;
 using MultiRPC.Core.Page;
 using System.Globalization;
-#if UNO || WINDOWS_UWP
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-#elif WINUI
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-#endif
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -40,14 +30,14 @@ namespace MultiRPC.Shared.UI.Pages.Custom
 
         public override async void UpdateText()
         {
-            tblID.Text = $"{await GetLineFromLanguageFile("ClientID")}:";
-            tblText1.Text = $"{await GetLineFromLanguageFile("Text1")}:";
-            tblText2.Text = $"{await GetLineFromLanguageFile("Text2")}:";
-            tblLargeKey.Text = $"{await GetLineFromLanguageFile("LargeKey")}:";
-            tblLargeText.Text = $"{await GetLineFromLanguageFile("LargeText")}:";
-            tblSmallKey.Text = $"{await GetLineFromLanguageFile("SmallKey")}:";
-            tblSmallText.Text = $"{await GetLineFromLanguageFile("SmallText")}:";
-            tblElapasedTime.Text = $"{await GetLineFromLanguageFile("ShowElapsedTime")}:";
+            tblID.Text = $"{ GetLineFromLanguageFile("ClientID")}:";
+            tblText1.Text = $"{GetLineFromLanguageFile("Text1")}:";
+            tblText2.Text = $"{GetLineFromLanguageFile("Text2")}:";
+            tblLargeKey.Text = $"{GetLineFromLanguageFile("LargeKey")}:";
+            tblLargeText.Text = $"{GetLineFromLanguageFile("LargeText")}:";
+            tblSmallKey.Text = $"{GetLineFromLanguageFile("SmallKey")}:";
+            tblSmallText.Text = $"{GetLineFromLanguageFile("SmallText")}:";
+            tblElapasedTime.Text = $"{GetLineFromLanguageFile("ShowElapsedTime")}:";
         }
 
         private async void RichPresence_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -59,18 +49,18 @@ namespace MultiRPC.Shared.UI.Pages.Custom
             {
                 case nameof(RichPresence.Details):
                     txtText1.SetValue(BorderBrushProperty, txtText1.Text.Length == 1 ? redBorder : DefaultBorder);
-                    ToolTipService.SetToolTip(txtText1, txtText1.Text.Length == 1 ? await GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
+                    ToolTipService.SetToolTip(txtText1, txtText1.Text.Length == 1 ? GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
                     break;
                 case nameof(RichPresence.State):
                     txtText2.SetValue(BorderBrushProperty, txtText2.Text.Length == 1 ? redBorder : DefaultBorder);
-                    ToolTipService.SetToolTip(txtText2, txtText2.Text.Length == 1 ? await GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
+                    ToolTipService.SetToolTip(txtText2, txtText2.Text.Length == 1 ? GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
                     break;
                 case nameof(RichPresence.Assets.LargeImage.Text): //Check Small + Large
                     txtLargeText.SetValue(BorderBrushProperty, txtLargeText.Text.Length == 1 ? redBorder : DefaultBorder);
-                    ToolTipService.SetToolTip(txtLargeText, txtLargeText.Text.Length == 1 ? await GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
+                    ToolTipService.SetToolTip(txtLargeText, txtLargeText.Text.Length == 1 ? GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
 
                     txtSmallText.SetValue(BorderBrushProperty, txtSmallText.Text.Length == 1 ? redBorder : DefaultBorder);
-                    ToolTipService.SetToolTip(txtSmallText, txtSmallText.Text.Length == 1 ? await GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
+                    ToolTipService.SetToolTip(txtSmallText, txtSmallText.Text.Length == 1 ? GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
                     break;
             }
 
@@ -86,7 +76,6 @@ namespace MultiRPC.Shared.UI.Pages.Custom
         public bool VaildRichPresence => LastIDCheckStatus && txtText1.Text.Length != 1 && txtText2.Text.Length != 1 && txtLargeText.Text.Length != 1 && txtSmallText.Text.Length != 1;
 
         private bool LastIDCheckStatus;
-
 
 
         public void txtText1_TextChanged(object sender, TextChangedEventArgs args) =>
@@ -129,8 +118,8 @@ namespace MultiRPC.Shared.UI.Pages.Custom
             {
                 txtID.SetValue(BorderBrushProperty, Application.Current.Resources["Red"]);
                 ToolTipService.SetToolTip(txtID, !isValidCode
-                    ? await GetLineFromLanguageFile("ClientIDIsNotValid")
-                    : await GetLineFromLanguageFile("ClientIDMustBe18CharactersLong"));
+                    ? GetLineFromLanguageFile("ClientIDIsNotValid")
+                    : GetLineFromLanguageFile("ClientIDMustBe18CharactersLong"));
 
                 return;
             }

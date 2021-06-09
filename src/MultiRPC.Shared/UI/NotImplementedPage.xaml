@@ -1,15 +1,15 @@
-﻿<Page
+<ui:LocalizablePage
     x:Class="MultiRPC.Shared.UI.NotImplementedPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:MultiRPC.Shared.UI"
+    xmlns:ui="using:MultiRPC.Shared.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{StaticResource Colour1}">
 
     <Grid>
-        <Button Content="" FontFamily="Segoe MDL2 Assets" FontSize="30" Click="btnBack_Click"/>
+        <Button Content="" FontFamily="Segoe MDL2 Assets" FontSize="30"/>
         <TextBlock Name="tblNotAdded" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Text="Oh looks like you hit something that hasn't been added yet! Come back later when it's added" FontSize="30"/>
     </Grid>
-</Page>
+</ui:LocalizablePage>

@@ -2,6 +2,7 @@
 
 namespace MultiRPC.Core
 {
+    //TODO: Use
     /// <summary>
     /// <see cref="FileWatch"/> helper
     /// </summary>

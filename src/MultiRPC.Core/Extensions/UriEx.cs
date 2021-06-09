@@ -22,7 +22,7 @@ namespace MultiRPC.Core.Extensions
         /// <summary>
         /// Opens the website in a web browser
         /// </summary>
-        /// <param name="uriString">website to open</param>
+        /// <param name="uri">website to open</param>
         public static void OpenWebsite([NotNull] this Uri uri)
         {
 #if NETCOREAPP

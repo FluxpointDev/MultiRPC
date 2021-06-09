@@ -5,15 +5,9 @@ using MultiRPC.Core.Page;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using static MultiRPC.Core.LanguagePicker;
-using MultiRPC.Shared.UI.Views;
 using System.ComponentModel;
-#if WINUI
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
-#else
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml;
-#endif
+using Microsoft.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 namespace MultiRPC.Shared.UI
@@ -42,34 +36,34 @@ namespace MultiRPC.Shared.UI
         {
             //To Do: Hook up RpcPageManager to something so we can change btnStart IsEnabled
             InitializeComponent();
-            RpcClient = ServiceManager.ServiceProvider.GetService<IRpcClient>();
+            /*RpcClient = ServiceManager.ServiceProvider.GetService<IRpcClient>();
 
             RpcClient.Disconnected += RpcClient_Disconnected;
             RpcClient.Ready += RpcClient_Ready;
             RpcClient.Loading += RpcClient_Loading;
             RpcClient.Errored += RpcClient_Errored;
-            RpcClient.PresenceUpdated += RpcClient_PresenceUpdated;
+            RpcClient.PresenceUpdated += RpcClient_PresenceUpdated;*/
 
-            RpcPageManager.PageChanged += RpcPageManager_NewCurrentPage;
-            RpcPageManager.PagePropertyChanged += RpcPageManager_PagePropertyChanged;
+            //RpcPageManager.PageChanged += RpcPageManager_NewCurrentPage;
+            //RpcPageManager.PagePropertyChanged += RpcPageManager_PagePropertyChanged;
 
             Loaded += TopBar_Loaded;
         }
 
         private void RpcPageManager_PagePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            UpdateButtons();
+            //UpdateButtons();
         }
 
         private void TopBar_Loaded(object sender, RoutedEventArgs e)
         {
             //Got to do it here as the MainPage won't be made until the application has loaded
-            MainPage = ServiceManager.ServiceProvider.GetService<MainPage>();
-            Loaded -= TopBar_Loaded;
+            //MainPage = ServiceManager.ServiceProvider.GetService<MainPage>();
+            //Loaded -= TopBar_Loaded;
         }
 
         //To update the RPC View's presence
-        private void RpcClient_PresenceUpdated(object sender, RichPresence e) => 
+        /*private void RpcClient_PresenceUpdated(object sender, RichPresence e) => 
             rpcView.RichPresence = e;
 
         private void RpcClient_Errored(object sender, EventArgs e) =>
@@ -91,16 +85,16 @@ namespace MultiRPC.Shared.UI
         {
             rpcView.CurrentView = RPCView.ViewType.Default;
             PartialUpdate();
-        }
+        }*/
 
         /// <summary>
         /// Partially updates UI elements (Start Btn text + style, rConnectStatus and rConnectStatus)
         /// </summary>
-        private async void PartialUpdate()
+        /*private async void PartialUpdate()
         {
             btnStart.Content = await StartText();
             UpdateButtons();
-            rConnectStatus.Text = await GetLineFromLanguageFile(
+            rConnectStatus.Text = GetLineFromLanguageFile(
                 RpcClient.Status == ConnectionStatus.Connecting ? "Loading" : RpcClient.Status.ToString());
         }
 
@@ -115,32 +109,32 @@ namespace MultiRPC.Shared.UI
         {
             if (RpcClient.IsRunning)
             {
-                return await GetLineFromLanguageFile("Shutdown");
+                return GetLineFromLanguageFile("Shutdown");
             }
-            return $"{await GetLineFromLanguageFile("Start")} {await GetLineFromLanguageFile(RpcPageManager.CurrentPage?.LocalizableName)}";
-        }
+            return $"{GetLineFromLanguageFile("Start")} {GetLineFromLanguageFile(RpcPageManager.CurrentPage?.LocalizableName)}";
+        }*/
 
         public override async void UpdateText() => 
         await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, async () =>
         {
-            btnStart.Content = await StartText();
-            btnUpdatePresence.Content = await GetLineFromLanguageFile("UpdatePresence");
+            /*btnStart.Content = StartText();
+            btnUpdatePresence.Content = GetLineFromLanguageFile("UpdatePresence");
 
-            rStatus.Text = await GetLineFromLanguageFile("Status") + ": ";
-            rConnectStatus.Text = await GetLineFromLanguageFile(
+            rStatus.Text = GetLineFromLanguageFile("Status") + ": ";
+            rConnectStatus.Text = GetLineFromLanguageFile(
                 RpcClient.Status == ConnectionStatus.Connecting ? "Loading" : RpcClient.Status.ToString());
-            rUser.Text = await GetLineFromLanguageFile("User") + ": ";
+            rUser.Text = GetLineFromLanguageFile("User") + ": ";
             rUsername.Text = "Azy#0000"; //TODO: Store and get username
-            tblAfk.Text = await GetLineFromLanguageFile("AfkText") + ": ";
+            tblAfk.Text = GetLineFromLanguageFile("AfkText") + ": ";
 
-            btnAuto.Content = await GetLineFromLanguageFile("Auto");
-            btnAfk.Content = await GetLineFromLanguageFile("Afk");
-        }).AsTask();
+            btnAuto.Content = GetLineFromLanguageFile("Auto");
+            btnAfk.Content = GetLineFromLanguageFile("Afk");*/
+        });
 
-        public async void btnUpdatePresence_Click(object sender, RoutedEventArgs e) => 
+        /*public void btnUpdatePresence_Click(object sender, RoutedEventArgs e) => 
             RpcClient?.UpdatePresence(RpcPageManager.CurrentPage.RichPresence);
 
-        public async void btnStart_Click(object sender, RoutedEventArgs e)
+        public void btnStart_Click(object sender, RoutedEventArgs e)
         {
             if (!RpcClient.IsRunning)
             {
@@ -150,14 +144,14 @@ namespace MultiRPC.Shared.UI
             {
                 RpcClient.Stop();
             }
-        }
+        }*/
 
-        public async void btnAfk_Click(object sender, RoutedEventArgs e)
+        public void btnAfk_Click(object sender, RoutedEventArgs e)
         {
-            if (RpcClient.IsRunning && RpcClient.ActivePresence.ApplicationId != AfkPresence.ApplicationId)
+            /*if (RpcClient.IsRunning && RpcClient.ActivePresence.ApplicationId != AfkPresence.ApplicationId)
             {
                 RpcClient.Stop();
-            }
+            }*/
             AfkPresence.Details = txtAfk.Text;
             RpcClient.UpdatePresence(AfkPresence);
 
@@ -172,7 +166,7 @@ namespace MultiRPC.Shared.UI
             btnAfk.IsEnabled = txtAfk.Text.Length != 1;
         }
 
-        private bool ButtonEnabled => MainPage.ActivePage == RpcPageManager.CurrentPage && RpcPageManager.CurrentPage.VaildRichPresence;
+        /*private bool ButtonEnabled => MainPage.ActivePage == RpcPageManager.CurrentPage && RpcPageManager.CurrentPage.VaildRichPresence;
 
         private async void UpdateButtons()
         {
@@ -182,7 +176,7 @@ namespace MultiRPC.Shared.UI
 
             btnStart.Style = (Style)Application.Current.Resources[RpcClient.IsRunning ? "btnRed" : "btnGreen"];
             btnStart.Content = await StartText();
-            btnStart.IsEnabled = !RpcClient.IsRunning ? RpcPageManager.CurrentPage.VaildRichPresence : true;
-        }
+            btnStart.IsEnabled = RpcClient.IsRunning || RpcPageManager.CurrentPage.VaildRichPresence;
+        }*/
     }
 }

@@ -8,6 +8,7 @@ using System.IO;
 
 namespace MultiRPC.Core
 {
+    //TODO: See if this is still needed
     public static class AssetManager
     {
         public static async Task<object> GetAsset(string assetPath, params object[] args)

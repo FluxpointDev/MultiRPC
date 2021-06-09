@@ -29,5 +29,9 @@ namespace MultiRPC.Shared.UI.Pages
         public string IconLocation => "Icon/Page/Credits";
 
         public string LocalizableName => "Credits";
+
+        public override void UpdateText()
+        {
+        }
     }
 }

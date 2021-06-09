@@ -4,20 +4,10 @@ using MultiRPC.Core.Rpc;
 using static MultiRPC.Core.LanguagePicker;
 using MultiRPC.Shared.UI.Views;
 using System.ComponentModel;
-using MultiRPC.Core.Page;
-#if WINUI
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-#else
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-#endif
+using MultiRPC.Core.Page;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 namespace MultiRPC.Shared.UI.Pages
@@ -60,34 +50,34 @@ namespace MultiRPC.Shared.UI.Pages
             {
                 case nameof(RichPresence.Details):
                     txtText1.SetValue(BorderBrushProperty, txtText1.Text.Length == 1 ? redBorder : DefaultBorder);
-                    ToolTipService.SetToolTip(txtText1, txtText1.Text.Length == 1 ? await GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
+                    ToolTipService.SetToolTip(txtText1, txtText1.Text.Length == 1 ? GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
                     break;
                 case nameof(RichPresence.State):
                     txtText2.SetValue(BorderBrushProperty, txtText2.Text.Length == 1 ? redBorder : DefaultBorder);
-                    ToolTipService.SetToolTip(txtText2, txtText2.Text.Length == 1 ? await GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
+                    ToolTipService.SetToolTip(txtText2, txtText2.Text.Length == 1 ? GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
                     break;
                 case nameof(RichPresence.Assets.LargeImage.Text): //Check Small + Large
                     txtLargeText.SetValue(BorderBrushProperty, txtLargeText.Text.Length == 1 ? redBorder : DefaultBorder);
-                    ToolTipService.SetToolTip(txtLargeText, txtLargeText.Text.Length == 1 ? await GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
+                    ToolTipService.SetToolTip(txtLargeText, txtLargeText.Text.Length == 1 ? GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
 
                     txtSmallText.SetValue(BorderBrushProperty, txtSmallText.Text.Length == 1 ? redBorder : DefaultBorder);
-                    ToolTipService.SetToolTip(txtSmallText, txtSmallText.Text.Length == 1 ? await GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
+                    ToolTipService.SetToolTip(txtSmallText, txtSmallText.Text.Length == 1 ? GetLineFromLanguageFile("LengthMustBeAtLeast2CharactersLong") : null);
                     break;
             }
 
             PropertyChanged?.Invoke(this, e);
         }
 
-        public override async void UpdateText()
+        public override void UpdateText()
         {
-            tblText1.Text = $"{await GetLineFromLanguageFile("Text1")}:";
-            tblText2.Text = $"{await GetLineFromLanguageFile("Text2")}:";
-            tblLargeKey.Text = $"{await GetLineFromLanguageFile("LargeKey")}:";
-            tblLargeText.Text = $"{await GetLineFromLanguageFile("LargeText")}:";
-            tblSmallKey.Text = $"{await GetLineFromLanguageFile("SmallKey")}:";
-            tblSmallText.Text = $"{await GetLineFromLanguageFile("SmallText")}:";
-            tblElapasedTime.Text = $"{await GetLineFromLanguageFile("ShowElapsedTime")}:";
-            tblWhatWillLookLike.Text = await GetLineFromLanguageFile("WhatItWillLookLike");
+            tblText1.Text = $"{GetLineFromLanguageFile("Text1")}:";
+            tblText2.Text = $"{GetLineFromLanguageFile("Text2")}:";
+            tblLargeKey.Text = $"{GetLineFromLanguageFile("LargeKey")}:";
+            tblLargeText.Text = $"{GetLineFromLanguageFile("LargeText")}:";
+            tblSmallKey.Text = $"{GetLineFromLanguageFile("SmallKey")}:";
+            tblSmallText.Text = $"{GetLineFromLanguageFile("SmallText")}:";
+            tblElapasedTime.Text = $"{GetLineFromLanguageFile("ShowElapsedTime")}:";
+            tblWhatWillLookLike.Text = GetLineFromLanguageFile("WhatItWillLookLike");
 
             //Get the MultiRPCImages, need to temp store where we was as we will lose
             //the index on changing it
@@ -120,13 +110,13 @@ namespace MultiRPC.Shared.UI.Pages
         public void cboLargeKey_SelectionChanged(object sender, RoutedEventArgs args)
         {
             RichPresence.Assets.LargeImage.Key = cboLargeKey.SelectedItem.ToString().ToLower();
-            RichPresence.Assets.LargeImage.Uri = Data.GetImageValue(cboLargeKey.SelectedItem.ToString());
+            //RichPresence.Assets.LargeImage.Uri = Data.GetImageValue(cboLargeKey.SelectedItem.ToString());
         }
 
         public void cboSmallKey_SelectionChanged(object sender, RoutedEventArgs args)
         {
             RichPresence.Assets.SmallImage.Key = cboSmallKey.SelectedItem.ToString().ToLower();
-            RichPresence.Assets.SmallImage.Uri = Data.GetImageValue(cboSmallKey.SelectedItem.ToString());
+            //RichPresence.Assets.SmallImage.Uri = Data.GetImageValue(cboSmallKey.SelectedItem.ToString());
         }
 
         public void cbElapasedTime_CheckedChanged(object sender, RoutedEventArgs args)

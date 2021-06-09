@@ -264,3 +264,7 @@ __pycache__/
 *.pyc
 
 src/MultiRPC.UWP/MultiRPC.UWP.GeneratedMSBuildEditorConfig.editorconfig
+
+.vsconfig
+
+global.json

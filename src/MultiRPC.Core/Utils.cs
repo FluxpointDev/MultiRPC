@@ -1,9 +1,8 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
+using System.Threading.Tasks;
+using System.Security.Principal;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
-using System.Security.Principal;
-using System.Threading.Tasks;
 
 namespace MultiRPC.Core
 {
@@ -14,7 +13,7 @@ namespace MultiRPC.Core
     {
         static Utils()
         {
-            GetOSPlatform();
+            GetOsPlatform();
         }
 
         /// <summary>
@@ -49,29 +48,24 @@ namespace MultiRPC.Core
         /// <summary>
         /// Get if the client is running as an administrator.
         /// </summary>
-        public static bool RunningAsAdministrator => OSPlatform == OSPlatform.Windows ?
-           new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator) : false;
+        public static bool RunningAsAdministrator => OsPlatform == OSPlatform.Windows && new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
         /// <summary>
         /// Gets what OS the user is running
         /// </summary>
-        [NotNull]
-        public static OSPlatform OSPlatform { get; private set; }
+        public static OSPlatform OsPlatform { get; private set; }
 
-        private static async Task GetOSPlatform() 
+        private static void GetOsPlatform() 
         {
             OSPlatform plat;
-
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 plat = OSPlatform.Windows;
             }
-
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 plat = OSPlatform.Linux;
             }
-
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 plat = OSPlatform.OSX;
@@ -79,9 +73,9 @@ namespace MultiRPC.Core
 
             if (plat == null)
             {
-                throw new Exception(await LanguagePicker.GetLineFromLanguageFile("CanNotGetOS"));
+                throw new Exception(LanguagePicker.GetLineFromLanguageFile("CanNotGetOS"));
             }
-            OSPlatform = plat;
+            OsPlatform = plat;
         }
     }
 }

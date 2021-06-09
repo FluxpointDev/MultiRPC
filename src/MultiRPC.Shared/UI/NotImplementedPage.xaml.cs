@@ -1,6 +1,3 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,32 +5,22 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-#if WINDOWS_UWP || UNO
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-#else
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-#endif
-#if UNO
-using MultiRPC.Wasm;
-#elif WINUI
-using MultiRPC.WinUI3;
-#else
-using MultiRPC.UWP;
-#endif
+using Serilog;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
+// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 namespace MultiRPC.Shared.UI
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class NotImplementedPage : Page
+    public sealed partial class NotImplementedPage : LocalizablePage
     {
         int backCount;
 
@@ -49,7 +36,12 @@ namespace MultiRPC.Shared.UI
 
         public void btnBack_Click(object sender, RoutedEventArgs e)
         {
-            (Application.Current as App).GoBack(backCount);
+            //(Application.Current as App).GoBack(backCount);
+        }
+
+        public override void UpdateText()
+        {
+            
         }
     }
 }

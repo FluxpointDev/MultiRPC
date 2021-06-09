@@ -1,0 +1,3 @@
+namespace MultiRPC.Skia.Gtk
+{
+}

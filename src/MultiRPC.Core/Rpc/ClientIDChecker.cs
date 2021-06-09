@@ -12,7 +12,7 @@ namespace MultiRPC.Core.Rpc
 {
     public static class ClientIDChecker
     {
-        static HttpClient Client = new HttpClient();
+        private static readonly HttpClient Client = new HttpClient();
 
         /// <summary>
         /// This checks the ID that is given to us
@@ -20,9 +20,9 @@ namespace MultiRPC.Core.Rpc
         /// <param name="id">ID to check</param>
         /// <returns>Fail: returns false with error message
         /// Success: returns true with name that is linked to that ID</returns>
-        public static async Task<(bool Successful, string resultMessage)> CheckID(long id) 
+        public static async Task<(bool Successful, string? resultMessage)> CheckID(long id) 
         {
-            HttpResponseMessage responseMessage = null;
+            HttpResponseMessage? responseMessage;
             try
             {
                 responseMessage = await Client.GetAsync($"https://discordapp.com/api/v6/oauth2/applications/{id}/rpc");
@@ -30,23 +30,23 @@ namespace MultiRPC.Core.Rpc
             catch (Exception e)
             {
                 Log.Logger.Error(e.Message);
-                return (false, await LanguagePicker.GetLineFromLanguageFile("DiscordAPIDown"));
+                return (false, LanguagePicker.GetLineFromLanguageFile("DiscordAPIDown"));
             }
 
             if (responseMessage.StatusCode == HttpStatusCode.BadRequest)
             {
-                return (false, await LanguagePicker.GetLineFromLanguageFile("ClientIDIsNotValid"));
+                return (false, LanguagePicker.GetLineFromLanguageFile("ClientIDIsNotValid"));
             }
 
-            var responseJSON = await responseMessage.Content.ReadAsStringAsync();
-            var response = System.Text.Json.JsonSerializer.Deserialize<ClientCheckResult>(responseJSON);
+            var responseJson = await responseMessage.Content.ReadAsStringAsync();
+            var response = System.Text.Json.JsonSerializer.Deserialize<ClientCheckResult>(responseJson);
 
-            if (!string.IsNullOrEmpty(response.Message))
+            if (!string.IsNullOrEmpty(response?.Message))
             {
-                return (false, $"{await LanguagePicker.GetLineFromLanguageFile("ClientIDIsNotValid")}\r\n{response.Message}");
+                return (false, $"{LanguagePicker.GetLineFromLanguageFile("ClientIDIsNotValid")}\r\n{response.Message}");
             }
 
-            return (true, response.Name);
+            return (true, response?.Name);
         }
     }
 
