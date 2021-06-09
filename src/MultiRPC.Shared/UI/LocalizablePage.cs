@@ -7,7 +7,7 @@ namespace MultiRPC.Shared.UI
 {
     public abstract class LocalizablePage : Page
     {
-        public LocalizablePage() : base()
+        public LocalizablePage()
         {
             //UWP/WINUI Loading
             Loading += OnLoading;
@@ -24,7 +24,6 @@ namespace MultiRPC.Shared.UI
             catch (Exception e)
             {
                 Log.Logger.Error(e.Message);
-
             }
         }
 

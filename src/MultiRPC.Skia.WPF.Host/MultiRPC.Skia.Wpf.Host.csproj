@@ -5,10 +5,12 @@
     <OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.WinUI.Skia.Wpf" Version="3.7.6" />
-    <PackageReference Include="Uno.WinUI.RemoteControl" Version="3.7.6" Condition="'$(Configuration)'=='Debug'" />
+    <PackageReference Include="Uno.WinUI.RemoteControl" Version="3.8.0-dev.461" />
+    <PackageReference Include="Uno.WinUI.Skia.Wpf" Version="3.8.0-dev.461" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Fonts\uno-fluentui-assets.ttf" />
