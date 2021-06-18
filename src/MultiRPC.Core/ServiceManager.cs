@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using MultiRPC.Core.Rpc;
-using MultiRPC.Core.Page;
+using MultiRPC.Core.Pages;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MultiRPC.Core
@@ -12,7 +12,7 @@ namespace MultiRPC.Core
     public static class ServiceManager
     {
         /// <summary>Collection of all the services we need to process</summary>
-        private static readonly ServiceCollection Service = new ServiceCollection();
+        public static readonly ServiceCollection Service = new ServiceCollection();
 
         /// <summary>
         /// This is the provider for all our services that we currently have

@@ -6,7 +6,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using MultiRPC.Core.Page;
+using MultiRPC.Core.Pages;
 using Windows.Foundation.Metadata;
 using System.Reflection;
 using Microsoft.UI.Xaml;
@@ -29,13 +29,8 @@ namespace MultiRPC.Shared.UI
         {
             InitializeComponent();
 
-            topbar.Content = new TopBar();
-
             //UWP/WinUI Loading
             Loading += OnLoading;
-
-            //Wasm Loading
-            //Loading += OnLoading;
         }
 
         public event EventHandler<object> PageChanged;
@@ -65,7 +60,8 @@ namespace MultiRPC.Shared.UI
             }
         }
 
-        private async void OnLoading(object sender, RoutedEventArgs e)
+        //private void OnLoading(FrameworkElement sender, object e)
+        private void OnLoading(object sender, RoutedEventArgs e)
         {
             //Get all the side pages 
             var pages = ServiceManager.ServiceProvider.GetServices<ISidePage>();

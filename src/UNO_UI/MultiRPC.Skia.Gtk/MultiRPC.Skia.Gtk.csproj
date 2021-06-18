@@ -19,7 +19,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <UpToDateCheckInput Include="..\MultiRPC.Shared\**\*.xaml" />
+    <UpToDateCheckInput Include="..\..\MultiRPC.Shared\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0-preview.4.21253.7" />
@@ -28,7 +28,7 @@
     <PackageReference Include="Uno.WinUI.Skia.Gtk" Version="3.8.0-dev.461" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MultiRPC.Core\MultiRPC.Core.csproj" />
+    <ProjectReference Include="..\..\MultiRPC.Core\MultiRPC.Core.csproj" />
   </ItemGroup>
-  <Import Project="..\MultiRPC.Shared\MultiRPC.Shared.projitems" Label="Shared" />
+  <Import Project="..\..\MultiRPC.Shared\MultiRPC.Shared.projitems" Label="Shared" />
 </Project>

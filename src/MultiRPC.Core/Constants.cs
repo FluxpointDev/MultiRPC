@@ -53,6 +53,6 @@ namespace MultiRPC.Core
         /// <summary>
         /// The folder with all the languages
         /// </summary>
-        public const string LanguageFolder = "Lang";
+        public const string LanguageFolder = @"C:\Users\aaron\source\repos\MultiRPC\src\MAUI\MultiRPC (Package)\Lang";
     }
 }

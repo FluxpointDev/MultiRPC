@@ -60,10 +60,22 @@ namespace MultiRPC.Core
         /// Gets the line that the language file contains
         /// </summary>
         /// <param name="jsonName">Name of the line you want to grab</param>
-        public static string GetLineFromLanguageFile(string jsonName)
+        public static string GetLineFromLanguageFile(string? jsonName)
         {
-            return !string.IsNullOrWhiteSpace(jsonName) ?
-            (LanguageJsonFileContent?[jsonName] ?? EnglishLanguageJsonFileContent[jsonName]) : "N/A";
+            if (string.IsNullOrWhiteSpace(jsonName))
+            {
+                return "N/A";
+            }
+            if (LanguageJsonFileContent.ContainsKey(jsonName))
+            {
+                return LanguageJsonFileContent[jsonName];
+            }
+            if (EnglishLanguageJsonFileContent.ContainsKey(jsonName))
+            {
+                return EnglishLanguageJsonFileContent[jsonName];
+            }
+
+            return "N/A";
         }
     }
 }

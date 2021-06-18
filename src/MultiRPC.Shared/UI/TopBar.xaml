@@ -22,8 +22,8 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             
-            <Button Height="40" Width="110" Style="{StaticResource btnGreen}" x:Name="btnStart" />
-            <Button Height="40" Width="110" Grid.Row="1" x:Name="btnUpdatePresence" IsEnabled="False" />
+            <Button Height="40" Width="110" Style="{StaticResource btnGreen}" x:Name="btnStart" Click="btnStart_Click" />
+            <Button Height="40" Width="110" Grid.Row="1" x:Name="btnUpdatePresence" Click="btnUpdatePresence_Click" />
         </Grid>
         
         <Grid VerticalAlignment="Center" Grid.Column="1" RowSpacing="5">
@@ -36,8 +36,8 @@
             <TextBlock><Run x:Name="rStatus" /><Run x:Name="rConnectStatus" /></TextBlock>
             <TextBlock Grid.Row="1"><Run x:Name="rUser" /><Run x:Name="rUsername"/></TextBlock>
             <StackPanel Orientation="Horizontal" Grid.Row="2">
-                <TextBlock VerticalAlignment="Center" x:Name="tblAfk" TextChanged="txtAfk_TextChanged" />
-                <TextBox Width="150" MaxLength="25" Margin="3,0,-10,0" Name="txtAfk" />
+                <TextBlock VerticalAlignment="Center" x:Name="tblAfk" />
+                <TextBox Width="150" MaxLength="25" Margin="3,0,-10,0" Name="txtAfk" TextChanged="txtAfk_TextChanged" />
             </StackPanel>
         </Grid>
 

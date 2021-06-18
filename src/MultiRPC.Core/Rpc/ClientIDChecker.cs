@@ -40,7 +40,7 @@ namespace MultiRPC.Core.Rpc
             var response = System.Text.Json.JsonSerializer.Deserialize<ClientCheckResult>(responseJson);
 
             return string.IsNullOrEmpty(response?.Message) ?
-                (false, $"{LanguagePicker.GetLineFromLanguageFile("ClientIDIsNotValid")}\r\n{response.Message}") 
+                (false, $"{LanguagePicker.GetLineFromLanguageFile("ClientIDIsNotValid")}\r\n{response.Message}")
                 : (true, response?.Name);
         }
     }

@@ -7,64 +7,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Page.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Right" />
-        </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="Width" Value="150" />
-            <Setter Property="MaxWidth" Value="150" />
-        </Style>
-    </Page.Resources>
 
     <Grid HorizontalAlignment="Left" RowSpacing="10" ColumnSpacing="5" Margin="13">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <TextBlock Name="tblID" />
         <TextBox Grid.Column="1" Name="txtID" TextChanged="txtID_TextChanged" />
-
-        <TextBlock Name="tblText1" Grid.Row="1" />
-        <TextBox Grid.Row="1" Grid.Column="1" Name="txtText1" MaxLength="25" TextChanged="txtText1_TextChanged" />
-
-        <TextBlock Name="tblText2" Grid.Row="2" />
-        <TextBox Grid.Row="2" Grid.Column="1" Name="txtText2" MaxLength="25" TextChanged="txtText2_TextChanged" />
-
-        <TextBlock Name="tblLargeKey" Grid.Row="3" />
-        <TextBox Grid.Row="3" Grid.Column="1" Name="txtLargeKey" TextChanged="txtLargeKey_SelectionChanged" />
-
-        <TextBlock Name="tblLargeText" Grid.Row="4" />
-        <TextBox Grid.Row="4" Grid.Column="1" Name="txtLargeText" MaxLength="25" TextChanged="txtLargeText_TextChanged" />
-
-        <TextBlock Name="tblSmallKey" Grid.Row="5" />
-        <TextBox Grid.Row="5" Grid.Column="1" Name="txtSmallKey" TextChanged="txtSmallKey_SelectionChanged" />
-
-        <TextBlock Name="tblSmallText" Grid.Row="6" />
-        <TextBox Grid.Row="6" Grid.Column="1" Name="txtSmallText" MaxLength="25" TextChanged="txtSmallText_TextChanged" />
-
-        <Grid Grid.Row="7" Grid.ColumnSpan="4" ColumnSpacing="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Name="tblElapasedTime" />
-            <CheckBox Grid.Column="1" Name="cbElapasedTime" Checked="cbElapasedTime_CheckedChanged" Unchecked="cbElapasedTime_CheckedChanged" />
-        </Grid>
+        
+        <ContentControl Grid.Row="1" Grid.ColumnSpan="2"  x:Name="cclEditor" />
     </Grid>
 </custom:TabbedPage>

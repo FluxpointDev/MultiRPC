@@ -7,7 +7,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using MultiRPC.Shared.UI;
 using MultiRPC.Core;
-using MultiRPC.Core.Page;
+using MultiRPC.Core.Pages;
 using Windows.Foundation.Metadata;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238

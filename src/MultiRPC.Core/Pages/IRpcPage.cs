@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using MultiRPC.Core.Rpc;
 
-namespace MultiRPC.Core.Page
+namespace MultiRPC.Core.Pages
 {
     public interface IRpcPage : INotifyPropertyChanged
     {

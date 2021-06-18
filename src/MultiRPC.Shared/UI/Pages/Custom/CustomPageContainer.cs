@@ -1,5 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Controls;
-using MultiRPC.Core.Page;
+using MultiRPC.Core.Pages;
 using MultiRPC.Core.Rpc;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
@@ -24,8 +24,8 @@ namespace MultiRPC.Shared.UI.Pages.Custom
             {
                 Children =
                 {
-                    ProfilesUI,
-                    ProfileEditingUI,
+                    //ProfilesUI,
+                    //ProfileEditingUI,
                     new Grid()
                     {
                         Background = (Brush)Application.Current.Resources["Colour1"],

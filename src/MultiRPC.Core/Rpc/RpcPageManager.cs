@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MultiRPC.Core.Page;
+using MultiRPC.Core.Pages;
 using System;
 using System.ComponentModel;
 

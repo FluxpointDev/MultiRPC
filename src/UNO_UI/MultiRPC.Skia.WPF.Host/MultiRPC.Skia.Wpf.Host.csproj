@@ -9,8 +9,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.WinUI.RemoteControl" Version="3.8.0-dev.461" />
-    <PackageReference Include="Uno.WinUI.Skia.Wpf" Version="3.8.0-dev.461" />
+    <PackageReference Include="Uno.WinUI.RemoteControl" Version="3.8.6" />
+    <PackageReference Include="Uno.WinUI.Skia.Wpf" Version="3.8.6" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Fonts\uno-fluentui-assets.ttf" />

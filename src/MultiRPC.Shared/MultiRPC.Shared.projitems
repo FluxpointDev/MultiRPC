@@ -9,16 +9,13 @@
     <Import_RootNamespace>MultiRPC</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </ApplicationDefinition>
-    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)AddDefaultPages.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DispatcherHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\LocalizablePage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\PageContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\TabbedPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Views\PresenceEditorView.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\Views\RPCView.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)UI\*.xaml.cs">
@@ -28,12 +25,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)UI\View\*.xaml.cs">
-      <DependentUpon>*.xaml</DependentUpon>
-    </Compile>
-    <Page Include="$(MSBuildThisFileDirectory)UI\View\*.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)UI\Views\PresenceEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)UI\Views\RPCView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -58,13 +54,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="$(MSBuildThisFileDirectory)CommonStyling.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)UI\Pages\Custom" />
-    <Folder Include="$(MSBuildThisFileDirectory)UI\View" />
+    <Compile Update="$(MSBuildThisFileDirectory)UI\Views\PresenceEditorView.xaml.cs">
+      <DependentUpon>PresenceEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="$(MSBuildThisFileDirectory)UI\Views\RPCView.xaml.cs">
+      <DependentUpon>RPCView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

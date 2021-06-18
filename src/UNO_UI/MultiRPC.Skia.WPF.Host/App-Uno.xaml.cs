@@ -1,34 +1,19 @@
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using MultiRPC.Core;
-using MultiRPC.Core.Page;
-using MultiRPC.Core.Rpc;
 using MultiRPC.Shared.UI;
-using MultiRPC.Shared.UI.Pages;
-using MultiRPC.Shared.UI.Pages.Custom;
+using System;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Activation;
 
-namespace MultiRPC
+namespace MultiRPC.Uno
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    public sealed partial class App : Application
+    public sealed partial class UnoApp : Application
     {
 #if NET5_0 && WINDOWS
         private Window _window;
@@ -36,54 +21,21 @@ namespace MultiRPC
 #else
         private Microsoft.UI.Xaml.Window _window;
 #endif
+        private MainPage _mainPage;
 
-	/// <summary>
-	/// Initializes the singleton application object.  This is the first line of authored code
-	/// executed, and as such is the logical equivalent of main() or WinMain().
-	/// </summary>
-	public App()
+    	/// <summary>
+	    /// Initializes the singleton application object.  This is the first line of authored code
+    	/// executed, and as such is the logical equivalent of main() or WinMain().
+	    /// </summary>
+	    public UnoApp()
         {
             InitializeLogging();
-            
-            //TODO: Readd
-            //ServiceManager.AddSingleton(x => m_window.MainPage);
 
-            //These pages have to be added first as they have multiple implementations for different things
-            //but we need to only have one instance of them pages
-            ServiceManager.AddSingleton<MultiRPCPage>();
-            ServiceManager.AddSingleton<CustomPage>();
-            ServiceManager.AddSingleton<CustomPageContainer>();
-
-            //Add their IRpcPage imp first
-            ServiceManager.AddSingleton<IRpcPage>(x => x.GetRequiredService<MultiRPCPage>());
-            ServiceManager.AddSingleton<IRpcPage>(x => x.GetRequiredService<CustomPage>());
-
-            //Now add their SidePage imp with the other pages
-            ServiceManager.AddSingleton<ISidePage>(x => x.GetRequiredService<MultiRPCPage>());
-            ServiceManager.AddSingleton<ISidePage>(x => x.GetRequiredService<CustomPageContainer>());
-            ServiceManager.AddSingleton<ISidePage, SettingsPage>();
-            ServiceManager.AddSingleton<ISidePage, LoggingPage>();
-            ServiceManager.AddSingleton<ISidePage, CreditsPage>();
-            ServiceManager.AddSingleton<ISidePage, ThemeEditorPage>();
-
-#if DEBUG
-            //Add any debugging pages into here
-            //ServiceManager.Service.AddSingleton<ISidePage, RPCViewTestPage>();
-#endif
-            //Add the FileSystemAccess service because UWP be a pain and make their own and not using System.IO
-            //like everyone else 😑
-            /*ServiceManager.AddSingleton<IFileSystemAccess, FileSystemAccess>();
-
-            //Add our asset processors so we can use assets xP
-            ServiceManager.AddSingleton<IAssetProcessor, PageIconProcessor>();
-            ServiceManager.AddSingleton<IAssetProcessor, LogoProcessor>();
-            ServiceManager.AddSingleton<IAssetProcessor, GifProcessor>();*/
+            ServiceManager.AddSingleton<MainPage>(x => _mainPage);
+            ServiceManager.Service.AddDefaults();
             
             //Now to process everything ready for the Client to use them
             ServiceManager.ProcessService();
-            RpcPageManager.Load();
-
-            this.InitializeComponent();
 
 #if HAS_UNO || NETFX_CORE
             this.Suspending += OnSuspending;
@@ -100,7 +52,7 @@ namespace MultiRPC
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                // this.DebugSettings.EnableFrameRateCounter = true;
+                //this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
 
@@ -140,7 +92,8 @@ namespace MultiRPC
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    _mainPage = new MainPage();
+                    rootFrame.Content = _mainPage;
                 }
                 // Ensure the current window is active
                 _window.Activate();
@@ -204,9 +157,9 @@ namespace MultiRPC
                 // builder.AddFilter("Microsoft.UI.Xaml.FrameworkElement", LogLevel.Trace );
 
                 // Layouter specific messages
-                // builder.AddFilter("Microsoft.UI.Xaml.Controls", LogLevel.Debug );
-                // builder.AddFilter("Microsoft.UI.Xaml.Controls.Layouter", LogLevel.Debug );
-                // builder.AddFilter("Microsoft.UI.Xaml.Controls.Panel", LogLevel.Debug );
+                builder.AddFilter("Microsoft.UI.Xaml.Controls", LogLevel.Debug );
+                builder.AddFilter("Microsoft.UI.Xaml.Controls.Layouter", LogLevel.Debug );
+                builder.AddFilter("Microsoft.UI.Xaml.Controls.Panel", LogLevel.Debug );
 
                 // builder.AddFilter("Windows.Storage", LogLevel.Debug );
 

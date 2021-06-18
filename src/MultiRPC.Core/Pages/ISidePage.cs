@@ -1,4 +1,4 @@
-﻿namespace MultiRPC.Core.Page
+﻿namespace MultiRPC.Core.Pages
 {
     /// <summary>
     /// Page that lives in the sidebar

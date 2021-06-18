@@ -4,13 +4,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
 using Microsoft.UI.Xaml.Input;
-
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using MultiRPC.Core;
-using Microsoft.UI.Xaml.Media.Animation;
 
 namespace MultiRPC.Shared.UI
 {

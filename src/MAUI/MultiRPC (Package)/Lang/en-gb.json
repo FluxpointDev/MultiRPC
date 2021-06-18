@@ -214,5 +214,6 @@
   "DidNotFindDiscordClient": "We couldn't find the discord client, letting RPC library find it",
   "FoundDiscordClient": "Found discord client",
   "Pipe": "Pipe",
-  "MultiRPC": "MultiRPC"
+  "MultiRPC": "MultiRPC",
+  "NotAddedMessage": "Oh looks like you hit something that hasn't been added yet! Come back later when it's added"
 }

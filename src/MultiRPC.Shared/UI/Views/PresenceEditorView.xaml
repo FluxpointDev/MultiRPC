@@ -1,0 +1,53 @@
+﻿<local:LocalizablePage
+    x:Class="MultiRPC.Shared.UI.Views.PresenceEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:MultiRPC.Shared.UI"
+    mc:Ignorable="d"
+    Background="Transparent">
+    <Grid RowSpacing="10" ColumnSpacing="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Name="tblText1" />
+        <TextBox Grid.Column="1" Name="txtText1" MaxLength="25" Text="{x:Bind RichPresence.Presence.Details, Mode=TwoWay}" />
+
+        <TextBlock Name="tblText2" Grid.Row="1" />
+        <TextBox Grid.Row="1" Grid.Column="1" Name="txtText2" MaxLength="25" Text="{x:Bind RichPresence.Presence.State, Mode=TwoWay}" />
+
+        <TextBlock Name="tblLargeKey" Grid.Row="2" />
+        <ComboBox Grid.Row="2" Grid.Column="1" Name="cboLargeKey" SelectionChanged="cboLargeKey_SelectionChanged" />
+
+        <TextBlock Name="tblLargeText" Grid.Row="3" />
+        <TextBox Grid.Row="3" Grid.Column="1" Name="txtLargeText" MaxLength="25" Text="{x:Bind RichPresence.Presence.Assets.LargeImageText, Mode=TwoWay}" />
+
+        <TextBlock Name="tblSmallKey" Grid.Row="4" />
+        <ComboBox Grid.Row="4" Grid.Column="1" Name="cboSmallKey" SelectionChanged="cboSmallKey_SelectionChanged" />
+
+        <TextBlock Name="tblSmallText" Grid.Row="5" />
+        <TextBox Grid.Row="5" Grid.Column="1" Name="txtSmallText" MaxLength="25" Text="{x:Bind RichPresence.Presence.Assets.SmallImageText, Mode=TwoWay}" />
+
+        <Grid Grid.Row="6" Grid.ColumnSpan="3" ColumnSpacing="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Name="tblElapasedTime" />
+            <CheckBox Grid.Column="1" Name="cbElapasedTime" IsChecked="{x:Bind RichPresence.UseTimestamp, Mode=TwoWay}" />
+        </Grid>
+    </Grid>
+</local:LocalizablePage>

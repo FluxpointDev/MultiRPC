@@ -1,0 +1,44 @@
+﻿<local:LocalizablePage
+    x:Class="MultiRPC.Shared.UI.Views.RPCView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:MultiRPC.Shared.UI"
+    mc:Ignorable="d"
+    Background="Transparent">
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+        <x:Double x:Key="bigImage">75</x:Double>
+        <x:Double x:Key="smallImage">26</x:Double>
+        <x:Double x:Key="smallImageBackground">30</x:Double>
+    </Page.Resources>
+    
+    <Border x:Name="bdrContainer" Background="{StaticResource Colour2}" CornerRadius="5" MinWidth="255" MaxWidth="355" Height="85">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid x:Name="grdIcons" VerticalAlignment="Center" Margin="5,0,0,0">
+                <Rectangle x:Name="regLarge" RadiusX="5" RadiusY="5" Height="{StaticResource bigImage}" Width="{StaticResource bigImage}" Fill="{x:Bind LargeImage, Mode=OneWay}" />
+                <Grid x:Name="grdSmall" Margin="0,0,-5,-2.5" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                    <Ellipse x:Name="elpSmallBG" Fill="{StaticResource Colour2}" Height="{StaticResource smallImageBackground}"
+                             Width="{StaticResource smallImageBackground}" />
+                    <Ellipse x:Name="elpSmall" Fill="{x:Bind SmallImage, Mode=OneWay}" Height="{StaticResource smallImage}" Width="{StaticResource smallImage}" VerticalAlignment="Center"
+                             HorizontalAlignment="Center" Margin="3,2" />
+                </Grid>
+            </Grid>
+            
+            <StackPanel Grid.Column="1" Margin="10,5,10,5">
+                <TextBlock x:Name="tblTitle" Text="{x:Bind Title, Mode=OneWay}" FontWeight="Bold" Margin="0,0,0,3" />
+                <TextBlock x:Name="tblLine1" Text="{x:Bind Text1, Mode=OneWay}" />
+                <TextBlock x:Name="tblLine2" Text="{x:Bind Text2, Mode=OneWay}" />
+                <TextBlock x:Name="tblTimer" Visibility="Collapsed" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</local:LocalizablePage>

@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-<Page.Resources>
+    <Page.Resources>
         <Style x:Key="PageButton" TargetType="Button" BasedOn="{StaticResource defaultbtn}">
             <Setter Property="CornerRadius" Value="50"/>
             <Setter Property="Height" Value="56"/>
@@ -31,7 +31,7 @@
             </Grid.ColumnDefinitions>
 
             <Border CornerRadius="15,0,0,0" Grid.Row="1" Grid.Column="1" Background="{StaticResource Colour2}" />
-            <ui:TopBar x:Name="topbar" VerticalAlignment="Center" Grid.Column="1"/>
+            <ui:TopBar VerticalAlignment="Center" Grid.Column="1"/>
 
             <ScrollViewer Grid.RowSpan="2" HorizontalAlignment="Center">
                 <StackPanel Margin="8" x:Name="stpSideBar" Spacing="25"/>

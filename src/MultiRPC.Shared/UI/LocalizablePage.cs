@@ -10,12 +10,12 @@ namespace MultiRPC.Shared.UI
     {
         public LocalizablePage() : base()
         {
-            //UWP/WINUI Loading
-            Loading += OnLoading;
+            Loaded += OnLoading;
 
             //TODO: Make it trigger on lang change
         }
 
+        //private void OnLoading(FrameworkElement sender, object e)
         private void OnLoading(object sender, RoutedEventArgs args)
         {
             try
