@@ -35,3 +35,6 @@ This allows you to change the main RPC title and add your own images
 # Resources
 Big thanks to https://github.com/Lachee/discord-rpc-csharp for providing the core code 
 and example for a C# rich presence that is being used in this app
+
+# Other
+[![Widget](https://discordservices.net/bot/434556304661544960/widget.svg?v=2)](https://dbot.page/waifu)
