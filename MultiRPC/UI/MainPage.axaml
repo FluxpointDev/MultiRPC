@@ -1,0 +1,37 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:MultiRPC.UI.Views"
+             mc:Ignorable="d" 
+             d:DesignWidth="800"
+             d:DesignHeight="450"
+             x:Class="MultiRPC.UI.MainPage">
+    <UserControl.Styles>
+        <Style Selector="Button.nav">
+            <Setter Property="CornerRadius" Value="56" />
+            <Setter Property="Width" Value="56" />
+            <Setter Property="Height" Value="56" />
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentColor}" />
+        </Style>
+        <Style Selector="Button.nav:pointerover">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentColor2Hover}" />
+        </Style>
+        <Style Selector="Button.selected">
+            <Setter Property="Background" Value="{DynamicResource NavButtonSelectedColor}" />
+        </Style>
+    </UserControl.Styles>
+    <Grid HorizontalAlignment="Stretch">
+        <StackPanel Margin="8,10,8,0" Spacing="25" Width="72" x:Name="splPages" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
+        <Grid Margin="72,0,0,0">
+            <ExperimentalAcrylicBorder CornerRadius="15,15,0,0" Margin="0,105,0,0">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial TintColor="{DynamicResource ThemeAccentColor2}" />
+                </ExperimentalAcrylicBorder.Material>
+                <ContentControl Margin="10" x:Name="cclContent" />
+            </ExperimentalAcrylicBorder>
+            
+            <views:TopBar HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+        </Grid>
+    </Grid>
+</UserControl>

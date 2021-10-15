@@ -1,0 +1,20 @@
+﻿<pages:SidePage xmlns="https://github.com/avaloniaui"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+          xmlns:pages="clr-namespace:MultiRPC.UI.Pages"
+          mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+          x:Class="MultiRPC.UI.Pages.MissingPage">
+    <StackPanel>
+        <TextBlock Text="What is currently missing" FontWeight="Bold" />
+        <TextBlock Text="Afk" />
+        <TextBlock Text="Customs page" />
+        <TextBlock Text="Settings Page" />
+        <TextBlock Text="Logging Page" />
+        <TextBlock Text="Credit Page" />
+        <TextBlock Text="Theme editor Page" />
+        <TextBlock Text="Theming" />
+        <TextBlock Text="All options in MultiRPC page" />
+        <TextBlock Text="Showing presence" />
+    </StackPanel>
+</pages:SidePage>

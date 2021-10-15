@@ -1,0 +1,32 @@
+<ui:FluentWindow xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="clr-namespace:MultiRPC.UI"
+        mc:Ignorable="d"
+        MinHeight="72" 
+        MinWidth="151"
+        SizeToContent="WidthAndHeight"
+        Background="Transparent"
+        CanResize="False"
+        x:Class="MultiRPC.UI.MainWindow"
+        Title="MultiRPC">
+        <Grid x:Name="grdContent">
+            <ExperimentalAcrylicBorder x:Name="eabBackground">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial TintColor="{DynamicResource ThemeAccentColor}" />
+                </ExperimentalAcrylicBorder.Material>
+            </ExperimentalAcrylicBorder>
+            
+            <ExperimentalAcrylicBorder x:Name="eabTitleBar" VerticalAlignment="Top">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial TintColor="{DynamicResource ThemeAccentColor}" />
+                </ExperimentalAcrylicBorder.Material>
+                <StackPanel Orientation="Horizontal" Margin="7,0,0,0">
+                    <Svg Path="/Assets/Logo.svg"  Margin="0,4,5,4" />
+                    <TextBlock x:Name="txtTitle" FontSize="11" Text="{Binding TextObservable^}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                </StackPanel>
+            </ExperimentalAcrylicBorder>
+            <TitleBar x:Name="tbrTitleBar" VerticalAlignment="Top" />
+        </Grid>
+</ui:FluentWindow>

@@ -1,0 +1,29 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             MinWidth="255" 
+             MaxWidth="355"
+             mc:Ignorable="d"
+             x:Class="MultiRPC.UI.Views.RpcView">
+    <Border x:Name="brdContent" CornerRadius="5">
+        <StackPanel Margin="5,0" Spacing="10" Orientation="Horizontal">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Border x:Name="brdLarge" Height="75" Width="75" CornerRadius="5"/>
+        
+                <!--TODO: Add load gif-->
+                <Grid Name="gridSmallImage" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,-5,-2.5">
+                    <Ellipse Name="ellSmallBackground" Fill="{Binding #brdContent.Background}" Height="30" Width="30" />
+                    <Ellipse Name="ellSmallImage" Height="26" Width="26" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </Grid>
+            </Grid>
+
+            <StackPanel Margin="0,5,0,0">
+                <TextBlock Name="tblTitle" Text="{Binding TextObservable^}" FontWeight="SemiBold" Margin="0,0,0,3" />
+                <TextBlock Name="tblText1" Text="{Binding TextObservable^}" />
+                <TextBlock Name="tblText2" Text="{Binding TextObservable^}" />
+                <TextBlock Name="tblTime" IsVisible="false" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

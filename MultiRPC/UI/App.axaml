@@ -1,0 +1,33 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MultiRPC.UI.App">
+    <Application.Resources>
+        <Color x:Key="ThemeAccentColor">#36393e</Color>
+        <Color x:Key="ThemeAccentColor2">#2c2e30</Color>
+        <Color x:Key="NavButtonSelectedColor">#FF00ABEB</Color>
+        <Color x:Key="Purple">#6A7EC4</Color>
+        <Color x:Key="Red">#FFF13333</Color>
+        
+        <SolidColorBrush x:Key="RedBrush" Color="{DynamicResource Red}" />
+        <SolidColorBrush x:Key="PurpleBrush" Color="{DynamicResource Purple}" />
+        <SolidColorBrush x:Key="ThemeAccentBrush" Color="{DynamicResource ThemeAccentColor}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush2" Color="{DynamicResource ThemeAccentColor2}"/>
+    </Application.Resources>
+
+    <Application.Styles>
+        <Style Selector="Button">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundColor}" />
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentColor}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentColor2Hover}" />
+        </Style>
+        <Style Selector="Button:pressed  /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentColor}" />
+        </Style>
+        <FluentTheme Mode="Dark"/>
+    </Application.Styles>
+</Application>
