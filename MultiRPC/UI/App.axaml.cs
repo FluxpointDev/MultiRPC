@@ -1,8 +1,10 @@
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using MultiRPC.Rpc;
 using MultiRPC.UI.Pages;
+using MultiRPC.UI.Pages.Rpc;
 using TinyUpdate.Binary;
 using TinyUpdate.Core.Extensions;
 using TinyUpdate.Core.Update;
@@ -27,7 +29,10 @@ namespace MultiRPC.UI
             PageManager.AddPage(new MissingPage());
             RpcPageManager.GiveRpcClient(RpcClient);
 
-            _= Updater.UpdateApp(null);
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                _= Updater.UpdateApp(null);
+            }
         }
 
         public override void OnFrameworkInitializationCompleted()

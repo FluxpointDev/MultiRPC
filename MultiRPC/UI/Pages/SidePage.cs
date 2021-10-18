@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 
 namespace MultiRPC.UI.Pages
 {
@@ -7,5 +7,15 @@ namespace MultiRPC.UI.Pages
         public abstract string IconLocation { get; }
 
         public abstract string LocalizableName { get; }
+
+        public void Initialize()
+        {
+            if (!IsInitialized)
+            {
+                Initialize(true);
+            }
+        }
+
+        public abstract void Initialize(bool loadXaml);
     }
 }

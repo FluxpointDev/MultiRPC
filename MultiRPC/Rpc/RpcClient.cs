@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using DiscordRPC;
 using DiscordRPC.Message;
 
@@ -12,6 +13,8 @@ namespace MultiRPC.Rpc
 
         public ConnectionStatus Status { get; private set; }
 
+        private DateTime _rpcStart;
+        
         private string _presenceName = "Unknown";
         private long _presenceId;
         public RichPresence? ActivePresence => _client?.CurrentPresence != null ? 
@@ -54,7 +57,6 @@ namespace MultiRPC.Rpc
                 ShutdownOnly = true
             };
 
-            UpdatePresence(RpcPageManager.CurrentPage?.RichPresence);
             _client.OnPresenceUpdate += (sender, e) =>
             {
                 PresenceUpdated?.Invoke(sender, ActivePresence);
@@ -69,6 +71,8 @@ namespace MultiRPC.Rpc
                 Status = ConnectionStatus.Connecting;
                 Errored?.Invoke(this, e);
             };
+            _rpcStart = DateTime.UtcNow;
+            UpdatePresence(RpcPageManager.CurrentPage?.RichPresence);
             _client.Initialize();
 
             Status = ConnectionStatus.Connecting;
@@ -95,11 +99,21 @@ namespace MultiRPC.Rpc
             }
             _presenceId = richPresence.ID;
             _presenceName = richPresence.Name;
+
+            var pre = richPresence.Presence.Clone();
+            pre.Buttons = pre.Buttons.Where(x => !string.IsNullOrWhiteSpace(x.Url)).ToArray();
+            if (richPresence.UseTimestamp)
+            {
+                pre.Timestamps = new Timestamps
+                {
+                    Start = _rpcStart
+                };
+            }
             
             if (!_client?.IsDisposed ?? false) 
             {
                 //TODO: Check ID is the same and restart if needed
-                _client?.SetPresence(richPresence.Presence);
+                _client?.SetPresence(pre);
             }
         }
     }

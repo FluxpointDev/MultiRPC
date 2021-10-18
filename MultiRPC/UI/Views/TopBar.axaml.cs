@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
@@ -110,11 +112,15 @@ namespace MultiRPC.UI.Views
             if (App.RpcClient.IsRunning)
             {
                 App.RpcClient.Stop();
+                btnStart.Classes.Remove("red");
+                btnStart.Classes.Add("green");
                 return;
             }
 
             App.RpcClient.Start(null, null);
             App.RpcClient.UpdatePresence(RpcPageManager.CurrentPage?.RichPresence);
+            btnStart.Classes.Remove("green");
+            btnStart.Classes.Add("red");
         }
 
         private void BtnUpdatePresence_OnClick(object? sender, RoutedEventArgs e)

@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <!--<PublishTrimmed>true</PublishTrimmed>-->
+    <PublishTrimmed>true</PublishTrimmed>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.8" />

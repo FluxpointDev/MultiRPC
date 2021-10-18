@@ -37,6 +37,8 @@ namespace MultiRPC.UI
                 //TODO: See why we need this
                 await Task.Delay(10);
                 eabTitleBar.Height = tbrTitleBar.DesiredSize.Height;
+                icon.Height = eabTitleBar.Height - icon.Margin.Top - icon.Margin.Bottom;
+                icon.Width = icon.Height;
                 eabBackground.Margin = new Thickness(0, eabTitleBar.Height, 0, 0);
                 _control.Margin += eabBackground.Margin;
                 grdContent.Children.Insert(1, _control);

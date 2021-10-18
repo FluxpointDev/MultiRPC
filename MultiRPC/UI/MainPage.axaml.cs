@@ -13,6 +13,7 @@ namespace MultiRPC.UI
         public MainPage()
         {
             InitializeComponent();
+            
             Button? btnToTrigger = null;
             SidePage? pageToTrigger = null;
             foreach (var page in PageManager.CurrentPages)
@@ -25,6 +26,7 @@ namespace MultiRPC.UI
 
             //TODO: Add autostart
             btnToTrigger?.Classes.Add("selected");
+            pageToTrigger?.Initialize();
             cclContent.Content = pageToTrigger;
             selectedBtn = btnToTrigger;
         }
@@ -50,6 +52,10 @@ namespace MultiRPC.UI
 
                 btn.Classes.Add("selected");
                 selectedBtn = btn;
+                if (!page.IsInitialized)
+                {
+                    page.Initialize();
+                }
                 cclContent.Content = page;
             };
 

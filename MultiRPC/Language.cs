@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading;
 using TinyUpdate.Core.Logging;
 
 namespace MultiRPC
@@ -30,29 +31,40 @@ namespace MultiRPC
         private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Language));
         static void GrabContent()
         {
-            //TODO: Get active language
             //TODO: Be able to change language
-            var fileLocation = Path.Combine(Constants.LanguageFolder, "en-gb.json");
+            var currentLang = Thread.CurrentThread.CurrentUICulture.Name.ToLower();
+            var currentLangTwoLetter = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToLower();
+            _englishLanguageJsonFileContent = GrabLanguage("en-gb")!;
+
+            if (currentLang != "en-gb")
+            {
+                _languageJsonFileContent = 
+                    GrabLanguage(currentLang) 
+                    ?? GrabLanguage(currentLangTwoLetter) 
+                    ?? _englishLanguageJsonFileContent;
+            }
+            _languageJsonFileContent ??= _englishLanguageJsonFileContent;
+        }
+        
+        private static Dictionary<string, string>? GrabLanguage(string name)
+        {
+            var fileLocation = Path.Combine(Constants.LanguageFolder, name + ".json");
             if (!File.Exists(fileLocation))
             {
-                return;
+                return null;
             }
 
-            Logger.Debug("File exists, grabbing contents from language file");
+            Logger.Debug("{0} exists, grabbing contents", fileLocation);
             using var fileContentsStream = File.OpenRead(fileLocation);
-
             try
             {
-                Logger.Debug("Parsing language file");
-                
-                _englishLanguageJsonFileContent = JsonSerializer.Deserialize<Dictionary<string, string>>(fileContentsStream)!;
-                _languageJsonFileContent = _englishLanguageJsonFileContent;
-                Logger.Debug("Parsed file!");
+                return JsonSerializer.Deserialize<Dictionary<string, string>>(fileContentsStream)!;
             }
             catch (Exception e)
             {
                 Logger.Error(e);
             }
+            return null;
         }
 
         public string Text => TextObservable.Text;

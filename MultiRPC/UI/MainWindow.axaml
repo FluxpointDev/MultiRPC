@@ -23,7 +23,7 @@
                     <ExperimentalAcrylicMaterial TintColor="{DynamicResource ThemeAccentColor}" />
                 </ExperimentalAcrylicBorder.Material>
                 <StackPanel Orientation="Horizontal" Margin="7,0,0,0">
-                    <Svg Path="/Assets/Logo.svg"  Margin="0,4,5,4" />
+                    <Svg x:Name="icon" Height="0" Width="0" Path="/Assets/Logo.svg"  Margin="0,4,5,4" />
                     <TextBlock x:Name="txtTitle" FontSize="11" Text="{Binding TextObservable^}" HorizontalAlignment="Left" VerticalAlignment="Center" />
                 </StackPanel>
             </ExperimentalAcrylicBorder>

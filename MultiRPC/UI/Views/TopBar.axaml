@@ -25,8 +25,8 @@
     <Grid ColumnDefinitions="Auto * Auto" VerticalAlignment="Center" HorizontalAlignment="Stretch">
         <StackPanel Orientation="Horizontal" Spacing="10">
             <StackPanel Spacing="5" Margin="5,0,0,0">
-                <Button x:Name="btnStart" Content="{Binding TextObservable^}" Click="BtnStart_OnClick" />
-                <Button x:Name="btnUpdatePresence" Content="{Binding TextObservable^}" Click="BtnUpdatePresence_OnClick" IsEnabled="False" />
+                <Button x:Name="btnStart" Content="{Binding TextObservable^}" Click="BtnStart_OnClick" Classes="green" />
+                <Button x:Name="btnUpdatePresence" Content="{Binding TextObservable^}" Click="BtnUpdatePresence_OnClick" IsEnabled="False" Classes="purple" />
             </StackPanel>
             <StackPanel Spacing="10">
                 <TextBlock x:Name="tblStatus" />
@@ -37,7 +37,7 @@
         <StackPanel Spacing="10" Orientation="Horizontal" Grid.Column="2" Margin="0,0,15,0">
             <StackPanel Spacing="5" Margin="5,0,0,0">
                 <Button x:Name="btnAuto" Classes="smaller" Content="{Binding TextObservable^}" IsEnabled="False" />
-                <Button x:Name="btnAfk" Classes="smaller" Content="{Binding TextObservable^}" IsEnabled="False" />
+                <Button x:Name="btnAfk" Classes="smaller purple" Content="{Binding TextObservable^}" IsEnabled="False" />
             </StackPanel>
             <views:RpcView x:Name="rpcView" />
         </StackPanel>
