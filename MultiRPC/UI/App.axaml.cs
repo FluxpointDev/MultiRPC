@@ -23,9 +23,12 @@ namespace MultiRPC.UI
         {
             AvaloniaXamlLoader.Load(this);
 
-            //TODO: Add all pages
             PageManager.AddRpcPage(new MultiRpcPage());
             PageManager.AddRpcPage(new CustomPage());
+            PageManager.AddPage(new SettingsPage());
+            PageManager.AddPage(new LoggingPage());
+            PageManager.AddPage(new CreditsPage());
+            PageManager.AddPage(new ThemeEditorPage());
             PageManager.AddPage(new MissingPage());
             RpcPageManager.GiveRpcClient(RpcClient);
 

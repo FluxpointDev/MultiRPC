@@ -3,30 +3,9 @@
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:rpc="clr-namespace:MultiRPC.Rpc"
+         xmlns:rpc1="clr-namespace:MultiRPC.UI.Pages.Rpc"
          Background="Transparent"
          mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
          x:Class="MultiRPC.UI.Pages.Rpc.MultiRpcPage">
-    <UserControl.Styles>
-        <Style Selector="ComboBox">
-            <Setter Property="Width" Value="150" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
-        </Style>
-        <Style Selector="TextBox">
-            <Setter Property="Width" Value="150" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
-        </Style>
-    </UserControl.Styles>
-    <StackPanel Spacing="5">
-        <TextBox x:Name="txtText1" Text="{Binding Result}" Watermark="{Binding Lang.TextObservable^}" />
-        <TextBox x:Name="txtText2" Text="{Binding Result}" Watermark="{Binding Lang.TextObservable^}" />
-        <ComboBox x:Name="cboLargeKey" SelectionChanged="CboLargeKey_OnSelectionChanged" />
-        <TextBox x:Name="txtLargeText" Text="{Binding Result}" Watermark="{Binding Lang.TextObservable^}" />
-        <ComboBox x:Name="cboSmallKey" SelectionChanged="CboSmallKey_OnSelectionChanged" />
-        <TextBox x:Name="txtSmallText" Text="{Binding Result}" Watermark="{Binding Lang.TextObservable^}" />
-        <TextBox x:Name="txtButton1Url" Text="{Binding Result}" Watermark="{Binding Lang.TextObservable^}" MaxLength="0" />
-        <TextBox x:Name="txtButton1Text" Text="{Binding Result}" Watermark="{Binding Lang.TextObservable^}" />
-        <TextBox x:Name="txtButton2Url" Text="{Binding Result}" Watermark="{Binding Lang.TextObservable^}" MaxLength="0" />
-        <TextBox x:Name="txtButton2Text" Text="{Binding Result}" Watermark="{Binding Lang.TextObservable^}" />
-        <CheckBox x:Name="ckbElapsedTime" Content="{Binding TextObservable^}" Checked="CkbElapsedTime_OnChange" Unchecked="CkbElapsedTime_OnChange" />
-    </StackPanel>
+    <rpc1:BaseRpcControl x:Name="rpcControl" />
 </rpc:RpcPage>

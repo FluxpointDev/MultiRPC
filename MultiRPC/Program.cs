@@ -1,6 +1,11 @@
+using System.IO;
 using Avalonia;
 using MultiRPC.UI;
+using TinyUpdate.Core;
+using TinyUpdate.Core.Logging;
+using TinyUpdate.Core.Logging.Loggers;
 
+[assembly: SemanticVersion("7.0.0-testing")]
 namespace MultiRPC
 {
     class Program
@@ -10,6 +15,10 @@ namespace MultiRPC
         // yet and stuff might break.
         public static void Main(string[] args)
         {
+            var logFolder = Path.Combine(Constants.SettingsFolder, "Logging");
+            Directory.CreateDirectory(logFolder);
+            LoggingCreator.AddLogBuilder(new FileLoggerBuilder(logFolder));
+            
             var builder = BuildAvaloniaApp();
             builder.StartWithClassicDesktopLifetime(args);
         }

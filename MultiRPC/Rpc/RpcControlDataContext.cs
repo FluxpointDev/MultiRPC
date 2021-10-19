@@ -34,4 +34,6 @@ namespace MultiRPC.Rpc
 
         public event EventHandler<string>? ResultChanged;
     }
+    
+    public record CheckResult(bool Valid, string? ReasonWhy = null);
 }

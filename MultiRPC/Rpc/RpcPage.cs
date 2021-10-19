@@ -16,14 +16,6 @@ namespace MultiRPC.Rpc
         
         public abstract RichPresence RichPresence { get; protected set; }
 
-        protected void AddRpcControl(Control control, Language language, Action<string> a, Func<string, CheckResult>? validation = null)
-        {
-            var rpcControl = new RpcControlDataContext(validation) { Lang = language };
-            control.DataContext = rpcControl;
-            rpcControl.ResultChanged += (sender, s) =>
-            {
-                a.Invoke(s);
-            };
-        }
+        public record CheckResult(bool Valid, string? ReasonWhy = null);
     }
 }

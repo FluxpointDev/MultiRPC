@@ -45,17 +45,22 @@ namespace MultiRPC.UI
                     }
                 }
             };
+            ToolTip.SetTip(btn, Language.GetText(page.LocalizableName) + " " + Language.GetText("Page"));
 
+            //TODO: See why the visual doesn't update on the spot
             btn.Click += delegate
             {
                 selectedBtn?.Classes.Remove("selected");
+                btn.Classes.Insert(0,"selected");
 
-                btn.Classes.Add("selected");
                 selectedBtn = btn;
                 if (!page.IsInitialized)
                 {
                     page.Initialize();
                 }
+
+                contentBorder.Material.TintColor = page.BackgroundColour ?? (Color)App.Current.Resources["ThemeAccentColor2"];
+                cclContent.Background = page.Background;
                 cclContent.Content = page;
             };
 

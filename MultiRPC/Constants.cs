@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 
 namespace MultiRPC
@@ -45,6 +46,8 @@ namespace MultiRPC
         {
             WriteIndented = true
         };
+
+        public static string SettingsFolder { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "MultiRPC-Beta");
 
         /// <summary>
         /// The theme's file extension

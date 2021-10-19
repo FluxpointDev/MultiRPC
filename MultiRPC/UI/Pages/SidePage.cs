@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Media;
 
 namespace MultiRPC.UI.Pages
 {
@@ -8,6 +9,8 @@ namespace MultiRPC.UI.Pages
 
         public abstract string LocalizableName { get; }
 
+        public abstract void Initialize(bool loadXaml);
+        
         public void Initialize()
         {
             if (!IsInitialized)
@@ -16,6 +19,6 @@ namespace MultiRPC.UI.Pages
             }
         }
 
-        public abstract void Initialize(bool loadXaml);
+        public Color? BackgroundColour { get; protected set; }
     }
 }
