@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Validation;
+using MultiRPC.UI.Controls;
 using TinyUpdate.Core.Extensions;
 
 namespace MultiRPC.UI.Pages.Rpc
@@ -21,15 +22,30 @@ namespace MultiRPC.UI.Pages.Rpc
         BuiltIn
     }
     
-    public partial class BaseRpcControl : UserControl
+    public partial class BaseRpcControl : UserControl, ITabPage
     {
-        public BaseRpcControl() { }
-
         public RichPresence RichPresence { get; set; } = null!;
-
         public ImagesType ImageType { get; set; }
-
         public bool GrabID { get; set; }
+        public Language TabName { get; set; }
+
+        public void ChangeRichPresence(RichPresence richPresence)
+        {
+            RichPresence = richPresence;
+
+            txtClientID.Text = richPresence.ID.ToString();
+            txtText1.Text = richPresence.Profile.Details;
+            txtText2.Text = richPresence.Profile.State;
+            txtLargeKey.Text = richPresence.Profile.LargeKey;
+            txtLargeText.Text = richPresence.Profile.LargeText;
+            txtSmallKey.Text = richPresence.Profile.SmallKey;
+            txtSmallText.Text = richPresence.Profile.SmallText;
+            txtButton1Url.Text = richPresence.Profile.Button1Url;
+            txtButton1Text.Text = richPresence.Profile.Button1Text;
+            txtButton2Url.Text = richPresence.Profile.Button2Url;
+            txtButton2Text.Text = richPresence.Profile.Button2Text;
+            ckbElapsedTime.IsChecked = richPresence.Profile.ShowTime;
+        }
 
         public void Initialize(bool loadXaml)
         {
@@ -47,7 +63,7 @@ namespace MultiRPC.UI.Pages.Rpc
 
                     _ = CheckID(s);
                     return new CheckResult(true);
-                }, RichPresence.Profile.ID);
+                }, RichPresence.ID.ToString());
             }
             
             if (ImageType == ImagesType.Custom)

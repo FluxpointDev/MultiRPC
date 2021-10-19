@@ -9,17 +9,17 @@ namespace MultiRPC.UI.Controls
 {
     public partial class TabsPage : UserControl
     {
-        private TabPage[] _pages = null!;
-        public void AddTabs(params TabPage[] pages) => _pages = pages;
+        private ITabPage[] _pages = null!;
+        public void AddTabs(params ITabPage[] pages) => _pages = pages;
         
-        protected virtual void Initialize()
+        public virtual void Initialize()
         {
             InitializeComponent();
             stpTabs.Children.AddRange(_pages.Select(MakeTab));
         }
 
         private Rectangle? _activePageRectangle;
-        private Control MakeTab(TabPage page)
+        private Control MakeTab(ITabPage page)
         {
             var text = new TextBlock
             {
@@ -72,10 +72,10 @@ namespace MultiRPC.UI.Controls
         }
     }
 
-    public abstract class TabPage : UserControl
+    public interface ITabPage
     {
-        public abstract Language TabName { get; }
+        public Language TabName { get; }
         
-        public abstract void Initialize();
+        public void Initialize(bool loadXaml);
     }
 }

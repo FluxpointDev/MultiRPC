@@ -6,7 +6,7 @@ using SharpCompress;
 namespace MultiRPC.Setting
 {
     public static class SettingManager<T> 
-        where T : Setting, INotifyPropertyChanged, new()
+        where T : Setting, new()
     {
         private static readonly Lazy<T> _setting = new Lazy<T>(() =>
         {
@@ -23,10 +23,13 @@ namespace MultiRPC.Setting
                 }
             }
 
-            setting.PropertyChanged += (sender, args) =>
+            if (setting is INotifyPropertyChanged settingNotify)
             {
-                setting.Save();
-            };
+                settingNotify.PropertyChanged += (sender, args) =>
+                {
+                    setting.Save();
+                };
+            }
             return setting;
         });
 

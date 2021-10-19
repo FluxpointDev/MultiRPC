@@ -8,11 +8,12 @@ namespace MultiRPC.Rpc
     {
         public RichPresence(string name, long id)
         {
-            Name = name;
+            _name = name;
             ID = id;
         }
 
-        public string Name { get; set; }
+        [GeneratedProperty]
+        private string _name;
 
         public long ID { get; set; }
 
@@ -27,7 +28,7 @@ namespace MultiRPC.Rpc
         [JsonIgnore]
         public Uri? CustomSmallImageUrl { get; set; }
 
-        [GeneratedProperty] public bool _useTimestamp;
+        [GeneratedProperty] private bool _useTimestamp;
 
         //TODO: Remake to use proper testing
         [JsonIgnore]

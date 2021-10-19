@@ -7,7 +7,6 @@ namespace MultiRPC.Rpc
 {
     public partial class RpcProfile
     {
-        [GeneratedProperty] private string _ID = string.Empty;
         [GeneratedProperty] private string _state = string.Empty;
         [GeneratedProperty] private string _details = string.Empty;
         [GeneratedProperty] private string _largeKey = string.Empty;
