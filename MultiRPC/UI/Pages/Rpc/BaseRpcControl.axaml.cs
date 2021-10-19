@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Validation;
+using TinyUpdate.Core.Extensions;
 
 namespace MultiRPC.UI.Pages.Rpc
 {
@@ -24,7 +25,7 @@ namespace MultiRPC.UI.Pages.Rpc
     {
         public BaseRpcControl() { }
 
-        public RichPresence RichPresence { get; set; }
+        public RichPresence RichPresence { get; set; } = null!;
 
         public ImagesType ImageType { get; set; }
 
@@ -37,10 +38,7 @@ namespace MultiRPC.UI.Pages.Rpc
             if (GrabID)
             {
                 txtClientID.IsVisible = true;
-                txtClientID.AddRpcControl(new Language("ClientID"), s =>
-                {
-                    RichPresence.Presence.Assets.LargeImageKey = s;
-                }, s =>
+                txtClientID.AddRpcControl(new Language("ClientID"), null, s =>
                 {
                     if (s.Length != 18)
                     {
@@ -49,7 +47,7 @@ namespace MultiRPC.UI.Pages.Rpc
 
                     _ = CheckID(s);
                     return new CheckResult(true);
-                });
+                }, RichPresence.Profile.ID);
             }
             
             if (ImageType == ImagesType.Custom)
@@ -59,43 +57,39 @@ namespace MultiRPC.UI.Pages.Rpc
 
                 txtLargeKey.IsVisible = true;
                 txtSmallKey.IsVisible = true;
-                txtLargeKey.AddRpcControl(new Language("LargeKey"), s => RichPresence.Presence.Assets.LargeImageKey = s, s => Check(s, 32));
-                txtSmallKey.AddRpcControl(new Language("SmallKey"), s => RichPresence.Presence.Assets.SmallImageKey = s, s => Check(s, 32));
+                txtLargeKey.AddRpcControl(new Language("LargeKey"), s => RichPresence.Profile.LargeKey = s, s => Check(s, 32), RichPresence.Profile.LargeKey);
+                txtSmallKey.AddRpcControl(new Language("SmallKey"), s => RichPresence.Profile.SmallKey = s, s => Check(s, 32), RichPresence.Profile.SmallKey);
             }
             else
             {
                 cboLargeKey.Items = Data.MultiRPCImages.Keys;
                 cboSmallKey.Items = Data.MultiRPCImages.Keys;
-                cboLargeKey.SelectedIndex = 0;
-                cboSmallKey.SelectedIndex = 0;
+                var largeKey = Data.MultiRPCImages.Keys.IndexOf(x => x?.ToLower() == RichPresence.Profile.LargeKey);
+                if (largeKey == -1)
+                {
+                    largeKey = 0;
+                }
+                cboLargeKey.SelectedIndex = largeKey;
+                
+                var smallKey = Data.MultiRPCImages.Keys.IndexOf(x => x?.ToLower() == RichPresence.Profile.SmallKey);
+                if (smallKey == -1)
+                {
+                    smallKey = 0;
+                }
+                cboSmallKey.SelectedIndex = smallKey;
             }
 
-            txtText1.AddRpcControl(new Language("Text1"), s => RichPresence.Presence.Details = s, s => Check(s));
-            txtText2.AddRpcControl(new Language("Text2"), s => RichPresence.Presence.State = s, s => Check(s));
-            txtLargeText.AddRpcControl(new Language("LargeText"), s => RichPresence.Presence.Assets.LargeImageText = s, s => Check(s));
-            txtSmallText.AddRpcControl(new Language("SmallText"), s => RichPresence.Presence.Assets.SmallImageText = s, s => Check(s));
+            txtText1.AddRpcControl(new Language("Text1"), s => RichPresence.Profile.Details = s, s => Check(s), RichPresence.Profile.Details);
+            txtText2.AddRpcControl(new Language("Text2"), s => RichPresence.Profile.State = s, s => Check(s), RichPresence.Profile.State);
+            txtLargeText.AddRpcControl(new Language("LargeText"), s => RichPresence.Profile.LargeText = s, s => Check(s), RichPresence.Profile.LargeText);
+            txtSmallText.AddRpcControl(new Language("SmallText"), s => RichPresence.Profile.SmallText = s, s => Check(s), RichPresence.Profile.SmallText);
 
-            //We have to add the try/catch due to the RPC lib not throwing on a empty string (but it still sets url so we good)
-            txtButton1Url.AddRpcControl(new Language("Button1Url"), s =>
-            {
-                try
-                {
-                    RichPresence.Presence.Buttons[0].Url = s;
-                }
-                catch (Exception) { }
-            }, CheckUrl);
-            txtButton1Text.AddRpcControl(new Language("Button1Text"), s => RichPresence.Presence.Buttons[0].Label = s, s => Check(s, 32));
+            txtButton1Url.AddRpcControl(new Language("Button1Url"), s => RichPresence.Profile.Button1Url = s, CheckUrl, RichPresence.Profile.Button1Url);
+            txtButton1Text.AddRpcControl(new Language("Button1Text"), s => RichPresence.Profile.Button1Text = s, s => Check(s, 32), RichPresence.Profile.Button1Text);
+            txtButton2Url.AddRpcControl(new Language("Button2Url"), s => RichPresence.Profile.Button2Url = s, CheckUrl, RichPresence.Profile.Button2Url);
+            txtButton2Text.AddRpcControl(new Language("Button2Text"), s => RichPresence.Profile.Button2Text = s, s => Check(s, 32), RichPresence.Profile.Button2Text);
 
-            txtButton2Url.AddRpcControl(new Language("Button2Url"), s =>
-            {
-                try
-                {
-                    RichPresence.Presence.Buttons[1].Url = s;
-                }
-                catch (Exception) { }
-            }, CheckUrl);
-            txtButton2Text.AddRpcControl(new Language("Button2Text"), s => RichPresence.Presence.Buttons[1].Label = s, s => Check(s, 32));
-
+            ckbElapsedTime.IsChecked = RichPresence.UseTimestamp;
             ckbElapsedTime.DataContext = new Language("ShowElapsedTime");
         }
 
@@ -152,8 +146,8 @@ namespace MultiRPC.UI.Pages.Rpc
         private void CboLargeKey_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             var key = e.AddedItems[0]?.ToString();
-            RichPresence.Presence.Assets.LargeImageKey = cboLargeKey.SelectedIndex != 0 ? 
-                key?.ToLower() : string.Empty;
+            RichPresence.Profile.LargeKey = cboLargeKey.SelectedIndex != 0 ? 
+                key?.ToLower() ?? string.Empty : string.Empty;
 
             RichPresence.CustomLargeImageUrl =
                 key != null 
@@ -166,8 +160,8 @@ namespace MultiRPC.UI.Pages.Rpc
         private void CboSmallKey_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             var key = e.AddedItems[0]?.ToString();
-            RichPresence.Presence.Assets.SmallImageKey = cboSmallKey.SelectedIndex != 0 ? 
-                key?.ToLower() : string.Empty;
+            RichPresence.Profile.SmallKey = cboSmallKey.SelectedIndex != 0 ? 
+                key?.ToLower() ?? string.Empty : string.Empty;
             
             RichPresence.CustomSmallImageUrl =
                 key != null 

@@ -1,0 +1,3 @@
+[submodule "ext/fonderie"]
+	path = ext/fonderie
+	url = https://github.com/Azyyyyyy/fonderie.git

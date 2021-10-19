@@ -9,14 +9,15 @@ namespace MultiRPC.Rpc.Validation
         private readonly ILogging _logging = LoggingCreator.CreateLogger(nameof(RpcControlValidation));
         
         private readonly Func<string, CheckResult>? _validation;
-        public RpcControlValidation(Func<string, CheckResult>? validation)
+        public RpcControlValidation(Func<string, CheckResult>? validation, string? initialValue)
         {
             _validation = validation;
+            _result = initialValue ?? string.Empty;
         }
 
         public Language Lang { get; init; } = null!;
 
-        private string _result = string.Empty;
+        private string _result;
         public string Result
         {
             get => _result;

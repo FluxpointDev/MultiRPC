@@ -37,7 +37,7 @@ namespace MultiRPC.Rpc
 
             return !string.IsNullOrEmpty(response?.Message) ?
                 (false, $"{Language.GetText("ClientIDIsNotValid")}\r\n{response?.Message}")
-                : (true, response.Name);
+                : (true, response!.Name);
         }
     }
 

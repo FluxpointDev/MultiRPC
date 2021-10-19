@@ -23,5 +23,7 @@
     <AvaloniaResource Include="Assets\**" />
     <AvaloniaResource Remove="Assets\Language\**" />
     <Content Include="Assets\Language\**" CopyToOutputDirectory="Always" />
+
+    <ProjectReference Include="..\ext\fonderie\Fonderie.INPC\Fonderie.INPC.Generator\Fonderie.INPC.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 </Project>

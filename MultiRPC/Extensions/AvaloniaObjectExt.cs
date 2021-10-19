@@ -2,7 +2,7 @@
 using Avalonia;
 using Avalonia.Threading;
 
-namespace MultiRPC
+namespace MultiRPC.Extensions
 {
     public static class AvaloniaObjectExt
     {

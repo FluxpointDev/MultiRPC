@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Svg;
 using DiscordRPC;
+using MultiRPC.Extensions;
 
 namespace MultiRPC.UI.Views
 {

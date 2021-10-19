@@ -1,5 +1,7 @@
 ﻿using MultiRPC.Rpc;
 using MultiRPC.Rpc.Page;
+using MultiRPC.Setting;
+using MultiRPC.Setting.Settings;
 
 namespace MultiRPC.UI.Pages.Rpc
 {
@@ -9,7 +11,7 @@ namespace MultiRPC.UI.Pages.Rpc
 
         public override string IconLocation => "Icons/Discord";
         public override string LocalizableName => "MultiRPC";
-        public override RichPresence RichPresence { get; protected set; } = new RichPresence("MultiRPC", Constants.MultiRPCID);
+        public override RichPresence RichPresence { get; protected set; } = SettingManager<MultiRPCSettings>.Setting.Presence;
         public override void Initialize(bool loadXaml)
         {
             InitializeComponent(loadXaml);

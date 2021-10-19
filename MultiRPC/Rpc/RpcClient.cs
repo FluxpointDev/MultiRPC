@@ -2,6 +2,7 @@
 using System.Linq;
 using DiscordRPC;
 using DiscordRPC.Message;
+using MultiRPC.Extensions;
 using MultiRPC.Rpc.Page;
 
 namespace MultiRPC.Rpc
@@ -22,7 +23,7 @@ namespace MultiRPC.Rpc
             null 
             : new RichPresence(_presenceName, _presenceId)
             {
-                Presence = _client?.CurrentPresence!
+                Profile = _client?.CurrentPresence?.ToProfile()!
             };
 
         public event EventHandler<ReadyMessage>? Ready;
@@ -101,8 +102,8 @@ namespace MultiRPC.Rpc
             _presenceId = richPresence.ID;
             _presenceName = richPresence.Name;
 
-            var pre = richPresence.Presence.Clone();
-            pre.Buttons = pre.Buttons.Where(x => !string.IsNullOrWhiteSpace(x.Url)).ToArray();
+            var pre = richPresence.Presence;
+            pre.Buttons = pre.Buttons?.Where(x => !string.IsNullOrWhiteSpace(x.Url) && !string.IsNullOrWhiteSpace(x.Label)).ToArray();
             if (richPresence.UseTimestamp)
             {
                 pre.Timestamps = new Timestamps

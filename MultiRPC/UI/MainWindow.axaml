@@ -9,6 +9,7 @@
         SizeToContent="WidthAndHeight"
         Background="Transparent"
         CanResize="False"
+        Icon="/Assets/Logo.ico"
         x:Class="MultiRPC.UI.MainWindow"
         Title="MultiRPC">
         <Grid x:Name="grdContent">

@@ -1,12 +1,17 @@
-﻿using System;
+using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using MultiRPC.Extensions;
 using MultiRPC.Rpc.Page;
+using MultiRPC.Setting;
+using MultiRPC.Setting.Settings;
 
 namespace MultiRPC.UI.Views
 {
     public partial class TopBar : UserControl
     {
+        private GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
+
         public TopBar()
         {
             InitializeComponent();
@@ -14,7 +19,7 @@ namespace MultiRPC.UI.Views
             {
                 RpcPageManagerOnPageChanged(this, RpcPageManager.CurrentPage);
             }
-            RpcPageManager.PageChanged += delegate(object? sender, RpcPage page)
+            RpcPageManager.NewCurrentPage += delegate(object? sender, RpcPage page)
             {
                 this.RunUILogic(() => RpcPageManagerOnPageChanged(sender, page));
             };
@@ -54,11 +59,10 @@ namespace MultiRPC.UI.Views
                     _statusKind.ChangeJsonNames("Connected");
                     btnUpdatePresence.IsEnabled = true;
 
-                    //TODO: Temp with user storing
                     var user = message.User.Username + "#" + message.User.Discriminator.ToString("0000");
-                    if (user != _user)
+                    if (user != _generalSettings.LastUser)
                     {
-                        _user = user;
+                        _generalSettings.LastUser = user;
                         UpdateUser();
                     }
                 });
@@ -85,11 +89,9 @@ namespace MultiRPC.UI.Views
             this.RunUILogic(() => tblStatus.Text = _statusText.Text + ": " + _statusKind.Text);
         }
 
-        //TODO: Store user's in settings
-        private string _user = "NA#0000";
         private void UpdateUser()
         {
-            this.RunUILogic(() => tblUser.Text = _userText.Text + ": " + _user);
+            this.RunUILogic(() => tblUser.Text = _userText.Text + ": " + _generalSettings.LastUser);
         }
         
         private void RpcPageManagerOnPageChanged(object? sender, RpcPage e)
