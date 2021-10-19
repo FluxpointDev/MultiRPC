@@ -1,11 +1,12 @@
-﻿<rpc:RpcPage xmlns="https://github.com/avaloniaui"
+﻿<page:RpcPage xmlns="https://github.com/avaloniaui"
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:rpc="clr-namespace:MultiRPC.Rpc"
-         xmlns:rpc1="clr-namespace:MultiRPC.UI.Pages.Rpc"
+         xmlns:rpcUI="clr-namespace:MultiRPC.UI.Pages.Rpc"
+         xmlns:page="clr-namespace:MultiRPC.Rpc.Page"
          Background="Transparent"
          mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
          x:Class="MultiRPC.UI.Pages.Rpc.MultiRpcPage">
-    <rpc1:BaseRpcControl x:Name="rpcControl" />
-</rpc:RpcPage>
+    <rpcUI:BaseRpcControl x:Name="rpcControl" ImageType="BuiltIn" />
+</page:RpcPage>

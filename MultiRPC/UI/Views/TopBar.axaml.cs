@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Templates;
-using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.Threading;
-using Avalonia.VisualTree;
-using MultiRPC.Rpc;
+using MultiRPC.Rpc.Page;
 
 namespace MultiRPC.UI.Views
 {

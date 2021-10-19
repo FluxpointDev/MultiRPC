@@ -1,6 +1,7 @@
 using System.IO;
 using Avalonia;
 using MultiRPC.UI;
+using MultiRPC.UI.Pages;
 using TinyUpdate.Core;
 using TinyUpdate.Core.Logging;
 using TinyUpdate.Core.Logging.Loggers;
@@ -17,7 +18,10 @@ namespace MultiRPC
         {
             var logFolder = Path.Combine(Constants.SettingsFolder, "Logging");
             Directory.CreateDirectory(logFolder);
+
+            LoggingCreator.GlobalLevel = LogLevel.Trace;
             LoggingCreator.AddLogBuilder(new FileLoggerBuilder(logFolder));
+            LoggingCreator.AddLogBuilder(new LoggingPageBuilder());
             
             var builder = BuildAvaloniaApp();
             builder.StartWithClassicDesktopLifetime(args);

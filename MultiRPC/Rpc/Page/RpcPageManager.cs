@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace MultiRPC.Rpc
+namespace MultiRPC.Rpc.Page
 {
     public static class RpcPageManager
     {

@@ -1,26 +1,74 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
+using MultiRPC.Rpc.Validation;
 
 namespace MultiRPC.UI.Pages.Rpc
 {
+    public enum ImagesType
+    {
+        /// <summary>
+        /// Use images from the user's RPC and not our images
+        /// </summary>
+        Custom,
+        /// <summary>
+        /// Use the images from us
+        /// </summary>
+        BuiltIn
+    }
+    
     public partial class BaseRpcControl : UserControl
     {
         public BaseRpcControl() { }
 
         public RichPresence RichPresence { get; set; }
 
+        public ImagesType ImageType { get; set; }
+
+        public bool GrabID { get; set; }
+
         public void Initialize(bool loadXaml)
         {
             InitializeComponent(loadXaml);
 
-            //Note that when it comes to doing the custom page, what theses fill in can't be more then 32bytes
-            cboLargeKey.Items = Data.MultiRPCImages.Keys;
-            cboSmallKey.Items = Data.MultiRPCImages.Keys;
-            cboLargeKey.SelectedIndex = 0;
-            cboSmallKey.SelectedIndex = 0;
+            if (GrabID)
+            {
+                txtClientID.IsVisible = true;
+                txtClientID.AddRpcControl(new Language("ClientID"), s =>
+                {
+                    RichPresence.Presence.Assets.LargeImageKey = s;
+                }, s =>
+                {
+                    if (s.Length != 18)
+                    {
+                        return new CheckResult(false, Language.GetText("ClientIDMustBe18CharactersLong"));
+                    }
+
+                    _ = CheckID(s);
+                    return new CheckResult(true);
+                });
+            }
+            
+            if (ImageType == ImagesType.Custom)
+            {
+                cboLargeKey.IsVisible = false;
+                cboSmallKey.IsVisible = false;
+
+                txtLargeKey.IsVisible = true;
+                txtSmallKey.IsVisible = true;
+                txtLargeKey.AddRpcControl(new Language("LargeKey"), s => RichPresence.Presence.Assets.LargeImageKey = s, s => Check(s, 32));
+                txtSmallKey.AddRpcControl(new Language("SmallKey"), s => RichPresence.Presence.Assets.SmallImageKey = s, s => Check(s, 32));
+            }
+            else
+            {
+                cboLargeKey.Items = Data.MultiRPCImages.Keys;
+                cboSmallKey.Items = Data.MultiRPCImages.Keys;
+                cboLargeKey.SelectedIndex = 0;
+                cboSmallKey.SelectedIndex = 0;
+            }
 
             txtText1.AddRpcControl(new Language("Text1"), s => RichPresence.Presence.Details = s, s => Check(s));
             txtText2.AddRpcControl(new Language("Text2"), s => RichPresence.Presence.State = s, s => Check(s));
@@ -34,7 +82,7 @@ namespace MultiRPC.UI.Pages.Rpc
                 {
                     RichPresence.Presence.Buttons[0].Url = s;
                 }
-                catch (Exception _) { }
+                catch (Exception) { }
             }, CheckUrl);
             txtButton1Text.AddRpcControl(new Language("Button1Text"), s => RichPresence.Presence.Buttons[0].Label = s, s => Check(s, 32));
 
@@ -44,7 +92,7 @@ namespace MultiRPC.UI.Pages.Rpc
                 {
                     RichPresence.Presence.Buttons[1].Url = s;
                 }
-                catch (Exception _) { }
+                catch (Exception) { }
             }, CheckUrl);
             txtButton2Text.AddRpcControl(new Language("Button2Text"), s => RichPresence.Presence.Buttons[1].Label = s, s => Check(s, 32));
 
@@ -52,6 +100,30 @@ namespace MultiRPC.UI.Pages.Rpc
         }
 
         //TODO: Make it so we can disable start button or update presence button
+
+        private async Task CheckID(string s)
+        {
+            txtClientID.Classes.Remove("error");
+
+            string? error = null;
+            if (long.TryParse(s, out var id))
+            {
+                txtClientID.Classes.Add("checking");
+                var (successful, resultMessage) = await IDChecker.Check(id);
+                txtClientID.Classes.Remove("checking");
+                if (successful)
+                {
+                    ToolTip.SetTip(txtClientID, null);
+                    RichPresence.ID = id;
+                    RichPresence.Name = resultMessage!;
+                    return;
+                }
+                error = resultMessage;
+            }
+            txtClientID.Classes.Add("error");
+            error ??= Language.GetText("ClientIDIsNotValid");
+            ToolTip.SetTip(txtClientID, error);
+        }
         
         private CheckResult CheckUrl(string s)
         {
@@ -79,14 +151,30 @@ namespace MultiRPC.UI.Pages.Rpc
 
         private void CboLargeKey_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
+            var key = e.AddedItems[0]?.ToString();
             RichPresence.Presence.Assets.LargeImageKey = cboLargeKey.SelectedIndex != 0 ? 
-                e.AddedItems[0]?.ToString()?.ToLower() : string.Empty;
+                key?.ToLower() : string.Empty;
+
+            RichPresence.CustomLargeImageUrl =
+                key != null 
+                && Data.TryGetImageValue(key, out var uriS)
+                && Uri.TryCreate(uriS, UriKind.Absolute, out var uri)
+                    ? uri 
+                    : null;
         }
 
         private void CboSmallKey_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
+            var key = e.AddedItems[0]?.ToString();
             RichPresence.Presence.Assets.SmallImageKey = cboSmallKey.SelectedIndex != 0 ? 
-                e.AddedItems[0]?.ToString()?.ToLower() : string.Empty;
+                key?.ToLower() : string.Empty;
+            
+            RichPresence.CustomSmallImageUrl =
+                key != null 
+                && Data.TryGetImageValue(key, out var uriS) 
+                && Uri.TryCreate(uriS, UriKind.Absolute, out var uri) 
+                    ? uri 
+                    : null;
         }
 
         private void CkbElapsedTime_OnChange(object? sender, RoutedEventArgs e)

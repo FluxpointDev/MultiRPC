@@ -1,9 +1,10 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 
 namespace MultiRPC.UI.Pages
 {
-    public abstract class SidePage : UserControl
+    public abstract class SidePage : UserControl, ISidePage
     {
         public abstract string IconLocation { get; }
 
@@ -20,5 +21,6 @@ namespace MultiRPC.UI.Pages
         }
 
         public Color? BackgroundColour { get; protected set; }
+        public Thickness ContentPadding { get; } = new Thickness(10, 10, 10, 0);
     }
 }

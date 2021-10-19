@@ -1,6 +1,6 @@
 ﻿using System;
 using Avalonia.Controls;
-using MultiRPC.Rpc;
+using MultiRPC.Rpc.Validation;
 
 namespace MultiRPC.Extensions
 {
@@ -8,7 +8,7 @@ namespace MultiRPC.Extensions
     {
         public static void AddRpcControl(this Control control, Language language, Action<string> a, Func<string, CheckResult>? validation = null)
         {
-            var rpcControl = new RpcControlDataContext(validation) { Lang = language };
+            var rpcControl = new RpcControlValidation(validation) { Lang = language };
             control.DataContext = rpcControl;
             rpcControl.ResultChanged += (sender, s) =>
             {

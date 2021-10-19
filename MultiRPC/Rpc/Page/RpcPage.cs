@@ -1,10 +1,7 @@
-﻿using System;
-using Avalonia.Controls;
-using MultiRPC.UI.Pages;
-using MultiRPC.UI.Pages.Rpc;
+﻿using MultiRPC.UI.Pages;
 using TinyUpdate.Core.Logging;
 
-namespace MultiRPC.Rpc
+namespace MultiRPC.Rpc.Page
 {
     public abstract class RpcPage : SidePage
     {

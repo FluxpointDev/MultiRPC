@@ -1,10 +1,5 @@
-﻿using System;
-using System.Text;
-using Avalonia.Controls;
-using Avalonia.Data;
-using Avalonia.Interactivity;
-using MultiRPC.Extensions;
-using MultiRPC.Rpc;
+﻿using MultiRPC.Rpc;
+using MultiRPC.Rpc.Page;
 
 namespace MultiRPC.UI.Pages.Rpc
 {
@@ -14,6 +9,7 @@ namespace MultiRPC.UI.Pages.Rpc
 
         public override string IconLocation => "Icons/Discord";
         public override string LocalizableName => "MultiRPC";
+        public override RichPresence RichPresence { get; protected set; } = new RichPresence("MultiRPC", Constants.MultiRPCID);
         public override void Initialize(bool loadXaml)
         {
             InitializeComponent(loadXaml);
@@ -21,7 +17,5 @@ namespace MultiRPC.UI.Pages.Rpc
             rpcControl.RichPresence = RichPresence;
             rpcControl.Initialize(loadXaml);
         }
-
-        public override RichPresence RichPresence { get; protected set; } = new RichPresence("MultiRPC", Constants.MultiRPCID);
     }
 }

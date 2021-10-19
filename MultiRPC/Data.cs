@@ -39,15 +39,15 @@ namespace MultiRPC
             };
         }
 
-        public static string? GetImageValue(string imageKey)
+        public static bool TryGetImageValue(string imageKey, out string uri)
         {
             if (string.IsNullOrWhiteSpace(imageKey))
             {
-                return string.Empty;
+                uri = string.Empty;
+                return false;
             }
 
-            MultiRPCImages.TryGetValue(imageKey, out var uri);
-            return uri;
+            return MultiRPCImages.TryGetValue(imageKey, out uri!);
         }
     }
 }

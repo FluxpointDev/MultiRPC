@@ -32,6 +32,24 @@
             <Setter Property="Background" Value="{DynamicResource ThemeAccentColor}" />
         </Style>
 
+        <!--error, checking-->
+        <Style Selector="TextBox.checking">
+            <Setter Property="BorderBrush" Value="Yellow" />
+        </Style>
+        <Style Selector="TextBox.error">
+            <Setter Property="BorderBrush" Value="Red" />
+        </Style>
+
+        <Style Selector="Button.red /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource Red}" />
+        </Style>
+        <Style Selector="Button.red:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#FFE64747" />
+        </Style>
+        <Style Selector="Button.red:focus-within /template/ ContentPresenter">
+            <Setter Property="Background" Value="#FFEE3333" />
+        </Style>
+        
         <Style Selector="Button.green /template/ ContentPresenter">
             <Setter Property="Background" Value="{DynamicResource Green}" />
         </Style>

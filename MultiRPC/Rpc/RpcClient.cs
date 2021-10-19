@@ -2,6 +2,7 @@
 using System.Linq;
 using DiscordRPC;
 using DiscordRPC.Message;
+using MultiRPC.Rpc.Page;
 
 namespace MultiRPC.Rpc
 {
@@ -53,7 +54,7 @@ namespace MultiRPC.Rpc
             _client = new DiscordRpcClient(idS) //TODO: Add custom pipe support
             {
                 SkipIdenticalPresence = false, 
-                //Logger = new RpcLogger(), 
+                Logger = new RpcLogger(),
                 ShutdownOnly = true
             };
 

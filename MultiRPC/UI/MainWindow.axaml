@@ -14,13 +14,13 @@
         <Grid x:Name="grdContent">
             <ExperimentalAcrylicBorder x:Name="eabBackground">
                 <ExperimentalAcrylicBorder.Material>
-                    <ExperimentalAcrylicMaterial TintColor="{DynamicResource ThemeAccentColor}" />
+                    <ExperimentalAcrylicMaterial TintOpacity="1" TintColor="{DynamicResource ThemeAccentColor}" />
                 </ExperimentalAcrylicBorder.Material>
             </ExperimentalAcrylicBorder>
             
             <ExperimentalAcrylicBorder x:Name="eabTitleBar" VerticalAlignment="Top">
                 <ExperimentalAcrylicBorder.Material>
-                    <ExperimentalAcrylicMaterial TintColor="{DynamicResource ThemeAccentColor}" />
+                    <ExperimentalAcrylicMaterial TintOpacity="1" TintColor="{DynamicResource ThemeAccentColor}" />
                 </ExperimentalAcrylicBorder.Material>
                 <StackPanel Orientation="Horizontal" Margin="7,0,0,0">
                     <Svg x:Name="icon" Height="0" Width="0" Path="/Assets/Logo.svg"  Margin="0,4,5,4" />

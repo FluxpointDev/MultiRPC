@@ -26,10 +26,11 @@ namespace MultiRPC
         private readonly Lazy<LanguageObservable> _textObservable;
         public LanguageObservable TextObservable => _textObservable.Value;
         
-        private static Dictionary<string, string> _englishLanguageJsonFileContent;
-        private static Dictionary<string, string> _languageJsonFileContent;
+        private static Dictionary<string, string> _englishLanguageJsonFileContent = null!;
+        private static Dictionary<string, string> _languageJsonFileContent = null!;
         private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Language));
-        static void GrabContent()
+
+        private static void GrabContent()
         {
             //TODO: Be able to change language
             var currentLang = Thread.CurrentThread.CurrentUICulture.Name.ToLower();
@@ -133,6 +134,7 @@ namespace MultiRPC
         public void Dispose()
         {
             _action.Invoke();
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Svg;
 using MultiRPC.UI.Pages;
@@ -15,7 +14,7 @@ namespace MultiRPC.UI
             InitializeComponent();
             
             Button? btnToTrigger = null;
-            SidePage? pageToTrigger = null;
+            ISidePage? pageToTrigger = null;
             foreach (var page in PageManager.CurrentPages)
             {
                 var btn = AddSidePage(page);
@@ -25,14 +24,11 @@ namespace MultiRPC.UI
             PageManager.PageAdded += (sender, page) => AddSidePage(page);
 
             //TODO: Add autostart
-            btnToTrigger?.Classes.Add("selected");
-            pageToTrigger?.Initialize();
-            cclContent.Content = pageToTrigger;
-            selectedBtn = btnToTrigger;
+            ClickBtn(btnToTrigger, null, pageToTrigger);
         }
 
-        private Button? selectedBtn;
-        private Button AddSidePage(SidePage page)
+        private Button? _selectedBtn;
+        private Button AddSidePage(ISidePage page)
         {
             var btn = new Button
             {
@@ -48,25 +44,32 @@ namespace MultiRPC.UI
             ToolTip.SetTip(btn, Language.GetText(page.LocalizableName) + " " + Language.GetText("Page"));
 
             //TODO: See why the visual doesn't update on the spot
-            btn.Click += delegate
-            {
-                selectedBtn?.Classes.Remove("selected");
-                btn.Classes.Insert(0,"selected");
-
-                selectedBtn = btn;
-                if (!page.IsInitialized)
-                {
-                    page.Initialize();
-                }
-
-                contentBorder.Material.TintColor = page.BackgroundColour ?? (Color)App.Current.Resources["ThemeAccentColor2"];
-                cclContent.Background = page.Background;
-                cclContent.Content = page;
-            };
+            btn.Click += (sender, args) => ClickBtn(sender, args, page);
 
             btn.Classes.Add("nav");
             splPages.Children.Add(btn);
             return btn;
+        }
+
+        private void ClickBtn(object? sender, RoutedEventArgs e, ISidePage page)
+        {
+            if (sender is not Button btn)
+            {
+                return;
+            }
+            
+            _selectedBtn?.Classes.Remove("selected");
+            btn.Classes.Insert(0,"selected");
+
+            _selectedBtn = btn;
+            if (!page.IsInitialized)
+            {
+                page.Initialize();
+            }
+
+            contentBorder.Material.TintColor = page.BackgroundColour ?? (Color)Application.Current.Resources["ThemeAccentColor2"]!;
+            cclContent.Padding = page.ContentPadding;
+            cclContent.Content = page;
         }
     }
 }

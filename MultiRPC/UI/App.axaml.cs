@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using MultiRPC.Rpc;
+using MultiRPC.Rpc.Page;
 using MultiRPC.UI.Pages;
 using MultiRPC.UI.Pages.Rpc;
 using TinyUpdate.Binary;

@@ -11,9 +11,9 @@ namespace MultiRPC.Rpc
             ID = id;
         }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public long ID { get; }
+        public long ID { get; set; }
 
         public DiscordRPC.RichPresence Presence { get; set; } = new()
         {
@@ -21,9 +21,9 @@ namespace MultiRPC.Rpc
             Buttons = new Button[] { new Button(), new Button() }
         };
 
-        public Uri CustomLargeImageUrl { get; set; }
+        public Uri? CustomLargeImageUrl { get; set; }
 
-        public Uri CustomSmallImageUrl { get; set; }
+        public Uri? CustomSmallImageUrl { get; set; }
 
         public bool UseTimestamp { get; set; }
 

@@ -1,13 +1,15 @@
 using System;
 using Avalonia.Data;
-using MultiRPC.UI.Pages.Rpc;
+using TinyUpdate.Core.Logging;
 
-namespace MultiRPC.Rpc
+namespace MultiRPC.Rpc.Validation
 {
-    public class RpcControlDataContext
+    public class RpcControlValidation
     {
+        private readonly ILogging _logging = LoggingCreator.CreateLogger(nameof(RpcControlValidation));
+        
         private readonly Func<string, CheckResult>? _validation;
-        public RpcControlDataContext(Func<string, CheckResult>? validation)
+        public RpcControlValidation(Func<string, CheckResult>? validation)
         {
             _validation = validation;
         }
@@ -23,12 +25,15 @@ namespace MultiRPC.Rpc
                 var check = _validation?.Invoke(value);
                 if (check?.Valid ?? true)
                 {
+                    _logging.Debug("Validation was successful");
                     _result = value;
                     ResultChanged?.Invoke(this, _result);
                     return;
                 }
 
-                throw new DataValidationException(check?.ReasonWhy ?? "Unknown validation reason");
+                var error = check?.ReasonWhy ?? "Unknown validation reason";
+                _logging.Error(error);
+                throw new DataValidationException(error);
             }
         }
 

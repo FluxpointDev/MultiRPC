@@ -1,17 +1,14 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using TinyUpdate.Core.Logging;
 using TinyUpdate.Http.Extensions;
 
 namespace MultiRPC.Rpc
 {
     public static class IDChecker
     {
-        private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Language));
         private static readonly HttpClient Client = new HttpClient();
 
         /// <summary>
@@ -22,7 +19,7 @@ namespace MultiRPC.Rpc
         /// Success: returns true with name that is linked to that ID</returns>
         public static async Task<(bool Successful, string? ResultMessage)> Check(long id) 
         {
-            HttpResponseMessage? responseMessage =
+            var responseMessage =
                 await Client.GetResponseMessage(
                     new HttpRequestMessage(HttpMethod.Get, 
                         $"https://discordapp.com/api/v6/oauth2/applications/{id}/rpc")); ;
@@ -38,7 +35,7 @@ namespace MultiRPC.Rpc
 
             var response = JsonSerializer.Deserialize<ClientCheckResult>(await responseMessage.Content.ReadAsStreamAsync());
 
-            return string.IsNullOrEmpty(response?.Message) ?
+            return !string.IsNullOrEmpty(response?.Message) ?
                 (false, $"{Language.GetText("ClientIDIsNotValid")}\r\n{response?.Message}")
                 : (true, response.Name);
         }

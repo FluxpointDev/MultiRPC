@@ -5,6 +5,9 @@
              xmlns:pages="clr-namespace:MultiRPC.UI.Pages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MultiRPC.UI.Pages.LoggingPage"
+             MaxHeight="550"
              BackgroundColour="Black">
-    Come back soon when Logging is readded!
+    <ScrollViewer>
+        <StackPanel Spacing="5" x:Name="stpLogs" />
+    </ScrollViewer>
 </pages:SidePage>

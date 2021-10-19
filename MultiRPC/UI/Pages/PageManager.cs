@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Avalonia.Controls;
-using MultiRPC.Rpc;
+using MultiRPC.Rpc.Page;
 
 namespace MultiRPC.UI.Pages
 {
     public static class PageManager
     {
-        private static readonly List<SidePage> Pages = new List<SidePage>();
+        private static readonly List<ISidePage> Pages = new List<ISidePage>();
         
-        public static void AddPage(SidePage page)
+        public static void AddPage(ISidePage page)
         {
             Pages.Add(page);
             PageAdded?.Invoke(page, page);
@@ -22,8 +21,8 @@ namespace MultiRPC.UI.Pages
             PageAdded?.Invoke(page, page);
         }
 
-        public static IReadOnlyList<SidePage> CurrentPages => Pages.AsReadOnly();
+        public static IReadOnlyList<ISidePage> CurrentPages => Pages.AsReadOnly();
 
-        public static event EventHandler<SidePage>? PageAdded;
+        public static event EventHandler<ISidePage>? PageAdded;
     }
 }

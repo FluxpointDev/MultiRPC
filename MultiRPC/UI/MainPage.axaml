@@ -6,7 +6,6 @@
              mc:Ignorable="d" 
              d:DesignWidth="800"
              d:DesignHeight="527"
-             MaxHeight="527"
              x:Class="MultiRPC.UI.MainPage">
     <UserControl.Styles>
         <Style Selector="Button.nav">
@@ -29,10 +28,10 @@
         <Grid Margin="72,0,0,0">
             <ExperimentalAcrylicBorder x:Name="contentBorder" CornerRadius="15,15,0,0" Margin="0,105,0,0">
                 <ExperimentalAcrylicBorder.Material>
-                    <ExperimentalAcrylicMaterial TintColor="{DynamicResource ThemeAccentColor2}" />
+                    <ExperimentalAcrylicMaterial TintOpacity="1" TintColor="{DynamicResource ThemeAccentColor2}" />
                 </ExperimentalAcrylicBorder.Material>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" >
-                    <ContentControl CornerRadius="{Binding #contentBorder.CornerRadius}" Padding="10, 10, 10, 0" x:Name="cclContent" />
+                    <ContentControl CornerRadius="{Binding #contentBorder.CornerRadius}" x:Name="cclContent" />
                 </ScrollViewer>
             </ExperimentalAcrylicBorder>
             
