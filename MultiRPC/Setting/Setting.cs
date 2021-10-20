@@ -10,8 +10,7 @@ namespace MultiRPC.Setting
         public void Save()
         {
             var settingFileLocation = Path.Combine(Constants.SettingsFolder, Name + ".json");
-            using var stream = File.OpenWrite(settingFileLocation);
-            JsonSerializer.Serialize(stream, this, GetType(), Constants.JsonSerializer);
+            File.WriteAllText(settingFileLocation, JsonSerializer.Serialize(this, GetType(), Constants.JsonSerializer));
         }
     }
 }

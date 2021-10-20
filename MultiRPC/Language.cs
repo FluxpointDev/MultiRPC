@@ -13,7 +13,7 @@ namespace MultiRPC
         {
             GrabContent();
         }
-        
+
         public Language(params string[] jsonNames)
         {
             _textObservable = new Lazy<LanguageObservable>(new LanguageObservable(jsonNames));
@@ -36,7 +36,6 @@ namespace MultiRPC
             var currentLang = Thread.CurrentThread.CurrentUICulture.Name.ToLower();
             var currentLangTwoLetter = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToLower();
             _englishLanguageJsonFileContent = GrabLanguage("en-gb")!;
-
             if (currentLang != "en-gb")
             {
                 _languageJsonFileContent = 
@@ -54,9 +53,11 @@ namespace MultiRPC
             {
                 return null;
             }
-
+           
             Logger.Debug("{0} exists, grabbing contents", fileLocation);
+           
             using var fileContentsStream = File.OpenRead(fileLocation);
+            
             try
             {
                 return JsonSerializer.Deserialize<Dictionary<string, string>>(fileContentsStream)!;

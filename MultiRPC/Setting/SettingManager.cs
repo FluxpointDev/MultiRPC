@@ -31,7 +31,7 @@ namespace MultiRPC.Setting
                 };
             }
             return setting;
-        });
+       });
 
         public static T Setting => _setting.Value;
     }

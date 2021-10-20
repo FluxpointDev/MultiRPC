@@ -18,10 +18,12 @@ namespace MultiRPC.UI
         public static readonly RpcClient RpcClient = new RpcClient();
 
         //TODO: Put this somewhere else, for now this works
-        private UpdateClient Updater = new GithubUpdateClient(new BinaryApplier(),"FluxpointDev", "MultiRPC");
+        private UpdateClient Updater = null;
         
         public override void Initialize()
         {
+            if (!Constants.IsWindowsApp)
+                Updater = new GithubUpdateClient(new BinaryApplier(), "FluxpointDev", "MultiRPC");
             AvaloniaXamlLoader.Load(this);
 
             PageManager.AddRpcPage(new MultiRpcPage());
@@ -33,7 +35,7 @@ namespace MultiRPC.UI
             PageManager.AddPage(new MissingPage());
             RpcPageManager.GiveRpcClient(RpcClient);
 
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (!Constants.IsWindowsApp && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 _= Updater.UpdateApp(null);
             }

@@ -16,17 +16,17 @@ namespace MultiRPC.Rpc
 
         public void Info(string message, params object[] args)
         {
-            _internalLogger.Information(message, args);
+                _internalLogger.Information(message, args);
         }
         
         public void Warning(string message, params object[] args)
         {
-            _internalLogger.Warning(message, args);
+                _internalLogger.Warning(message, args);
         }
 
         public void Error(string message, params object[] args)
         {
-            _internalLogger.Error(message, args);
+                _internalLogger.Error(message, args);
         }
 
         public LogLevel Level

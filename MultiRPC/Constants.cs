@@ -47,7 +47,12 @@ namespace MultiRPC
             WriteIndented = true
         };
 
-        public static string SettingsFolder { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "MultiRPC-Beta");
+        /// <summary>
+        /// Set to true if the build is for windows store.
+        /// </summary>
+        public static bool IsWindowsApp { get; } = false;
+
+        public static string SettingsFolder { get; set; }
 
         /// <summary>
         /// The theme's file extension
