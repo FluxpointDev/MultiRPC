@@ -3,6 +3,7 @@ using System.Linq;
 using DiscordRPC;
 using DiscordRPC.Message;
 using MultiRPC.Extensions;
+using MultiRPC.Logging;
 using MultiRPC.Rpc.Page;
 
 namespace MultiRPC.Rpc

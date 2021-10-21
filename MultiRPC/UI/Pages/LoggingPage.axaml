@@ -6,6 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MultiRPC.UI.Pages.LoggingPage"
              MaxHeight="550"
+             MaxWidth="550"
              BackgroundColour="Black">
     <ScrollViewer>
         <StackPanel Spacing="5" x:Name="stpLogs" />

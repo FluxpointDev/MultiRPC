@@ -26,10 +26,10 @@
             <Setter Property="BorderThickness" Value="1" />
         </Style>
         <Style Selector="Button:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource ThemeAccentColor2Hover}" />
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentColor2Brush}" />
         </Style>
         <Style Selector="Button:focus-within /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource ThemeAccentColor}" />
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
         </Style>
 
         <!--error, checking-->

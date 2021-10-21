@@ -6,6 +6,7 @@ using MultiRPC.Rpc;
 using MultiRPC.Rpc.Page;
 using MultiRPC.UI.Pages;
 using MultiRPC.UI.Pages.Rpc;
+using MultiRPC.UI.Pages.Rpc.Custom;
 using TinyUpdate.Binary;
 using TinyUpdate.Core.Extensions;
 using TinyUpdate.Core.Update;
@@ -18,12 +19,13 @@ namespace MultiRPC.UI
         public static readonly RpcClient RpcClient = new RpcClient();
 
         //TODO: Put this somewhere else, for now this works
-        private UpdateClient Updater = null;
+        private UpdateClient? Updater;
         
         public override void Initialize()
         {
-            if (!Constants.IsWindowsApp)
-                Updater = new GithubUpdateClient(new BinaryApplier(), "FluxpointDev", "MultiRPC");
+#if !WINSTORE && !DEBUG
+            Updater = new GithubUpdateClient(new BinaryApplier(), "FluxpointDev", "MultiRPC");
+#endif
             AvaloniaXamlLoader.Load(this);
 
             PageManager.AddRpcPage(new MultiRpcPage());
@@ -35,16 +37,21 @@ namespace MultiRPC.UI
             PageManager.AddPage(new MissingPage());
             RpcPageManager.GiveRpcClient(RpcClient);
 
-            if (!Constants.IsWindowsApp && !RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+#if !DEBUG
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                _= Updater.UpdateApp(null);
+                _= Updater?.UpdateApp(null);
             }
+#endif
         }
 
+        public IClassicDesktopStyleApplicationLifetime DesktopLifetime;
+        
         public override void OnFrameworkInitializationCompleted()
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                DesktopLifetime = desktop;
                 desktop.MainWindow = new MainWindow();
             }
 

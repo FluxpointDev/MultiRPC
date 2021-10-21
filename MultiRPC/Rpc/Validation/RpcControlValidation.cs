@@ -24,7 +24,7 @@ namespace MultiRPC.Rpc.Validation
             set
             {
                 var check = _validation?.Invoke(value);
-                if ((check?.Valid ?? true))
+                if (check?.Valid ?? true)
                 {
                     _logging.Debug("Validation was successful");
                     _result = value;

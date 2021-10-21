@@ -7,8 +7,6 @@ namespace MultiRPC.UI.Pages.Rpc
 {
     public partial class MultiRpcPage : RpcPage
     {
-        public MultiRpcPage() { }
-
         public override string IconLocation => "Icons/Discord";
         public override string LocalizableName => "MultiRPC";
         public override RichPresence RichPresence { get; protected set; } = SettingManager<MultiRPCSettings>.Setting.Presence;

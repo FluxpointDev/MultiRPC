@@ -3,20 +3,24 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using MultiRPC.UI.Controls;
+using MultiRPC.UI.Pages.Rpc.Custom.Popups;
 
-namespace MultiRPC.UI.Pages.Rpc
+namespace MultiRPC.UI.Pages.Rpc.Custom
 {
     //TODO: Add edit/add/remove/share popup's
     public partial class CustomPage : RpcPage
     {
         public CustomPage()
         {
+            //TODO: Add tooltips
             ContentPadding = new Thickness(0);
         }
 
@@ -26,14 +30,13 @@ namespace MultiRPC.UI.Pages.Rpc
 
         private readonly ProfilesSettings _profilesSettings = SettingManager<ProfilesSettings>.Setting;
         private RichPresence _activeProfile;
-        private IDisposable _textBindingDis;
         private BaseRpcControl rpcControl;
-
+        private Button _activeButton;
+        private IDisposable _textBindingDis;
+        
         public override void Initialize(bool loadXaml)
         {
             InitializeComponent(loadXaml);
-
-            brdContent.Background = (IBrush)Application.Current.Resources["ThemeAccentBrush"];
 
             var tabPage = new TabsPage();
             rpcControl = new BaseRpcControl
@@ -88,13 +91,7 @@ namespace MultiRPC.UI.Pages.Rpc
                 DataContext = presence,
                 Margin = new Thickness(0, 0, 5, 0)
             };
-            btn.Click += (sender, args) =>
-            {
-                _activeProfile = presence;
-                _textBindingDis.Dispose();
-                AddTextBinding();
-                rpcControl.ChangeRichPresence(_activeProfile);
-            };
+            btn.Click += BtnChangePresence;
             var binding = new Binding
             {
                 Source = presence,
@@ -102,6 +99,56 @@ namespace MultiRPC.UI.Pages.Rpc
             };
             btn.Bind(ContentProperty, binding);
             return btn;
+        }
+
+        private void BtnChangePresence(object? sender, RoutedEventArgs e)
+        {
+            _activeButton = (Button)sender!;
+            _activeProfile = (RichPresence)_activeButton.DataContext!;
+            _textBindingDis.Dispose();
+            AddTextBinding();
+            imgProfileDelete.IsVisible = _profilesSettings.Profiles.First() != _activeProfile;
+            rpcControl.ChangeRichPresence(_activeProfile);
+        }
+
+        private void ImgProfileEdit_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            var window = new MainWindow(new EditPage());
+            window.ShowDialog(((App)Application.Current).DesktopLifetime.MainWindow);
+        }
+
+        private void ImgProfileShare_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            var window = new MainWindow(new SharePage(_activeProfile));
+            window.ShowDialog(((App)Application.Current).DesktopLifetime.MainWindow);
+        }
+
+        private void ImgProfileAdd_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            var newProfile = new RichPresence("Custom" + _profilesSettings.Profiles.Count, 0);
+            _profilesSettings.Profiles.Add(newProfile);
+            BtnChangePresence(wrpProfileSelector.Children[^1], e);
+        }
+
+        private void ImgProfileDelete_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            var profileIndex = wrpProfileSelector.Children.IndexOf(_activeButton);
+            if (profileIndex == _profilesSettings.Profiles.Count - 1)
+            {
+                profileIndex--;
+            }
+            _profilesSettings.Profiles.Remove(_activeProfile);
+            BtnChangePresence(wrpProfileSelector.Children[profileIndex], e);
+        }
+
+        private void Action_PointerEnter(object? sender, PointerEventArgs e)
+        {
+            ((Control)sender).Opacity = 1;
+        }
+
+        private void Action_PointerLeave(object? sender, PointerEventArgs e)
+        {
+            ((Control)sender).Opacity = 0.6;
         }
     }
 }

@@ -67,7 +67,9 @@ namespace MultiRPC.UI
                 page.Initialize();
             }
 
-            contentBorder.Material.TintColor = page.BackgroundColour ?? (Color)Application.Current.Resources["ThemeAccentColor2"]!;
+            contentBorder.Background = page.BackgroundColour != null 
+                ? new SolidColorBrush(page.BackgroundColour.Value) 
+                : (IBrush)Application.Current.Resources["ThemeAccentBrush2"]!;
             cclContent.Padding = page.ContentPadding;
             cclContent.Content = page;
         }

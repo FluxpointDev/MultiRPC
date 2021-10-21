@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media;
 
 namespace MultiRPC.UI
 {
@@ -22,6 +23,7 @@ namespace MultiRPC.UI
 
         private void InitializeExtra()
         {
+            //TODO: make it so we can show the control title if it's not MainPage
             txtTitle.DataContext = new Language("MultiRPC");
             eabTitleBar.PointerPressed += (sender, args) =>
             {
@@ -35,8 +37,7 @@ namespace MultiRPC.UI
                 eabTitleBar.Height = tbrTitleBar.DesiredSize.Height;
                 icon.Height = eabTitleBar.Height - icon.Margin.Top - icon.Margin.Bottom;
                 icon.Width = icon.Height;
-                eabBackground.Margin = new Thickness(0, eabTitleBar.Height, 0, 0);
-                _control.Margin += eabBackground.Margin;
+                _control.Margin += new Thickness(0, eabTitleBar.Height, 0, 0);
                 grdContent.Children.Insert(1, _control);
             };
         }

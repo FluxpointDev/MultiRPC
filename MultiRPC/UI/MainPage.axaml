@@ -12,7 +12,7 @@
             <Setter Property="CornerRadius" Value="56" />
             <Setter Property="Width" Value="56" />
             <Setter Property="Height" Value="56" />
-            <Setter Property="Background" Value="{DynamicResource ThemeAccentColor}" />
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
         </Style>
         <Style Selector="Button.nav:pointerover">
             <Setter Property="Background" Value="{DynamicResource ThemeAccentColor2Hover}" />
@@ -26,14 +26,11 @@
             <StackPanel Margin="8,10,8,25" Spacing="25" x:Name="splPages" />
         </ScrollViewer>
         <Grid Margin="72,0,0,0">
-            <ExperimentalAcrylicBorder x:Name="contentBorder" CornerRadius="15,15,0,0" Margin="0,105,0,0">
-                <ExperimentalAcrylicBorder.Material>
-                    <ExperimentalAcrylicMaterial TintOpacity="1" TintColor="{DynamicResource ThemeAccentColor2}" />
-                </ExperimentalAcrylicBorder.Material>
+            <Border x:Name="contentBorder" CornerRadius="15,15,0,0" Margin="0,105,0,0">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" >
                     <ContentControl CornerRadius="{Binding #contentBorder.CornerRadius}" x:Name="cclContent" />
                 </ScrollViewer>
-            </ExperimentalAcrylicBorder>
+            </Border>
             
             <views:TopBar HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
         </Grid>
