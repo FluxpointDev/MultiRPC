@@ -45,7 +45,7 @@ namespace MultiRPC.UI
 #endif
         }
 
-        public IClassicDesktopStyleApplicationLifetime DesktopLifetime;
+        public IClassicDesktopStyleApplicationLifetime? DesktopLifetime;
         
         public override void OnFrameworkInitializationCompleted()
         {

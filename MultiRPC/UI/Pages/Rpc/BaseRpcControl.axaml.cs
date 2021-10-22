@@ -127,7 +127,10 @@ namespace MultiRPC.UI.Pages.Rpc
                 {
                     ToolTip.SetTip(txtClientID, null);
                     RichPresence.ID = id;
-                    RichPresence.Name = resultMessage!;
+                    if (RichPresence.Name.StartsWith("Custom"))
+                    {
+                        RichPresence.Name = resultMessage!;
+                    }
                     return;
                 }
                 error = resultMessage;

@@ -1,14 +1,13 @@
+using System;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Media;
 
 namespace MultiRPC.UI
 {
     public partial class MainWindow : FluentWindow
     {
-        public MainWindow() : this(new MainPage()) 
-        { }
+        public MainWindow() : this(new MainPage()) { }
         
         private readonly Control _control;
         public MainWindow(Control control)
@@ -23,8 +22,23 @@ namespace MultiRPC.UI
 
         private void InitializeExtra()
         {
-            //TODO: make it so we can show the control title if it's not MainPage
-            txtTitle.DataContext = new Language("MultiRPC");
+            var lang = new Language("MultiRPC");
+            if (_control is ITitlePage titlePage)
+            {
+                lang.TextObservable.Subscribe(s =>
+                {
+                    txtTitle.Text = s + " - " + titlePage.Title.Text;
+                });
+                titlePage.Title.TextObservable.Subscribe(s =>
+                {
+                    txtTitle.Text = lang.Text + " - " + s;
+                });
+            }
+            else
+            {
+                txtTitle.DataContext = lang;
+            }
+            
             eabTitleBar.PointerPressed += (sender, args) =>
             {
                 BeginMoveDrag(args);
@@ -40,6 +54,20 @@ namespace MultiRPC.UI
                 _control.Margin += new Thickness(0, eabTitleBar.Height, 0, 0);
                 grdContent.Children.Insert(1, _control);
             };
+        }
+    }
+
+    public static class MainWindowExt
+    {
+        public static bool TryClose(this UserControl userControl)
+        {
+            if (userControl.Parent?.Parent is MainWindow window)
+            {
+                window.Close();
+                return true;
+            }
+
+            return false;
         }
     }
 }

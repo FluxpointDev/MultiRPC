@@ -2,6 +2,7 @@
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -15,7 +16,6 @@ using MultiRPC.UI.Pages.Rpc.Custom.Popups;
 
 namespace MultiRPC.UI.Pages.Rpc.Custom
 {
-    //TODO: Add edit/add/remove/share popup's
     public partial class CustomPage : RpcPage
     {
         public CustomPage()
@@ -38,12 +38,18 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
         {
             InitializeComponent(loadXaml);
 
+            //Not added yet so don't show if built for release/store
+#if !DEBUG
+            imgProfileShare.IsVisible = false;
+#endif
+            
             var tabPage = new TabsPage();
             rpcControl = new BaseRpcControl
             {
                 ImageType = ImagesType.Custom,
                 GrabID = true,
-                TabName = new Language("CustomPage")
+                TabName = new Language("CustomPage"),
+                Margin = new Thickness(10),
             };
             Grid.SetRow(tabPage, 2);
             tabPage.AddTabs(rpcControl);
@@ -113,7 +119,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
 
         private void ImgProfileEdit_OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            var window = new MainWindow(new EditPage());
+            var window = new MainWindow(new EditPage(_activeProfile));
             window.ShowDialog(((App)Application.Current).DesktopLifetime.MainWindow);
         }
 

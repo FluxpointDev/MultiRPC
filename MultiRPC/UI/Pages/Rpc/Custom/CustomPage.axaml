@@ -16,12 +16,13 @@
             <Setter Property="Opacity" Value="0.6" />
         </Style>
     </UserControl.Styles>
+    <!--TODO: Add Help-->
     <Border x:Name="brdContent" Background="{DynamicResource ThemeAccentBrush}" CornerRadius="15, 15, 0, 0">
         <Grid x:Name="grdContent" RowDefinitions="Auto Auto *">
             <WrapPanel x:Name="wrpProfileSelector" MaxWidth="750" />
-            <StackPanel Grid.Row="1" x:Name="stpProfileEditor" Height="40" Orientation="Horizontal"  Margin="0,7">
-                <TextBlock FontWeight="SemiBold" x:Name="tblProfileName" Margin="10,0,0,0" VerticalAlignment="Center" />
-                <Rectangle Margin="5,2" Fill="White" Width="1" VerticalAlignment="Stretch" />
+            <StackPanel Spacing="5" Grid.Row="1" x:Name="stpProfileEditor" Height="40" Orientation="Horizontal"  Margin="0,7">
+                <TextBlock FontWeight="SemiBold" x:Name="tblProfileName" VerticalAlignment="Center" />
+                <Rectangle Margin="0,2" Fill="White" Width="1" VerticalAlignment="Stretch" />
                 <Svg x:Name="imgProfileEdit" Path="/Assets/Icons/Pencil.svg" PointerPressed="ImgProfileEdit_OnPointerPressed" PointerEnter="Action_PointerEnter" PointerLeave="Action_PointerLeave" />
                 <Svg x:Name="imgProfileShare" Path="/Assets/Icons/Share.svg" PointerPressed="ImgProfileShare_OnPointerPressed" PointerEnter="Action_PointerEnter" PointerLeave="Action_PointerLeave" />
                 <Svg x:Name="imgProfileAdd" Path="/Assets/Icons/Add.svg" PointerPressed="ImgProfileAdd_OnPointerPressed" PointerEnter="Action_PointerEnter" PointerLeave="Action_PointerLeave" />

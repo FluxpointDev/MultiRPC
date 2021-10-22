@@ -1,5 +1,7 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Diagnostics;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Svg;
@@ -26,6 +28,7 @@ namespace MultiRPC.UI
             //TODO: Add autostart
             ClickBtn(btnToTrigger, null!, pageToTrigger!);
         }
+        private readonly Language _pageLang = new Language("Page");
 
         private Button? _selectedBtn;
         private Button AddSidePage(ISidePage page)
@@ -41,7 +44,16 @@ namespace MultiRPC.UI
                     }
                 }
             };
-            ToolTip.SetTip(btn, Language.GetText(page.LocalizableName) + " " + Language.GetText("Page"));
+
+            var lang = new Language(page.LocalizableName);
+            lang.TextObservable.Subscribe(s =>
+            {
+                ToolTip.SetTip(btn, s + " " + _pageLang.Text);
+            });
+            _pageLang.TextObservable.Subscribe(s =>
+            {
+                ToolTip.SetTip(btn, lang.Text + " " + s);
+            });
 
             //TODO: See why the visual doesn't update on the spot
             btn.Click += (sender, args) => ClickBtn(sender, args, page);
