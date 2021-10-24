@@ -26,7 +26,15 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
 
         public override string IconLocation => "Icons/Custom";
         public override string LocalizableName => "Custom";
-        public override RichPresence RichPresence { get; protected set; } = new RichPresence("", 0);
+
+        public override RichPresence RichPresence
+        {
+            get => _activeProfile;
+            protected set
+            {
+                //Don't do anything
+            }
+        }
 
         private readonly ProfilesSettings _profilesSettings = SettingManager<ProfilesSettings>.Setting;
         private RichPresence _activeProfile;
@@ -115,6 +123,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             AddTextBinding();
             imgProfileDelete.IsVisible = _profilesSettings.Profiles.First() != _activeProfile;
             rpcControl.ChangeRichPresence(_activeProfile);
+            RichPresence = _activeProfile;
         }
 
         private void ImgProfileEdit_OnPointerPressed(object? sender, PointerPressedEventArgs e)
