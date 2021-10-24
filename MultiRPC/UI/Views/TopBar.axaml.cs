@@ -52,7 +52,7 @@ namespace MultiRPC.UI.Views
             };
             App.RpcClient.Ready += (sender, message) =>
             {
-                rpcView.ViewType = ViewType.RichPresence;
+                rpcView.ViewType = ViewType.RpcRichPresence;
 
                 this.RunUILogic(() =>
                 {

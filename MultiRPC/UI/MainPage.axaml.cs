@@ -55,9 +55,7 @@ namespace MultiRPC.UI
                 ToolTip.SetTip(btn, lang.Text + " " + s);
             });
 
-            //TODO: See why the visual doesn't update on the spot
             btn.Click += (sender, args) => ClickBtn(sender, args, page);
-
             btn.Classes.Add("nav");
             splPages.Children.Add(btn);
             return btn;

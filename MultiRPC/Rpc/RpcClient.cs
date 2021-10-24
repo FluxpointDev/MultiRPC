@@ -10,28 +10,19 @@ namespace MultiRPC.Rpc
 {
     public class RpcClient
     {
+        private DateTime _rpcStart;
+        private string _presenceName = "Unknown";
+        private long _presenceId;
         private DiscordRpcClient? _client;
 
         public bool IsRunning => Status != ConnectionStatus.Disconnected;
-
         public ConnectionStatus Status { get; private set; }
-
-        private DateTime _rpcStart;
-        
-        private string _presenceName = "Unknown";
-        private long _presenceId;
-        public RichPresence? ActivePresence => _client?.CurrentPresence != null ? 
-            null 
-            : new RichPresence(_presenceName, _presenceId)
-            {
-                Profile = _client?.CurrentPresence?.ToProfile()!
-            };
 
         public event EventHandler<ReadyMessage>? Ready;
         public event EventHandler<ErrorMessage>? Errored;
         public event EventHandler? Disconnected;
         public event EventHandler? Loading;
-        public event EventHandler<RichPresence?>? PresenceUpdated;
+        public event EventHandler<PresenceMessage>? PresenceUpdated;
 
         public void ClearPresence()
         {
@@ -62,7 +53,7 @@ namespace MultiRPC.Rpc
 
             _client.OnPresenceUpdate += (sender, e) =>
             {
-                PresenceUpdated?.Invoke(sender, ActivePresence);
+                PresenceUpdated?.Invoke(sender, e);
             };
             _client.OnReady += (sender, e) => 
             {

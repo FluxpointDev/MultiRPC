@@ -11,13 +11,157 @@
         CanResize="False"
         Icon="/Assets/Logo.ico"
         x:Class="MultiRPC.UI.MainWindow">
-        <Grid x:Name="grdContent" Background="{DynamicResource ThemeAccentBrush}">
+    <Window.Styles>
+        <Style Selector="ComboBoxItem">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2Hover}" />
+        </Style>
+        <Style Selector="ComboBoxItem:selected /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2Hover}" />
+        </Style>
+
+        <Style Selector="ComboBox">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush4}" />
+        </Style>
+        <Style Selector="ComboBox:pointerover /template/ Border">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush5}" />
+        </Style>
+        <Style Selector="ComboBox:disabled /template/ Border">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentDisabledBrush}" />
+            <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeAccentDisabledTextBrush}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        
+        <Style Selector="TextBox">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush4}" />
+        </Style>
+        <Style Selector="TextBox:pointerover /template/ Border">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush5}" />
+        </Style>
+        <Style Selector="TextBox:focus /template/ Border">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush5}" />
+        </Style>
+        <Style Selector="TextBox:disabled /template/ Border">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentDisabledBrush}" />
+            <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeAccentDisabledTextBrush}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        
+        <Style Selector="TextBox.checking">
+            <Setter Property="BorderBrush" Value="Yellow" />
+        </Style>
+        <Style Selector="TextBox.checking:pointerover /template/ Border">
+            <Setter Property="BorderBrush" Value="Yellow" />
+        </Style>
+        <Style Selector="TextBox.checking:focus /template/ Border">
+            <Setter Property="BorderBrush" Value="Yellow" />
+        </Style>
+        <Style Selector="TextBox.error">
+            <Setter Property="BorderBrush" Value="{DynamicResource Red}" />
+        </Style>
+        <Style Selector="TextBox.error:pointerover /template/ Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource Red}" />
+        </Style>
+        <Style Selector="TextBox.error:focus /template/ Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource Red}" />
+        </Style>
+
+        <Style Selector="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style Selector="TextBlock.subtitle">
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontSize" Value="25" />
+        </Style>
+
+        <Style Selector="Button">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button /template/ ContentPresenter">
+            <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+            <Setter Property="TextBlock.FontSize" Value="12" />
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush4}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2Hover}" />
+        </Style>
+        <Style Selector="Button:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+        </Style>
+        <Style Selector="Button:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentDisabledBrush}" />
+            <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeAccentDisabledTextBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <Style Selector="Button.red /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource Red}" />
+        </Style>
+        <Style Selector="Button.red:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#FFE64747" />
+        </Style>
+        <Style Selector="Button.red:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="#FFEE3333" />
+        </Style>
+        <Style Selector="Button.red:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentDisabledBrush}" />
+            <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeAccentDisabledTextBrush}" />
+        </Style>
+        
+        <Style Selector="Button.green /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource Green}" />
+        </Style>
+        <Style Selector="Button.green:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#FF3FA979" />
+        </Style>
+        <Style Selector="Button.green:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="#FF3DA375" />
+        </Style>
+        <Style Selector="Button.green:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentDisabledBrush}" />
+            <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeAccentDisabledTextBrush}" />
+        </Style>
+        
+        <Style Selector="Button.purple /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource Purple}" />
+        </Style>
+        <Style Selector="Button.purple:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#5D70B5" />
+        </Style>
+        <Style Selector="Button.purple:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="#5164A7" />
+        </Style>
+        <Style Selector="Button.purple:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentDisabledBrush}" />
+            <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeAccentDisabledTextBrush}" />
+        </Style>
+    </Window.Styles>
+
+    <Grid x:Name="grdContent" Background="{DynamicResource ThemeAccentBrush}">
             <Border x:Name="eabTitleBar" VerticalAlignment="Top" Background="{DynamicResource ThemeAccentBrush}">
                 <StackPanel Orientation="Horizontal" Margin="7,0,0,0">
                     <Svg x:Name="icon" Height="0" Width="0" Path="/Assets/Logo.svg"  Margin="0,4,5,4" />
                     <TextBlock x:Name="txtTitle" FontSize="11" Text="{Binding TextObservable^}" HorizontalAlignment="Left" VerticalAlignment="Center" />
                 </StackPanel>
             </Border>
-            <TitleBar x:Name="tbrTitleBar" VerticalAlignment="Top" />
-        </Grid>
+        <TitleBar x:Name="tbrTitleBar" VerticalAlignment="Top" />
+    </Grid>
 </ui:FluentWindow>

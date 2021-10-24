@@ -22,20 +22,14 @@ namespace MultiRPC.Rpc
         
         public RpcProfile Profile { get; set; } = new RpcProfile();
 
+        [GeneratedProperty]
         [JsonIgnore]
-        public Uri? CustomLargeImageUrl { get; set; }
+        private Uri? _customLargeImageUrl;
 
+        [GeneratedProperty]
         [JsonIgnore]
-        public Uri? CustomSmallImageUrl { get; set; }
+        private Uri? _customSmallImageUrl;
 
         [GeneratedProperty] private bool _useTimestamp;
-
-        //TODO: Remake to use proper testing
-        [JsonIgnore]
-        public bool IsValidPresence =>
-            Presence.Details?.Length != 1
-            && Presence.State?.Length != 1
-            && Presence.Assets?.LargeImageText?.Length != 1
-            && Presence.Assets?.SmallImageText?.Length != 1;
     }
 }

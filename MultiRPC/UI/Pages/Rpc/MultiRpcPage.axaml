@@ -5,8 +5,15 @@
          xmlns:rpc="clr-namespace:MultiRPC.Rpc"
          xmlns:rpcUI="clr-namespace:MultiRPC.UI.Pages.Rpc"
          xmlns:page="clr-namespace:MultiRPC.Rpc.Page"
+         xmlns:views="clr-namespace:MultiRPC.UI.Views"
          Background="Transparent"
          mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
          x:Class="MultiRPC.UI.Pages.Rpc.MultiRpcPage">
-    <rpcUI:BaseRpcControl x:Name="rpcControl" ImageType="BuiltIn" />
+    <Grid ColumnDefinitions="Auto 10 *" VerticalAlignment="Top">
+        <rpcUI:BaseRpcControl x:Name="rpcControl" ImageType="BuiltIn" />
+        <StackPanel Grid.Column="2" Spacing="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+            <TextBlock x:Name="tblLookLike" Text="{Binding TextObservable^}" FontWeight="SemiBold" />
+            <views:RpcView x:Name="rpcView" />
+        </StackPanel>
+    </Grid>
 </page:RpcPage>

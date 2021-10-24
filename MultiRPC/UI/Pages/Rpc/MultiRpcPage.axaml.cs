@@ -1,4 +1,6 @@
-﻿using MultiRPC.Rpc;
+﻿using Avalonia;
+using Avalonia.Media;
+using MultiRPC.Rpc;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
@@ -13,6 +15,10 @@ namespace MultiRPC.UI.Pages.Rpc
         public override void Initialize(bool loadXaml)
         {
             InitializeComponent(loadXaml);
+
+            tblLookLike.DataContext = new Language("WhatItWillLookLike");
+            rpcView.RpcProfile = RichPresence;
+            rpcView.UpdateBackground((IBrush)Application.Current.Resources["PurpleBrush"]!);
 
             rpcControl.RichPresence = RichPresence;
             rpcControl.Initialize(loadXaml);

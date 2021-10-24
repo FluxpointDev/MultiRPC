@@ -1,3 +1,6 @@
 [submodule "ext/fonderie"]
 	path = ext/fonderie
 	url = https://github.com/Azyyyyyy/fonderie.git
+[submodule "ext/avalonia.gif"]
+	path = ext/avalonia.gif
+	url = https://github.com/Azyyyyyy/Avalonia.GIF

@@ -4,7 +4,16 @@
     <Application.Resources>
         <Color x:Key="ThemeAccentColor">#36393e</Color>
         <Color x:Key="ThemeAccentColor2">#2c2e30</Color>
+        <Color x:Key="ThemeAccentColor2Hover">#2c2a2a</Color>
+        <Color x:Key="ThemeAccentColor3">White</Color>
+        <Color x:Key="ThemeAccentColor4">#b4b4b4</Color>
+        <Color x:Key="ThemeAccentColor5">#707070</Color>
+
+        <Color x:Key="ThemeAccentDisabledColor">#505050</Color>
+        <Color x:Key="ThemeAccentDisabledTextColor">White</Color>
         <Color x:Key="NavButtonSelectedColor">#FF00ABEB</Color>
+        <Color x:Key="NavButtonSelectedIconColor">Blue</Color>
+
         <Color x:Key="Purple">#6A7EC4</Color>
         <Color x:Key="Red">#FFF13333</Color>
         <Color x:Key="Orange">#FFEEAD37</Color>
@@ -12,73 +21,18 @@
         
         <SolidColorBrush x:Key="RedBrush" Color="{DynamicResource Red}" />
         <SolidColorBrush x:Key="PurpleBrush" Color="{DynamicResource Purple}" />
+
         <SolidColorBrush x:Key="ThemeAccentBrush" Color="{DynamicResource ThemeAccentColor}"/>
         <SolidColorBrush x:Key="ThemeAccentBrush2" Color="{DynamicResource ThemeAccentColor2}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush2Hover" Color="{DynamicResource ThemeAccentColor2Hover}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush3" Color="{DynamicResource ThemeAccentColor3}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush4" Color="{DynamicResource ThemeAccentColor4}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush5" Color="{DynamicResource ThemeAccentColor5}"/>
+        <SolidColorBrush x:Key="ThemeAccentDisabledBrush" Color="{DynamicResource ThemeAccentDisabledColor}"/>
+        <SolidColorBrush x:Key="ThemeAccentDisabledTextBrush" Color="{DynamicResource ThemeAccentDisabledTextColor}"/>
     </Application.Resources>
 
-    <!--TODO: Find out why only the initial styling is being applied-->
     <Application.Styles>
-        <Style Selector="Button">
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundColor}" />
-            <Setter Property="Background" Value="{DynamicResource ThemeAccentColor}" />
-            <Setter Property="BorderThickness" Value="1" />
-        </Style>
-        <Style Selector="Button:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource ThemeAccentColor2Brush}" />
-        </Style>
-        <Style Selector="Button:focus-within /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
-        </Style>
-
-        <!--error, checking-->
-        <Style Selector="TextBox.checking">
-            <Setter Property="BorderBrush" Value="Yellow" />
-        </Style>
-        <Style Selector="TextBox.error">
-            <Setter Property="BorderBrush" Value="Red" />
-        </Style>
-
-        <Style Selector="Button.red /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource Red}" />
-        </Style>
-        <Style Selector="Button.red:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#FFE64747" />
-        </Style>
-        <Style Selector="Button.red:focus-within /template/ ContentPresenter">
-            <Setter Property="Background" Value="#FFEE3333" />
-        </Style>
-        
-        <Style Selector="Button.green /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource Green}" />
-        </Style>
-        <Style Selector="Button.green:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#FF3FA979" />
-        </Style>
-        <Style Selector="Button.green:focus-within /template/ ContentPresenter">
-            <Setter Property="Background" Value="#FF3DA375" />
-        </Style>
-        
-        <Style Selector="Button.purple /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource Purple}" />
-        </Style>
-        <Style Selector="Button.purple:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#5D70B5" />
-        </Style>
-        <Style Selector="Button.purple:focus-within /template/ ContentPresenter">
-            <Setter Property="Background" Value="#5164A7" />
-        </Style>
-        
-        <Style Selector="Button.red /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource Red}" />
-        </Style>
-        <Style Selector="Button.red:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#FFE64747" />
-        </Style>
-        <Style Selector="Button.red:focus-within /template/ ContentPresenter">
-            <Setter Property="Background" Value="#FFEE3333" />
-        </Style>
         <FluentTheme Mode="Dark"/>
     </Application.Styles>
 </Application>

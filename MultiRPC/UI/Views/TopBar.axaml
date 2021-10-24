@@ -21,7 +21,6 @@
             <Setter Property="Width" Value="50" />
         </Style>
     </UserControl.Styles>
-    <!--TODO: Add styling-->
     <Grid ColumnDefinitions="Auto * Auto" VerticalAlignment="Center" HorizontalAlignment="Stretch">
         <StackPanel Orientation="Horizontal" Spacing="10">
             <StackPanel Spacing="5" Margin="5,0,0,0">
