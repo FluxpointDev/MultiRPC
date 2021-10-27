@@ -8,12 +8,12 @@ using Avalonia.Media;
 
 namespace MultiRPC.UI.Controls
 {
-    public partial class TabsPage : UserControl
+    public sealed partial class TabsPage : UserControl
     {
         private ITabPage[] _pages = null!;
         public void AddTabs(params ITabPage[] pages) => _pages = pages;
         
-        public virtual void Initialize()
+        public void Initialize()
         {
             InitializeComponent();
             stpTabs.Children.AddRange(_pages.Select(MakeTab));

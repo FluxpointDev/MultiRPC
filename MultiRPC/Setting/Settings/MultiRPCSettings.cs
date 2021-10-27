@@ -13,13 +13,13 @@ namespace MultiRPC.Setting.Settings
             _presence.PropertyChanged += OnPropertyChanged;
         }
 
-        public void OnPropertyChanged(object? sender, PropertyChangedEventArgs args)
+        private void OnPropertyChanged(object? sender, PropertyChangedEventArgs args)
         {
             PropertyChanged?.Invoke(sender, args);
         }
         
-        [GeneratedProperty]
-        public RichPresence _presence = new RichPresence("MultiRPC", Constants.MultiRPCID);
+        [GeneratedProperty] 
+        private RichPresence _presence = new RichPresence("MultiRPC", Constants.MultiRPCID);
 
         partial void OnPresenceChanged(RichPresence previous, RichPresence value)
         {

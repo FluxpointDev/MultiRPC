@@ -2,11 +2,9 @@
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Media;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
@@ -20,13 +18,11 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
     {
         public CustomPage()
         {
-            //TODO: Add tooltips
             ContentPadding = new Thickness(0);
         }
 
         public override string IconLocation => "Icons/Custom";
         public override string LocalizableName => "Custom";
-
         public override RichPresence RichPresence
         {
             get => _activeProfile;
@@ -38,7 +34,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
 
         private readonly ProfilesSettings _profilesSettings = SettingManager<ProfilesSettings>.Setting;
         private RichPresence _activeProfile;
-        private BaseRpcControl rpcControl;
+        private BaseRpcControl _rpcControl;
         private Button _activeButton;
         private IDisposable _textBindingDis;
         
@@ -46,13 +42,8 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
         {
             InitializeComponent(loadXaml);
 
-            //Not added yet so don't show if built for release/store
-#if !DEBUG
-            imgProfileShare.IsVisible = false;
-#endif
-            
             var tabPage = new TabsPage();
-            rpcControl = new BaseRpcControl
+            _rpcControl = new BaseRpcControl
             {
                 ImageType = ImagesType.Custom,
                 GrabID = true,
@@ -60,17 +51,14 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
                 Margin = new Thickness(10),
             };
             Grid.SetRow(tabPage, 2);
-            tabPage.AddTabs(rpcControl);
+            tabPage.AddTabs(_rpcControl);
             tabPage.Initialize();
             grdContent.Children.Insert(grdContent.Children.Count - 1, tabPage);
             
             _activeProfile = _profilesSettings.Profiles.First();
             AddTextBinding();
            
-            foreach (var profile in _profilesSettings.Profiles)
-            {
-                wrpProfileSelector.Children.Add(MakeProfileSelector(profile));
-            }
+            wrpProfileSelector.Children.AddRange(_profilesSettings.Profiles.Select(MakeProfileSelector));
             _profilesSettings.Profiles.CollectionChanged += (sender, args) =>
             {
                 foreach (RichPresence profile in args.OldItems ?? Array.Empty<object>())
@@ -83,8 +71,8 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
                 }
             };
 
-            rpcControl.RichPresence = RichPresence;
-            rpcControl.Initialize(loadXaml);
+            _rpcControl.RichPresence = RichPresence;
+            _rpcControl.Initialize(loadXaml);
         }
         
         private void AddTextBinding()
@@ -122,20 +110,20 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             _textBindingDis.Dispose();
             AddTextBinding();
             imgProfileDelete.IsVisible = _profilesSettings.Profiles.First() != _activeProfile;
-            rpcControl.ChangeRichPresence(_activeProfile);
+            _rpcControl.ChangeRichPresence(_activeProfile);
             RichPresence = _activeProfile;
         }
 
         private void ImgProfileEdit_OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
             var window = new MainWindow(new EditPage(_activeProfile));
-            window.ShowDialog(((App)Application.Current).DesktopLifetime.MainWindow);
+            window.ShowDialog(((App)Application.Current).DesktopLifetime?.MainWindow);
         }
 
         private void ImgProfileShare_OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
             var window = new MainWindow(new SharePage(_activeProfile));
-            window.ShowDialog(((App)Application.Current).DesktopLifetime.MainWindow);
+            window.ShowDialog(((App)Application.Current).DesktopLifetime?.MainWindow);
         }
 
         private void ImgProfileAdd_OnPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -158,12 +146,12 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
 
         private void Action_PointerEnter(object? sender, PointerEventArgs e)
         {
-            ((Control)sender).Opacity = 1;
+            ((Control)sender!).Opacity = 1;
         }
 
         private void Action_PointerLeave(object? sender, PointerEventArgs e)
         {
-            ((Control)sender).Opacity = 0.6;
+            ((Control)sender!).Opacity = 0.6;
         }
     }
 }

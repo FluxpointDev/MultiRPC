@@ -1,31 +1,36 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using MultiRPC.Exceptions;
 
+//This is based off Wpf Message box
 namespace MultiRPC.UI
 {
     public enum MessageBoxResult
     {
-        None,
-        Cancel,
-        OK,
-        Yes,
-        No
+        None = 0,
+        Ok = 1,
+        Cancel = 2,
+        Yes = 6,
+        No = 7,
     }
 
     public enum MessageBoxButton
     {
-        OKCancel,
-        OK,
-        YesNo,
-        YesNoCancel
+        Ok = 0,
+        OkCancel = 1,
+        YesNoCancel = 3,
+        YesNo = 4,
     }
     
     public enum MessageBoxImage
     {
-        None,
+        None = 0,
+        Error = 16,
+        Question = 32,
+        Warning = 48,
+        Information = 64,
     }
     
     public partial class MessageBox : UserControl
@@ -34,11 +39,11 @@ namespace MultiRPC.UI
         {
             if (!Design.IsDesignMode)
             {
-                throw new Exception("Don't call this const");
+                throw new DesignException();
             }
         }
 
-        public MessageBox(string messageBoxText, string messageBoxTitle,
+        private MessageBox(string messageBoxText, string messageBoxTitle,
             MessageBoxButton messageBoxButton, MessageBoxImage messageBoxImage)
         {
             InitializeComponent();
@@ -49,11 +54,11 @@ namespace MultiRPC.UI
             btnCancel.Content = Language.GetText("Cancel");
             tblText.Text = messageBoxText;
 
-            if (messageBoxButton == MessageBoxButton.OK)
+            if (messageBoxButton == MessageBoxButton.Ok)
             {
                 btnOk.IsVisible = true;
             }
-            if (messageBoxButton == MessageBoxButton.OKCancel)
+            if (messageBoxButton == MessageBoxButton.OkCancel)
             {
                 btnOk.IsVisible = true;
                 btnCancel.IsVisible = true;
@@ -70,33 +75,21 @@ namespace MultiRPC.UI
                 btnCancel.IsVisible = true;
             }
 
-            //TODO: Add
             var imgInt = (int)messageBoxImage;
-            if (imgInt == 0)
+            imgStatus.IsVisible = imgInt != 0;
+            imgStatus.Source = imgInt switch
             {
-                imgStatus.IsVisible = false;
-            }
-            else if (imgInt == 64)
-            {
-                //imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "InfoIconDrawingImage");
-            }
-            else if (imgInt == 48)
-            {
-                //imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "WarningIconDrawingImage");
-            }
-            else if (imgInt == 16)
-            {
-                //imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "AlertIconDrawingImage");
-            }
-            else if (imgInt == 32)
-            {
-                //imgMessageBoxImage.SetResourceReference(Image.SourceProperty, "HelpIconDrawingImage");
-            }
+                64 => SvgImageHelper.LoadImage("Icons/Info.svg"),
+                48 => SvgImageHelper.LoadImage("Icons/Warning.svg"),
+                16 => SvgImageHelper.LoadImage("Icons/Alert.svg"),
+                32 => SvgImageHelper.LoadImage("Icons/Help.svg"),
+                _ => imgStatus.Source
+            };
         }
 
         private void ButOk_OnClick(object? sender, RoutedEventArgs e)
         {
-            this.TryClose(MessageBoxResult.OK);
+            this.TryClose(MessageBoxResult.Ok);
         }
 
         private void ButYes_OnClick(object? sender, RoutedEventArgs e)
@@ -118,10 +111,10 @@ namespace MultiRPC.UI
         {
             switch (button)
             {
-                case MessageBoxButton.OKCancel:
+                case MessageBoxButton.OkCancel:
                     return MessageBoxResult.Cancel;
-                case MessageBoxButton.OK:
-                    return MessageBoxResult.OK;
+                case MessageBoxButton.Ok:
+                    return MessageBoxResult.Ok;
                 case MessageBoxButton.YesNoCancel:
                     return MessageBoxResult.Cancel;
                 case MessageBoxButton.YesNo:
@@ -138,10 +131,10 @@ namespace MultiRPC.UI
             var page = new MessageBox(messageBoxText, messageBoxTitle, messageBoxButton, messageBoxImage);
             switch (messageBoxButton)
             {
-                case MessageBoxButton.OKCancel:
+                case MessageBoxButton.OkCancel:
                     page.btnOk.IsDefault = true;
                     break;
-                case MessageBoxButton.OK:
+                case MessageBoxButton.Ok:
                     page.btnOk.IsDefault = true;
                     break;
                 case MessageBoxButton.YesNoCancel:
@@ -169,14 +162,14 @@ namespace MultiRPC.UI
         
         public static async Task<MessageBoxResult> Show(string messageBoxText, Window? window = null)
         {
-            return await Show(messageBoxText, "MultiRPC", MessageBoxButton.OK, MessageBoxImage.None,
+            return await Show(messageBoxText, "MultiRPC", MessageBoxButton.Ok, MessageBoxImage.None,
                 ownerWindow: window);
         }
 
         public static async Task<MessageBoxResult> Show(string messageBoxText, string messageBoxTitle,
             Window? window = null)
         {
-            return await Show(messageBoxText, messageBoxTitle, MessageBoxButton.OK, MessageBoxImage.None,
+            return await Show(messageBoxText, messageBoxTitle, MessageBoxButton.Ok, MessageBoxImage.None,
                 ownerWindow: window);
         }
 

@@ -8,6 +8,9 @@ namespace MultiRPC.Setting.Settings
 {
     public class ProfilesSettings : Setting
     {
+        public ProfilesSettings() 
+            : this(new ObservableCollection<RichPresence>{ new RichPresence("Profile",  0) }) { }
+
         [JsonConstructor]
         public ProfilesSettings(ObservableCollection<RichPresence> profiles)
         {
@@ -32,8 +35,6 @@ namespace MultiRPC.Setting.Settings
                 Save();
             };
         }
-        
-        public ProfilesSettings() : this(new ObservableCollection<RichPresence>{ new RichPresence("Profile",  0) }) { }
 
         private void OnUpdate(object? sender, PropertyChangedEventArgs args)
         {

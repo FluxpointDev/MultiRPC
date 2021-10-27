@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using MultiRPC.Exceptions;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
 using MultiRPC.Setting;
@@ -15,14 +16,13 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
     public partial class SharePage : UserControl, ITitlePage
     {
         private readonly ILogging _logging = LoggingCreator.CreateLogger(nameof(SharePage));
-
         public Language Title { get; } = new Language("ProfileShare");
 
         public SharePage()
         {
             if (!Design.IsDesignMode)
             {
-                throw new Exception("Shouldn't be calling this when not in designer!");
+                throw new DesignException();
             }
         }
 

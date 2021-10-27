@@ -21,6 +21,6 @@ namespace MultiRPC.UI.Pages
         }
 
         public Color? BackgroundColour { get; protected set; }
-        public Thickness ContentPadding { get; protected set; } = new Thickness(10, 10, 10, 0);
+        public Thickness ContentPadding { get; protected init; } = new Thickness(10, 10, 10, 0);
     }
 }

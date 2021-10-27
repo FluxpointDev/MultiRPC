@@ -24,7 +24,7 @@ namespace MultiRPC.UI
                 pageToTrigger ??= page;
             }
             PageManager.PageAdded += (sender, page) => AddSidePage(page);
-
+            
             //TODO: Add autostart
             ClickBtn(btnToTrigger, null!, pageToTrigger!);
         }

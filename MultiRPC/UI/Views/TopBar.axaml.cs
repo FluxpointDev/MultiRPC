@@ -9,7 +9,6 @@ using MultiRPC.Setting.Settings;
 
 namespace MultiRPC.UI.Views
 {
-    //TODO: Add afk
     public partial class TopBar : UserControl
     {
         private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;

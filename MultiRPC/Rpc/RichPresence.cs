@@ -30,6 +30,7 @@ namespace MultiRPC.Rpc
         [JsonIgnore]
         private Uri? _customSmallImageUrl;
 
-        [GeneratedProperty] private bool _useTimestamp;
+        [GeneratedProperty] 
+        private bool _useTimestamp;
     }
 }

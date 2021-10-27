@@ -21,6 +21,7 @@ namespace MultiRPC.UI.Pages
             PageAdded?.Invoke(page, page);
         }
 
+        // ReSharper disable once ReturnTypeCanBeEnumerable.Global
         public static IReadOnlyList<ISidePage> CurrentPages => Pages.AsReadOnly();
 
         public static event EventHandler<ISidePage>? PageAdded;

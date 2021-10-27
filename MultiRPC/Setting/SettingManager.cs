@@ -1,14 +1,14 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Text.Json;
-using SharpCompress;
 
 namespace MultiRPC.Setting
 {
     public static class SettingManager<T> 
         where T : Setting, new()
     {
-        private static readonly Lazy<T> _setting = new Lazy<T>(() =>
+        private static readonly Lazy<T> LazySetting = new Lazy<T>(() =>
         {
             var setting = new T();
             
@@ -33,6 +33,6 @@ namespace MultiRPC.Setting
             return setting;
        });
 
-        public static T Setting => _setting.Value;
+        public static T Setting => LazySetting.Value;
     }
 }

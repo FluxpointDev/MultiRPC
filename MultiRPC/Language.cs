@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using TinyUpdate.Core.Logging;
@@ -113,14 +114,8 @@ namespace MultiRPC
             observer.OnNext(Text);
             return new DisposableAction(() => _observables.Remove(observer));
         }
-        
-        private IEnumerable<string> GetText()
-        {
-            foreach (var jsonName in _jsonNames)
-            {
-                yield return Language.GetText(jsonName);
-            }
-        }
+
+        private IEnumerable<string> GetText() => _jsonNames.Select(Language.GetText);
     }
 
     public class DisposableAction : IDisposable

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 
 namespace MultiRPC.Rpc.Page
 {
@@ -44,14 +43,7 @@ namespace MultiRPC.Rpc.Page
                 PageChanged?.Invoke(sender, page);
             };
         }
-        
-        private static void RichPresence_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            
-            //TODO: Add a timer to auto update rich presence
-            //throw new NotImplementedException();
-        }
-        
+
         /// <summary>
         /// This is when we are actively tracking the Rich Presence from a new page
         /// </summary>

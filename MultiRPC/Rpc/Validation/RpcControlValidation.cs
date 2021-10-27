@@ -15,6 +15,7 @@ namespace MultiRPC.Rpc.Validation
             _result = initialValue ?? string.Empty;
         }
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public Language? Lang { get; init; }
 
         private string _result;

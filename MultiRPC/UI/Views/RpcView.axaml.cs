@@ -8,7 +8,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.Svg;
 using DiscordRPC.Message;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
@@ -30,18 +29,8 @@ namespace MultiRPC.UI.Views
     {
         static RpcView()
         {
-            LogoVisualBrush = new VisualBrush(new Image {
-                Source = new SvgImage
-                {
-                    Source = SvgSource.Load("avares://MultiRPC/Assets/Logo.svg", null)
-                }
-            });
-            ErrorVisualBrush = new VisualBrush(new Image {
-                Source = new SvgImage
-                {
-                    Source = SvgSource.Load("avares://MultiRPC/Assets/Icons/Delete.svg", null)
-                }
-            });
+            LogoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") });
+            ErrorVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Icons/Delete.svg") });
         }
         
         public RpcView()
@@ -83,27 +72,6 @@ namespace MultiRPC.UI.Views
             set => UpdateFromRichPresence(value);
         }
 
-        private void UpdateFromRichPresence(RichPresence? presence)
-        {
-            if (presence != null)
-            {
-                if ( _rpcProfile != null)
-                {
-                    _rpcProfile.PropertyChanged -= PresenceOnPropertyChanged;
-                }
-                _rpcProfile = presence;
-            }
-            if (_rpcProfile == null)
-            {
-                return;
-            }
-
-            DoBinding(_rpcProfile.Profile, nameof(presence.Profile.Details), tblText1);
-            DoBinding(_rpcProfile.Profile, nameof(presence.Profile.State), tblText2);
-            _rpcProfile.PropertyChanged += PresenceOnPropertyChanged;
-            _rpcProfile.Profile.PropertyChanged += ProfileOnPropertyChanged;
-        }
-
         private void ProfileOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(RpcProfile.Profile.LargeText))
@@ -134,59 +102,6 @@ namespace MultiRPC.UI.Views
                     await UpdateLargeImage(_rpcProfile.CustomLargeImageUrl);
                     break;
             }
-        }
-
-        private async Task UpdateLargeImage(Uri? uri)
-        {
-            if (uri is null)
-            {
-                brdLarge.Background = null;
-                brdLarge.IsVisible = false;
-                gridSmallImage.IsVisible = false;
-                return;
-            }
-            //TODO: Make this a bool
-            await ProcessUri(uri);
-            brdLarge.Background = CachedImages[uri];
-            brdLarge.IsVisible = true;
-            gridSmallImage.IsVisible = ellSmallImage.Fill != null;
-        }
-        
-        private async Task UpdateSmallImage(Uri? uri)
-        {
-            if (uri is null)
-            {
-                ellSmallImage.Fill = null;
-                gridSmallImage.IsVisible = false;
-                return;
-            }
-                
-            await ProcessUri(uri);
-            ellSmallImage.Fill = CachedImages[uri];
-            gridSmallImage.IsVisible = brdLarge.Background != null;
-        }
-
-        private bool _timerRunning;
-        private async Task RunTimer()
-        {
-            if (_timerRunning)
-            {
-                return;
-            }
-            _timerRunning = true;
-
-            while (_timerTime != null)
-            {
-                await Task.Delay(1000);
-                var ts = DateTime.UtcNow.Subtract(_timerTime.Value);
-
-                var text = ts.Hours > 0 ? ts.Hours.ToString("00") + ":" : string.Empty;
-                text += $"{ts.Minutes:00}:{ts.Seconds:00}";
-                tblTime.Text = text;
-            }
-
-            _timerRunning = false;
-            tblText1.Text = string.Empty;
         }
         
         private DateTime? _timerTime;
@@ -221,20 +136,103 @@ namespace MultiRPC.UI.Views
                     new Uri(baseurl + "/" + e.Presence.Assets.LargeImageID + ".png")
                     : null);
         });
-
-        private async Task ProcessUri(Uri uri)
+        
+        private void UpdateFromRichPresence(RichPresence? presence)
         {
-            if (!CachedImages.ContainsKey(uri))
+            if (presence != null)
             {
-                var largeImage = await HttpClient.GetResponseMessage(new HttpRequestMessage(HttpMethod.Get, uri));
-                if (largeImage is { IsSuccessStatusCode: true })
+                if ( _rpcProfile != null)
                 {
-                    await using var imageStream = await largeImage.Content.ReadAsStreamAsync();
-                    var image = Bitmap.DecodeToHeight(imageStream, (int)brdLarge.Height * 3);
-                    var brush = new ImageBrush(image);
-                    CachedImages[uri] = brush;
+                    _rpcProfile.PropertyChanged -= PresenceOnPropertyChanged;
                 }
+                _rpcProfile = presence;
             }
+            if (_rpcProfile == null)
+            {
+                return;
+            }
+
+            DoBinding(_rpcProfile.Profile, nameof(presence.Profile.Details), tblText1);
+            DoBinding(_rpcProfile.Profile, nameof(presence.Profile.State), tblText2);
+            _rpcProfile.PropertyChanged += PresenceOnPropertyChanged;
+            _rpcProfile.Profile.PropertyChanged += ProfileOnPropertyChanged;
+        }
+
+        private async Task UpdateLargeImage(Uri? uri)
+        {
+            if (uri is null)
+            {
+                brdLarge.Background = null;
+                brdLarge.IsVisible = false;
+                gridSmallImage.IsVisible = false;
+                return;
+            }
+
+            if (await ProcessUri(uri))
+            {
+                brdLarge.Background = CachedImages[uri];
+                brdLarge.IsVisible = true;
+                gridSmallImage.IsVisible = ellSmallImage.Fill != null;
+            }
+        }
+        
+        private async Task UpdateSmallImage(Uri? uri)
+        {
+            if (uri is null)
+            {
+                ellSmallImage.Fill = null;
+                gridSmallImage.IsVisible = false;
+                return;
+            }
+
+            if (await ProcessUri(uri))
+            {
+                ellSmallImage.Fill = CachedImages[uri];
+                gridSmallImage.IsVisible = brdLarge.Background != null;
+            }
+        }
+
+        private bool _timerRunning;
+        private async Task RunTimer()
+        {
+            if (_timerRunning)
+            {
+                return;
+            }
+            _timerRunning = true;
+
+            while (_timerTime != null)
+            {
+                await Task.Delay(1000);
+                var ts = DateTime.UtcNow.Subtract(_timerTime.Value);
+
+                var text = ts.Hours > 0 ? ts.Hours.ToString("00") + ":" : string.Empty;
+                text += $"{ts.Minutes:00}:{ts.Seconds:00}";
+                tblTime.Text = text;
+            }
+
+            _timerRunning = false;
+            tblText1.Text = string.Empty;
+        }
+
+        private async Task<bool> ProcessUri(Uri uri)
+        {
+            if (CachedImages.ContainsKey(uri))
+            {
+                return true;
+            }
+            
+            var largeImage = await HttpClient.GetResponseMessage(new HttpRequestMessage(HttpMethod.Get, uri));
+            if (largeImage is { IsSuccessStatusCode: true })
+            {
+                await using var imageStream = await largeImage.Content.ReadAsStreamAsync();
+                var image = Bitmap.DecodeToHeight(imageStream, (int)brdLarge.Height * 3);
+                var brush = new ImageBrush(image);
+                CachedImages[uri] = brush;
+                return true;
+            }
+
+            return false;
         }
 
         private static void DoBinding(RpcProfile presence, string path, IAvaloniaObject control)

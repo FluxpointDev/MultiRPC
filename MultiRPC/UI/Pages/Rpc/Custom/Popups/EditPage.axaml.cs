@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using MultiRPC.Exceptions;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Validation;
@@ -18,14 +19,16 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
         {
             if (!Design.IsDesignMode)
             {
-                throw new Exception("Shouldn't be calling this when not in designer!");
+                throw new DesignException();
             }
         }
-
+        
+        public Language Title { get; } = new Language("ProfileEdit");
+        
         private readonly ProfilesSettings _profiles = SettingManager<ProfilesSettings>.Setting;
-
-        private RichPresence _activeRichPresence;
+        private readonly RichPresence _activeRichPresence;
         private string _newName = string.Empty;
+
         public EditPage(RichPresence activeRichPresence)
         {
             _activeRichPresence = activeRichPresence;
@@ -44,8 +47,6 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
                     return result;
                 }, _activeRichPresence.Name);
         }
-
-        public Language Title { get; } = new Language("ProfileEdit");
 
         private void BtnDone_OnClick(object? sender, RoutedEventArgs e)
         {
