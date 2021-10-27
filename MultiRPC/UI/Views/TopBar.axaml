@@ -35,7 +35,7 @@
         </StackPanel>
         <StackPanel Spacing="10" Orientation="Horizontal" Grid.Column="2" Margin="0,0,15,0">
             <StackPanel Spacing="5" Margin="5,0,0,0">
-                <Button x:Name="btnAuto" Classes="smaller" Content="{Binding TextObservable^}" />
+                <Button x:Name="btnAuto" Classes="smaller" Content="{Binding TextObservable^}" IsEnabled="False" />
                 <Button x:Name="btnAfk" Classes="smaller purple" Content="{Binding TextObservable^}" Click="BtnAfk_OnClick" />
             </StackPanel>
             <views:RpcView x:Name="rpcView" />

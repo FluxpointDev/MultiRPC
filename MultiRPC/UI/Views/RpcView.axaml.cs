@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net.Http;
@@ -156,6 +156,8 @@ namespace MultiRPC.UI.Views
             DoBinding(_rpcProfile.Profile, nameof(presence.Profile.State), tblText2);
             _rpcProfile.PropertyChanged += PresenceOnPropertyChanged;
             _rpcProfile.Profile.PropertyChanged += ProfileOnPropertyChanged;
+            ProfileOnPropertyChanged(this, new PropertyChangedEventArgs(nameof(RpcProfile.Profile.LargeText)));
+            ProfileOnPropertyChanged(this, new PropertyChangedEventArgs(nameof(RpcProfile.Profile.SmallText)));
         }
 
         private async Task UpdateLargeImage(Uri? uri)
