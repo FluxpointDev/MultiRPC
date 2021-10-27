@@ -30,6 +30,7 @@ namespace MultiRPC.Rpc.Validation
                     _result = value;
                     ResultChanged?.Invoke(this, _result);
                     return;
+
                 }
 
                 var error = check?.ReasonWhy ?? "Unknown validation reason";
