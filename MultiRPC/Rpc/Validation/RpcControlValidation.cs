@@ -15,7 +15,7 @@ namespace MultiRPC.Rpc.Validation
             _result = initialValue ?? string.Empty;
         }
 
-        public Language Lang { get; init; } = null!;
+        public Language? Lang { get; init; }
 
         private string _result;
         public string Result
@@ -33,7 +33,7 @@ namespace MultiRPC.Rpc.Validation
 
                 }
 
-                var error = check?.ReasonWhy ?? "Unknown validation reason";
+                var error = check.ReasonWhy ?? "Unknown validation reason";
                 _logging.Error(error);
                 throw new DataValidationException(error);
             }

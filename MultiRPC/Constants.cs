@@ -9,7 +9,16 @@ namespace MultiRPC
     /// </summary>
     public static class Constants
     {
-        public static bool IsWindowsApp { get; internal set; }
+        static Constants()
+        {
+            // Windows apps have restricted access, use the appdata folder instead of document.
+            SettingsFolder =
+#if WINSTORE
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Packages/29025FluxpointDevelopment.MultiRPC_q026kjacpk46y/AppData")
+#else
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "MultiRPC-Beta");
+#endif
+        }
 
         /// <summary>
         /// MultiRPC Application ID
@@ -49,7 +58,7 @@ namespace MultiRPC
             WriteIndented = true
         };
         
-        public static string SettingsFolder { get; internal set; }
+        public static string SettingsFolder { get; }
 
         /// <summary>
         /// The theme's file extension

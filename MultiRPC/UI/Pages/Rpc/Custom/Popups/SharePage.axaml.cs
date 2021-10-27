@@ -12,9 +12,11 @@ using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
 {
-    public partial class SharePage : UserControl
+    public partial class SharePage : UserControl, ITitlePage
     {
-        private ILogging _logging = LoggingCreator.CreateLogger(nameof(SharePage));
+        private readonly ILogging _logging = LoggingCreator.CreateLogger(nameof(SharePage));
+
+        public Language Title { get; } = new Language("ProfileShare");
 
         public SharePage()
         {
@@ -24,7 +26,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
             }
         }
 
-        private RichPresence _activeRichPresence;
+        private readonly RichPresence _activeRichPresence;
         public SharePage(RichPresence activeRichPresence)
         {
             _activeRichPresence = activeRichPresence;
@@ -33,9 +35,10 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
             tblGuild.DataContext = new Language("ShareHelp");
             btnExport.DataContext = new Language("Export");
             btnImport.DataContext = new Language("Import");
+            btnImport.IsEnabled = false;
         }
 
-        private void BtnImport_OnClick(object? sender, RoutedEventArgs e)
+        private async void BtnImport_OnClick(object? sender, RoutedEventArgs e)
         {
             try
             {
@@ -52,7 +55,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
                 _logging.Error(exception);
             }
 
-            //TODO: Show failed popup if we get here
+            await MessageBox.Show(Language.GetText("SharingError"));
             this.TryClose();
         }
 
@@ -61,7 +64,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
             var profileBase64 = JsonSerializer.Serialize(_activeRichPresence);
             await Application.Current.Clipboard.SetTextAsync(profileBase64 = profileBase64.Base64Encode());
             txtData.Text = profileBase64;
-            //TODO: Show export popup
+            await MessageBox.Show(Language.GetText("ProfileCopyMessage"));
         }
     }
 }

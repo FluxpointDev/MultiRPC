@@ -6,7 +6,7 @@ namespace MultiRPC.Extensions
 {
     public static class ControlExt
     {
-        public static void AddRpcControl(this Control control, Language language, Action<string>? a, Func<string, CheckResult>? validation = null, string? initialValue = null)
+        public static void AddRpcControl(this Control control, Language? language, Action<string>? a, Func<string, CheckResult>? validation = null, string? initialValue = null)
         {
             var rpcControl = new RpcControlValidation(validation, initialValue) { Lang = language };
             control.DataContext = rpcControl;

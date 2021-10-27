@@ -19,22 +19,16 @@ namespace MultiRPC
         public static void Main(string[] args)
         {
             LoggingCreator.GlobalLevel = LogLevel.Trace;
-            Constants.IsWindowsApp = Environment.GetFolderPath(Environment.SpecialFolder.System) == Directory.GetCurrentDirectory();
-            if (Constants.IsWindowsApp)
-            {
-                Directory.SetCurrentDirectory(AppContext.BaseDirectory + "/");
-                Constants.SettingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Packages/29025FluxpointDevelopment.MultiRPC_q026kjacpk46y/AppData");
-             
-            }
-            else
-            {
-                Constants.SettingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "MultiRPC-Beta");
-                
-                // This seems to break windows apps even though it can write to log folder.
-                var logFolder = Path.Combine(Constants.SettingsFolder, "Logging");
-                Directory.CreateDirectory(logFolder);
-                LoggingCreator.AddLogBuilder(new FileLoggerBuilder(logFolder));
-            }
+
+            // Set the current directory to the app install location to get assets.
+#if WINSTORE
+            Directory.SetCurrentDirectory(AppContext.BaseDirectory + "/");
+#else
+            // This seems to break windows apps even though it can write to log folder.
+            var logFolder = Path.Combine(Constants.SettingsFolder, "Logging");
+            Directory.CreateDirectory(logFolder);
+            LoggingCreator.AddLogBuilder(new FileLoggerBuilder(logFolder));
+#endif
             LoggingCreator.AddLogBuilder(new LoggingPageBuilder());
             var builder = BuildAvaloniaApp();
             builder.StartWithClassicDesktopLifetime(args);

@@ -26,7 +26,6 @@ namespace MultiRPC.UI.Views
         RpcRichPresence
     }
     
-    //TODO: Add Timer
     public partial class RpcView : UserControl
     {
         static RpcView()
@@ -55,6 +54,7 @@ namespace MultiRPC.UI.Views
             tblText1.DataContext = _tblText1;
             tblText2.DataContext = _tblText2;
             ViewType = ViewType.Default;
+            App.RpcClient.Disconnected += (sender, args) => _timerTime = null;
         }
         
         private static readonly Dictionary<Uri, IBrush> CachedImages = new Dictionary<Uri, IBrush>();
@@ -145,6 +145,7 @@ namespace MultiRPC.UI.Views
                 gridSmallImage.IsVisible = false;
                 return;
             }
+            //TODO: Make this a bool
             await ProcessUri(uri);
             brdLarge.Background = CachedImages[uri];
             brdLarge.IsVisible = true;
@@ -165,8 +166,35 @@ namespace MultiRPC.UI.Views
             gridSmallImage.IsVisible = brdLarge.Background != null;
         }
 
+        private bool _timerRunning;
+        private async Task RunTimer()
+        {
+            if (_timerRunning)
+            {
+                return;
+            }
+            _timerRunning = true;
+
+            while (_timerTime != null)
+            {
+                await Task.Delay(1000);
+                var ts = DateTime.UtcNow.Subtract(_timerTime.Value);
+
+                var text = ts.Hours > 0 ? ts.Hours.ToString("00") + ":" : string.Empty;
+                text += $"{ts.Minutes:00}:{ts.Seconds:00}";
+                tblTime.Text = text;
+            }
+
+            _timerRunning = false;
+            tblText1.Text = string.Empty;
+        }
+        
+        private DateTime? _timerTime;
         private void RpcClientOnPresenceUpdated(object? sender, PresenceMessage e) => this.RunUILogic(() =>
         {
+            _timerTime = e.Presence.Timestamps?.Start;
+            _ = RunTimer();
+            
             tblTitle.Text = e.Name;
             tblText1.Text = e.Presence.Details;
             tblText2.Text = e.Presence.State;
@@ -202,14 +230,14 @@ namespace MultiRPC.UI.Views
                 if (largeImage is { IsSuccessStatusCode: true })
                 {
                     await using var imageStream = await largeImage.Content.ReadAsStreamAsync();
-                    var image = Bitmap.DecodeToHeight(imageStream, (int)brdLarge.Height);
+                    var image = Bitmap.DecodeToHeight(imageStream, (int)brdLarge.Height * 3);
                     var brush = new ImageBrush(image);
                     CachedImages[uri] = brush;
                 }
             }
         }
 
-        private void DoBinding(RpcProfile presence, string path, IAvaloniaObject control)
+        private static void DoBinding(RpcProfile presence, string path, IAvaloniaObject control)
         {
             var binding = new Binding
             {
@@ -229,9 +257,9 @@ namespace MultiRPC.UI.Views
         {
             tblText1.IsVisible = _viewType is not ViewType.Loading or ViewType.LocalRichPresence;
             tblText2.IsVisible = tblText1.IsVisible && _viewType is not ViewType.Error;
-            tblTime.IsVisible = _viewType == ViewType.LocalRichPresence;
+            tblTime.IsVisible = _viewType == ViewType.RpcRichPresence;
             imgGif.IsVisible = _viewType == ViewType.Loading;
-
+            
             var brush = _viewType switch
             {
                 ViewType.Default => Application.Current.Resources["ThemeAccentBrush2"],

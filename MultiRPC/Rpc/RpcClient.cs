@@ -16,6 +16,7 @@ namespace MultiRPC.Rpc
         private DiscordRpcClient? _client;
 
         public bool IsRunning => Status != ConnectionStatus.Disconnected;
+        public long ID => _presenceId;
         public ConnectionStatus Status { get; private set; }
 
         public event EventHandler<ReadyMessage>? Ready;
@@ -32,8 +33,11 @@ namespace MultiRPC.Rpc
         public void Start(long? applicationId, string? applicationName)
         {
             var id = applicationId ?? RpcPageManager.CurrentPage?.RichPresence.ID;
-            var idS = id.ToString();
+            _presenceId = id.GetValueOrDefault(Constants.MultiRPCID);
+            var idS = _presenceId.ToString();
+
             var name = applicationName ?? RpcPageManager.CurrentPage?.RichPresence.Name;
+            _presenceName = name!;
             
             //If we are running already then stop it if we aren't
             //using the same ID
@@ -41,9 +45,8 @@ namespace MultiRPC.Rpc
             {
                 Stop();
             }
-            _presenceId = id.GetValueOrDefault(Constants.MultiRPCID);
-            _presenceName = name!;
 
+            _client?.Dispose();
             _client = new DiscordRpcClient(idS) //TODO: Add custom pipe support
             {
                 SkipIdenticalPresence = false, 
@@ -51,10 +54,7 @@ namespace MultiRPC.Rpc
                 ShutdownOnly = true
             };
 
-            _client.OnPresenceUpdate += (sender, e) =>
-            {
-                PresenceUpdated?.Invoke(sender, e);
-            };
+            _client.OnPresenceUpdate += (sender, e) => PresenceUpdated?.Invoke(sender, e);
             _client.OnReady += (sender, e) => 
             {
                 Status = ConnectionStatus.Connected;
@@ -66,7 +66,6 @@ namespace MultiRPC.Rpc
                 Errored?.Invoke(this, e);
             };
             _rpcStart = DateTime.UtcNow;
-            UpdatePresence(RpcPageManager.CurrentPage?.RichPresence);
             _client.Initialize();
 
             Status = ConnectionStatus.Connecting;
@@ -80,35 +79,41 @@ namespace MultiRPC.Rpc
             _client?.Dispose();
             Status = ConnectionStatus.Disconnected;
             _presenceId = 0;
-            _presenceName = "";
+            _presenceName = "Unknown";
 
             Disconnected?.Invoke(this, EventArgs.Empty);
         }
 
+        public void UpdatePresence(DiscordRPC.RichPresence richPresence)
+        {
+            if (_client?.IsDisposed ?? true)
+            {
+                return;
+            }
+            
+            _client?.SetPresence(richPresence);
+        }
+        
         public void UpdatePresence(RichPresence? richPresence)
         {
             if (richPresence == null)
             {
                 return;
             }
-            _presenceId = richPresence.ID;
-            _presenceName = richPresence.Name;
-
+            
             var pre = richPresence.Presence;
             pre.Buttons = pre.Buttons?.Where(x => !string.IsNullOrWhiteSpace(x.Url) && !string.IsNullOrWhiteSpace(x.Label)).ToArray();
-            if (richPresence.UseTimestamp)
+            pre.Timestamps = richPresence.UseTimestamp ? new Timestamps
             {
-                pre.Timestamps = new Timestamps
-                {
-                    Start = _rpcStart
-                };
-            }
+                Start = _rpcStart
+            } : null;
             
-            if (!_client?.IsDisposed ?? false) 
+            if (richPresence.ID != _presenceId)
             {
-                //TODO: Check ID is the same and restart if needed
-                _client?.SetPresence(pre);
+                Stop();
+                Start(richPresence.ID, richPresence.Name);
             }
+            UpdatePresence(pre);
         }
     }
 }

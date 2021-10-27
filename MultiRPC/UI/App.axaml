@@ -1,7 +1,9 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              x:Class="MultiRPC.UI.App">
     <Application.Resources>
+        <system:Double x:Key="TextControlThemeMinHeight">28</system:Double>
         <Color x:Key="ThemeAccentColor">#36393e</Color>
         <Color x:Key="ThemeAccentColor2">#2c2e30</Color>
         <Color x:Key="ThemeAccentColor2Hover">#2c2a2a</Color>

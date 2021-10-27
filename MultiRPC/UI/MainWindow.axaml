@@ -25,6 +25,8 @@
         </Style>
 
         <Style Selector="ComboBox">
+            <Setter Property="Height" Value="{TemplateBinding MinHeight}" />
+            <Setter Property="MinHeight" Value="{DynamicResource TextControlThemeMinHeight}" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
             <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />

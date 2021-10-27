@@ -47,18 +47,35 @@ namespace MultiRPC.UI
             Opened += async (sender, args) =>
             {
                 //TODO: See why we need this
-                await Task.Delay(10);
-                eabTitleBar.Height = tbrTitleBar.DesiredSize.Height;
-                icon.Height = eabTitleBar.Height - icon.Margin.Top - icon.Margin.Bottom;
-                icon.Width = icon.Height;
-                _control.Margin += new Thickness(0, eabTitleBar.Height, 0, 0);
-                grdContent.Children.Insert(1, _control);
+                while (eabTitleBar.Height is 0 or double.NaN)
+                {
+                    await Task.Delay(10);
+                    eabTitleBar.Height = tbrTitleBar.DesiredSize.Height;
+                    if (eabTitleBar.Height != 0)
+                    {
+                        icon.Height = eabTitleBar.Height - icon.Margin.Top - icon.Margin.Bottom;
+                        icon.Width = icon.Height;
+                        _control.Margin += new Thickness(0, eabTitleBar.Height, 0, 0);
+                    }
+                }
             };
+            grdContent.Children.Insert(1, _control);
         }
     }
 
     public static class MainWindowExt
     {
+        public static bool TryClose<T>(this UserControl userControl, T result)
+        {
+            if (userControl.Parent?.Parent is MainWindow window)
+            {
+                window.Close(result);
+                return true;
+            }
+
+            return false;
+        }
+        
         public static bool TryClose(this UserControl userControl)
         {
             if (userControl.Parent?.Parent is MainWindow window)
