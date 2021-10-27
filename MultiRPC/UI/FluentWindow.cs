@@ -14,9 +14,10 @@ namespace MultiRPC.UI
 
         public FluentWindow()
         {
+            Title = "MultiRPC";
             ExtendClientAreaToDecorationsHint = true;
-            ExtendClientAreaTitleBarHeightHint = -1;            
-
+            ExtendClientAreaTitleBarHeightHint = -1;
+            
             TransparencyLevelHint = WindowTransparencyLevel.AcrylicBlur;
 
             this.GetObservable(WindowStateProperty)
