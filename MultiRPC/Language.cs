@@ -55,7 +55,6 @@ namespace MultiRPC
             }
            
             Logger.Debug("{0} exists, grabbing contents", fileLocation);
-           
             using var fileContentsStream = File.OpenRead(fileLocation);
             
             try
