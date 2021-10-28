@@ -1,5 +1,6 @@
 ﻿using Avalonia.Styling;
 using System;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
@@ -17,8 +18,15 @@ namespace MultiRPC.UI
             Title = "MultiRPC";
             ExtendClientAreaToDecorationsHint = true;
             ExtendClientAreaTitleBarHeightHint = -1;
-            
-            TransparencyLevelHint = WindowTransparencyLevel.AcrylicBlur;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var version = Environment.OSVersion.Version;
+                if (version.Major >= 10)
+                {
+                    TransparencyLevelHint = version.Build >= 22000 ? WindowTransparencyLevel.Mica : WindowTransparencyLevel.AcrylicBlur;
+                }
+            }
 
             this.GetObservable(WindowStateProperty)
                 .Subscribe(x =>
@@ -28,13 +36,17 @@ namespace MultiRPC.UI
                 });
 
             this.GetObservable(IsExtendedIntoWindowDecorationsProperty)
-                
                 .Subscribe(x =>
                 {
-                    if (IsInitialized && !x)
+                    if (!IsInitialized)
                     {
-                        SystemDecorations = SystemDecorations.Full;
-                        TransparencyLevelHint = WindowTransparencyLevel.Blur;
+                        return;
+                    }
+
+                    SystemDecorations = SystemDecorations.Full;
+                    if (!x)
+                    {
+                        TransparencyLevelHint = WindowTransparencyLevel.None;
                     }
                 });
         }
@@ -42,7 +54,7 @@ namespace MultiRPC.UI
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
             base.OnApplyTemplate(e);            
-            ExtendClientAreaChromeHints = 
+            ExtendClientAreaChromeHints =
                 ExtendClientAreaChromeHints.PreferSystemChrome |
                 ExtendClientAreaChromeHints.OSXThickTitleBar;
         }

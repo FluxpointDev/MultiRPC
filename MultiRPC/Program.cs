@@ -38,6 +38,10 @@ namespace MultiRPC
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
+                .With(new Win32PlatformOptions
+                {
+                    EnableMultitouch = true
+                })
                 .LogToTrace();
     }
 }

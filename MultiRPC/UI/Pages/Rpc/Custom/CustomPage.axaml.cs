@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
@@ -16,11 +17,6 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
 {
     public partial class CustomPage : RpcPage
     {
-        public CustomPage()
-        {
-            ContentPadding = new Thickness(0);
-        }
-
         public override string IconLocation => "Icons/Custom";
         public override string LocalizableName => "Custom";
         public override RichPresence RichPresence
@@ -33,13 +29,17 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
         }
 
         private readonly ProfilesSettings _profilesSettings = SettingManager<ProfilesSettings>.Setting;
-        private RichPresence _activeProfile;
-        private BaseRpcControl _rpcControl;
-        private Button _activeButton;
-        private IDisposable _textBindingDis;
+        private RichPresence _activeProfile = null!;
+        private BaseRpcControl _rpcControl = null!;
+        private Button? _activeButton;
+        private IDisposable? _textBindingDis;
         
         public override void Initialize(bool loadXaml)
         {
+            if (loadXaml)
+            {
+                ContentPadding = new Thickness(0);
+            }
             InitializeComponent(loadXaml);
 
             var tabPage = new TabsPage();
@@ -49,14 +49,12 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
                 GrabID = true,
                 TabName = new Language("CustomPage"),
                 Margin = new Thickness(10),
+                ShowHelp = true
             };
             Grid.SetRow(tabPage, 2);
             tabPage.AddTabs(_rpcControl);
             tabPage.Initialize();
             grdContent.Children.Insert(grdContent.Children.Count - 1, tabPage);
-            
-            _activeProfile = _profilesSettings.Profiles.First();
-            AddTextBinding();
            
             wrpProfileSelector.Children.AddRange(_profilesSettings.Profiles.Select(MakeProfileSelector));
             _profilesSettings.Profiles.CollectionChanged += (sender, args) =>
@@ -71,9 +69,21 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
                 }
             };
 
+            BtnChangePresence(wrpProfileSelector.Children[0], null!);
+
             _rpcControl.RichPresence = RichPresence;
             _rpcControl.Initialize(loadXaml);
+
+            _editLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgProfileEdit, x));
+            _shareLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgProfileShare, x));
+            _addLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgProfileAdd, x));
+            _deleteLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgProfileDelete, x));
         }
+        
+        private readonly Language _editLang = new Language("ProfileEdit");
+        private readonly Language _shareLang = new Language("ProfileShare");
+        private readonly Language _addLang = new Language("ProfileAdd");
+        private readonly Language _deleteLang = new Language("ProfileDelete");
         
         private void AddTextBinding()
         {
@@ -105,12 +115,19 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
 
         private void BtnChangePresence(object? sender, RoutedEventArgs e)
         {
+            _activeButton?.Classes.Remove("activeProfile");
             _activeButton = (Button)sender!;
+            _activeButton.Classes.Add("activeProfile");
+            
             _activeProfile = (RichPresence)_activeButton.DataContext!;
-            _textBindingDis.Dispose();
+            _textBindingDis?.Dispose();
             AddTextBinding();
             imgProfileDelete.IsVisible = _profilesSettings.Profiles.First() != _activeProfile;
-            _rpcControl.ChangeRichPresence(_activeProfile);
+
+            if (_rpcControl.IsInitialized)
+            {
+                _rpcControl.ChangeRichPresence(_activeProfile);
+            }
             RichPresence = _activeProfile;
         }
 
@@ -128,7 +145,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
 
         private void ImgProfileAdd_OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            var newProfile = new RichPresence("Custom" + _profilesSettings.Profiles.Count, 0);
+            var newProfile = new RichPresence("Profile" + _profilesSettings.Profiles.Count, 0);
             _profilesSettings.Profiles.Add(newProfile);
             BtnChangePresence(wrpProfileSelector.Children[^1], e);
         }

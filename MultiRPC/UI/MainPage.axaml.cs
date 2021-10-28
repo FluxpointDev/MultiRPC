@@ -28,7 +28,6 @@ namespace MultiRPC.UI
             //TODO: Add autostart
             ClickBtn(btnToTrigger, null!, pageToTrigger!);
         }
-        private readonly Language _pageLang = new Language("Page");
 
         private Button? _selectedBtn;
         private Button AddSidePage(ISidePage page)
@@ -46,14 +45,7 @@ namespace MultiRPC.UI
             };
 
             var lang = new Language(page.LocalizableName);
-            lang.TextObservable.Subscribe(s =>
-            {
-                ToolTip.SetTip(btn, s + " " + _pageLang.Text);
-            });
-            _pageLang.TextObservable.Subscribe(s =>
-            {
-                ToolTip.SetTip(btn, lang.Text + " " + s);
-            });
+            lang.TextObservable.Subscribe(s => ToolTip.SetTip(btn, s));
 
             btn.Click += (sender, args) => ClickBtn(sender, args, page);
             btn.Classes.Add("nav");
@@ -63,7 +55,8 @@ namespace MultiRPC.UI
 
         private void ClickBtn(object? sender, RoutedEventArgs e, ISidePage page)
         {
-            if (sender is not Button btn)
+            if (sender is not Button btn
+            || btn == _selectedBtn)
             {
                 return;
             }
@@ -77,7 +70,7 @@ namespace MultiRPC.UI
                 page.Initialize();
             }
 
-            contentBorder.Background = page.BackgroundColour != null 
+            contentBorder.Background = page.BackgroundColour.HasValue 
                 ? new SolidColorBrush(page.BackgroundColour.Value) 
                 : (IBrush)Application.Current.Resources["ThemeAccentBrush2"]!;
             cclContent.Padding = page.ContentPadding;

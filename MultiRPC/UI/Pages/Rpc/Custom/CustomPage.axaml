@@ -13,12 +13,14 @@
             <Setter Property="Height" Value="38" />
             <Setter Property="Opacity" Value="0.6" />
         </Style>
+        <Style Selector="Button.activeProfile">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2Hover}" />
+        </Style>
     </UserControl.Styles>
-    <!--TODO: Add Help-->
-    <Border x:Name="brdContent" Background="{DynamicResource ThemeAccentBrush}" CornerRadius="15, 15, 0, 0">
+    <Border x:Name="brdContent" CornerRadius="15, 15, 0, 0" Background="{DynamicResource ThemeAccentBrush}">
         <Grid x:Name="grdContent" RowDefinitions="Auto Auto *">
-            <WrapPanel x:Name="wrpProfileSelector" MaxWidth="750" />
-            <StackPanel Spacing="5" Grid.Row="1" x:Name="stpProfileEditor" Height="40" Orientation="Horizontal"  Margin="0,7">
+            <WrapPanel x:Name="wrpProfileSelector" MaxWidth="750" Margin="10,10,0,0" />
+            <StackPanel Spacing="5" Grid.Row="1" x:Name="stpProfileEditor" Height="40" Orientation="Horizontal" Margin="10,7,0,7">
                 <TextBlock FontWeight="SemiBold" x:Name="tblProfileName" VerticalAlignment="Center" />
                 <Rectangle Margin="0,2" Fill="White" Width="1" VerticalAlignment="Stretch" />
                 <Svg x:Name="imgProfileEdit" Path="/Assets/Icons/Pencil.svg" PointerPressed="ImgProfileEdit_OnPointerPressed" PointerEnter="Action_PointerEnter" PointerLeave="Action_PointerLeave" />

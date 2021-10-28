@@ -1,7 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Validation;
@@ -28,6 +35,7 @@ namespace MultiRPC.UI.Pages.Rpc
         public ImagesType ImageType { get; set; }
         public bool GrabID { get; set; }
         public Language TabName { get; init; }
+        public bool ShowHelp { get; init; }
 
         public bool IsDefaultPage => true;
 
@@ -66,6 +74,29 @@ namespace MultiRPC.UI.Pages.Rpc
                     _ = CheckID(s);
                     return new CheckResult(true);
                 }, RichPresence.ID.ToString());
+            }
+
+            if (ShowHelp)
+            {
+                var mainGrid = new Grid
+                {
+                    Margin = new Thickness(5, 0, 0, 0),
+                    ColumnDefinitions = new ColumnDefinitions("Auto *")
+                };
+                Grid.SetColumn(mainGrid, 1);
+                
+                //TODO: Replace image with new images and make help for buttons
+                var mainStackPanel = new StackPanel { Spacing = 5, HorizontalAlignment = HorizontalAlignment.Left };
+                string[] helpImages = { "ClientID.jpg", "Text1.jpg", "Text2.jpg", 
+                    "SmallAndLargeKey.jpg", "LargeText.jpg", "SmallAndLargeKey.jpg", "SmallText.jpg" };
+                mainStackPanel.Children.AddRange(helpImages.Select(MakeHelpImage));
+                mainGrid.Children.Add(mainStackPanel);
+
+                _helpImage = new Image { Height = 200, Margin = new Thickness(10,0,0,0) };
+                Grid.SetColumn(_helpImage, 1);
+                mainGrid.Children.Add(_helpImage);
+
+                stpContent.Children.Add(mainGrid);
             }
             
             if (ImageType == ImagesType.Custom)
@@ -111,6 +142,47 @@ namespace MultiRPC.UI.Pages.Rpc
             ckbElapsedTime.DataContext = new Language("ShowElapsedTime");
         }
 
+        private Image MakeHelpImage(string helpImage)
+        {
+            var image = new Image { Classes = { "help" }, Tag = helpImage };
+            image.PointerPressed += ImageOnPointerPressed;
+            return image;
+        }
+
+        private Image _helpImage = null!;
+        private Image? _selectedHelpImage;
+        private Dictionary<string, IBitmap> _helpImages = new Dictionary<string, IBitmap>();
+        private void ImageOnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            var image = (Image)sender!;
+
+            if (_selectedHelpImage != null)
+            {
+                _selectedHelpImage.Opacity = 0.6;
+                // ReSharper disable once PossibleUnintendedReferenceComparison
+                if (_selectedHelpImage == image)
+                {
+                    _selectedHelpImage = null;
+                    _helpImage.Opacity = 0;
+                    return;
+                }
+            }
+
+            _selectedHelpImage = image;
+            _selectedHelpImage.Opacity = 1;
+            _helpImage.Opacity = 1;
+
+            var key = image.Tag!.ToString()!;
+            if (!_helpImages.ContainsKey(key))
+            {
+                var assetLocator = AvaloniaLocator.Current.GetService<IAssetLoader>();
+                var stream = assetLocator.Open(new Uri("avares://MultiRPC/Assets/HelpImages/" + key));
+                _helpImages[key] = new Bitmap(stream);
+            }
+
+            _helpImage.Source = _helpImages[key];
+        }
+
         //TODO: Make it so we can disable start button or update presence button
 
         private async Task CheckID(string s)
@@ -127,7 +199,7 @@ namespace MultiRPC.UI.Pages.Rpc
                 {
                     ToolTip.SetTip(txtClientID, null);
                     RichPresence.ID = id;
-                    if (RichPresence.Name.StartsWith("Custom"))
+                    if (RichPresence.Name.StartsWith("Profile"))
                     {
                         RichPresence.Name = resultMessage!;
                     }

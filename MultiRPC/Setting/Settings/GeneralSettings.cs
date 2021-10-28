@@ -11,7 +11,7 @@ namespace MultiRPC.Setting.Settings
 
         [GeneratedProperty]
         private string? _lastUser = "NA#0000";
-        
+
         [GeneratedProperty]
         private bool _showAfkTime = false;
     }

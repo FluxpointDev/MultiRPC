@@ -76,13 +76,15 @@ namespace MultiRPC.UI.Views
         {
             if (e.PropertyName == nameof(RpcProfile.Profile.LargeText))
             {
-                ToolTip.SetTip(brdLarge, RpcProfile!.Profile.LargeText);
+                var text = RpcProfile!.Profile.LargeText;
+                ToolTip.SetTip(brdLarge, string.IsNullOrWhiteSpace(text) ? null : text);
                 return;
             }
             
             if (e.PropertyName == nameof(RpcProfile.Profile.SmallText))
             {
-                ToolTip.SetTip(gridSmallImage, RpcProfile!.Profile.SmallText);
+                var text = RpcProfile!.Profile.SmallText;
+                ToolTip.SetTip(gridSmallImage, string.IsNullOrWhiteSpace(text) ? null : text);
             }
         }
         

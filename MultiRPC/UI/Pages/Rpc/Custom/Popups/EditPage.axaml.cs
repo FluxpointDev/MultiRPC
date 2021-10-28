@@ -27,11 +27,12 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
         
         private readonly ProfilesSettings _profiles = SettingManager<ProfilesSettings>.Setting;
         private readonly RichPresence _activeRichPresence;
-        private string _newName = string.Empty;
+        private string _newName;
 
         public EditPage(RichPresence activeRichPresence)
         {
             _activeRichPresence = activeRichPresence;
+            _newName = activeRichPresence.Name;
             InitializeComponent();
             
             btnDone.DataContext = new Language("Done");

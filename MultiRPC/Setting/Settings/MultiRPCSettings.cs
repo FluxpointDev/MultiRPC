@@ -18,8 +18,16 @@ namespace MultiRPC.Setting.Settings
             PropertyChanged?.Invoke(sender, args);
         }
         
-        [GeneratedProperty] 
-        private RichPresence _presence = new RichPresence("MultiRPC", Constants.MultiRPCID);
+        [GeneratedProperty]
+        private RichPresence _presence = new RichPresence("MultiRPC", Constants.MultiRPCID)
+        {
+            Profile = new RpcProfile
+            {
+                LargeKey = "multirpc",
+                Details = Language.GetText("Hello"),
+                State = Language.GetText("World")
+            }
+        };
 
         partial void OnPresenceChanged(RichPresence previous, RichPresence value)
         {

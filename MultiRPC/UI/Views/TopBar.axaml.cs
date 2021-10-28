@@ -139,7 +139,7 @@ namespace MultiRPC.UI.Views
                 Assets = new Assets
                 {
                     LargeImageKey = "cat",
-                    LargeImageText = Language.GetText("AFKTime")
+                    LargeImageText = Language.GetText("SleepyCat")
                 },
                 Timestamps = _generalSettings.ShowAfkTime ? Timestamps.Now : null
             };

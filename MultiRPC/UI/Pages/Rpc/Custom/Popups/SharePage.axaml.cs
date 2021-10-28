@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
@@ -43,12 +44,27 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
             try
             {
                 var profile = JsonSerializer.Deserialize<RichPresence>(txtData.Text.Base64Decode());
-                if (profile != null)
+                if (profile == null)
                 {
-                    SettingManager<ProfilesSettings>.Setting.Profiles.Add(profile);
+                    await MessageBox.Show(Language.GetText("SharingError"));
                     this.TryClose();
                     return;
                 }
+                
+                var profiles = SettingManager<ProfilesSettings>.Setting.Profiles;
+                if (profiles.Any(x => profile.Name == x.Name))
+                {
+                    var count = 0;
+                    while (profiles.Any(x => profile.Name + $" {count}" == x.Name))
+                    {
+                        count++;
+                    }
+                    profile.Name += $" {count}";
+                }
+                
+                profiles.Add(profile);
+                this.TryClose();
+                return;
             }
             catch (Exception exception)
             {
