@@ -1,7 +1,7 @@
 # Info
 ![Image](https://img.fluxpoint.dev/258597428385546240.png)
 
-This supports all versions of windows, linux/mac support coming soon using .net core
+This supports Windows and Linux!
 
 Translations, themes and custom theme support now available!
 
@@ -9,7 +9,7 @@ Ram usage: 50mb | Language: C# | GUI: Wpf
 
 # Support 
 
-Contact me Builderb#0001 or join the Discord server https://discord.gg/TjF6QDC for more info and support
+Contact me Builderb#0001 or join the Discord server https://discord.gg/fluxpoint for more info and support
 
 # Install
 Install the app from our website https://fluxpoint.dev/multirpc
