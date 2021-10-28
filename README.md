@@ -1,5 +1,5 @@
 # Info
-![Image](https://img.fluxpoint.dev/med/2531927730946048.jpg)
+![Image](https://img.fluxpoint.dev/258597428385546240.png)
 
 This supports all versions of windows, linux/mac support coming soon using .net core
 
@@ -12,7 +12,7 @@ Ram usage: 50mb | Language: C# | GUI: Wpf
 Contact me Builderb#0001 or join the Discord server https://discord.gg/TjF6QDC for more info and support
 
 # Install
-Install the setup from here https://multirpc.fluxpoint.dev
+Install the app from our website https://fluxpoint.dev/multirpc
 
 Click more info and run anyway (windows limitation)
 
