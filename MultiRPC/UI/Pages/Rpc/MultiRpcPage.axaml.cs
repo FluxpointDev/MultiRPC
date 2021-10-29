@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.Media;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Page;
@@ -12,6 +13,9 @@ namespace MultiRPC.UI.Pages.Rpc
         public override string IconLocation => "Icons/Discord";
         public override string LocalizableName => "MultiRPC";
         public override RichPresence RichPresence { get; protected set; } = SettingManager<MultiRPCSettings>.Setting.Presence;
+        public override event EventHandler? PresenceChanged;
+        public override bool PresenceValid => rpcControl.RpcValid;
+
         public override void Initialize(bool loadXaml)
         {
             InitializeComponent(loadXaml);
@@ -20,6 +24,7 @@ namespace MultiRPC.UI.Pages.Rpc
             rpcView.RpcProfile = RichPresence;
             rpcView.UpdateBackground((IBrush)Application.Current.Resources["PurpleBrush"]!);
 
+            rpcControl.ProfileChanged += (sender, args) => PresenceChanged?.Invoke(sender, args);
             rpcControl.RichPresence = RichPresence;
             rpcControl.Initialize(loadXaml);
         }

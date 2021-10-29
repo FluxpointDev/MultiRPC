@@ -13,16 +13,28 @@ namespace MultiRPC.UI.Views
     {
         private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
 
+        private RpcPage _page;
         public TopBar()
         {
             InitializeComponent();
             if (RpcPageManager.CurrentPage != null)
             {
-                RpcPageManagerOnPageChanged(this, RpcPageManager.CurrentPage);
+                _page = RpcPageManager.CurrentPage;
+                RpcPageManagerOnPageChanged(this, _page);
+                _page.PresenceChanged += PageOnPresenceChanged;
+                PageOnPresenceChanged(this, EventArgs.Empty);
             }
             RpcPageManager.NewCurrentPage += delegate(object? sender, RpcPage page)
             {
                 this.RunUILogic(() => RpcPageManagerOnPageChanged(sender, page));
+
+                if (_page != null)
+                {
+                    _page.PresenceChanged -= PageOnPresenceChanged;
+                }
+                _page = page;
+                page.PresenceChanged += PageOnPresenceChanged;
+                PageOnPresenceChanged(sender, EventArgs.Empty);
             };
 
             btnStart.DataContext = _startButton = new Language("Start", "MultiRPC");
@@ -67,7 +79,7 @@ namespace MultiRPC.UI.Views
                     _statusKind.ChangeJsonNames("Connected");
                     if (App.RpcClient.ID != Constants.AfkID)
                     {
-                        btnUpdatePresence.IsEnabled = true;                        
+                        btnUpdatePresence.IsEnabled = _page?.PresenceValid ?? true;
                     }
 
                     var user = message.User.Username + "#" + message.User.Discriminator.ToString("0000");
@@ -93,6 +105,18 @@ namespace MultiRPC.UI.Views
                 });
             };
         }
+
+        private void PageOnPresenceChanged(object? sender, EventArgs e)
+        {
+            if (!App.RpcClient.IsRunning)
+            {
+                btnStart.IsEnabled = _page.PresenceValid;
+                return;
+            }
+
+            btnUpdatePresence.IsEnabled = _page.PresenceValid;
+        }
+
         private readonly Language _statusKind;
         private readonly Language _statusText;
         private readonly Language _userText;

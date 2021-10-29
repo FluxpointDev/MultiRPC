@@ -46,7 +46,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
 
                     btnDone.IsEnabled = result.Valid;
                     return result;
-                }, _activeRichPresence.Name);
+                }, initialValue: _activeRichPresence.Name);
         }
 
         private void BtnDone_OnClick(object? sender, RoutedEventArgs e)

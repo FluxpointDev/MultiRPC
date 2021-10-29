@@ -1,4 +1,5 @@
-﻿using MultiRPC.UI.Pages;
+﻿using System;
+using MultiRPC.UI.Pages;
 using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.Rpc.Page
@@ -8,5 +9,8 @@ namespace MultiRPC.Rpc.Page
         public abstract RichPresence RichPresence { get; protected set; }
 
         public record CheckResult(bool Valid, string? ReasonWhy = null);
+
+        public abstract bool PresenceValid { get; }
+        public abstract event EventHandler? PresenceChanged;
     }
 }

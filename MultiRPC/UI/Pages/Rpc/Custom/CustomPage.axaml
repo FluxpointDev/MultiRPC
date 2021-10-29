@@ -12,9 +12,32 @@
             <Setter Property="Width" Value="38" />
             <Setter Property="Height" Value="38" />
             <Setter Property="Opacity" Value="0.6" />
+            <Setter Property="Transitions">
+                <Setter.Value>
+                    <Transitions>
+                        <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="QuadraticEaseIn" />
+                    </Transitions>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style Selector="Button.activeProfile">
             <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2Hover}" />
+        </Style>
+        <Style Selector="Image">
+            <Setter Property="Transitions">
+                <Setter.Value>
+                    <Transitions>
+                        <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="QuadraticEaseIn" />
+                    </Transitions>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style Selector="Image.help">
+            <Setter Property="Width" Value="20" />
+            <Setter Property="Height" Value="{TemplateBinding Width}" />
+            <Setter Property="Source" Value="{SvgImage /Assets/Icons/Help.svg}" />
+            <Setter Property="Margin" Value="0,4,0,4" />
+            <Setter Property="Opacity" Value="0.6" />
         </Style>
     </UserControl.Styles>
     <Border x:Name="brdContent" CornerRadius="15, 15, 0, 0" Background="{DynamicResource ThemeAccentBrush}">

@@ -205,14 +205,14 @@ namespace MultiRPC.UI.Views
             }
             _timerRunning = true;
 
-            while (_timerTime != null)
+            while (_timerTime.HasValue)
             {
-                await Task.Delay(1000);
                 var ts = DateTime.UtcNow.Subtract(_timerTime.Value);
 
                 var text = ts.Hours > 0 ? ts.Hours.ToString("00") + ":" : string.Empty;
                 text += $"{ts.Minutes:00}:{ts.Seconds:00}";
                 tblTime.Text = text;
+                await Task.Delay(1000);
             }
 
             _timerRunning = false;

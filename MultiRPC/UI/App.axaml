@@ -14,7 +14,7 @@
         <Color x:Key="ThemeAccentDisabledColor">#505050</Color>
         <Color x:Key="ThemeAccentDisabledTextColor">White</Color>
         <Color x:Key="NavButtonSelectedColor">#00ABEB</Color>
-        <Color x:Key="NavButtonSelectedIconColor">Blue</Color>
+        <Color x:Key="NavButtonSelectedIconColor">#FFFFFF</Color>
 
         <Color x:Key="Purple">#6A7EC4</Color>
         <Color x:Key="Red">#FFF13333</Color>
