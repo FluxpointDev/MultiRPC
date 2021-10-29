@@ -102,11 +102,11 @@ namespace MultiRPC.UI
 
             if (_selectedBtn != null)
             {
-                UpdateButtonIconColour(_selectedBtn, (Color)App.Current.Resources["ThemeAccentColor3"]);
+                UpdateButtonIconColour(_selectedBtn, (Color)Application.Current.Resources["ThemeAccentColor3"]!);
                 _selectedBtn.Classes.Remove("selected");
             }
             btn.Classes.Insert(0,"selected");
-            UpdateButtonIconColour(btn, (Color)App.Current.Resources["NavButtonSelectedIconColor"]);
+            UpdateButtonIconColour(btn, (Color)Application.Current.Resources["NavButtonSelectedIconColor"]!);
 
             _selectedBtn = btn;
             if (!page.IsInitialized)

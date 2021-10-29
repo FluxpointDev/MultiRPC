@@ -13,7 +13,7 @@ namespace MultiRPC.UI.Views
     {
         private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
 
-        private RpcPage _page;
+        private RpcPage? _page;
         public TopBar()
         {
             InitializeComponent();
@@ -110,11 +110,11 @@ namespace MultiRPC.UI.Views
         {
             if (!App.RpcClient.IsRunning)
             {
-                btnStart.IsEnabled = _page.PresenceValid;
+                btnStart.IsEnabled = _page?.PresenceValid ?? true;
                 return;
             }
 
-            btnUpdatePresence.IsEnabled = _page.PresenceValid;
+            btnUpdatePresence.IsEnabled = _page?.PresenceValid ?? true;
         }
 
         private readonly Language _statusKind;

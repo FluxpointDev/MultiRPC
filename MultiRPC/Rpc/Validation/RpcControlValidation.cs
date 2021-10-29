@@ -50,7 +50,7 @@ namespace MultiRPC.Rpc.Validation
                     return;
                 }
 
-                var error = check.ReasonWhy ?? "Unknown validation reason";
+                var error = check?.ReasonWhy ?? "Unknown validation reason";
                 _logging.Error(error);
                 throw new DataValidationException(error);
             }
