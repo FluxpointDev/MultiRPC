@@ -34,7 +34,7 @@ namespace MultiRPC.UI.Pages.Rpc
         public RichPresence RichPresence { get; set; } = null!;
         public ImagesType ImageType { get; set; }
         public bool GrabID { get; set; }
-        public Language TabName { get; init; }
+        public Language? TabName { get; init; }
         public bool ShowHelp { get; init; }
 
         public bool IsDefaultPage => true;

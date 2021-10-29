@@ -5,6 +5,7 @@ using System.Text.Json;
 
 namespace MultiRPC.Setting
 {
+    //TODO: Use source gen to make JsonTypeInfo (Ensures we can process json even when trimming)
     public static class SettingManager<T> 
         where T : Setting, new()
     {

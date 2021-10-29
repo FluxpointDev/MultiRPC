@@ -19,12 +19,12 @@ namespace MultiRPC.UI
         public static readonly RpcClient RpcClient = new RpcClient();
 
         //TODO: Put this somewhere else, for now this works
-        private UpdateClient? Updater;
+        private UpdateClient? _updater;
         
         public override void Initialize()
         {
 #if !WINSTORE && !DEBUG
-            Updater = new GithubUpdateClient(new BinaryApplier(), "FluxpointDev", "MultiRPC");
+            _updater = new GithubUpdateClient(new BinaryApplier(), "FluxpointDev", "MultiRPC");
 #endif
             AvaloniaXamlLoader.Load(this);
 
@@ -41,7 +41,7 @@ namespace MultiRPC.UI
 #if !DEBUG
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                _= Updater?.UpdateApp(null);
+                _= _updater?.UpdateApp(null);
             }
 #endif
         }

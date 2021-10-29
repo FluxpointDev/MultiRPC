@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MultiRPC
 {
@@ -39,15 +40,15 @@ namespace MultiRPC
             };
         }
 
-        public static bool TryGetImageValue(string imageKey, out string uri)
+        public static bool TryGetImageValue(string imageKey, [NotNullWhen(true)] out string? uri)
         {
             if (string.IsNullOrWhiteSpace(imageKey))
             {
-                uri = string.Empty;
+                uri = null;
                 return false;
             }
 
-            return MultiRPCImages.TryGetValue(imageKey, out uri!);
+            return MultiRPCImages.TryGetValue(imageKey, out uri);
         }
     }
 }

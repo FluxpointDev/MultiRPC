@@ -32,11 +32,10 @@ namespace MultiRPC.Rpc
 
         public void Start(long? applicationId, string? applicationName)
         {
-            var id = applicationId ?? RpcPageManager.CurrentPage?.RichPresence.ID;
-            _presenceId = id.GetValueOrDefault(Constants.MultiRPCID);
+            _presenceId = applicationId ?? RpcPageManager.CurrentPage?.RichPresence.ID ?? Constants.MultiRPCID;
             var idS = _presenceId.ToString();
 
-            var name = applicationName ?? RpcPageManager.CurrentPage?.RichPresence.Name;
+            var name = applicationName ?? RpcPageManager.CurrentPage?.RichPresence.Name ?? Language.GetText("MultiRPC");
             _presenceName = name!;
             
             //If we are running already then stop it if we aren't

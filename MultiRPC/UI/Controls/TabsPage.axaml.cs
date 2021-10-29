@@ -22,16 +22,17 @@ namespace MultiRPC.UI.Controls
             var defaultPage = _pages.FirstOrDefault(x => x.IsDefaultPage);
             var defaultControl = stpTabs.Children.FirstOrDefault(x => x.DataContext == defaultPage);
             defaultControl?.RaiseEvent(
-                new PointerPressedEventArgs(null, null, null,
+                new PointerPressedEventArgs(null!, null!, null!,
                     new Point(), 0, PointerPointProperties.None, KeyModifiers.None));
         }
 
+        private static Language naLang = new Language("N/A");
         private Rectangle? _activePageRectangle;
         private Control MakeTab(ITabPage page)
         {
             var text = new TextBlock
             {
-                [!TextBlock.TextProperty] = page.TabName.TextObservable.ToBinding(),
+                [!TextBlock.TextProperty] = (page.TabName?.TextObservable ?? naLang.TextObservable).ToBinding(),
                 Margin = new Thickness(0, 0, 0, 6)
             };
 
@@ -83,7 +84,7 @@ namespace MultiRPC.UI.Controls
 
     public interface ITabPage
     {
-        public Language TabName { get; }
+        public Language? TabName { get; }
 
         public bool IsDefaultPage { get; }
 

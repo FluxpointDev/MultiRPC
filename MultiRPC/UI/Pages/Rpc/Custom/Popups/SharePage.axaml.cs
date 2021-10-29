@@ -27,7 +27,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
             }
         }
 
-        private readonly RichPresence _activeRichPresence;
+        private readonly RichPresence _activeRichPresence = null!;
         public SharePage(RichPresence activeRichPresence)
         {
             _activeRichPresence = activeRichPresence;

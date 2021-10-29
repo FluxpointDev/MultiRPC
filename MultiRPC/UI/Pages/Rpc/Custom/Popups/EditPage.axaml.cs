@@ -26,8 +26,8 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
         public Language Title { get; } = new Language("ProfileEdit");
         
         private readonly ProfilesSettings _profiles = SettingManager<ProfilesSettings>.Setting;
-        private readonly RichPresence _activeRichPresence;
-        private string _newName;
+        private readonly RichPresence _activeRichPresence = null!;
+        private string _newName = null!;
 
         public EditPage(RichPresence activeRichPresence)
         {
