@@ -3,6 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <ApplicationIcon>Assets/Logo.ico</ApplicationIcon>
     <PublishTrimmed>true</PublishTrimmed>
     <Configurations>Debug;Release;WINSTORE</Configurations>
     <Platforms>AnyCPU</Platforms>
