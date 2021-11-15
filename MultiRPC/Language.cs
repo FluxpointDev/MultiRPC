@@ -27,6 +27,8 @@ namespace MultiRPC
         private readonly Lazy<LanguageObservable> _textObservable;
         public LanguageObservable TextObservable => _textObservable.Value;
         
+        public string Text => TextObservable.Text;
+
         private static Dictionary<string, string> _englishLanguageJsonFileContent = null!;
         private static Dictionary<string, string> _languageJsonFileContent = null!;
         private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Language));
@@ -69,8 +71,6 @@ namespace MultiRPC
             return null;
         }
 
-        public string Text => TextObservable.Text;
-        
         public static bool HasKey(string jsonName)
         {
             return _languageJsonFileContent.ContainsKey(jsonName) || _englishLanguageJsonFileContent.ContainsKey(jsonName);

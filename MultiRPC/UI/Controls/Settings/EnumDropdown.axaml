@@ -1,0 +1,19 @@
+﻿<settings:SettingItem xmlns="https://github.com/avaloniaui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:settings="clr-namespace:MultiRPC.UI.Controls.Settings"
+                      xmlns:system="clr-namespace:System;assembly=System.Runtime"
+                      mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                      x:Class="MultiRPC.UI.Controls.Settings.EnumDropdown">
+    <StackPanel Orientation="Horizontal" Spacing="7">
+        <TextBlock x:Name="tblHeader" VerticalAlignment="Center" />
+        <ComboBox x:Name="cboSelection" VerticalAlignment="Center">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding TextObservable^}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+    </StackPanel>
+</settings:SettingItem>

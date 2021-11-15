@@ -4,13 +4,17 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Page;
+using MultiRPC.Setting;
+using MultiRPC.Setting.Settings;
 using MultiRPC.UI.Pages;
 using MultiRPC.UI.Pages.Rpc;
 using MultiRPC.UI.Pages.Rpc.Custom;
+using Splat;
 using TinyUpdate.Binary;
 using TinyUpdate.Core.Extensions;
 using TinyUpdate.Core.Update;
 using TinyUpdate.Github;
+using SettingsPage = MultiRPC.UI.Pages.Settings.SettingsPage;
 
 namespace MultiRPC.UI
 {
@@ -28,6 +32,8 @@ namespace MultiRPC.UI
 #endif
             AvaloniaXamlLoader.Load(this);
 
+            Locator.CurrentMutable.Register<Setting.Setting>(() => SettingManager<GeneralSettings>.Setting);
+            //TODO: Replace with splat
             //Any new pages get added here
             PageManager.AddRpcPage(new MultiRpcPage());
             PageManager.AddRpcPage(new CustomPage());

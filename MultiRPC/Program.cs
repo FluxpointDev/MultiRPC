@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using Avalonia;
 using MultiRPC.Logging;
@@ -30,6 +31,13 @@ namespace MultiRPC
             LoggingCreator.AddLogBuilder(new FileLoggerBuilder(logFolder));
 #endif
             LoggingCreator.AddLogBuilder(new LoggingPageBuilder());
+            
+            //We do the check here so if we do throw, it'll be logged wherever it needs to be logged
+            if (!DebugUtil.IsDebugBuild && Process.GetProcessesByName("MultiRPC").Length > 1)
+            {
+                throw new Exception("Multiple instances are not allowed!");
+            }
+
             var builder = BuildAvaloniaApp();
             builder.StartWithClassicDesktopLifetime(args);
         }

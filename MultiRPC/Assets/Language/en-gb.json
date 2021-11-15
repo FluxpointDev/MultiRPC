@@ -219,5 +219,6 @@
   "TooManyChars": "There's too much for discord to handle!",
   "InvalidUri": "Uri is not valid",
   "UriTooBig": "This Uri is too big for discord!",
-  "Missing": "Missing"
+  "Missing": "Missing",
+  "General": "General"
 }
