@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -37,6 +37,7 @@ namespace MultiRPC.UI.Pages.Rpc
                 .All(x => x.GetValueOrDefault(true))
                 && _lastIDCheckStatus;
 
+        public event EventHandler<bool> PresenceValidChanged;
         public event EventHandler? ProfileChanged;
 
         public void ChangeRichPresence(RichPresence richPresence)
@@ -57,10 +58,20 @@ namespace MultiRPC.UI.Pages.Rpc
             ckbElapsedTime.IsChecked = richPresence.Profile.ShowTime;
         }
 
+        private bool _lastValid;
         public void Initialize(bool loadXaml)
         {
             InitializeComponent(loadXaml);
 
+            ProfileChanged += (sender, args) =>
+            {
+                var isValid = RpcValid;
+                if (_lastValid != isValid)
+                {
+                    PresenceValidChanged?.Invoke(this, isValid);
+                }
+                _lastValid = isValid;
+            };
             if (GrabID)
             {
                 txtClientID.IsVisible = true;

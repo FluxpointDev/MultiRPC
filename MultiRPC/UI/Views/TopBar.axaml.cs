@@ -138,6 +138,8 @@ namespace MultiRPC.UI.Views
             _startButton.ChangeJsonNames(hasStartKey ? new []{ "Start" + e.LocalizableName } : new []{ "Start", e.LocalizableName });
         }
 
+        public void TriggerStartStop() => BtnStart_OnClick(btnStart, null!);
+
         private void BtnStart_OnClick(object? sender, RoutedEventArgs e)
         {
             if (App.RpcClient.IsRunning)

@@ -33,6 +33,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
         }
         public override event EventHandler? PresenceChanged;
         public override bool PresenceValid => _rpcControl.RpcValid;
+        public override event EventHandler<bool> PresenceValidChanged;
 
         private readonly ProfilesSettings _profilesSettings = SettingManager<ProfilesSettings>.Setting;
         private RichPresence _activeProfile = null!;
@@ -58,6 +59,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
                 Margin = new Thickness(10),
             };
             _rpcControl.ProfileChanged += (sender, args) => PresenceChanged?.Invoke(sender, args);
+            _rpcControl.PresenceValidChanged += (sender, b) => PresenceValidChanged?.Invoke(sender, b);
             Grid.SetRow(tabPage, 2);
             tabPage.AddTabs(_rpcControl);
             tabPage.Initialize();

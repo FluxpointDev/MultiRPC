@@ -15,6 +15,7 @@ namespace MultiRPC.UI.Pages.Rpc
         public override RichPresence RichPresence { get; protected set; } = SettingManager<MultiRPCSettings>.Setting.Presence;
         public override event EventHandler? PresenceChanged;
         public override bool PresenceValid => rpcControl.RpcValid;
+        public override event EventHandler<bool> PresenceValidChanged;
 
         public override void Initialize(bool loadXaml)
         {
@@ -24,6 +25,7 @@ namespace MultiRPC.UI.Pages.Rpc
             rpcView.RpcProfile = RichPresence;
             rpcView.UpdateBackground((IBrush)Application.Current.Resources["PurpleBrush"]!);
 
+            rpcControl.PresenceValidChanged += (sender, b) => PresenceValidChanged?.Invoke(sender, b);
             rpcControl.ProfileChanged += (sender, args) => PresenceChanged?.Invoke(sender, args);
             rpcControl.RichPresence = RichPresence;
             rpcControl.Initialize(loadXaml);

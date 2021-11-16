@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
+using MultiRPC.Setting;
+using MultiRPC.Setting.Settings;
 using TinyUpdate.Core.Logging;
 
 namespace MultiRPC
@@ -33,25 +35,46 @@ namespace MultiRPC
         private static Dictionary<string, string> _languageJsonFileContent = null!;
         private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Language));
 
+        public static event EventHandler? LanguageChanged;
+        internal static void ChangeLanguage(string file)
+        {
+            _languageJsonFileContent = GrabLanguage(file);
+            LanguageChanged?.Invoke(null, EventArgs.Empty);
+        }
+        
         private static void GrabContent()
         {
-            //TODO: Be able to change language
-            var currentLang = Thread.CurrentThread.CurrentUICulture.Name.ToLower();
-            var currentLangTwoLetter = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToLower();
-            _englishLanguageJsonFileContent = GrabLanguage("en-gb")!;
-            if (currentLang != "en-gb")
+            _englishLanguageJsonFileContent = GrabLanguage(GetFilePath("en-gb"))!;
+
+            var langName = SettingManager<GeneralSettings>.Setting.Language;
+            if (!string.IsNullOrWhiteSpace(langName))
             {
-                _languageJsonFileContent = 
-                    GrabLanguage(currentLang) 
-                    ?? GrabLanguage(currentLangTwoLetter) 
-                    ?? _englishLanguageJsonFileContent;
+                GeneralSettings.GetLanguages();
+                if (GeneralSettings.Languages.ContainsKey(langName))
+                {
+                    _languageJsonFileContent = GrabLanguage(GeneralSettings.Languages[langName]);
+                }
+            }
+
+            if (_languageJsonFileContent == null)
+            {
+                var currentLang = Thread.CurrentThread.CurrentUICulture.Name.ToLower();
+                if (currentLang != "en-gb")
+                {
+                    var currentLangTwoLetter = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToLower();
+                    _languageJsonFileContent =
+                        GrabLanguage(GetFilePath(currentLang)) 
+                        ?? GrabLanguage(GetFilePath(currentLangTwoLetter));
+                }
             }
             _languageJsonFileContent ??= _englishLanguageJsonFileContent;
         }
-        
-        private static Dictionary<string, string>? GrabLanguage(string name)
+
+        private static string GetFilePath(string name) =>
+            Path.Combine(Constants.LanguageFolder, name + ".json");
+
+        private static Dictionary<string, string>? GrabLanguage(string fileLocation)
         {
-            var fileLocation = Path.Combine(Constants.LanguageFolder, name + ".json");
             if (!File.Exists(fileLocation))
             {
                 return null;
@@ -110,9 +133,15 @@ namespace MultiRPC
         private readonly List<IObserver<string>> _observables = new List<IObserver<string>>();
         public IDisposable Subscribe(IObserver<string> observer)
         {
+            Language.LanguageChanged += LanguageOnLanguageChanged;
             _observables.Add(observer);
             observer.OnNext(Text);
             return new DisposableAction(() => _observables.Remove(observer));
+        }
+
+        private void LanguageOnLanguageChanged(object? sender, EventArgs e)
+        {
+            _observables.ForEach(x => x.OnNext(Text));
         }
 
         private IEnumerable<string> GetText() => _jsonNames.Select(Language.GetText);

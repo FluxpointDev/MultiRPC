@@ -14,13 +14,6 @@ namespace MultiRPC.UI.Pages
             PageAdded?.Invoke(page, page);
         }
 
-        public static void AddRpcPage(RpcPage page)
-        {
-            RpcPageManager.AddPage(page);
-            Pages.Add(page);
-            PageAdded?.Invoke(page, page);
-        }
-
         // ReSharper disable once ReturnTypeCanBeEnumerable.Global
         public static IReadOnlyList<ISidePage> CurrentPages => Pages.AsReadOnly();
 

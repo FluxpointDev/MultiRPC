@@ -1,8 +1,12 @@
-using System.ComponentModel;
-using System.Reflection;
-using System.Text.Json.Serialization;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Fonderie;
+using MultiRPC.Rpc;
+using System.Text.Json.Serialization;
+using MultiRPC.Rpc.Page;
 using MultiRPC.Setting.Settings.Attributes;
+using MultiRPC.UI.Pages;
 
 namespace MultiRPC.Setting.Settings
 {
@@ -26,14 +30,39 @@ namespace MultiRPC.Setting.Settings
         [GeneratedProperty, SettingName("AfkTime")]
         private bool _showAfkTime;
 
-        //TODO: Actually add logic which get real values
-        private string[] GetLanguages()
+        partial void OnLanguageChanged(string previous, string value)
         {
-            return new[] { "e", "h" };
+            if (Languages.ContainsKey(value))
+            {
+                MultiRPC.Language.ChangeLanguage(Languages[value]);
+            }
         }
+
+        internal static readonly Dictionary<string, string> Languages = new Dictionary<string, string>();
+        internal static string[] GetLanguages()
+        {
+            if (Languages.Any())
+            {
+                return Languages.Keys.ToArray();
+            }
+            
+            foreach (var file in Directory.GetFiles(Constants.LanguageFolder, "*.json"))
+            {
+                var lines = File.ReadLines(file);
+                var line = lines.First(x => x.Contains("LanguageName"));
+                var langName = line[(line.IndexOf(':') + 1)..].Trim()[1..^2];
+                Languages.Add(langName, file);
+            }
+
+            return Languages.Keys.ToArray();
+        }
+
         private string[] GetAutoStarts()
         {
-            return new[] { "MultiRPC", "Custom" };
+            var l = new List<string>() { "No" };
+            l.AddRange(PageManager.CurrentPages.Where(x => x is RpcPage)
+                .Select(x => x.LocalizableName));
+            return l.ToArray();
         }
     }
 }

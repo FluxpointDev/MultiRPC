@@ -12,5 +12,6 @@ namespace MultiRPC.Rpc.Page
 
         public abstract bool PresenceValid { get; }
         public abstract event EventHandler? PresenceChanged;
+        public abstract event EventHandler<bool> PresenceValidChanged;
     }
 }

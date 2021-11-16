@@ -26,22 +26,19 @@ namespace MultiRPC.Rpc.Page
             NewCurrentPage?.Invoke(sender, CurrentPage);
             PageChanged?.Invoke(sender, CurrentPage);
         }
-
-        internal static void AddPage(RpcPage page)
+        
+        internal static void PageMoved(RpcPage page)
         {
-            page.AttachedToVisualTree += (sender, args) =>
+            if (_rpcClient.IsRunning)
             {
-                if (_rpcClient.IsRunning)
-                {
-                    _pendingPage = page;
-                    PageChanged?.Invoke(sender, page);
-                    return;
-                }
+                _pendingPage = page;
+                PageChanged?.Invoke(null, page);
+                return;
+            }
 
-                CurrentPage = page;
-                NewCurrentPage?.Invoke(sender, page);
-                PageChanged?.Invoke(sender, page);
-            };
+            CurrentPage = page;
+            NewCurrentPage?.Invoke(null, page);
+            PageChanged?.Invoke(null, page);
         }
 
         /// <summary>

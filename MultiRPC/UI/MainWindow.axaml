@@ -96,6 +96,10 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+            <Setter Property="Padding" Value="5,1" />
+        </Style>
+        <Style Selector="AccessText">
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
         <Style Selector="Button /template/ ContentPresenter">
             <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeForegroundBrush}" />

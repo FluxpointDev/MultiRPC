@@ -35,8 +35,8 @@ namespace MultiRPC.UI
             Locator.CurrentMutable.Register<Setting.Setting>(() => SettingManager<GeneralSettings>.Setting);
             //TODO: Replace with splat
             //Any new pages get added here
-            PageManager.AddRpcPage(new MultiRpcPage());
-            PageManager.AddRpcPage(new CustomPage());
+            PageManager.AddPage(new MultiRpcPage());
+            PageManager.AddPage(new CustomPage());
             PageManager.AddPage(new SettingsPage());
             PageManager.AddPage(new LoggingPage());
             PageManager.AddPage(new CreditsPage());

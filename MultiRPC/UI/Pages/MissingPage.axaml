@@ -7,14 +7,10 @@
           x:Class="MultiRPC.UI.Pages.MissingPage">
     <StackPanel>
         <TextBlock Text="What is currently missing" FontWeight="Bold" />
-        <TextBlock Text="Saving settings" />
-        
-        <TextBlock Text="Settings Page" />
         <TextBlock Text="Credit Page" />
         <TextBlock Text="Theme editor Page" />
         <TextBlock Text="Theming" />
         <TextBlock Text="Network notification" />
-        <TextBlock Text="Help in Customs page" />
         <TextBlock Text="Updating popup" />
         <TextBlock Text="Show/Hide Tooltray" />
     </StackPanel>

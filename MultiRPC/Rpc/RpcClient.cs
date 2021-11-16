@@ -1,10 +1,17 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Pipes;
 using System.Linq;
+using System.Runtime.InteropServices;
 using DiscordRPC;
 using DiscordRPC.Message;
 using MultiRPC.Extensions;
 using MultiRPC.Logging;
 using MultiRPC.Rpc.Page;
+using MultiRPC.Setting;
+using MultiRPC.Setting.Settings;
+using TinyUpdate.Core.Helper;
 
 namespace MultiRPC.Rpc
 {
@@ -30,6 +37,50 @@ namespace MultiRPC.Rpc
             _client?.ClearPresence();
         }
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool GetNamedPipeServerProcessId(IntPtr pipe, out int clientProcessId);
+        
+        private int FindPipe(string processName)
+        {
+            if (OSHelper.ActiveOS != OSPlatform.Windows
+                || string.IsNullOrWhiteSpace(processName))
+            {
+                return -1;
+            }
+
+            var pipeCount = -1;
+            var pipes = Directory.GetFiles(@"\\.\pipe\");
+            foreach (var t in pipes)
+            {
+                var pipe = t[9..];
+                if (!pipe.StartsWith("discord"))
+                {
+                    continue;
+                }
+
+                pipeCount++;
+                try
+                {
+                    using NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", pipe, PipeDirection.InOut, PipeOptions.Asynchronous);
+                    pipeClient.Connect(1000);
+                    var canGetPipe = GetNamedPipeServerProcessId(pipeClient.SafePipeHandle.DangerousGetHandle(), out var id);
+                    pipeClient.Close();
+                        
+                    if (!canGetPipe || id == 0)
+                    {
+                        continue;
+                    }
+                    Process proc = Process.GetProcessById(id);
+                    if (proc.ProcessName == processName)
+                    {
+                        return pipeCount;
+                    }
+                }
+                catch { }
+            }
+            return -1;
+        }
+
         public void Start(long? applicationId, string? applicationName)
         {
             _presenceId = applicationId ?? RpcPageManager.CurrentPage?.RichPresence.ID ?? Constants.MultiRPCID;
@@ -45,8 +96,16 @@ namespace MultiRPC.Rpc
                 Stop();
             }
 
+            var processName = SettingManager<GeneralSettings>.Setting.Client switch
+            {
+                DiscordClient.Discord => "Discord",
+                DiscordClient.DiscordPTB => "DiscordPTB",
+                DiscordClient.DiscordCanary => "Discord Canary",
+                DiscordClient.DiscordDevelopment => "Discord Development",
+                _ => string.Empty
+            };
             _client?.Dispose();
-            _client = new DiscordRpcClient(idS) //TODO: Add custom pipe support
+            _client = new DiscordRpcClient(idS, FindPipe(processName))
             {
                 SkipIdenticalPresence = false, 
                 Logger = new RpcLogger(),
