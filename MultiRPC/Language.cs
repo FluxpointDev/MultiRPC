@@ -38,8 +38,12 @@ namespace MultiRPC
         public static event EventHandler? LanguageChanged;
         internal static void ChangeLanguage(string file)
         {
-            _languageJsonFileContent = GrabLanguage(file);
-            LanguageChanged?.Invoke(null, EventArgs.Empty);
+            var lan = GrabLanguage(file);
+            if (lan != null)
+            {
+                _languageJsonFileContent = lan;
+                LanguageChanged?.Invoke(null, EventArgs.Empty);
+            }
         }
         
         private static void GrabContent()
