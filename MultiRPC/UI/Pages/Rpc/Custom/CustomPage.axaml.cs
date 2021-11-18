@@ -40,7 +40,8 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
         private BaseRpcControl _rpcControl = null!;
         private Button? _activeButton;
         private IDisposable? _textBindingDis;
-        
+        private DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
+
         public override void Initialize(bool loadXaml)
         {
             if (loadXaml)
@@ -78,7 +79,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
                     wrpProfileSelector.Children.Add(MakeProfileSelector(profile));
                 }
             };
-            BtnChangePresence(wrpProfileSelector.Children[0], null!);
+            BtnChangePresence(wrpProfileSelector.Children[_profilesSettings.LastSelectedProfileIndex], null!);
 
             //Setup tooltips
             _editLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgProfileEdit, x));
@@ -99,15 +100,28 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             string[] helpImages = { "ClientID.jpg", "Text1.jpg", "Text2.jpg", 
                 "SmallAndLargeKey.jpg", "LargeText.jpg", "SmallAndLargeKey.jpg", "SmallText.jpg" };
             stpHelpIcons.Children.AddRange(helpImages.Select(MakeHelpImage));
+            stpHelpIcons.IsVisible = !_disableSettings.HelpIcons;
             helpGrid.Children.Add(stpHelpIcons);
 
             _rpcControl.RichPresence = RichPresence;
             _rpcControl.Initialize(loadXaml);
             
-            _helpImage = new Image { Height = 200, Margin = new Thickness(10,0,0,0), Opacity = 0 };
+            _helpImage = new Image
+            {
+                Height = 200, 
+                Margin = new Thickness(10,0,0,0), 
+                Opacity = 0,
+                IsVisible = stpHelpIcons.IsVisible
+            };
             Grid.SetColumn(_helpImage, 1);
             helpGrid.Children.Add(_helpImage);
             _rpcControl.AddExtraControl(helpGrid);
+            
+            _disableSettings.PropertyChanged += (sender, args) =>
+            {
+                stpHelpIcons.IsVisible = !_disableSettings.HelpIcons;
+                _helpImage.IsVisible = stpHelpIcons.IsVisible;
+            };
         }
         
         private Image MakeHelpImage(string helpImage)
@@ -189,6 +203,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             _activeButton?.Classes.Remove("activeProfile");
             _activeButton = (Button)sender!;
             _activeButton.Classes.Add("activeProfile");
+            _profilesSettings.LastSelectedProfileIndex = wrpProfileSelector.Children.IndexOf(_activeButton);
             
             _activeProfile = (RichPresence)_activeButton.DataContext!;
             _textBindingDis?.Dispose();

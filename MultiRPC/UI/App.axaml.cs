@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using MultiRPC.Rpc;
@@ -33,6 +34,7 @@ namespace MultiRPC.UI
             AvaloniaXamlLoader.Load(this);
 
             Locator.CurrentMutable.Register<Setting.Setting>(() => SettingManager<GeneralSettings>.Setting);
+            Locator.CurrentMutable.Register<Setting.Setting>(() => SettingManager<DisableSettings>.Setting);
             //TODO: Replace with splat
             //Any new pages get added here
             PageManager.AddPage(new MultiRpcPage());

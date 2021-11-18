@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
@@ -10,8 +11,8 @@ namespace MultiRPC.UI.Controls
 {
     public sealed partial class TabsPage : UserControl
     {
-        private ITabPage[] _pages = null!;
-        public void AddTabs(params ITabPage[] pages) => _pages = pages;
+        private readonly List<ITabPage> _pages = new List<ITabPage>();
+        public void AddTabs(params ITabPage[] pages) => _pages.AddRange(pages);
         
         public void Initialize()
         {

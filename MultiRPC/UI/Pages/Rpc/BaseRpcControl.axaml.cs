@@ -6,6 +6,8 @@ using Avalonia.Interactivity;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Validation;
+using MultiRPC.Setting;
+using MultiRPC.Setting.Settings;
 using MultiRPC.UI.Controls;
 using TinyUpdate.Core.Extensions;
 
@@ -58,6 +60,7 @@ namespace MultiRPC.UI.Pages.Rpc
             ckbElapsedTime.IsChecked = richPresence.Profile.ShowTime;
         }
 
+        private DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
         private bool _lastValid;
         public void Initialize(bool loadXaml)
         {
@@ -84,7 +87,14 @@ namespace MultiRPC.UI.Pages.Rpc
                         return new CheckResult(false, Language.GetText("ClientIDMustBe18CharactersLong"));
                     }
 
-                    _ = CheckID(s);
+                    if (!_disableSettings.TokenCheck)
+                    {
+                        _ = CheckID(s);
+                    }
+                    else
+                    {
+                        _lastIDCheckStatus = true;
+                    }
                     return new CheckResult(true);
                 }, OnProfileChanged, RichPresence.ID.ToString());
             }

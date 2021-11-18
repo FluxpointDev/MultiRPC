@@ -2,11 +2,12 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
+using Fonderie;
 using MultiRPC.Rpc;
 
 namespace MultiRPC.Setting.Settings
 {
-    public class ProfilesSettings : Setting
+    public partial class ProfilesSettings : Setting
     {
         public ProfilesSettings() 
             : this(new ObservableCollection<RichPresence>{ new RichPresence("Profile",  0) }) { }
@@ -41,6 +42,9 @@ namespace MultiRPC.Setting.Settings
             Save();
         }
 
+        [GeneratedProperty] 
+        private int _lastSelectedProfileIndex;
+        
         public ObservableCollection<RichPresence> Profiles { get; }
 
         [JsonIgnore] 
