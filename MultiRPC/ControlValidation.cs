@@ -2,14 +2,14 @@ using System;
 using Avalonia.Data;
 using TinyUpdate.Core.Logging;
 
-namespace MultiRPC.Rpc.Validation
+namespace MultiRPC
 {
-    public class RpcControlValidation
+    public class ControlValidation
     {
-        private readonly ILogging _logging = LoggingCreator.CreateLogger(nameof(RpcControlValidation));
+        private readonly ILogging _logging = LoggingCreator.CreateLogger(nameof(ControlValidation));
         
         private readonly Func<string, CheckResult>? _validation;
-        public RpcControlValidation(Func<string, CheckResult>? validation, string? initialValue)
+        public ControlValidation(Func<string, CheckResult>? validation, string? initialValue)
         {
             _validation = validation;
             _result = initialValue ?? string.Empty;

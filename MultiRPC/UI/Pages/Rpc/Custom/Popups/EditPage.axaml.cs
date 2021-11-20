@@ -7,7 +7,6 @@ using Avalonia.Markup.Xaml;
 using MultiRPC.Exceptions;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
-using MultiRPC.Rpc.Validation;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 
@@ -36,7 +35,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
             InitializeComponent();
             
             btnDone.DataContext = new Language("Done");
-            txtNewName.AddRpcControl(null, s => _newName = s,
+            txtNewName.AddValidation(null, s => _newName = s,
                 s =>
                 {
                     var result = string.IsNullOrWhiteSpace(s)

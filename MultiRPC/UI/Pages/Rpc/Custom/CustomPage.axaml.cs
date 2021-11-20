@@ -158,7 +158,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             if (!_helpImages.ContainsKey(key))
             {
                 var assetLocator = AvaloniaLocator.Current.GetService<IAssetLoader>();
-                var stream = assetLocator.Open(new Uri("avares://MultiRPC/Assets/HelpImages/" + key));
+                var stream = assetLocator.Open(new Uri("avares://MultiRPC/Assets/Images/Help/" + key));
                 _helpImages[key] = new Bitmap(stream);
             }
 

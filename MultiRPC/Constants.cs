@@ -43,7 +43,7 @@ namespace MultiRPC
         /// <summary>
         /// The app developer
         /// </summary>
-        public const string AppDeveloper = "Builderb#0001";
+        public const string AppDeveloper = "Fluxpoint Development";
 
         /// <summary>
         /// The discord server's invite code

@@ -5,7 +5,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
-using MultiRPC.Rpc.Validation;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using MultiRPC.UI.Controls;
@@ -35,7 +34,7 @@ namespace MultiRPC.UI.Pages.Rpc
         
         public bool RpcValid => stpContent.Children
                 .Where(x => x is TextBox && x.Name != nameof(txtClientID))
-                .Select(x => ((RpcControlValidation?)((TextBox)x).DataContext)?.LastResultStatus)
+                .Select(x => ((ControlValidation?)((TextBox)x).DataContext)?.LastResultStatus)
                 .All(x => x.GetValueOrDefault(true))
                 && _lastIDCheckStatus;
 
@@ -78,7 +77,7 @@ namespace MultiRPC.UI.Pages.Rpc
             if (GrabID)
             {
                 txtClientID.IsVisible = true;
-                txtClientID.AddRpcControl(new Language("ClientID"), null, s =>
+                txtClientID.AddValidation(new Language("ClientID"), null, s =>
                 {
                     if (s.Length != 18)
                     {
@@ -106,8 +105,8 @@ namespace MultiRPC.UI.Pages.Rpc
 
                 txtLargeKey.IsVisible = true;
                 txtSmallKey.IsVisible = true;
-                txtLargeKey.AddRpcControl(new Language("LargeKey"), s => RichPresence.Profile.LargeKey = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.LargeKey);
-                txtSmallKey.AddRpcControl(new Language("SmallKey"), s => RichPresence.Profile.SmallKey = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.SmallKey);
+                txtLargeKey.AddValidation(new Language("LargeKey"), s => RichPresence.Profile.LargeKey = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.LargeKey);
+                txtSmallKey.AddValidation(new Language("SmallKey"), s => RichPresence.Profile.SmallKey = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.SmallKey);
             }
             else
             {
@@ -128,15 +127,15 @@ namespace MultiRPC.UI.Pages.Rpc
                 cboSmallKey.SelectedIndex = smallKey;
             }
 
-            txtText1.AddRpcControl(new Language("Text1"), s => RichPresence.Profile.Details = s, Check, OnProfileChanged, RichPresence.Profile.Details);
-            txtText2.AddRpcControl(new Language("Text2"), s => RichPresence.Profile.State = s, Check, OnProfileChanged, RichPresence.Profile.State);
-            txtLargeText.AddRpcControl(new Language("LargeText"), s => RichPresence.Profile.LargeText = s, Check, OnProfileChanged, RichPresence.Profile.LargeText);
-            txtSmallText.AddRpcControl(new Language("SmallText"), s => RichPresence.Profile.SmallText = s, Check, OnProfileChanged, RichPresence.Profile.SmallText);
+            txtText1.AddValidation(new Language("Text1"), s => RichPresence.Profile.Details = s, Check, OnProfileChanged, RichPresence.Profile.Details);
+            txtText2.AddValidation(new Language("Text2"), s => RichPresence.Profile.State = s, Check, OnProfileChanged, RichPresence.Profile.State);
+            txtLargeText.AddValidation(new Language("LargeText"), s => RichPresence.Profile.LargeText = s, Check, OnProfileChanged, RichPresence.Profile.LargeText);
+            txtSmallText.AddValidation(new Language("SmallText"), s => RichPresence.Profile.SmallText = s, Check, OnProfileChanged, RichPresence.Profile.SmallText);
 
-            txtButton1Url.AddRpcControl(new Language("Button1Url"), s => RichPresence.Profile.Button1Url = s, CheckUrl, OnProfileChanged, RichPresence.Profile.Button1Url);
-            txtButton1Text.AddRpcControl(new Language("Button1Text"), s => RichPresence.Profile.Button1Text = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.Button1Text);
-            txtButton2Url.AddRpcControl(new Language("Button2Url"), s => RichPresence.Profile.Button2Url = s, CheckUrl, OnProfileChanged, RichPresence.Profile.Button2Url);
-            txtButton2Text.AddRpcControl(new Language("Button2Text"), s => RichPresence.Profile.Button2Text = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.Button2Text);
+            txtButton1Url.AddValidation(new Language("Button1Url"), s => RichPresence.Profile.Button1Url = s, CheckUrl, OnProfileChanged, RichPresence.Profile.Button1Url);
+            txtButton1Text.AddValidation(new Language("Button1Text"), s => RichPresence.Profile.Button1Text = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.Button1Text);
+            txtButton2Url.AddValidation(new Language("Button2Url"), s => RichPresence.Profile.Button2Url = s, CheckUrl, OnProfileChanged, RichPresence.Profile.Button2Url);
+            txtButton2Text.AddValidation(new Language("Button2Text"), s => RichPresence.Profile.Button2Text = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.Button2Text);
 
             ckbElapsedTime.IsChecked = RichPresence.UseTimestamp;
             ckbElapsedTime.DataContext = new Language("ShowElapsedTime");

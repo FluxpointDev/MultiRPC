@@ -100,8 +100,8 @@ namespace MultiRPC.Rpc
             {
                 DiscordClient.Discord => "Discord",
                 DiscordClient.DiscordPTB => "DiscordPTB",
-                DiscordClient.DiscordCanary => "Discord Canary",
-                DiscordClient.DiscordDevelopment => "Discord Development",
+                DiscordClient.DiscordCanary => "DiscordCanary",
+                DiscordClient.DiscordDevelopment => "DiscordDevelopment",
                 _ => string.Empty
             };
             _client?.Dispose();

@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:MultiRPC.UI.Views"
+             xmlns:overlays="clr-namespace:MultiRPC.UI.Overlays"
              mc:Ignorable="d" 
              d:DesignWidth="800"
              d:DesignHeight="527"
@@ -25,11 +26,11 @@
             <Setter Property="Background" Value="{DynamicResource NavButtonSelectedColor}" />
         </Style>
     </UserControl.Styles>
-    <Grid HorizontalAlignment="Stretch">
-        <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="72">
+    <Grid HorizontalAlignment="Stretch" ColumnDefinitions="72 *">
+        <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Stretch">
             <StackPanel Margin="8,10,8,25" Spacing="25" x:Name="splPages" />
         </ScrollViewer>
-        <Grid Margin="72,0,0,0">
+        <Grid Grid.Column="1">
             <Border x:Name="contentBorder" CornerRadius="15,15,0,0" Margin="0,105,0,0">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" >
                     <ContentControl CornerRadius="{Binding #contentBorder.CornerRadius}" x:Name="cclContent" />
@@ -38,5 +39,7 @@
             
             <views:TopBar x:Name="topbar" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
         </Grid>
+        
+        <overlays:DiscordCheckOverlay Grid.ColumnSpan="2" Grid.Column="0" />
     </Grid>
 </UserControl>
