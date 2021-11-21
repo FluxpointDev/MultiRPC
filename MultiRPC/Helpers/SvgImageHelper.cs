@@ -1,10 +1,9 @@
 ﻿using System;
-using Avalonia.Controls;
 using Avalonia.Svg;
 
-namespace MultiRPC
+namespace MultiRPC.Helpers
 {
-    public class SvgImageHelper
+    public static class SvgImageHelper
     {
         public static SvgImage LoadImage(string path, string basePath = "avares://MultiRPC/Assets/", Uri? baseUri = null)
         {

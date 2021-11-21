@@ -26,7 +26,7 @@ namespace MultiRPC
         public const long MultiRPCID = 450894077165043722;
 
         /// <summary>
-        /// Afk's Application ID
+        /// Afk Application ID
         /// </summary>
         public const long AfkID = 469643793851744257;
 
@@ -36,9 +36,9 @@ namespace MultiRPC
         public const int RetryCount = 10;
 
         /// <summary>
-        /// The Uri to the MultiRPC web page
+        /// Url to the MultiRPC's info + download page
         /// </summary>
-        public const string MultiRPCWebsiteRoot = "https://fluxpoint.dev/multirpc";
+        public const string WebsiteUrl = "https://fluxpoint.dev/multirpc";
 
         /// <summary>
         /// The app developer
@@ -51,13 +51,16 @@ namespace MultiRPC
         public const string ServerInviteCode = "TjF6QDC";
 
         /// <summary>
-        /// Serializer for json
+        /// Serializer for JSON
         /// </summary>
         public static JsonSerializerOptions JsonSerializer { get; } = new JsonSerializerOptions
         {
             WriteIndented = true
         };
         
+        /// <summary>
+        /// Where all Settings should be stored
+        /// </summary>
         public static string SettingsFolder { get; }
 
         /// <summary>

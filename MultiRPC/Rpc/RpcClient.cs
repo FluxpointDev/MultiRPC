@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using DiscordRPC;
 using DiscordRPC.Message;
 using MultiRPC.Extensions;
@@ -11,12 +12,15 @@ using MultiRPC.Logging;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
+using MultiRPC.UI;
 using TinyUpdate.Core.Helper;
+using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.Rpc
 {
     public class RpcClient
     {
+        private ILogging _logger = LoggingCreator.CreateLogger(nameof(RpcClient));
         private DateTime _rpcStart;
         private string _presenceName = "Unknown";
         private long _presenceId;
@@ -37,11 +41,42 @@ namespace MultiRPC.Rpc
             _client?.ClearPresence();
         }
 
+        private DisableSettings? _disableSettings;
+        private async Task<bool> CheckPresence(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text) || !text.ToLower().Contains("discord.gg"))
+            {
+                return true;
+            }
+
+            _disableSettings ??= SettingManager<DisableSettings>.Setting;
+            if (_disableSettings.InviteWarn)
+            {
+                return true;
+            }
+            var result = await MessageBox.Show(
+                Language.GetText("AdvertisingWarning"), 
+                Language.GetText("Warning"),
+                MessageBoxButton.OkCancel,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Ok)
+            {
+                _disableSettings.InviteWarn = true;
+
+                _logger.Warning(Language.GetText("AdvertisingWarningDisabled"));
+                return true;
+            }
+
+            return result != MessageBoxResult.Cancel;
+        }
+        
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool GetNamedPipeServerProcessId(IntPtr pipe, out int clientProcessId);
         
-        private int FindPipe(string processName)
+        private int FindPipe(string? processName)
         {
+            //TODO: Make this work on other OS's
             if (OSHelper.ActiveOS != OSPlatform.Windows
                 || string.IsNullOrWhiteSpace(processName))
             {
@@ -87,14 +122,14 @@ namespace MultiRPC.Rpc
             var idS = _presenceId.ToString();
 
             var name = applicationName ?? RpcPageManager.CurrentPage?.RichPresence.Name ?? Language.GetText("MultiRPC");
-            _presenceName = name!;
+            _presenceName = name;
             
-            //If we are running already then stop it if we aren't
-            //using the same ID
+            //If we are running already then stop it if we aren't using the same ID
             if (IsRunning && _client?.ApplicationID != idS)
             {
                 Stop();
             }
+            _logger.Information(Language.GetText("StartingRpc"));
 
             var processName = SettingManager<GeneralSettings>.Setting.Client switch
             {
@@ -102,10 +137,13 @@ namespace MultiRPC.Rpc
                 DiscordClient.DiscordPTB => "DiscordPTB",
                 DiscordClient.DiscordCanary => "DiscordCanary",
                 DiscordClient.DiscordDevelopment => "DiscordDevelopment",
-                _ => string.Empty
+                _ => null
             };
             _client?.Dispose();
-            _client = new DiscordRpcClient(idS, FindPipe(processName))
+
+            var pipe = FindPipe(processName);
+            _logger.Debug($"Discord {Language.GetText("Client")}, Was {(processName ?? Language.GetText("N/A"))} found?: {pipe != -1}");
+            _client = new DiscordRpcClient(idS, pipe)
             {
                 SkipIdenticalPresence = false, 
                 Logger = new RpcLogger(),
@@ -132,6 +170,7 @@ namespace MultiRPC.Rpc
 
         public void Stop()
         {
+            _logger.Information(Language.GetText("ShuttingDown"));
             ClearPresence();
             _client?.Deinitialize();
             _client?.Dispose();
@@ -142,8 +181,15 @@ namespace MultiRPC.Rpc
             Disconnected?.Invoke(this, EventArgs.Empty);
         }
 
-        public void UpdatePresence(DiscordRPC.RichPresence richPresence)
+        public async Task UpdatePresence(DiscordRPC.RichPresence richPresence)
         {
+            //Check that the presence isn't doing any advertising
+            if (!await CheckPresence(richPresence.Details) || !await CheckPresence(richPresence.State))
+            {
+                Stop();
+                return;
+            }
+            
             if (_client?.IsDisposed ?? true)
             {
                 return;
@@ -152,7 +198,7 @@ namespace MultiRPC.Rpc
             _client?.SetPresence(richPresence);
         }
         
-        public void UpdatePresence(RichPresence? richPresence)
+        public async Task UpdatePresence(RichPresence? richPresence)
         {
             if (richPresence == null)
             {
@@ -171,7 +217,7 @@ namespace MultiRPC.Rpc
                 Stop();
                 Start(richPresence.ID, richPresence.Name);
             }
-            UpdatePresence(pre);
+            await UpdatePresence(pre);
         }
     }
 }

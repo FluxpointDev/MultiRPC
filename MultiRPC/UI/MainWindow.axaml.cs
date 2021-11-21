@@ -1,13 +1,58 @@
 using System;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using MultiRPC.Setting;
+using MultiRPC.Setting.Settings;
 
 namespace MultiRPC.UI
 {
+    class TrayCommand : ICommand
+    {
+        public bool CanExecute(object? parameter) => true;
+
+        public void Execute(object? parameter)
+        {
+            var mainWin = ((App)Application.Current).DesktopLifetime!.MainWindow!;
+            switch (mainWin.WindowState)
+            {
+                case WindowState.Normal:
+                case WindowState.Maximized:
+                case WindowState.FullScreen:
+                    mainWin.WindowState = WindowState.Minimized;
+                    break;
+                case WindowState.Minimized:
+                    mainWin.WindowState = WindowState.Normal;
+                    return;
+                default:
+                    return;
+            }
+        }
+
+        public event EventHandler? CanExecuteChanged;
+    }
+    
     public partial class MainWindow : FluentWindow
     {
-        public MainWindow() : this(new MainPage()) { }
+        public MainWindow() : this(new MainPage())
+        {
+            var disableSettings = SettingManager<DisableSettings>.Setting;
+            var trayIcon = new TrayIcon
+            {
+                Icon = this.Icon,
+                ToolTipText = Language.GetText("HideMultiRPC"),
+                Command = new TrayCommand()
+            };
+            TrayIcon.SetIcons(this, new TrayIcons{ trayIcon });
+
+            Language.LanguageChanged += (sender, args) => ChangeTrayIconText(trayIcon);
+            this.GetObservable(WindowStateProperty).Subscribe(x =>
+            {
+                ChangeTrayIconText(trayIcon);
+                ShowInTaskbar = !(!disableSettings.HideTaskbarIcon && x == WindowState.Minimized);
+            });
+        }
         
         private readonly Control _control;
         public MainWindow(Control control)
@@ -18,6 +63,23 @@ namespace MultiRPC.UI
 #if DEBUG
             this.AttachDevTools();
 #endif
+        }
+        
+        private void ChangeTrayIconText(TrayIcon trayIcon)
+        {
+            switch (WindowState)
+            {
+                case WindowState.Normal:
+                case WindowState.Maximized:
+                case WindowState.FullScreen:
+                    trayIcon.ToolTipText = Language.GetText("HideMultiRPC");
+                    break;
+                case WindowState.Minimized:
+                    trayIcon.ToolTipText = Language.GetText("ShowMultiRPC");
+                    return;
+                default:
+                    return;
+            }
         }
 
         private void InitializeExtra()
@@ -39,11 +101,7 @@ namespace MultiRPC.UI
                 txtTitle.DataContext = lang;
             }
             
-            eabTitleBar.PointerPressed += (sender, args) =>
-            {
-                BeginMoveDrag(args);
-            };
-
+            eabTitleBar.PointerPressed += (sender, args) => BeginMoveDrag(args);
             Opened += async (sender, args) =>
             {
                 //TODO: See why we need this

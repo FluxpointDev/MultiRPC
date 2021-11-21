@@ -4,12 +4,15 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Styling;
 using MultiRPC.Extensions;
 
 namespace MultiRPC.UI.Controls
 {
-    public class Hyperlink : TextBlock
+    public class Hyperlink : TextBlock, IStyleable
     {
+        Type IStyleable.StyleKey => typeof(TextBlock);
+
         public Hyperlink()
         {
             TextDecorations = TextDecorationCollection.Parse("Underline");

@@ -23,14 +23,14 @@ namespace MultiRPC.UI.Overlays
             InitializeComponent();
             tblMadeBy.Text = Language.GetText("MadeBy") + ": " + Constants.AppDeveloper;
             rDiscordServer.Text = Language.GetText("DiscordServer") + ": ";
-            hylServerLinkUri.Text = Language.GetText("ServerInviteCode");
+            hylServerLinkUri.Text = Constants.ServerInviteCode;
             hylServerLinkUri.Uri = "https://discord.gg/" + Constants.ServerInviteCode;
+            btnDisableDiscordCheck.DataContext = new Language("TempDisableDiscordCheck");
 
             _ = WaitForDiscord();
             _ = ShowTmpButton();
         }
 
-        //TODO: Add imgLoading
         private async Task ShowTmpButton()
         {
             await Task.Delay(5000);
@@ -102,10 +102,9 @@ namespace MultiRPC.UI.Overlays
 
         private async Task FadeOut()
         {
-            //TODO: Add animation
             _ranFadeOut = true;
             Opacity = 0;
-            //await Task.Delay(500);
+            await Task.Delay(500);
             IsVisible = false;
         }
 

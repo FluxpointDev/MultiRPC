@@ -5,7 +5,7 @@ namespace MultiRPC
 {
     public static class Data
     {
-        public static Dictionary<string, string> MultiRPCImages = MakeImagesDictionary();
+        public static Dictionary<string, string> MultiRPCImages { get; internal set; } = MakeImagesDictionary();
 
         public static Dictionary<string, string> MakeImagesDictionary()
         {

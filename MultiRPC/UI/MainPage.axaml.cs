@@ -2,14 +2,12 @@ using System;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Svg;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
-using MultiRPC.UI.Overlays;
 using MultiRPC.UI.Pages;
 using ShimSkiaSharp;
 
@@ -20,7 +18,9 @@ namespace MultiRPC.UI
         public MainPage()
         {
             InitializeComponent();
-            
+
+            //Make all the buttons which will put onto the sidebar,
+            //finding the autostart page if we have it
             Button? btnToTrigger = null;
             ISidePage? pageToTrigger = null;
             var autoStartPageName = SettingManager<GeneralSettings>.Setting.AutoStart;
@@ -48,6 +48,8 @@ namespace MultiRPC.UI
                     return;
                 }
 
+                //If the presence isn't yet valid then wait for a
+                //bit and see if it becomes valid
                 _ = WaitForValidPresence();
             }
         }
@@ -55,7 +57,7 @@ namespace MultiRPC.UI
         private async Task WaitForValidPresence()
         {
             _autoStartPage.PresenceValidChanged += OnPresenceValidChanged;
-            await Task.Delay(1024 * 5);
+            await Task.Delay(TimeSpan.FromSeconds(5).Milliseconds);
             _autoStartPage.PresenceValidChanged -= OnPresenceValidChanged;
         }
         
@@ -76,7 +78,8 @@ namespace MultiRPC.UI
                 topbar.TriggerStartStop();
             }
         }
-        
+
+        private DisableSettings _disableSetting = SettingManager<DisableSettings>.Setting;
         private Button? _selectedBtn;
         private Button AddSidePage(ISidePage page)
         {
@@ -95,6 +98,7 @@ namespace MultiRPC.UI
                 Tag = source
             };
 
+            //Update the colour based on if it's the current page or not when this changes
             Application.Current.GetResourceObservable("ThemeAccentColor3").Subscribe(x =>
             {
                 if (_selectedBtn != btn)
@@ -111,7 +115,14 @@ namespace MultiRPC.UI
             });
 
             var lang = new Language(page.LocalizableName);
-            lang.TextObservable.Subscribe(s => ToolTip.SetTip(btn, s));
+            lang.TextObservable.Subscribe(s => ToolTip.SetTip(btn,  _disableSetting.ShowPageTooltips ? null : s));
+            _disableSetting.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == nameof(DisableSettings.ShowPageTooltips))
+                {
+                    ToolTip.SetTip(btn, _disableSetting.ShowPageTooltips ? null : lang.Text);
+                }
+            };
 
             btn.Click += (sender, args) => SideButton_Clicked(sender, args, page);
             btn.Classes.Add("nav");
@@ -142,8 +153,8 @@ namespace MultiRPC.UI
 
         private void SideButton_Clicked(object? sender, RoutedEventArgs e, ISidePage page)
         {
-            if (sender is not Button btn
-            || btn == _selectedBtn)
+            if (sender is not Button btn 
+                || btn == _selectedBtn)
             {
                 return;
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Text.Json;
 using System.Threading;
 using MultiRPC.Setting;
@@ -28,11 +29,10 @@ namespace MultiRPC
         }
         private readonly Lazy<LanguageObservable> _textObservable;
         public LanguageObservable TextObservable => _textObservable.Value;
-        
         public string Text => TextObservable.Text;
 
         private static Dictionary<string, string> _englishLanguageJsonFileContent = null!;
-        private static Dictionary<string, string> _languageJsonFileContent = null!;
+        private static Dictionary<string, string>? _languageJsonFileContent;
         private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Language));
 
         public static event EventHandler? LanguageChanged;
@@ -50,9 +50,11 @@ namespace MultiRPC
         {
             _englishLanguageJsonFileContent = GrabLanguage(GetFilePath("en-gb"))!;
 
+            //If we have a set language then we want to load the current languages we have
             var langName = SettingManager<GeneralSettings>.Setting.Language;
             if (!string.IsNullOrWhiteSpace(langName))
             {
+                //Only load it in if we have the language
                 GeneralSettings.GetLanguages();
                 if (GeneralSettings.Languages.ContainsKey(langName))
                 {
@@ -60,18 +62,22 @@ namespace MultiRPC
                 }
             }
 
-            if (_languageJsonFileContent == null)
+            if (_languageJsonFileContent != null)
+                return;
+
+            /*If we wasn't able to load the users language from
+             settings in, try to load in from what the system is*/
+            var currentCulture = Thread.CurrentThread.CurrentUICulture;
+            var currentLang = currentCulture.Name.ToLower();
+            
+            //Don't try if the system is en-gb as we already load that in as a fallback
+            if (currentLang != "en-gb")
             {
-                var currentLang = Thread.CurrentThread.CurrentUICulture.Name.ToLower();
-                if (currentLang != "en-gb")
-                {
-                    var currentLangTwoLetter = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToLower();
-                    _languageJsonFileContent =
-                        GrabLanguage(GetFilePath(currentLang)) 
-                        ?? GrabLanguage(GetFilePath(currentLangTwoLetter));
-                }
+                var currentLangTwoLetter = currentCulture.TwoLetterISOLanguageName.ToLower();
+                _languageJsonFileContent =
+                    GrabLanguage(GetFilePath(currentLang)) 
+                    ?? GrabLanguage(GetFilePath(currentLangTwoLetter));
             }
-            _languageJsonFileContent ??= _englishLanguageJsonFileContent;
         }
 
         private static string GetFilePath(string name) =>
@@ -100,7 +106,7 @@ namespace MultiRPC
 
         public static bool HasKey(string jsonName)
         {
-            return _languageJsonFileContent.ContainsKey(jsonName) || _englishLanguageJsonFileContent.ContainsKey(jsonName);
+            return (_languageJsonFileContent?.ContainsKey(jsonName) ?? false) || _englishLanguageJsonFileContent.ContainsKey(jsonName);
         }
 
         public static string GetText(string? jsonName)
@@ -109,7 +115,7 @@ namespace MultiRPC
             {
                 return "N/A";
             }
-            if (_languageJsonFileContent.ContainsKey(jsonName))
+            if (_languageJsonFileContent?.ContainsKey(jsonName) ?? false)
             {
                 return _languageJsonFileContent[jsonName];
             }
@@ -140,7 +146,7 @@ namespace MultiRPC
             Language.LanguageChanged += LanguageOnLanguageChanged;
             _observables.Add(observer);
             observer.OnNext(Text);
-            return new DisposableAction(() => _observables.Remove(observer));
+            return Disposable.Create(() => _observables.Remove(observer));
         }
 
         private void LanguageOnLanguageChanged(object? sender, EventArgs e)
@@ -149,20 +155,5 @@ namespace MultiRPC
         }
 
         private IEnumerable<string> GetText() => _jsonNames.Select(Language.GetText);
-    }
-
-    public class DisposableAction : IDisposable
-    {
-        private readonly Action _action;
-        public DisposableAction(Action action)
-        {
-            _action = action;
-        }
-
-        public void Dispose()
-        {
-            _action.Invoke();
-            GC.SuppressFinalize(this);
-        }
     }
 }

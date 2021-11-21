@@ -38,7 +38,7 @@ namespace MultiRPC.UI.Pages.Rpc
                 .All(x => x.GetValueOrDefault(true))
                 && _lastIDCheckStatus;
 
-        public event EventHandler<bool> PresenceValidChanged;
+        public event EventHandler<bool>? PresenceValidChanged;
         public event EventHandler? ProfileChanged;
 
         public void ChangeRichPresence(RichPresence richPresence)
@@ -59,7 +59,7 @@ namespace MultiRPC.UI.Pages.Rpc
             ckbElapsedTime.IsChecked = richPresence.Profile.ShowTime;
         }
 
-        private DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
+        private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
         private bool _lastValid;
         public void Initialize(bool loadXaml)
         {

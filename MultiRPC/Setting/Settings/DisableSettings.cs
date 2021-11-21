@@ -23,5 +23,11 @@ namespace MultiRPC.Setting.Settings
         
         [GeneratedProperty, SettingName("HideTaskbarIcon")]
         private bool _hideTaskbarIcon;
+        
+        [GeneratedProperty, SettingName("ShowPageTooltips")]
+        private bool _showPageTooltips;
+
+        [GeneratedProperty]
+        private bool _inviteWarn;
     }
 }

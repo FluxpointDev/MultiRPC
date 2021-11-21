@@ -21,8 +21,6 @@ namespace MultiRPC.UI
 {
     public class App : Application
     {
-        public static readonly RpcClient RpcClient = new RpcClient();
-
         //TODO: Put this somewhere else, for now this works
         private UpdateClient? _updater;
         
@@ -33,8 +31,10 @@ namespace MultiRPC.UI
 #endif
             AvaloniaXamlLoader.Load(this);
 
+            //Add default settings here
             Locator.CurrentMutable.Register<Setting.Setting>(() => SettingManager<GeneralSettings>.Setting);
             Locator.CurrentMutable.Register<Setting.Setting>(() => SettingManager<DisableSettings>.Setting);
+
             //TODO: Replace with splat
             //Any new pages get added here
             PageManager.AddPage(new MultiRpcPage());
@@ -44,7 +44,9 @@ namespace MultiRPC.UI
             PageManager.AddPage(new CreditsPage());
             PageManager.AddPage(new ThemeEditorPage());
             PageManager.AddPage(new MissingPage());
-            RpcPageManager.GiveRpcClient(RpcClient);
+
+            //Anything else here
+            Locator.CurrentMutable.Register(() => new RpcClient());
 
 #if !DEBUG
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))

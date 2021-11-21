@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting.Settings.Attributes;
 using MultiRPC.UI.Pages;
+using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.Setting.Settings
 {
@@ -27,9 +28,13 @@ namespace MultiRPC.Setting.Settings
         [GeneratedProperty, SettingName("Language"), SettingSource(nameof(GetLanguages)), NoneLocalizable]
         private string _language = "";
         
+        [GeneratedProperty, SettingName("LogLevel")]
+        private LogLevel _logLevel = LogLevel.Trace;
+
         [GeneratedProperty, SettingName("AfkTime")]
         private bool _showAfkTime;
-
+        
+        partial void OnLogLevelChanged(LogLevel previous, LogLevel value) => LoggingCreator.GlobalLevel = value;
         partial void OnLanguageChanged(string previous, string value)
         {
             if (Languages.ContainsKey(value))

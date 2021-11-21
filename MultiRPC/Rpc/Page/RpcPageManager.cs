@@ -1,18 +1,14 @@
 ﻿using System;
+using MultiRPC.Exceptions;
+using Splat;
 
 namespace MultiRPC.Rpc.Page
 {
     public static class RpcPageManager
     {
-        public static void GiveRpcClient(RpcClient rpcClient)
-        {
-            rpcClient.Disconnected += RpcClient_Disconnected;
-            _rpcClient = rpcClient;
-        }
-
         public static RpcPage? CurrentPage { get; private set; }
 
-        private static RpcClient _rpcClient = null!;
+        private static RpcClient? _rpcClient;
         private static RpcPage? _pendingPage;
         private static void RpcClient_Disconnected(object? sender, EventArgs e)
         {
@@ -29,6 +25,12 @@ namespace MultiRPC.Rpc.Page
         
         internal static void PageMoved(RpcPage page)
         {
+            if (_rpcClient == null)
+            {
+                _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException();
+                _rpcClient.Disconnected += RpcClient_Disconnected;
+            }
+            
             if (_rpcClient.IsRunning)
             {
                 _pendingPage = page;

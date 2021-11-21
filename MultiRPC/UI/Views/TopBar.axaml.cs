@@ -2,21 +2,27 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using DiscordRPC;
+using MultiRPC.Exceptions;
 using MultiRPC.Extensions;
+using MultiRPC.Rpc;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
+using Splat;
+using RichPresence = DiscordRPC.RichPresence;
 
 namespace MultiRPC.UI.Views
 {
     public partial class TopBar : UserControl
     {
         private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
-
         private RpcPage? _page;
+        private readonly RpcClient _rpcClient;
+        
         public TopBar()
         {
             InitializeComponent();
+            _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException(); 
             if (RpcPageManager.CurrentPage != null)
             {
                 _page = RpcPageManager.CurrentPage;
@@ -51,7 +57,7 @@ namespace MultiRPC.UI.Views
             _statusText.TextObservable.Subscribe(_ => UpdateStatus());
             _userText.TextObservable.Subscribe(x => UpdateUser());
 
-            App.RpcClient.Loading += (sender, args) =>
+            _rpcClient.Loading += (sender, args) =>
             {
                 rpcView.ViewType = ViewType.Loading;
 
@@ -63,13 +69,13 @@ namespace MultiRPC.UI.Views
                     btnStart.Classes.Remove("green");
                     btnStart.Classes.Add("red");
 
-                    if (App.RpcClient.ID != Constants.AfkID)
+                    if (_rpcClient.ID != Constants.AfkID)
                     {
                         btnAfk.IsEnabled = false;
                     }
                 });
             };
-            App.RpcClient.Ready += (sender, message) =>
+            _rpcClient.Ready += (sender, message) =>
             {
                 rpcView.ViewType = ViewType.RpcRichPresence;
 
@@ -77,7 +83,7 @@ namespace MultiRPC.UI.Views
                 {
                     _startButton.ChangeJsonNames("Shutdown");
                     _statusKind.ChangeJsonNames("Connected");
-                    if (App.RpcClient.ID != Constants.AfkID)
+                    if (_rpcClient.ID != Constants.AfkID)
                     {
                         btnUpdatePresence.IsEnabled = _page?.PresenceValid ?? true;
                     }
@@ -90,7 +96,7 @@ namespace MultiRPC.UI.Views
                     }
                 });
             };
-            App.RpcClient.Disconnected += (sender, args) =>
+            _rpcClient.Disconnected += (sender, args) =>
             {
                 rpcView.ViewType = ViewType.Default;
 
@@ -108,7 +114,7 @@ namespace MultiRPC.UI.Views
 
         private void PageOnPresenceChanged(object? sender, EventArgs e)
         {
-            if (!App.RpcClient.IsRunning)
+            if (!_rpcClient.IsRunning)
             {
                 btnStart.IsEnabled = _page?.PresenceValid ?? true;
                 return;
@@ -140,24 +146,24 @@ namespace MultiRPC.UI.Views
 
         public void TriggerStartStop() => BtnStart_OnClick(btnStart, null!);
 
-        private void BtnStart_OnClick(object? sender, RoutedEventArgs e)
+        private async void BtnStart_OnClick(object? sender, RoutedEventArgs e)
         {
-            if (App.RpcClient.IsRunning)
+            if (_rpcClient.IsRunning)
             {
-                App.RpcClient.Stop();
+                _rpcClient.Stop();
                 return;
             }
 
-            App.RpcClient.Start(null, null);
-            App.RpcClient.UpdatePresence(RpcPageManager.CurrentPage?.RichPresence);
+            _rpcClient.Start(null, null);
+            await _rpcClient.UpdatePresence(RpcPageManager.CurrentPage?.RichPresence);
         }
 
-        private void BtnUpdatePresence_OnClick(object? sender, RoutedEventArgs e)
+        private async void BtnUpdatePresence_OnClick(object? sender, RoutedEventArgs e)
         {
-            App.RpcClient.UpdatePresence(RpcPageManager.CurrentPage?.RichPresence);
+            await _rpcClient.UpdatePresence(RpcPageManager.CurrentPage?.RichPresence);
         }
 
-        private void BtnAfk_OnClick(object? sender, RoutedEventArgs e)
+        private async void BtnAfk_OnClick(object? sender, RoutedEventArgs e)
         {
             var pre = new RichPresence
             {
@@ -170,17 +176,17 @@ namespace MultiRPC.UI.Views
                 Timestamps = _generalSettings.ShowAfkTime ? Timestamps.Now : null
             };
 
-            if (App.RpcClient.IsRunning
-                && App.RpcClient.ID != Constants.AfkID)
+            if (_rpcClient.IsRunning
+                && _rpcClient.ID != Constants.AfkID)
             {
-                App.RpcClient.Stop();
+                _rpcClient.Stop();
             }
 
-            if (!App.RpcClient.IsRunning)
+            if (!_rpcClient.IsRunning)
             {
-                App.RpcClient.Start(Constants.AfkID, "Afk");
+                _rpcClient.Start(Constants.AfkID, "Afk");
             }
-            App.RpcClient.UpdatePresence(pre);
+            await _rpcClient.UpdatePresence(pre);
             txtAfk.Clear();
         }
     }

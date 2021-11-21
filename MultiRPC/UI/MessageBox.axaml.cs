@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MultiRPC.Exceptions;
+using MultiRPC.Helpers;
 
 //This is based off Wpf Message box
 namespace MultiRPC.UI

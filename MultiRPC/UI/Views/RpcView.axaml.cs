@@ -9,8 +9,11 @@ using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using DiscordRPC.Message;
+using MultiRPC.Exceptions;
 using MultiRPC.Extensions;
+using MultiRPC.Helpers;
 using MultiRPC.Rpc;
+using Splat;
 using TinyUpdate.Http.Extensions;
 
 namespace MultiRPC.UI.Views
@@ -27,6 +30,7 @@ namespace MultiRPC.UI.Views
     
     public partial class RpcView : UserControl
     {
+        private RpcClient _rpcClient;
         static RpcView()
         {
             LogoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") });
@@ -36,6 +40,7 @@ namespace MultiRPC.UI.Views
         public RpcView()
         {
             InitializeComponent();
+            _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException();
 
             brdLarge.Background = LogoVisualBrush;
 
@@ -43,7 +48,7 @@ namespace MultiRPC.UI.Views
             tblText1.DataContext = _tblText1;
             tblText2.DataContext = _tblText2;
             ViewType = ViewType.Default;
-            App.RpcClient.Disconnected += (sender, args) => _timerTime = null;
+            _rpcClient.Disconnected += (sender, args) => _timerTime = null;
         }
         
         private static readonly Dictionary<Uri, IBrush> CachedImages = new Dictionary<Uri, IBrush>();
@@ -274,7 +279,7 @@ namespace MultiRPC.UI.Views
             };
             brdContent.Background = (IBrush)brush!;
 
-            App.RpcClient.PresenceUpdated -= RpcClientOnPresenceUpdated;
+            _rpcClient.PresenceUpdated -= RpcClientOnPresenceUpdated;
             switch (_viewType)
             {
                 case ViewType.Default:
@@ -329,7 +334,7 @@ namespace MultiRPC.UI.Views
                 break;
                 case ViewType.RpcRichPresence:
                 {
-                    App.RpcClient.PresenceUpdated += RpcClientOnPresenceUpdated;
+                    _rpcClient.PresenceUpdated += RpcClientOnPresenceUpdated;
                 }
                 break;
             }

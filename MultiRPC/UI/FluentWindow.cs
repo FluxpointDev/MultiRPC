@@ -5,8 +5,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
 using Avalonia.Controls.Primitives;
-using MultiRPC.Setting;
-using MultiRPC.Setting.Settings;
 
 namespace MultiRPC.UI
 {
@@ -14,7 +12,6 @@ namespace MultiRPC.UI
     public class FluentWindow : Window, IStyleable
     {
         Type IStyleable.StyleKey => typeof(Window);
-        private DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
 
         public FluentWindow()
         {
@@ -34,9 +31,6 @@ namespace MultiRPC.UI
             this.GetObservable(WindowStateProperty)
                 .Subscribe(x =>
                 {
-                    //TODO: Need to add tooltray
-                    //ShowInTaskbar = !(!_disableSettings.HideTaskbarIcon && x == WindowState.Minimized);
-                    
                     PseudoClasses.Set(":maximized", x == WindowState.Maximized);
                     PseudoClasses.Set(":fullscreen", x == WindowState.FullScreen);
                 });
