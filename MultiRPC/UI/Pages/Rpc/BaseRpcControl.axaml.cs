@@ -110,6 +110,17 @@ namespace MultiRPC.UI.Pages.Rpc
             }
             else
             {
+                Language.LanguageChanged += (sender, args) =>
+                {
+                    Data.MultiRPCImages = Data.MakeImagesDictionary();
+                    var largeKey = cboLargeKey.SelectedIndex;
+                    var smallKey = cboSmallKey.SelectedIndex;
+
+                    cboLargeKey.Items = Data.MultiRPCImages.Keys;
+                    cboSmallKey.Items = Data.MultiRPCImages.Keys;
+                    cboLargeKey.SelectedIndex = largeKey;
+                    cboSmallKey.SelectedIndex = smallKey;
+                };
                 cboLargeKey.Items = Data.MultiRPCImages.Keys;
                 cboSmallKey.Items = Data.MultiRPCImages.Keys;
                 var largeKey = Data.MultiRPCImages.Keys.IndexOf(x => x?.ToLower() == RichPresence.Profile.LargeKey);
@@ -211,6 +222,11 @@ namespace MultiRPC.UI.Pages.Rpc
         
         private void CboLargeKey_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
+            if (e.AddedItems.Count == 0)
+            {
+                return;
+            }
+            
             var key = e.AddedItems[0]?.ToString();
             RichPresence.Profile.LargeKey = cboLargeKey.SelectedIndex != 0 ? 
                 key?.ToLower() ?? string.Empty : string.Empty;
@@ -225,6 +241,11 @@ namespace MultiRPC.UI.Pages.Rpc
 
         private void CboSmallKey_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
+            if (e.AddedItems.Count == 0)
+            {
+                return;
+            }
+
             var key = e.AddedItems[0]?.ToString();
             RichPresence.Profile.SmallKey = cboSmallKey.SelectedIndex != 0 ? 
                 key?.ToLower() ?? string.Empty : string.Empty;

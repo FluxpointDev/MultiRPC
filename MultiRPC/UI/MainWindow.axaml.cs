@@ -44,7 +44,11 @@ namespace MultiRPC.UI
                 ToolTipText = Language.GetText("HideMultiRPC"),
                 Command = new TrayCommand()
             };
-            TrayIcon.SetIcons(this, new TrayIcons{ trayIcon });
+            TrayIcon.SetIcons(this, new TrayIcons { trayIcon });
+            this.Closing += (sender, args) =>
+            {
+                TrayIcon.GetIcons(this)[0].IsVisible = false;
+            };
 
             Language.LanguageChanged += (sender, args) => ChangeTrayIconText(trayIcon);
             this.GetObservable(WindowStateProperty).Subscribe(x =>

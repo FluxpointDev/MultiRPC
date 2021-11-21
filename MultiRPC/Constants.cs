@@ -38,7 +38,7 @@ namespace MultiRPC
         /// <summary>
         /// Url to the MultiRPC's info + download page
         /// </summary>
-        public const string WebsiteUrl = "https://fluxpoint.dev/multirpc";
+        public const string WebsiteUrl = "https://multirpc.fluxpoint.dev/";
 
         /// <summary>
         /// The app developer

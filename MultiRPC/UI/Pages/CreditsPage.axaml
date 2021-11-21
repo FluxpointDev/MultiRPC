@@ -3,7 +3,79 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pages="clr-namespace:MultiRPC.UI.Pages"
+             xmlns:controls="clr-namespace:MultiRPC.UI.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MultiRPC.UI.Pages.CreditsPage">
-    Come back soon when Credits is readded!
+    <UserControl.Styles>
+        <Style Selector="Image">
+            <Setter Property="Width" Value="20" />
+        </Style>
+        <Style Selector="ScrollViewer">
+            <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
+        </Style>
+        <Style Selector="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </UserControl.Styles>
+    <Grid RowDefinitions="*,Auto" ColumnDefinitions="*,10,*,10,*,10,*">
+        
+        <Grid RowDefinitions="Auto,5,*">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Image Name="imgCommunityAdmins" Source="{SvgImage /Assets/Icons/Shield.svg}" />
+                <TextBlock Name="tblCommunityAdminsTitle" Classes="title" Text="{Binding TextObservable^}" />
+            </StackPanel>
+            <Border Grid.Row="2" CornerRadius="15" Background="{DynamicResource ThemeAccentBrush}" />
+            <ScrollViewer Grid.Row="2">
+                <TextBlock Name="tblCommunityAdmins" />
+            </ScrollViewer>
+        </Grid>
+        
+        <Grid RowDefinitions="Auto,5,*" Grid.Column="2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Image Name="imgPatreonDonators" Source="{SvgImage /Assets/Icons/Heart.svg}" />
+                <TextBlock Name="tblPatreonDonatorsTitle" Classes="title" Text="{Binding TextObservable^}" />
+            </StackPanel>
+            <Border Grid.Row="2" CornerRadius="15" Background="{DynamicResource ThemeAccentBrush}" />
+            <ScrollViewer Grid.Row="2">
+                <TextBlock Name="tblPatreonDonators" />
+            </ScrollViewer>
+        </Grid>
+        
+        <Grid RowDefinitions="Auto,5,*" Grid.Column="4">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Image Name="imgPaypalDonators" Source="{SvgImage /Assets/Icons/Heart.svg}" />
+                <TextBlock Name="tblPaypalDonatorsTitle" Classes="title" Text="{Binding TextObservable^}" />
+            </StackPanel>
+            <Border Grid.Row="2" CornerRadius="15" Background="{DynamicResource ThemeAccentBrush}" />
+            <ScrollViewer Grid.Row="2">
+                <TextBlock Name="tblPaypalDonators" />
+            </ScrollViewer>
+        </Grid>
+        
+        <Grid RowDefinitions="Auto,5,*" Grid.Column="6">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Image Name="imgIconProviders" Source="{SvgImage /Assets/Icons/Heart.svg}" />
+                <TextBlock Name="tblIconProvidersTitle" Classes="title" Text="{Binding TextObservable^}" />
+            </StackPanel>
+            <Border Grid.Row="2" CornerRadius="15" Background="{DynamicResource ThemeAccentBrush}" />
+            <ScrollViewer Grid.Row="2">
+               <StackPanel Margin="10">
+                   <controls:Hyperlink Margin="0" Uri="https://www.iconfinder.com/" Text="Iconfinder"/>
+                   <controls:Hyperlink Margin="0" Uri="https://icons8.com/" Text="Icons8" />
+                   <controls:Hyperlink Margin="0" Uri="https://www.flaticon.com/" Text="Flaticon" />
+                   <controls:Hyperlink Margin="0" Uri="https://www.onlinewebfonts.com/icon/" Text="OnlineWebFonts" />
+               </StackPanel>
+            </ScrollViewer>
+        </Grid>
+        
+        <TextBlock Name="tblLastUpdated" Grid.Row="1" Grid.ColumnSpan="7" Margin="0,5" />
+    </Grid>
 </pages:SidePage>

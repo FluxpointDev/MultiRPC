@@ -3,14 +3,13 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using MultiRPC.UI;
 using TinyUpdate.Http.Extensions;
 
 namespace MultiRPC.Rpc
 {
     public static class IDChecker
     {
-        private static readonly HttpClient Client = new HttpClient();
-
         /// <summary>
         /// This checks the ID that is given to us
         /// </summary>
@@ -20,7 +19,7 @@ namespace MultiRPC.Rpc
         public static async Task<(bool Successful, string? ResultMessage)> Check(long id) 
         {
             var responseMessage =
-                await Client.GetResponseMessage(
+                await App.HttpClient.GetResponseMessage(
                     new HttpRequestMessage(HttpMethod.Get, 
                         $"https://discordapp.com/api/v6/oauth2/applications/{id}/rpc")); ;
 

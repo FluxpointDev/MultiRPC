@@ -159,6 +159,7 @@ namespace MultiRPC.UI.Views
                 return;
             }
 
+            //TODO: Make it so we can cancel this binding
             DoBinding(_rpcProfile.Profile, nameof(presence.Profile.Details), tblText1);
             DoBinding(_rpcProfile.Profile, nameof(presence.Profile.State), tblText2);
             _rpcProfile.PropertyChanged += PresenceOnPropertyChanged;

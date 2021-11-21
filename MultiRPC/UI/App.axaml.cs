@@ -1,26 +1,26 @@
-using System.Runtime.InteropServices;
+using System.Net.Http;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using MultiRPC.Rpc;
-using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using MultiRPC.UI.Pages;
 using MultiRPC.UI.Pages.Rpc;
 using MultiRPC.UI.Pages.Rpc.Custom;
+using MultiRPC.UI.Pages.Settings;
 using Splat;
+using TinyUpdate.Core.Update;
 using TinyUpdate.Binary;
 using TinyUpdate.Core.Extensions;
-using TinyUpdate.Core.Update;
 using TinyUpdate.Github;
-using SettingsPage = MultiRPC.UI.Pages.Settings.SettingsPage;
 
 namespace MultiRPC.UI
 {
     public class App : Application
     {
+        public static readonly HttpClient HttpClient = new HttpClient();
+
         //TODO: Put this somewhere else, for now this works
         private UpdateClient? _updater;
         
@@ -32,10 +32,9 @@ namespace MultiRPC.UI
             AvaloniaXamlLoader.Load(this);
 
             //Add default settings here
-            Locator.CurrentMutable.Register<Setting.Setting>(() => SettingManager<GeneralSettings>.Setting);
-            Locator.CurrentMutable.Register<Setting.Setting>(() => SettingManager<DisableSettings>.Setting);
+            Locator.CurrentMutable.RegisterLazySingleton<Setting.Setting>(() => SettingManager<GeneralSettings>.Setting);
+            Locator.CurrentMutable.RegisterLazySingleton<Setting.Setting>(() => SettingManager<DisableSettings>.Setting);
 
-            //TODO: Replace with splat
             //Any new pages get added here
             PageManager.AddPage(new MultiRpcPage());
             PageManager.AddPage(new CustomPage());
@@ -46,7 +45,7 @@ namespace MultiRPC.UI
             PageManager.AddPage(new MissingPage());
 
             //Anything else here
-            Locator.CurrentMutable.Register(() => new RpcClient());
+            Locator.CurrentMutable.RegisterLazySingleton(() => new RpcClient());
 
 #if !DEBUG
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
