@@ -21,6 +21,7 @@
         <Color x:Key="Orange">#FFEEAD37</Color>
         <Color x:Key="Green">#FF43B581</Color>
         
+        <SolidColorBrush x:Key="GreenBrush" Color="{DynamicResource Green}" />
         <SolidColorBrush x:Key="RedBrush" Color="{DynamicResource Red}" />
         <SolidColorBrush x:Key="PurpleBrush" Color="{DynamicResource Purple}" />
 

@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
+using MultiRPC.Utils;
 
 namespace MultiRPC.UI
 {
@@ -93,16 +94,19 @@ namespace MultiRPC.UI
             {
                 lang.TextObservable.Subscribe(s =>
                 {
-                    txtTitle.Text = s + " - " + titlePage.Title.Text;
+                    txtTitle.Text = s + " - " + titlePage.Title.Text + (AdminUtil.IsAdmin ? " (Administrator)" : "");
                 });
                 titlePage.Title.TextObservable.Subscribe(s =>
                 {
-                    txtTitle.Text = lang.Text + " - " + s;
+                    txtTitle.Text = lang.Text + " - " + s + (AdminUtil.IsAdmin ? " (Administrator)" : "");
                 });
             }
             else
             {
-                txtTitle.DataContext = lang;
+                lang.TextObservable.Subscribe(s =>
+                {
+                    txtTitle.Text = s + (AdminUtil.IsAdmin ? " (Administrator)" : "");
+                });
             }
             
             eabTitleBar.PointerPressed += (sender, args) => BeginMoveDrag(args);

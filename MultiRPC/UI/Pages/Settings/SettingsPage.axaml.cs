@@ -22,7 +22,7 @@ namespace MultiRPC.UI.Pages.Settings
         {
             InitializeComponent(loadXaml);
             var tabPage = new TabsPage();
-            var addedFirstPage = false;
+            tabPage.AddTabs(new AboutSettingsTab());
             
             foreach (var setting in Locator.Current.GetServices<Setting.Setting>())
             {
@@ -97,8 +97,6 @@ namespace MultiRPC.UI.Pages.Settings
 
                 if (settingPage != null)
                 {
-                    settingPage.IsDefaultPage = !addedFirstPage;
-                    addedFirstPage = true;
                     tabPage.AddTabs(settingPage);
                 }
             }

@@ -224,5 +224,7 @@
   "Discord": "Discord",
   "DiscordPTB": "Discord PTB",
   "DiscordCanary": "Discord Canary",
-  "DiscordDevelopment": "Discord Development"
+  "DiscordDevelopment": "Discord Development",
+  "About": "About",
+  "Warn": "Warn"
 }

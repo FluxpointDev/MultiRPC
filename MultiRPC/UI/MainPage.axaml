@@ -41,5 +41,6 @@
         </Grid>
         
         <overlays:DiscordCheckOverlay Grid.ColumnSpan="2" Grid.Column="0" />
+        <overlays:NetworkStatusOverlay VerticalAlignment="Bottom" Grid.ColumnSpan="2" Grid.Column="0" />
     </Grid>
 </UserControl>
