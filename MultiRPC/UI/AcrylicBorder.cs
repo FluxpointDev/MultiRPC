@@ -2,8 +2,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
-using Avalonia.Platform;
 
 namespace MultiRPC.UI
 {

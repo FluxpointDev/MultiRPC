@@ -49,9 +49,8 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
                 ContentPadding = new Thickness(0);
             }
             InitializeComponent(loadXaml);
-
-            //Process the tab pages
-            var tabPage = new TabsPage();
+            
+            //Setup the RPC control
             _rpcControl = new BaseRpcControl
             {
                 ImageType = ImagesType.Custom,
@@ -61,11 +60,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             };
             _rpcControl.ProfileChanged += (sender, args) => PresenceChanged?.Invoke(sender, args);
             _rpcControl.PresenceValidChanged += (sender, b) => PresenceValidChanged?.Invoke(sender, b);
-            Grid.SetRow(tabPage, 2);
-            tabPage.AddTabs(_rpcControl);
-            tabPage.Initialize();
-            grdContent.Children.Insert(grdContent.Children.Count - 1, tabPage);
-           
+
             //Process current profiles and setup for processing new profiles and profiles that get deleted
             wrpProfileSelector.Children.AddRange(_profilesSettings.Profiles.Select(MakeProfileSelector));
             _profilesSettings.Profiles.CollectionChanged += (sender, args) =>
@@ -80,6 +75,13 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
                 }
             };
             BtnChangePresence(wrpProfileSelector.Children[_profilesSettings.LastSelectedProfileIndex], null!);
+
+            //Process the tab pages
+            var tabPage = new TabsPage();
+            Grid.SetRow(tabPage, 2);
+            grdContent.Children.Insert(grdContent.Children.Count - 1, tabPage);
+            tabPage.AddTabs(_rpcControl);
+            tabPage.Initialize();
 
             //Setup tooltips
             _editLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgProfileEdit, x));
@@ -103,9 +105,6 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             stpHelpIcons.IsVisible = !_disableSettings.HelpIcons;
             helpGrid.Children.Add(stpHelpIcons);
 
-            _rpcControl.RichPresence = RichPresence;
-            _rpcControl.Initialize(loadXaml);
-            
             _helpImage = new Image
             {
                 Height = 200, 
@@ -210,10 +209,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             AddTextBinding();
             imgProfileDelete.IsVisible = _profilesSettings.Profiles.First() != _activeProfile;
 
-            if (_rpcControl.IsInitialized)
-            {
-                _rpcControl.ChangeRichPresence(_activeProfile);
-            }
+            _rpcControl.ChangeRichPresence(_activeProfile);
             RichPresence = _activeProfile;
         }
 
@@ -246,16 +242,6 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             }
             _profilesSettings.Profiles.Remove(_activeProfile);
             BtnChangePresence(wrpProfileSelector.Children[profileIndex], e);
-        }
-
-        private void Action_PointerEnter(object? sender, PointerEventArgs e)
-        {
-            ((Control)sender!).Opacity = 1;
-        }
-
-        private void Action_PointerLeave(object? sender, PointerEventArgs e)
-        {
-            ((Control)sender!).Opacity = 0.6;
         }
     }
 }

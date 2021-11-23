@@ -70,7 +70,7 @@
   "Debug": "Debug",
   "CheckForUpdates": "Check for\r\nupdates",
   "Donations": "Donations",
-  "PaypalMin1": "PayPal (min $2)",
+  "PaypalMin": "PayPal (min $2)",
   "PatreonMonthly": "Patreon (Monthly)",
   "ClickHere": "Click Here",
   "Disable": "Disable",
@@ -226,5 +226,14 @@
   "DiscordCanary": "Discord Canary",
   "DiscordDevelopment": "Discord Development",
   "About": "About",
-  "Warn": "Warn"
+  "Warn": "Warn",
+  "ClickToDonate": "Click here to donate!",
+  "CheckingDiscordStatus": "Checking discord status",
+  "Operational": "Operational",
+  "PartialOutage": "Partial outage",
+  "DegradedPerformance": "Degraded performance",
+  "MajorOutage": "Major outage!",
+  "LogLevel": "Log Level",
+  "GithubTooltip": "Access all the source code",
+  "FluxpointTooltip": "Look at the other services that Fluxpoint offer!"
 }

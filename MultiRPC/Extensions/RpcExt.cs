@@ -1,12 +1,13 @@
 using MultiRPC.Rpc;
+using RichPresence = DiscordRPC.RichPresence;
 
 namespace MultiRPC.Extensions
 {
     public static class RpcExt
     {
-        public static RpcProfile ToProfile(this DiscordRPC.RichPresence presence)
+        public static RpcProfile ToProfile(this RichPresence presence)
         {
-            return new RpcProfile()
+            return new RpcProfile
             {
                 State = presence.State,
                 Details = presence.Details,

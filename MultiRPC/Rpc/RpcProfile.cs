@@ -36,7 +36,7 @@ namespace MultiRPC.Rpc
                 State = _state,
                 Details = _details,
                 Timestamps = _showTime ? Timestamps.Now : null,
-                Assets = new Assets()
+                Assets = new Assets
                 {
                     LargeImageKey = _largeKey,
                     LargeImageText = _largeText,

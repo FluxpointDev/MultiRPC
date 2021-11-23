@@ -7,7 +7,7 @@ using MultiRPC.Rpc;
 
 namespace MultiRPC.Setting.Settings
 {
-    public partial class ProfilesSettings : Setting
+    public partial class ProfilesSettings : BaseSetting
     {
         public ProfilesSettings() 
             : this(new ObservableCollection<RichPresence>{ new RichPresence("Profile",  0) }) { }

@@ -46,7 +46,7 @@ namespace MultiRPC.UI
                 Command = new TrayCommand()
             };
             TrayIcon.SetIcons(this, new TrayIcons { trayIcon });
-            this.Closing += (sender, args) =>
+            Closing += (sender, args) =>
             {
                 TrayIcon.GetIcons(this)[0].IsVisible = false;
             };

@@ -7,7 +7,7 @@ namespace MultiRPC.Setting
 {
     //TODO: Use source gen to make JsonTypeInfo (Ensures we can process json even when trimming)
     public static class SettingManager<T> 
-        where T : Setting, new()
+        where T : BaseSetting, new()
     {
         private static readonly Lazy<T> LazySetting = new Lazy<T>(() =>
         {

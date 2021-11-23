@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.Logging
@@ -60,9 +61,9 @@ namespace MultiRPC.Logging
 
         private void WriteLog(string message, string type, params object?[] propertyValues)
         {
-            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            Dispatcher.UIThread.Post(() =>
             {
-                var textBlock = new TextBlock()
+                var textBlock = new TextBlock
                 {
                     Text = $"[{type} - {Name}]: " + string.Format(message, propertyValues)
                 };

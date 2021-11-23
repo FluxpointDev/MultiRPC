@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using MultiRPC.Setting;
 using TinyUpdate.Core.Extensions;
 
 namespace MultiRPC.UI.Controls.Settings
@@ -12,7 +13,7 @@ namespace MultiRPC.UI.Controls.Settings
             InitializeComponent();
         }
         
-        public EnumDropdown(Type enumType, Language header, Setting.Setting setting, MethodInfo getMethod, MethodInfo setMethod)
+        public EnumDropdown(Type enumType, Language header, BaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
             : base(header, setting, getMethod, setMethod)
         {
             InitializeComponent();

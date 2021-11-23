@@ -1,7 +1,7 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Avalonia.Controls;
 using MultiRPC.Exceptions;
+using MultiRPC.Setting;
 
 namespace MultiRPC.UI.Controls.Settings
 {
@@ -15,7 +15,7 @@ namespace MultiRPC.UI.Controls.Settings
             }
         }
 
-        public SettingItem(Language header, Setting.Setting setting, MethodInfo getMethod, MethodInfo setMethod)
+        public SettingItem(Language header, BaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
         { }
     }
 }

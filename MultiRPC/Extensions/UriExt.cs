@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using TinyUpdate.Core.Helper;
 
 namespace MultiRPC.Extensions
 {

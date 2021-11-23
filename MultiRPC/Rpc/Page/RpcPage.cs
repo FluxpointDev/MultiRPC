@@ -1,6 +1,5 @@
 ﻿using System;
 using MultiRPC.UI.Pages;
-using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.Rpc.Page
 {

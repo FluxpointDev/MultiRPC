@@ -5,7 +5,7 @@ using MultiRPC.Rpc;
 
 namespace MultiRPC.Setting.Settings
 {
-    public partial class MultiRPCSettings : Setting
+    public partial class MultiRPCSettings : BaseSetting
     {
         public MultiRPCSettings()
         {

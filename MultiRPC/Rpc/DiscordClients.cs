@@ -1,6 +1,6 @@
 ﻿namespace MultiRPC.Rpc
 {
-    public enum DiscordClient
+    public enum DiscordClients
     {
         Auto,
         Discord,

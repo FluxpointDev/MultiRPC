@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MultiRPC.UI;
 using TinyUpdate.Http.Extensions;
 
-namespace MultiRPC.Rpc
+namespace MultiRPC.Discord
 {
     public static class IDChecker
     {
@@ -15,7 +15,7 @@ namespace MultiRPC.Rpc
         /// </summary>
         /// <param name="id">ID to check</param>
         /// <returns>Fail: returns false with error message
-        /// Success: returns true with name that is linked to that ID</returns>
+        /// Success: returns true with the name that is linked to that ID</returns>
         public static async Task<(bool Successful, string? ResultMessage)> Check(long id) 
         {
             var responseMessage =

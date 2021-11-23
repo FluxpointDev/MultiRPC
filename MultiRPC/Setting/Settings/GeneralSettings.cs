@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Fonderie;
 using MultiRPC.Rpc;
-using System.Text.Json.Serialization;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting.Settings.Attributes;
 using MultiRPC.UI.Pages;
@@ -11,7 +11,7 @@ using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.Setting.Settings
 {
-    public partial class GeneralSettings : Setting
+    public partial class GeneralSettings : BaseSetting
     {
         [JsonIgnore]
         public override string Name => "General";
@@ -20,7 +20,7 @@ namespace MultiRPC.Setting.Settings
         private string? _lastUser = "NA#0000";
 
         [GeneratedProperty, SettingName("Client")]
-        private DiscordClient _client;
+        private DiscordClients _client;
 
         [GeneratedProperty, SettingName("AutoStart"), SettingSource(nameof(GetAutoStarts))]
         private string _autoStart = "";
@@ -64,7 +64,7 @@ namespace MultiRPC.Setting.Settings
 
         private string[] GetAutoStarts()
         {
-            var l = new List<string>() { "No" };
+            var l = new List<string> { "No" };
             l.AddRange(PageManager.CurrentPages.Where(x => x is RpcPage)
                 .Select(x => x.LocalizableName));
             return l.ToArray();

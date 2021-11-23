@@ -1,8 +1,6 @@
-﻿using System;
+using System;
 using System.Reflection;
-using Avalonia.Controls;
-using Avalonia.Layout;
-using MultiRPC.Setting.Settings;
+using MultiRPC.Setting;
 using MultiRPC.Setting.Settings.Attributes;
 using MultiRPC.UI.Controls;
 using MultiRPC.UI.Controls.Settings;
@@ -24,7 +22,7 @@ namespace MultiRPC.UI.Pages.Settings
             var tabPage = new TabsPage();
             tabPage.AddTabs(new AboutSettingsTab());
             
-            foreach (var setting in Locator.Current.GetServices<Setting.Setting>())
+            foreach (var setting in Locator.Current.GetServices<BaseSetting>())
             {
                 SettingsTab? settingPage = null;
                 SettingSourceAttribute? sourceAttribute = null;
@@ -84,12 +82,8 @@ namespace MultiRPC.UI.Pages.Settings
                     else
                     {
                         var settingDropdownType = typeof(SettingDropdown<>).MakeGenericType(settingProperty.PropertyType);
-                        var settingDropdown = (SettingItem)Activator.CreateInstance(settingDropdownType, new object[]
-                        {
-                            name, setting, getMethod, setMethod,
-                            sourceAttribute, languageSourceAttribute,
-                            settingProperty.GetCustomAttribute<NoneLocalizableAttribute>() == null
-                        });
+                        var settingDropdown = (SettingItem)Activator.CreateInstance(settingDropdownType, name, setting, getMethod, 
+                            setMethod, sourceAttribute, languageSourceAttribute, settingProperty.GetCustomAttribute<NoneLocalizableAttribute>() == null);
                         
                         settingPage.Add(settingDropdown);
                     }

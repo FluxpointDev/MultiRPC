@@ -4,7 +4,6 @@ using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using MultiRPC.Exceptions;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;

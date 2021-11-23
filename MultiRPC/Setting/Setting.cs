@@ -10,7 +10,7 @@ namespace MultiRPC.Setting
     /// Name will need [JsonIgnore] or it will be stored with your settings.
     /// Where you put your settings in your actual setting class matters on where it shows up in the UI! 
     /// </remarks>
-    public abstract class Setting
+    public abstract class BaseSetting
     {
         public abstract string Name { get; }
 

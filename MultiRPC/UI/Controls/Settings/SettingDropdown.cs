@@ -6,7 +6,7 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml.Templates;
-using MultiRPC.Setting.Settings;
+using MultiRPC.Setting;
 using MultiRPC.Setting.Settings.Attributes;
 using TinyUpdate.Core.Extensions;
 
@@ -19,7 +19,7 @@ namespace MultiRPC.UI.Controls.Settings
             InitializeComponent();
         }
         
-        public SettingDropdown(Language header, Setting.Setting setting, MethodInfo getMethod, 
+        public SettingDropdown(Language header, BaseSetting setting, MethodInfo getMethod, 
             MethodInfo setMethod, SettingSourceAttribute? sourceAttribute, LanguageSourceAttribute? languageSourceAttribute, bool isLocalizable)
             : base(header, setting, getMethod, setMethod)
         {

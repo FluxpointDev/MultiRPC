@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using DiscordRPC;
 using DiscordRPC.Message;
-using MultiRPC.Extensions;
 using MultiRPC.Logging;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
@@ -20,7 +19,7 @@ namespace MultiRPC.Rpc
 {
     public class RpcClient
     {
-        private ILogging _logger = LoggingCreator.CreateLogger(nameof(RpcClient));
+        private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(RpcClient));
         private DateTime _rpcStart;
         private string _presenceName = "Unknown";
         private long _presenceId;
@@ -133,10 +132,10 @@ namespace MultiRPC.Rpc
 
             var processName = SettingManager<GeneralSettings>.Setting.Client switch
             {
-                DiscordClient.Discord => "Discord",
-                DiscordClient.DiscordPTB => "DiscordPTB",
-                DiscordClient.DiscordCanary => "DiscordCanary",
-                DiscordClient.DiscordDevelopment => "DiscordDevelopment",
+                DiscordClients.Discord => "Discord",
+                DiscordClients.DiscordPTB => "DiscordPTB",
+                DiscordClients.DiscordCanary => "DiscordCanary",
+                DiscordClients.DiscordDevelopment => "DiscordDevelopment",
                 _ => null
             };
             _client?.Dispose();

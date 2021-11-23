@@ -75,6 +75,11 @@ namespace MultiRPC.UI.Controls
                     _activePageRectangle.Height = 0;
                 }
 
+                if (!page.IsInitialized)
+                {
+                    page.Initialize(true);
+                }
+
                 _activePageRectangle = rec;
                 _activePageRectangle.Height = 3;
                 content.Content = page;
@@ -88,6 +93,7 @@ namespace MultiRPC.UI.Controls
         public Language? TabName { get; }
 
         public bool IsDefaultPage { get; }
+        public bool IsInitialized { get; }
 
         public void Initialize(bool loadXaml);
     }

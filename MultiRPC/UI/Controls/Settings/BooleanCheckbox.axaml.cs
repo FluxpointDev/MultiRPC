@@ -1,8 +1,5 @@
-﻿using System;
-using System.Reflection;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using System.Reflection;
+using MultiRPC.Setting;
 
 namespace MultiRPC.UI.Controls.Settings
 {
@@ -13,7 +10,7 @@ namespace MultiRPC.UI.Controls.Settings
             InitializeComponent();
         }
         
-        public BooleanCheckbox(Language header, Setting.Setting setting, MethodInfo getMethod, MethodInfo setMethod)
+        public BooleanCheckbox(Language header, BaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
             : base(header, setting, getMethod, setMethod)
         {
             InitializeComponent();

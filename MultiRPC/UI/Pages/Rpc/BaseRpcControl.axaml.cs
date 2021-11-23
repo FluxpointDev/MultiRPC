@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using MultiRPC.Discord;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
 using MultiRPC.Setting;
@@ -45,6 +46,11 @@ namespace MultiRPC.UI.Pages.Rpc
         {
             RichPresence = richPresence;
 
+            if (!IsInitialized)
+            {
+                return;
+            }
+            
             txtClientID.Text = richPresence.ID.ToString();
             txtText1.Text = richPresence.Profile.Details;
             txtText2.Text = richPresence.Profile.State;

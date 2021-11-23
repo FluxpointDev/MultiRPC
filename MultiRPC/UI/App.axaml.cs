@@ -11,9 +11,6 @@ using MultiRPC.UI.Pages.Rpc.Custom;
 using MultiRPC.UI.Pages.Settings;
 using Splat;
 using TinyUpdate.Core.Update;
-using TinyUpdate.Binary;
-using TinyUpdate.Core.Extensions;
-using TinyUpdate.Github;
 
 namespace MultiRPC.UI
 {
@@ -32,8 +29,8 @@ namespace MultiRPC.UI
             AvaloniaXamlLoader.Load(this);
 
             //Add default settings here
-            Locator.CurrentMutable.RegisterLazySingleton<Setting.Setting>(() => SettingManager<GeneralSettings>.Setting);
-            Locator.CurrentMutable.RegisterLazySingleton<Setting.Setting>(() => SettingManager<DisableSettings>.Setting);
+            Locator.CurrentMutable.RegisterLazySingleton<BaseSetting>(() => SettingManager<GeneralSettings>.Setting);
+            Locator.CurrentMutable.RegisterLazySingleton<BaseSetting>(() => SettingManager<DisableSettings>.Setting);
 
             //Any new pages get added here
             PageManager.AddPage(new MultiRpcPage());
@@ -42,7 +39,6 @@ namespace MultiRPC.UI
             PageManager.AddPage(new LoggingPage());
             PageManager.AddPage(new CreditsPage());
             PageManager.AddPage(new ThemeEditorPage());
-            PageManager.AddPage(new MissingPage());
 
             //Anything else here
             Locator.CurrentMutable.RegisterLazySingleton(() => new RpcClient());

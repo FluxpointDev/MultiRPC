@@ -4,7 +4,7 @@ using MultiRPC.Setting.Settings.Attributes;
 
 namespace MultiRPC.Setting.Settings
 {
-    public partial class DisableSettings : Setting
+    public partial class DisableSettings : BaseSetting
     {
         [JsonIgnore]
         public override string Name => "Disable";

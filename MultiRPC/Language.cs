@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
-using System.Text.Json;
 using System.Threading;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
+using Newtonsoft.Json;
 using TinyUpdate.Core.Logging;
 
 namespace MultiRPC
@@ -91,11 +91,9 @@ namespace MultiRPC
             }
            
             Logger.Debug("{0} exists, grabbing contents", fileLocation);
-            using var fileContentsStream = File.OpenRead(fileLocation);
-            
             try
             {
-                return JsonSerializer.Deserialize<Dictionary<string, string>>(fileContentsStream)!;
+                return JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(fileLocation));
             }
             catch (Exception e)
             {

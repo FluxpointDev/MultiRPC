@@ -20,6 +20,9 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style Selector="Svg:pointerover">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
         <Style Selector="Button.activeProfile">
             <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2Hover}" />
         </Style>
@@ -46,10 +49,10 @@
             <StackPanel Spacing="5" Grid.Row="1" x:Name="stpProfileEditor" Height="40" Orientation="Horizontal" Margin="10,7,0,7">
                 <TextBlock FontWeight="SemiBold" x:Name="tblProfileName" VerticalAlignment="Center" />
                 <Rectangle Margin="0,2" Fill="White" Width="1" VerticalAlignment="Stretch" />
-                <Svg x:Name="imgProfileEdit" Path="/Assets/Icons/Pencil.svg" PointerPressed="ImgProfileEdit_OnPointerPressed" PointerEnter="Action_PointerEnter" PointerLeave="Action_PointerLeave" />
-                <Svg x:Name="imgProfileShare" Path="/Assets/Icons/Share.svg" PointerPressed="ImgProfileShare_OnPointerPressed" PointerEnter="Action_PointerEnter" PointerLeave="Action_PointerLeave" />
-                <Svg x:Name="imgProfileAdd" Path="/Assets/Icons/Add.svg" PointerPressed="ImgProfileAdd_OnPointerPressed" PointerEnter="Action_PointerEnter" PointerLeave="Action_PointerLeave" />
-                <Svg x:Name="imgProfileDelete" Path="/Assets/Icons/Delete.svg" PointerPressed="ImgProfileDelete_OnPointerPressed" IsVisible="False" PointerEnter="Action_PointerEnter" PointerLeave="Action_PointerLeave" />
+                <Svg x:Name="imgProfileEdit" Path="/Assets/Icons/Pencil.svg" PointerPressed="ImgProfileEdit_OnPointerPressed" />
+                <Svg x:Name="imgProfileShare" Path="/Assets/Icons/Share.svg" PointerPressed="ImgProfileShare_OnPointerPressed" />
+                <Svg x:Name="imgProfileAdd" Path="/Assets/Icons/Add.svg" PointerPressed="ImgProfileAdd_OnPointerPressed" />
+                <Svg x:Name="imgProfileDelete" Path="/Assets/Icons/Delete.svg" PointerPressed="ImgProfileDelete_OnPointerPressed" IsVisible="False" />
             </StackPanel>
         </Grid>
     </Border>

@@ -1,10 +1,8 @@
-﻿using System;
+using System;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Data;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using MultiRPC.Extensions;
 using MultiRPC.Utils;
