@@ -150,7 +150,7 @@ namespace MultiRPC.UI
             {
                 SizeToContent = SizeToContent.WidthAndHeight,
                 MinHeight = page.MinHeight + 30,
-                MinWidth = page.MinWidth,
+                MaxWidth = 410,
                 Title = messageBoxTitle,
                 CanResize = true,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,

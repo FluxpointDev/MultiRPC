@@ -1,6 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             Name="MultiRPC"
              x:Class="MultiRPC.UI.App">
     <Application.Resources>
         <system:Double x:Key="TextControlThemeMinHeight">28</system:Double>

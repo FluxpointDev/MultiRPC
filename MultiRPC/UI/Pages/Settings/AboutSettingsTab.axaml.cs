@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -11,7 +12,9 @@ using Avalonia.Media;
 using MultiRPC.Discord;
 using MultiRPC.Extensions;
 using MultiRPC.UI.Controls;
+using MultiRPC.Utils;
 using TinyUpdate.Core.Extensions;
+using TinyUpdate.Core.Helper;
 
 namespace MultiRPC.UI.Pages.Settings
 {
@@ -26,6 +29,9 @@ namespace MultiRPC.UI.Pages.Settings
         public bool IsDefaultPage => true;
         public void Initialize(bool loadXaml)
         {
+            //TODO: Remove Windows check when we add cross platform support for gaining admin mode
+            btnAdmin.IsEnabled = !AdminUtil.IsAdmin && OSHelper.ActiveOS == OSPlatform.Windows;
+
             tblName.Text += Assembly.GetEntryAssembly().GetSemanticVersion();
             var madeByLang = new Language(LanguageText.MadeBy);
             madeByLang.TextObservable.Subscribe(x => tblMadeBy.Text = x + ": " + Constants.AppDeveloper);
@@ -83,7 +89,15 @@ namespace MultiRPC.UI.Pages.Settings
         //TODO: Make cross platform
         private async void BtnAdmin_OnClick(object? sender, RoutedEventArgs e)
         {
-            //TODO: Add warning
+            if (await MessageBox.Show(
+                    Language.GetText(LanguageText.AdminWarning), 
+                    Language.GetText(LanguageText.MultiRPC), 
+                    MessageBoxButton.OkCancel, 
+                    MessageBoxImage.Warning) != MessageBoxResult.Ok)
+            {
+                return;
+            }
+            
             try
             {
                 var processInfo = new ProcessStartInfo(Assembly.GetExecutingAssembly().CodeBase.Replace(".dll", ".exe")) //Net Core tell's us the location of the dll, not the exe so we point it back to the exe
