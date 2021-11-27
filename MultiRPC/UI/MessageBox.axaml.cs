@@ -5,7 +5,7 @@ using Avalonia.Interactivity;
 using MultiRPC.Exceptions;
 using MultiRPC.Helpers;
 
-//This is based off Wpf Message box
+//This is based off Wpf MessageBox
 namespace MultiRPC.UI
 {
     public enum MessageBoxResult
@@ -163,7 +163,7 @@ namespace MultiRPC.UI
         
         public static async Task<MessageBoxResult> Show(string messageBoxText, Window? window = null)
         {
-            return await Show(messageBoxText, "MultiRPC", MessageBoxButton.Ok, MessageBoxImage.None,
+            return await Show(messageBoxText, Language.GetText(LanguageText.MultiRPC), MessageBoxButton.Ok, MessageBoxImage.None,
                 ownerWindow: window);
         }
 

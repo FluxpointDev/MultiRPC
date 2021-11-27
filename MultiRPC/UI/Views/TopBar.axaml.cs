@@ -186,7 +186,7 @@ namespace MultiRPC.UI.Views
 
             if (!_rpcClient.IsRunning)
             {
-                _rpcClient.Start(Constants.AfkID, "Afk");
+                _rpcClient.Start(Constants.AfkID, Language.GetText(LanguageText.Afk));
             }
             await _rpcClient.UpdatePresence(pre);
             txtAfk.Clear();

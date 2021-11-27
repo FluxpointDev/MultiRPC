@@ -6,10 +6,12 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MultiRPC.Exceptions;
 using TinyUpdate.Core.Logging;
 
 namespace MultiRPC
 {
+    //TODO: Use Name to check if this is a valid IPC
     //Works on top of this example
     //https://github.com/davidfowl/TcpEcho
     public class IPC
@@ -33,6 +35,9 @@ namespace MultiRPC
         /// </summary>
         public IPCType Type { get; private set; }
 
+        /// <summary>
+        /// When we get a new message from a Client
+        /// </summary>
         public event EventHandler<string>? NewMessage; 
 
         /// <summary>
@@ -49,6 +54,7 @@ namespace MultiRPC
             {
                 if (!ipcCon.ConnectToServer())
                 {
+                    ipcCon.DisconnectFromServer();
                     ipcCon.Type = IPCType.Server;
                     ipcCon.StartServer();
                 }
@@ -64,38 +70,47 @@ namespace MultiRPC
         {
             if (Type != IPCType.Server)
             {
-                throw new Exception("This IPC is not a server!");
+                throw new NotServerIPCException();
             }
             
             StopServer();
-            _socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            _logger.Information("Starting IPC Server");
+            _socket = MakeSocket();
             _socket.Bind(_endPoint);
             _socket.Listen(120);
             _ = WaitForConnection();
+            _logger.Information("IPC Server started!");
         }
         
         public void StopServer()
         {
-            _socket?.Dispose();
+            if (_socket == null)
+            {
+                return;
+            }
+
+            _logger.Information("Stopping IPC Server");
+            _socket.Dispose();
             _socket = null;
         }
 
+        private Socket MakeSocket() => new Socket(SocketType.Stream, ProtocolType.Tcp);
         private readonly IPEndPoint _endPoint = new IPEndPoint(IPAddress.Loopback, 8087);
         public bool ConnectToServer()
         {
             if (Type != IPCType.Client)
             {
-                throw new Exception("This IPC is not a client!");
+                throw new NotClientIPCException();
             }
 
             DisconnectFromServer();
-
             try
             {
-                _socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-                _logger.Debug("Connecting to port 8087");
+                _socket = MakeSocket();
+                _logger.Information("Connecting to IPC Server ({0}:{1})", _endPoint.Address, _endPoint.Port);
                 _socket.Connect(_endPoint);
                 _networkStream = new NetworkStream(_socket);
+                _logger.Information("Connected to IPC Server!");
                 return true;
             }
             catch (Exception e)
@@ -107,11 +122,12 @@ namespace MultiRPC
 
         public void DisconnectFromServer()
         {
-            if (Type != IPCType.Client)
+            if (_socket == null)
             {
-                throw new Exception("This IPC is not a client!");
+                return;
             }
             
+            _logger.Information("Disconnecting from IPC Server!");
             _networkStream?.Dispose();
             _networkStream = null;
             _socket?.Dispose();
@@ -122,7 +138,7 @@ namespace MultiRPC
         {
             if (Type != IPCType.Client)
             {
-                throw new Exception("This IPC is not a client!");
+                throw new NotClientIPCException();
             }
 
             var b = _ipcEncoding.GetBytes(message + "\n");
@@ -143,7 +159,7 @@ namespace MultiRPC
 
         private async Task ProcessLinesAsync(Socket socket)
         {
-            Console.WriteLine($"[{socket.RemoteEndPoint}]: connected");
+            _logger.Debug("[{0}]: connected", socket.RemoteEndPoint);
 
             // Create a PipeReader over the network stream
             var stream = new NetworkStream(socket);
@@ -172,8 +188,7 @@ namespace MultiRPC
 
             // Mark the PipeReader as complete.
             await reader.CompleteAsync();
-
-            Console.WriteLine($"[{socket.RemoteEndPoint}]: disconnected");
+            _logger.Debug("[{0}]: disconnected", socket.RemoteEndPoint);
         }
         
         private static bool TryReadLine(ref ReadOnlySequence<byte> buffer, out ReadOnlySequence<byte> line)

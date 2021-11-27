@@ -41,7 +41,7 @@ namespace MultiRPC.UI
             //If auto start has been selected then we want load that up if possible
             if (pageToTrigger?.LocalizableName == autoStartPageName)
             {
-                _autoStartPage = ((RpcPage)pageToTrigger);
+                _autoStartPage = (RpcPage)pageToTrigger;
                 if (_autoStartPage.PresenceValid)
                 {
                     TriggerStart();
@@ -79,7 +79,7 @@ namespace MultiRPC.UI
             }
         }
 
-        private DisableSettings _disableSetting = SettingManager<DisableSettings>.Setting;
+        private readonly DisableSettings _disableSetting = SettingManager<DisableSettings>.Setting;
         private Button? _selectedBtn;
         private Button AddSidePage(ISidePage page)
         {

@@ -35,6 +35,13 @@ namespace MultiRPC.SourceGen
                         var startIndex = 0;
                         var endIndex = 0;
                         var s = line.ToString();
+                        
+                        //If it contains this then the line is a comment, skip it
+                        if (s.Contains("/*"))
+                        {
+                            continue;
+                        }
+                        
                         for (int i = 0; i < s.Length; i++)
                         {
                             if (s[i] != '\"')

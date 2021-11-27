@@ -15,7 +15,7 @@ namespace MultiRPC.UI
 
         public FluentWindow()
         {
-            Title = "MultiRPC";
+            Title = Language.GetText(LanguageText.MultiRPC);
             ExtendClientAreaToDecorationsHint = true;
             ExtendClientAreaTitleBarHeightHint = -1;
 

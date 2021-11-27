@@ -15,9 +15,12 @@ namespace MultiRPC.UI.Overlays
         {
             InitializeComponent();
             NetworkChange.NetworkAddressChanged += AddressChangedCallback;
+
+            tblInternetConnectivity.DataContext = _textLang = new Language();
             AddressChangedCallback(null, EventArgs.Empty);
         }
 
+        private readonly Language _textLang;
         private void AddressChangedCallback(object? sender, EventArgs e)
         {
             if (NetworkUtil.NetworkIsAvailable())
@@ -25,7 +28,7 @@ namespace MultiRPC.UI.Overlays
                 this.RunUILogic(async () =>
                 {
                     this.Background = (SolidColorBrush)Application.Current.Resources["GreenBrush"]!;
-                    tblInternetConnectivity.Text = Language.GetText(LanguageText.InternetBack) + "!!";
+                    _textLang.ChangeJsonNames(LanguageText.InternetBack);
                     await Task.Delay(3000);
                     this.Height = 0;
                 });
@@ -35,7 +38,7 @@ namespace MultiRPC.UI.Overlays
             this.RunUILogic(() =>
             {
                 this.Height = double.NaN;
-                tblInternetConnectivity.Text = Language.GetText(LanguageText.InternetLost) + "!!";
+                _textLang.ChangeJsonNames(LanguageText.InternetLost);
                 this.Background = (SolidColorBrush)Application.Current.Resources["RedBrush"]!;
             });
         }

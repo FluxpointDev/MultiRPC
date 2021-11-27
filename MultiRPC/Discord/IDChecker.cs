@@ -35,7 +35,7 @@ namespace MultiRPC.Discord
             var response = JsonSerializer.Deserialize<ClientCheckResult>(await responseMessage.Content.ReadAsStreamAsync());
 
             return !string.IsNullOrEmpty(response?.Message) ?
-                (false, $"{Language.GetText(LanguageText.ClientIDIsNotValid)}\r\n{response?.Message}")
+                (false, $"{Language.GetText(LanguageText.ClientIDIsNotValid)}\r\n{response.Message}")
                 : (true, response!.Name);
         }
     }

@@ -36,7 +36,7 @@ namespace MultiRPC
         public const int RetryCount = 10;
 
         /// <summary>
-        /// Url to the MultiRPC's info + download page
+        /// Url to the MultiRPCs info + download page
         /// </summary>
         public const string WebsiteUrl = "https://fluxpoint.dev/multirpc";
 

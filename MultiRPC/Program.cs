@@ -13,6 +13,7 @@ using TinyUpdate.Core;
 using TinyUpdate.Core.Logging;
 using TinyUpdate.Core.Logging.Loggers;
 
+//TODO: Make GIFs loops stop when they're not on screen
 //TODO: Make this be used for the versioning
 [assembly: SemanticVersion("7.0.0-beta4")]
 namespace MultiRPC
@@ -27,7 +28,6 @@ namespace MultiRPC
         public static void Main(string[] args)
         {
             LoggingCreator.GlobalLevel = SettingManager<GeneralSettings>.Setting.LogLevel;
-            _ipc = IPC.GetOrMakeConnection(); //DON'T MOVE
 
             // Set the current directory to the app install location to get assets.
 #if WINSTORE
@@ -39,6 +39,7 @@ namespace MultiRPC
             LoggingCreator.AddLogBuilder(new FileLoggerBuilder(logFolder));
 #endif
             LoggingCreator.AddLogBuilder(new LoggingPageBuilder());
+            _ipc = IPC.GetOrMakeConnection();
             
             //Now check if we are already currently open, if so tell that instance to show
             if (!DebugUtil.IsDebugBuild && Process.GetProcessesByName("MultiRPC").Length > 1)

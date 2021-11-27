@@ -30,7 +30,7 @@ namespace MultiRPC.UI.Views
     
     public partial class RpcView : UserControl
     {
-        private RpcClient _rpcClient;
+        private readonly RpcClient _rpcClient;
         static RpcView()
         {
             LogoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") });

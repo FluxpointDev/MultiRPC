@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
@@ -87,26 +86,22 @@ namespace MultiRPC.UI
             }
         }
 
+        private void UpdateTitle(string title, string? subTitle)
+        {
+            txtTitle.Text = title + (subTitle != null ? " - " + subTitle : null) + (AdminUtil.IsAdmin ? $" ({Language.GetText(LanguageText.Administrator)})" : null);
+        }
+
         private void InitializeExtra()
         {
             var lang = new Language(LanguageText.MultiRPC);
             if (_control is ITitlePage titlePage)
             {
-                lang.TextObservable.Subscribe(s =>
-                {
-                    txtTitle.Text = s + " - " + titlePage.Title.Text + (AdminUtil.IsAdmin ? " (Administrator)" : "");
-                });
-                titlePage.Title.TextObservable.Subscribe(s =>
-                {
-                    txtTitle.Text = lang.Text + " - " + s + (AdminUtil.IsAdmin ? " (Administrator)" : "");
-                });
+                lang.TextObservable.Subscribe(s => UpdateTitle(s, titlePage.Title.Text));
+                titlePage.Title.TextObservable.Subscribe(s => UpdateTitle(lang.Text, s));
             }
             else
             {
-                lang.TextObservable.Subscribe(s =>
-                {
-                    txtTitle.Text = s + (AdminUtil.IsAdmin ? " (Administrator)" : "");
-                });
+                lang.TextObservable.Subscribe(s => UpdateTitle(s, null));
             }
             
             eabTitleBar.PointerPressed += (sender, args) => BeginMoveDrag(args);

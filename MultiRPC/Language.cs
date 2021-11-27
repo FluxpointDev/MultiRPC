@@ -98,7 +98,8 @@ namespace MultiRPC
                     new JsonSerializerOptions(JsonSerializerDefaults.General)
                     {
                         //We know that the file in question is safe as we provide the files 
-                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                        ReadCommentHandling = JsonCommentHandling.Skip
                     });
             }
             catch (Exception e)

@@ -26,6 +26,7 @@ namespace MultiRPC.UI.Pages
             NetworkChange.NetworkAddressChanged += NetworkChangeOnNetworkAddressChanged;
             UpdateCredits();
             _ = DownloadAndShow();
+            Language.LanguageChanged += OnLanguageChanged;
         }
 
         private async void NetworkChangeOnNetworkAddressChanged(object? sender, EventArgs e)
@@ -53,6 +54,7 @@ namespace MultiRPC.UI.Pages
             {
                 return;
             }
+            _writeTime = creditsFileInfo.LastWriteTime;
 
             using var reader = creditsFileInfo.OpenRead();
             _creditsList = JsonSerializer.Deserialize<CreditsList>(reader);
@@ -63,19 +65,29 @@ namespace MultiRPC.UI.Pages
                 tblPaypalDonators.Text = string.Join("\r\n\r\n", _creditsList.Paypal);
             }
 
+            UpdateLastUpdate();
+        }
+
+        private void OnLanguageChanged(object? sender, EventArgs e)
+        {
+            UpdateLastUpdate();
+        }
+
+        private void UpdateLastUpdate()
+        {
             if (!NetworkUtil.NetworkIsAvailable() && !_downloadedCredit)
             {
                 tblLastUpdated.Text = $"{Language.GetText(LanguageText.WaitingForInternetUpdate)}...";
                 return;
             }
             
-            //TODO: Make this be updated on Lang change
-            tblLastUpdated.Text = creditsFileInfo.LastWriteTime.Date == DateTime.Now.Date
-                ? $"{Language.GetText(LanguageText.LastUpdatedAt)}: {creditsFileInfo.LastWriteTime.ToShortTimeString()}"
-                : $"{Language.GetText(LanguageText.LastUpdatedOn)}: {creditsFileInfo.LastWriteTime.ToLongDateString()}";
+            tblLastUpdated.Text = _writeTime.Date == DateTime.Now.Date
+                ? $"{Language.GetText(LanguageText.LastUpdatedAt)}: {_writeTime.ToShortTimeString()}"
+                : $"{Language.GetText(LanguageText.LastUpdatedOn)}: {_writeTime.ToLongDateString()}";
         }
 
-        private const string Url = Constants.WebsiteUrl + "Credits.json";
+        private DateTime _writeTime = DateTime.MinValue;
+        private const string Url = "https://multirpc.fluxpoint.dev/Credits.json";
         private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(CreditsPage));
         private async Task DownloadCredits()
         {

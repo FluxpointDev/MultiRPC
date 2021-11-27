@@ -13,12 +13,12 @@ namespace MultiRPC.Logging
             _action = action;
             foreach (var log in StoredLogging)
             {
-                _action.Invoke(log);
+                _action.Invoke(MakeTextBlock(log[0], log[1]));
             }
         }
 
         private static Action<TextBlock>? _action;
-        private static readonly List<TextBlock> StoredLogging = new List<TextBlock>();
+        private static readonly List<string[]> StoredLogging = new List<string[]>();
         
         public LoggingPageLogger(string name) => Name = name;
 
@@ -61,20 +61,25 @@ namespace MultiRPC.Logging
 
         private void WriteLog(string message, string type, params object?[] propertyValues)
         {
-            Dispatcher.UIThread.Post(() =>
+            var header = $"[{type} - {Name}]:";
+            var mess = string.Format(message, propertyValues);
+            if (_action != null)
             {
-                var textBlock = new TextBlock
+                Dispatcher.UIThread.Post(() =>
                 {
-                    Text = $"[{type} - {Name}]: " + string.Format(message, propertyValues)
-                };
+                    _action.Invoke(MakeTextBlock(header, mess));
+                });
+                return;
+            }
+            StoredLogging.Add(new [] { header, mess });
+        }
 
-                if (_action != null)
-                {
-                    _action.Invoke(textBlock);
-                    return;
-                }
-                StoredLogging.Add(textBlock);
-            });
+        private static TextBlock MakeTextBlock(string header, string message)
+        {
+            return new TextBlock()
+            {
+                Text = header + " " + message
+            };
         }
 
         public string Name { get; }

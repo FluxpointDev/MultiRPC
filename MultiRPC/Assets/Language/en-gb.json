@@ -1,5 +1,5 @@
 {
-  "README": "Hello people's of the world reading this for some reason, if your editing this in your own language that's great, and if you want it to be in MultiRPC send it to Builderb#0001 (in discord) so he can add it to the project",
+  /* "README": "Hello people's of the world reading this for some reason, if your editing this in your own language that's great, and if you want it to be in MultiRPC send it to Builderb#0001 (in discord) so he can add it to the project", */
   "LanguageName": "English",
   "LanguageTag": "en-gb",
   "Start": "Start",
@@ -236,5 +236,7 @@
   "LogLevel": "Log Level",
   "GithubTooltip": "Access all the source code",
   "FluxpointTooltip": "Look at the other services that Fluxpoint offer!",
-  "NA": "N/A"
+  "NA": "N/A",
+  "Administrator": "Administrator",
+  "DiscordClientCheck": "Discord client check. Was checking for {discordProcess} (found: {wasFound})"
 }

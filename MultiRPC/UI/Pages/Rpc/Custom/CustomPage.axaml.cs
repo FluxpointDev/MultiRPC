@@ -40,7 +40,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
         private BaseRpcControl _rpcControl = null!;
         private Button? _activeButton;
         private IDisposable? _textBindingDis;
-        private DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
+        private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
 
         public override void Initialize(bool loadXaml)
         {

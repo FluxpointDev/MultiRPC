@@ -97,7 +97,14 @@ namespace MultiRPC.Rpc
             _client?.Dispose();
 
             var pipe = PipeUtil.FindPipe(processName);
-            _logger.Debug($"Discord {Language.GetText(LanguageText.Client)}, Was {(processName ?? Language.GetText(LanguageText.NA))} found?: {pipe != -1}");
+
+            if (LoggingCreator.ShouldProcess(_logger.LogLevel, LogLevel.Trace))
+            {
+                var debugMessage = Language.GetText(LanguageText.DiscordClientCheck)
+                    .Replace("{discordProcess}", (Language.GetText(processName ?? "NA")))
+                    .Replace("{wasFound}", (pipe != -1).ToString());
+                _logger.Debug(debugMessage);
+            }
             _client = new DiscordRpcClient(idS, pipe)
             {
                 SkipIdenticalPresence = false, 
