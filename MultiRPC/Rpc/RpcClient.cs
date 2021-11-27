@@ -12,6 +12,7 @@ using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using MultiRPC.UI;
+using MultiRPC.Utils;
 using TinyUpdate.Core.Helper;
 using TinyUpdate.Core.Logging;
 
@@ -54,8 +55,8 @@ namespace MultiRPC.Rpc
                 return true;
             }
             var result = await MessageBox.Show(
-                Language.GetText("AdvertisingWarning"), 
-                Language.GetText("Warning"),
+                Language.GetText(LanguageText.AdvertisingWarning), 
+                Language.GetText(LanguageText.Warning),
                 MessageBoxButton.OkCancel,
                 MessageBoxImage.Warning);
 
@@ -63,56 +64,11 @@ namespace MultiRPC.Rpc
             {
                 _disableSettings.InviteWarn = true;
 
-                _logger.Warning(Language.GetText("AdvertisingWarningDisabled"));
+                _logger.Warning(Language.GetText(LanguageText.AdvertisingWarningDisabled));
                 return true;
             }
 
             return result != MessageBoxResult.Cancel;
-        }
-        
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool GetNamedPipeServerProcessId(IntPtr pipe, out int clientProcessId);
-        
-        private int FindPipe(string? processName)
-        {
-            //TODO: Make this work on other OS's
-            if (OSHelper.ActiveOS != OSPlatform.Windows
-                || string.IsNullOrWhiteSpace(processName))
-            {
-                return -1;
-            }
-
-            var pipeCount = -1;
-            var pipes = Directory.GetFiles(@"\\.\pipe\");
-            foreach (var t in pipes)
-            {
-                var pipe = t[9..];
-                if (!pipe.StartsWith("discord"))
-                {
-                    continue;
-                }
-
-                pipeCount++;
-                try
-                {
-                    using NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", pipe, PipeDirection.InOut, PipeOptions.Asynchronous);
-                    pipeClient.Connect(1000);
-                    var canGetPipe = GetNamedPipeServerProcessId(pipeClient.SafePipeHandle.DangerousGetHandle(), out var id);
-                    pipeClient.Close();
-                        
-                    if (!canGetPipe || id == 0)
-                    {
-                        continue;
-                    }
-                    Process proc = Process.GetProcessById(id);
-                    if (proc.ProcessName == processName)
-                    {
-                        return pipeCount;
-                    }
-                }
-                catch { }
-            }
-            return -1;
         }
 
         public void Start(long? applicationId, string? applicationName)
@@ -120,7 +76,7 @@ namespace MultiRPC.Rpc
             _presenceId = applicationId ?? RpcPageManager.CurrentPage?.RichPresence.ID ?? Constants.MultiRPCID;
             var idS = _presenceId.ToString();
 
-            var name = applicationName ?? RpcPageManager.CurrentPage?.RichPresence.Name ?? Language.GetText("MultiRPC");
+            var name = applicationName ?? RpcPageManager.CurrentPage?.RichPresence.Name ?? Language.GetText(LanguageText.MultiRPC);
             _presenceName = name;
             
             //If we are running already then stop it if we aren't using the same ID
@@ -128,7 +84,7 @@ namespace MultiRPC.Rpc
             {
                 Stop();
             }
-            _logger.Information(Language.GetText("StartingRpc"));
+            _logger.Information(Language.GetText(LanguageText.StartingRpc));
 
             var processName = SettingManager<GeneralSettings>.Setting.Client switch
             {
@@ -140,8 +96,8 @@ namespace MultiRPC.Rpc
             };
             _client?.Dispose();
 
-            var pipe = FindPipe(processName);
-            _logger.Debug($"Discord {Language.GetText("Client")}, Was {(processName ?? Language.GetText("N/A"))} found?: {pipe != -1}");
+            var pipe = PipeUtil.FindPipe(processName);
+            _logger.Debug($"Discord {Language.GetText(LanguageText.Client)}, Was {(processName ?? Language.GetText(LanguageText.NA))} found?: {pipe != -1}");
             _client = new DiscordRpcClient(idS, pipe)
             {
                 SkipIdenticalPresence = false, 
@@ -169,7 +125,7 @@ namespace MultiRPC.Rpc
 
         public void Stop()
         {
-            _logger.Information(Language.GetText("ShuttingDown"));
+            _logger.Information(Language.GetText(LanguageText.ShuttingDown));
             ClearPresence();
             _client?.Deinitialize();
             _client?.Dispose();

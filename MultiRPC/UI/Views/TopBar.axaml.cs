@@ -43,15 +43,15 @@ namespace MultiRPC.UI.Views
                 PageOnPresenceChanged(sender, EventArgs.Empty);
             };
 
-            btnStart.DataContext = _startButton = new Language("Start", "MultiRPC");
-            btnUpdatePresence.DataContext = new Language("UpdatePresence");
-            btnAfk.DataContext = new Language("Afk");
-            btnAuto.DataContext = new Language("Auto");
-            txtAfk.DataContext = new Language("AfkText");
+            btnStart.DataContext = _startButton = new Language(LanguageText.Start, LanguageText.MultiRPC);
+            btnUpdatePresence.DataContext = new Language(LanguageText.UpdatePresence);
+            btnAfk.DataContext = new Language(LanguageText.Afk);
+            btnAuto.DataContext = new Language(LanguageText.Auto);
+            txtAfk.DataContext = new Language(LanguageText.AfkText);
 
-            _statusKind = new Language("Disconnected");
-            _statusText = new Language("Status");
-            _userText = new Language("User");
+            _statusKind = new Language(LanguageText.Disconnected);
+            _statusText = new Language(LanguageText.Status);
+            _userText = new Language(LanguageText.User);
 
             _statusKind.TextObservable.Subscribe(_ => UpdateStatus());
             _statusText.TextObservable.Subscribe(_ => UpdateStatus());
@@ -63,8 +63,8 @@ namespace MultiRPC.UI.Views
 
                 this.RunUILogic(() =>
                 {
-                    _startButton.ChangeJsonNames("Shutdown");
-                    _statusKind.ChangeJsonNames("Loading");
+                    _startButton.ChangeJsonNames(LanguageText.Shutdown);
+                    _statusKind.ChangeJsonNames(LanguageText.Loading);
                     btnUpdatePresence.IsEnabled = false;
                     btnStart.Classes.Remove("green");
                     btnStart.Classes.Add("red");
@@ -81,8 +81,8 @@ namespace MultiRPC.UI.Views
 
                 this.RunUILogic(() =>
                 {
-                    _startButton.ChangeJsonNames("Shutdown");
-                    _statusKind.ChangeJsonNames("Connected");
+                    _startButton.ChangeJsonNames(LanguageText.Shutdown);
+                    _statusKind.ChangeJsonNames(LanguageText.Connected);
                     if (_rpcClient.ID != Constants.AfkID)
                     {
                         btnUpdatePresence.IsEnabled = _page?.PresenceValid ?? true;
@@ -103,7 +103,7 @@ namespace MultiRPC.UI.Views
                 this.RunUILogic(() =>
                 {
                     RpcPageManagerOnPageChanged(sender, RpcPageManager.CurrentPage!);
-                    _statusKind.ChangeJsonNames("Disconnected");
+                    _statusKind.ChangeJsonNames(LanguageText.Disconnected);
                     btnUpdatePresence.IsEnabled = false;
                     btnStart.Classes.Remove("red");
                     btnStart.Classes.Add("green");
@@ -141,7 +141,9 @@ namespace MultiRPC.UI.Views
         private void RpcPageManagerOnPageChanged(object? sender, RpcPage e)
         {
             var hasStartKey = Language.HasKey("Start" + e.LocalizableName);
-            _startButton.ChangeJsonNames(hasStartKey ? new []{ "Start" + e.LocalizableName } : new []{ "Start", e.LocalizableName });
+            _startButton.ChangeJsonNames(hasStartKey ? 
+                new []{ "Start" + e.LocalizableName } 
+                : new []{ "Start", e.LocalizableName });
         }
 
         public void TriggerStartStop() => BtnStart_OnClick(btnStart, null!);
@@ -171,7 +173,7 @@ namespace MultiRPC.UI.Views
                 Assets = new Assets
                 {
                     LargeImageKey = "cat",
-                    LargeImageText = Language.GetText("SleepyCat")
+                    LargeImageText = Language.GetText(LanguageText.SleepyCat)
                 },
                 Timestamps = _generalSettings.ShowAfkTime ? Timestamps.Now : null
             };

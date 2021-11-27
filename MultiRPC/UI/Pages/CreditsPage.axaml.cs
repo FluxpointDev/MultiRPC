@@ -19,10 +19,10 @@ namespace MultiRPC.UI.Pages
         {
             InitializeComponent(loadXaml);
 
-            tblCommunityAdminsTitle.DataContext = new Language("CommunityAdmins");
-            tblPatreonDonatorsTitle.DataContext = new Language("PatreonDonators");
-            tblPaypalDonatorsTitle.DataContext = new Language("PaypalDonators");
-            tblIconProvidersTitle.DataContext = new Language("IconProviders");
+            tblCommunityAdminsTitle.DataContext = new Language(LanguageText.CommunityAdmins);
+            tblPatreonDonatorsTitle.DataContext = new Language(LanguageText.PatreonDonators);
+            tblPaypalDonatorsTitle.DataContext = new Language(LanguageText.PaypalDonators);
+            tblIconProvidersTitle.DataContext = new Language(LanguageText.IconProviders);
             NetworkChange.NetworkAddressChanged += NetworkChangeOnNetworkAddressChanged;
             UpdateCredits();
             _ = DownloadAndShow();
@@ -65,14 +65,14 @@ namespace MultiRPC.UI.Pages
 
             if (!NetworkUtil.NetworkIsAvailable() && !_downloadedCredit)
             {
-                tblLastUpdated.Text = $"{Language.GetText("WaitingForInternetUpdate")}...";
+                tblLastUpdated.Text = $"{Language.GetText(LanguageText.WaitingForInternetUpdate)}...";
                 return;
             }
             
             //TODO: Make this be updated on Lang change
             tblLastUpdated.Text = creditsFileInfo.LastWriteTime.Date == DateTime.Now.Date
-                ? $"{Language.GetText("LastUpdatedAt")}: {creditsFileInfo.LastWriteTime.ToShortTimeString()}"
-                : $"{Language.GetText("LastUpdatedOn")}: {creditsFileInfo.LastWriteTime.ToLongDateString()}";
+                ? $"{Language.GetText(LanguageText.LastUpdatedAt)}: {creditsFileInfo.LastWriteTime.ToShortTimeString()}"
+                : $"{Language.GetText(LanguageText.LastUpdatedOn)}: {creditsFileInfo.LastWriteTime.ToLongDateString()}";
         }
 
         private const string Url = Constants.WebsiteUrl + "Credits.json";
@@ -87,7 +87,7 @@ namespace MultiRPC.UI.Pages
             for (int i = 0; i < Constants.RetryCount; i++)
             {
                 this.RunUILogic(() => 
-                    tblLastUpdated.Text = Language.GetText("CheckForUpdates").Replace("\r\n", " "));
+                    tblLastUpdated.Text = Language.GetText(LanguageText.CheckForUpdates).Replace("\r\n", " "));
 
                 var req = await App.HttpClient.GetResponseMessage(new HttpRequestMessage(HttpMethod.Get, Url));
                 if (req is null || !req.IsSuccessStatusCode)

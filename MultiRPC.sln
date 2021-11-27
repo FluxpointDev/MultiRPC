@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaGif", "ext\avalonia
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ext", "ext", "{B7AAF9E7-1C1E-4376-BAF6-D2FCA8B39CDF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiRPC.SourceGen", "MultiRPC.SourceGen\MultiRPC.SourceGen.csproj", "{3369169D-31C0-4A74-A5A9-F2BB1EA80705}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,12 @@ Global
 		{D4EBB986-EDAC-4C0B-AB58-70E4A5C7D2A4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D4EBB986-EDAC-4C0B-AB58-70E4A5C7D2A4}.WINSTORE|Any CPU.ActiveCfg = WINSTORE|Any CPU
 		{D4EBB986-EDAC-4C0B-AB58-70E4A5C7D2A4}.WINSTORE|Any CPU.Build.0 = WINSTORE|Any CPU
+		{3369169D-31C0-4A74-A5A9-F2BB1EA80705}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3369169D-31C0-4A74-A5A9-F2BB1EA80705}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3369169D-31C0-4A74-A5A9-F2BB1EA80705}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3369169D-31C0-4A74-A5A9-F2BB1EA80705}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3369169D-31C0-4A74-A5A9-F2BB1EA80705}.WINSTORE|Any CPU.ActiveCfg = Debug|Any CPU
+		{3369169D-31C0-4A74-A5A9-F2BB1EA80705}.WINSTORE|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

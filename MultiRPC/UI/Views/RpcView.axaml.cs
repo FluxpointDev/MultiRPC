@@ -52,7 +52,6 @@ namespace MultiRPC.UI.Views
         }
         
         private static readonly Dictionary<Uri, IBrush> CachedImages = new Dictionary<Uri, IBrush>();
-        private static readonly HttpClient HttpClient = new HttpClient();
         private readonly Language _titleText = new Language();
         private readonly Language _tblText1 = new Language();
         private readonly Language _tblText2 = new Language();
@@ -232,7 +231,7 @@ namespace MultiRPC.UI.Views
                 return true;
             }
             
-            var largeImage = await HttpClient.GetResponseMessage(new HttpRequestMessage(HttpMethod.Get, uri));
+            var largeImage = await App.HttpClient.GetResponseMessage(new HttpRequestMessage(HttpMethod.Get, uri));
             if (largeImage is { IsSuccessStatusCode: true })
             {
                 await using var imageStream = await largeImage.Content.ReadAsStreamAsync();
@@ -285,9 +284,9 @@ namespace MultiRPC.UI.Views
             {
                 case ViewType.Default:
                 {
-                    _titleText.ChangeJsonNames("MultiRPC");
-                    _tblText1.ChangeJsonNames("ThankYouForUsing");
-                    _tblText2.ChangeJsonNames("ThisProgram");
+                    _titleText.ChangeJsonNames(LanguageText.MultiRPC);
+                    _tblText1.ChangeJsonNames(LanguageText.ThankYouForUsing);
+                    _tblText2.ChangeJsonNames(LanguageText.ThisProgram);
                     brdLarge.Background = LogoVisualBrush;
 
                     brdLarge.IsVisible = true;
@@ -297,9 +296,9 @@ namespace MultiRPC.UI.Views
                 break;
                 case ViewType.Default2:
                 {
-                    _titleText.ChangeJsonNames("MultiRPC");
-                    _tblText1.ChangeJsonNames("Hello");
-                    _tblText2.ChangeJsonNames("World");
+                    _titleText.ChangeJsonNames(LanguageText.MultiRPC);
+                    _tblText1.ChangeJsonNames(LanguageText.Hello);
+                    _tblText2.ChangeJsonNames(LanguageText.World);
                     brdLarge.Background = LogoVisualBrush;
 
                     brdLarge.IsVisible = true;
@@ -309,14 +308,14 @@ namespace MultiRPC.UI.Views
                 break;
                 case ViewType.Loading:
                 {
-                    _titleText.ChangeJsonNames("Loading");
+                    _titleText.ChangeJsonNames(LanguageText.Loading);
                     gridSmallImage.IsVisible = false;
                     brdLarge.IsVisible = false;
                 }
                 break;
                 case ViewType.Error:
                 {
-                    _titleText.ChangeJsonNames("Error");
+                    _titleText.ChangeJsonNames(LanguageText.Error);
 
                     tblTitle.Foreground = new SolidColorBrush(Colors.White);
                     tblText1.Text = error;

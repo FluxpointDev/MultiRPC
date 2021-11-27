@@ -3,42 +3,46 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Threading;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
-using Newtonsoft.Json;
 using TinyUpdate.Core.Logging;
 
 namespace MultiRPC
 {
     public class Language
     {
+        private readonly Lazy<LanguageObservable> _textObservable;
+        private static Dictionary<string, string> _englishLanguageJsonFileContent = null!;
+        private static Dictionary<string, string>? _languageJsonFileContent;
+        private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Language));
         static Language()
         {
-            GrabContent();
+            GrabLanguage();
         }
 
+        public Language() : this(LanguageText.NA) { }
+        public Language(params LanguageText[] jsonNames) : this(jsonNames.Select(x => x.ToString()).ToArray()) { }
         public Language(params string[] jsonNames)
         {
-            _textObservable = new Lazy<LanguageObservable>(new LanguageObservable(jsonNames));
+            _textObservable = new Lazy<LanguageObservable>(() => new LanguageObservable(jsonNames));
         }
 
+        public void ChangeJsonNames(params LanguageText[] jsonNames) => ChangeJsonNames(jsonNames.Select(x => x.ToString()).ToArray());
         public void ChangeJsonNames(params string[] jsonNames)
         {
             _textObservable.Value.ChangeJsonNames(jsonNames);
         }
-        private readonly Lazy<LanguageObservable> _textObservable;
+
         public LanguageObservable TextObservable => _textObservable.Value;
         public string Text => TextObservable.Text;
-
-        private static Dictionary<string, string> _englishLanguageJsonFileContent = null!;
-        private static Dictionary<string, string>? _languageJsonFileContent;
-        private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Language));
-
         public static event EventHandler? LanguageChanged;
+
         internal static void ChangeLanguage(string file)
         {
-            var lan = GrabLanguage(file);
+            var lan = GrabLanguageFile(file);
             if (lan != null)
             {
                 _languageJsonFileContent = lan;
@@ -46,9 +50,9 @@ namespace MultiRPC
             }
         }
         
-        private static void GrabContent()
+        private static void GrabLanguage()
         {
-            _englishLanguageJsonFileContent = GrabLanguage(GetFilePath("en-gb"))!;
+            _englishLanguageJsonFileContent = GrabLanguageFile(GetFilePath("en-gb"))!;
 
             //If we have a set language then we want to load the current languages we have
             var langName = SettingManager<GeneralSettings>.Setting.Language;
@@ -58,7 +62,7 @@ namespace MultiRPC
                 GeneralSettings.GetLanguages();
                 if (GeneralSettings.Languages.ContainsKey(langName))
                 {
-                    _languageJsonFileContent = GrabLanguage(GeneralSettings.Languages[langName]);
+                    _languageJsonFileContent = GrabLanguageFile(GeneralSettings.Languages[langName]);
                 }
             }
 
@@ -75,25 +79,27 @@ namespace MultiRPC
             {
                 var currentLangTwoLetter = currentCulture.TwoLetterISOLanguageName.ToLower();
                 _languageJsonFileContent =
-                    GrabLanguage(GetFilePath(currentLang)) 
-                    ?? GrabLanguage(GetFilePath(currentLangTwoLetter));
+                    GrabLanguageFile(GetFilePath(currentLang)) 
+                    ?? GrabLanguageFile(GetFilePath(currentLangTwoLetter));
             }
         }
 
-        private static string GetFilePath(string name) =>
-            Path.Combine(Constants.LanguageFolder, name + ".json");
-
-        private static Dictionary<string, string>? GrabLanguage(string fileLocation)
+        private static string GetFilePath(string name) => Path.Combine(Constants.LanguageFolder, name + ".json");
+        private static Dictionary<string, string>? GrabLanguageFile(string fileLocation)
         {
             if (!File.Exists(fileLocation))
             {
                 return null;
             }
            
-            Logger.Debug("{0} exists, grabbing contents", fileLocation);
             try
             {
-                return JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(fileLocation));
+                return JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(fileLocation), 
+                    new JsonSerializerOptions(JsonSerializerDefaults.General)
+                    {
+                        //We know that the file in question is safe as we provide the files 
+                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                    });
             }
             catch (Exception e)
             {
@@ -107,16 +113,18 @@ namespace MultiRPC
             return (_languageJsonFileContent?.ContainsKey(jsonName) ?? false) || _englishLanguageJsonFileContent.ContainsKey(jsonName);
         }
 
+        public static string GetText(LanguageText langText) => GetText(langText.ToString());
         public static string GetText(string? jsonName)
         {
             if (string.IsNullOrWhiteSpace(jsonName))
             {
-                return "N/A";
+                return GetText(LanguageText.NA);
             }
             if (_languageJsonFileContent?.ContainsKey(jsonName) ?? false)
             {
                 return _languageJsonFileContent[jsonName];
             }
+            //We manually have the N/A here in case it isn't seen anywhere (But that would also show a bigger issue)
             return _englishLanguageJsonFileContent.ContainsKey(jsonName) ? _englishLanguageJsonFileContent[jsonName] : "N/A";
         }
     }

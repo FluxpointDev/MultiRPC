@@ -19,7 +19,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
             }
         }
         
-        public Language Title { get; } = new Language("ProfileEdit");
+        public Language Title { get; } = new Language(LanguageText.ProfileEdit);
         
         private readonly ProfilesSettings _profiles = SettingManager<ProfilesSettings>.Setting;
         private readonly RichPresence _activeRichPresence = null!;
@@ -31,14 +31,14 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
             _newName = activeRichPresence.Name;
             InitializeComponent();
             
-            btnDone.DataContext = new Language("Done");
+            btnDone.DataContext = new Language(LanguageText.Done);
             txtNewName.AddValidation(null, s => _newName = s,
                 s =>
                 {
                     var result = string.IsNullOrWhiteSpace(s)
-                        ? new CheckResult(false, Language.GetText("EmptyProfileName"))
+                        ? new CheckResult(false, Language.GetText(LanguageText.EmptyProfileName))
                         : _profiles.Profiles.Any(x => x != _activeRichPresence && x.Name == s) ?
-                            new CheckResult(false, Language.GetText("SameProfileName")) : new CheckResult(true);
+                            new CheckResult(false, Language.GetText(LanguageText.SameProfileName)) : new CheckResult(true);
 
                     btnDone.IsEnabled = result.Valid;
                     return result;

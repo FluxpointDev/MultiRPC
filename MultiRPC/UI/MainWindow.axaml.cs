@@ -42,7 +42,7 @@ namespace MultiRPC.UI
             var trayIcon = new TrayIcon
             {
                 Icon = this.Icon,
-                ToolTipText = Language.GetText("HideMultiRPC"),
+                ToolTipText = Language.GetText(LanguageText.HideMultiRPC),
                 Command = new TrayCommand()
             };
             TrayIcon.SetIcons(this, new TrayIcons { trayIcon });
@@ -77,10 +77,10 @@ namespace MultiRPC.UI
                 case WindowState.Normal:
                 case WindowState.Maximized:
                 case WindowState.FullScreen:
-                    trayIcon.ToolTipText = Language.GetText("HideMultiRPC");
+                    trayIcon.ToolTipText = Language.GetText(LanguageText.HideMultiRPC);
                     break;
                 case WindowState.Minimized:
-                    trayIcon.ToolTipText = Language.GetText("ShowMultiRPC");
+                    trayIcon.ToolTipText = Language.GetText(LanguageText.ShowMultiRPC);
                     return;
                 default:
                     return;
@@ -89,7 +89,7 @@ namespace MultiRPC.UI
 
         private void InitializeExtra()
         {
-            var lang = new Language("MultiRPC");
+            var lang = new Language(LanguageText.MultiRPC);
             if (_control is ITitlePage titlePage)
             {
                 lang.TextObservable.Subscribe(s =>
@@ -110,20 +110,13 @@ namespace MultiRPC.UI
             }
             
             eabTitleBar.PointerPressed += (sender, args) => BeginMoveDrag(args);
-            Opened += async (sender, args) =>
+            Opened += (sender, args) =>
             {
-                //TODO: See why we need this
-                while (eabTitleBar.Height is 0 or double.NaN)
-                {
-                    await Task.Delay(10);
-                    eabTitleBar.Height = tbrTitleBar.DesiredSize.Height;
-                    if (eabTitleBar.Height != 0)
-                    {
-                        icon.Height = eabTitleBar.Height - icon.Margin.Top - icon.Margin.Bottom;
-                        icon.Width = icon.Height;
-                        _control.Margin += new Thickness(0, eabTitleBar.Height, 0, 0);
-                    }
-                }
+                eabTitleBar.Height = WindowDecorationMargin.Top;
+                tbrTitleBar.Height = eabTitleBar.Height;
+                icon.Height = eabTitleBar.Height - icon.Margin.Top - icon.Margin.Bottom;
+                icon.Width = icon.Height;
+                _control.Margin += new Thickness(0, eabTitleBar.Height, 0, 0);
             };
             grdContent.Children.Insert(1, _control);
         }

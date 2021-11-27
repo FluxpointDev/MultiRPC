@@ -21,7 +21,7 @@ namespace MultiRPC.UI.Pages.Rpc
         {
             InitializeComponent(loadXaml);
 
-            tblLookLike.DataContext = new Language("WhatItWillLookLike");
+            tblLookLike.DataContext = new Language(LanguageText.WhatItWillLookLike);
             rpcView.RpcProfile = RichPresence;
             rpcView.UpdateBackground((IBrush)Application.Current.Resources["PurpleBrush"]!);
 

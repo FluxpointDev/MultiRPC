@@ -13,6 +13,7 @@
     <PackageReference Include="Avalonia.Svg" Version="0.10.8.3" />
     <PackageReference Include="DiscordRichPresence" Version="1.0.175" />
     <PackageReference Include="Splat" Version="13.1.30" />
+    <PackageReference Include="System.IO.Pipelines" Version="6.0.0" />
     <PackageReference Include="System.Text.Json" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="TinyUpdate.Binary" Version="0.0.0.10-alpha" />
     <PackageReference Include="TinyUpdate.Github" Version="0.0.0.10-alpha" />
@@ -20,6 +21,7 @@
 
     <ProjectReference Include="..\ext\avalonia.gif\AvaloniaGif\AvaloniaGif.csproj" />
     <ProjectReference Include="..\ext\fonderie\Fonderie.INPC\Fonderie.INPC.Generator\Fonderie.INPC.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\MultiRPC.SourceGen\MultiRPC.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' " Label="Debug Packages">
@@ -28,7 +30,9 @@
   
   <ItemGroup Label="Resources">
     <AvaloniaResource Include="Assets\**" />
+
     <AvaloniaResource Remove="Assets\Language\**" />
     <Content Include="Assets\Language\**" CopyToOutputDirectory="Always" />
+    <AdditionalFiles Include="Assets\Language\en-gb.json" />
   </ItemGroup>
 </Project>

@@ -21,11 +21,11 @@ namespace MultiRPC.UI.Overlays
             }
 
             InitializeComponent();
-            tblMadeBy.Text = Language.GetText("MadeBy") + ": " + Constants.AppDeveloper;
-            rDiscordServer.Text = Language.GetText("DiscordServer") + ": ";
+            tblMadeBy.Text = Language.GetText(LanguageText.MadeBy) + ": " + Constants.AppDeveloper;
+            rDiscordServer.Text = Language.GetText(LanguageText.DiscordServer) + ": ";
             hylServerLinkUri.Text = Constants.ServerInviteCode;
-            hylServerLinkUri.Uri = "https://discord.gg/" + Constants.ServerInviteCode;
-            btnDisableDiscordCheck.DataContext = new Language("TempDisableDiscordCheck");
+            hylServerLinkUri.Uri = Constants.DiscordServerUrl;
+            btnDisableDiscordCheck.DataContext = new Language(LanguageText.TempDisableDiscordCheck);
 
             _ = WaitForDiscord();
             _ = ShowTmpButton();
@@ -69,7 +69,7 @@ namespace MultiRPC.UI.Overlays
                         break;
                     }
                     
-                    tblDiscordClientMessage.Text = Language.GetText("CantFindDiscord");
+                    tblDiscordClientMessage.Text = Language.GetText(LanguageText.CantFindDiscord);
                     await Task.Delay(750);
                 }
 
@@ -85,7 +85,7 @@ namespace MultiRPC.UI.Overlays
                     if (processCount < 4)
                     {
                         tblDiscordClientMessage.Text =
-                            $"{Language.GetText(discordClient)} {Language.GetText("IsLoading")}....";
+                            $"{Language.GetText(discordClient)} {Language.GetText(LanguageText.IsLoading)}....";
                         await Task.Delay(750);
                         continue;
                     }
@@ -95,7 +95,7 @@ namespace MultiRPC.UI.Overlays
             }
             catch
             {
-                _logger.Error(Language.GetText("ProcessFindError"));
+                _logger.Error(Language.GetText(LanguageText.ProcessFindError));
                 _ = FadeOut();
             }
         }

@@ -22,55 +22,55 @@ namespace MultiRPC.UI.Pages.Settings
             InitializeComponent();
         }
 
-        public Language? TabName { get; } = new Language("About");
+        public Language? TabName { get; } = new Language(LanguageText.About);
         public bool IsDefaultPage => true;
         public void Initialize(bool loadXaml)
         {
             tblName.Text += Assembly.GetEntryAssembly().GetSemanticVersion();
-            var madeByLang = new Language("MadeBy");
+            var madeByLang = new Language(LanguageText.MadeBy);
             madeByLang.TextObservable.Subscribe(x => tblMadeBy.Text = x + ": " + Constants.AppDeveloper);
-            tblDiscord.DataContext = new Language("Discord");
-            tblDonations.DataContext = new Language("Donations");
-            btnDonate.DataContext = new Language("ClickToDonate");
-            tblDonationInfo.DataContext = new Language("DonateMessage");
-            btnAdmin.DataContext = new Language("Admin");
-            btnChangelog.DataContext = new Language("Changelog");
-            btnCheckUpdate.DataContext = new Language("CheckForUpdates");
+            tblDiscord.DataContext = new Language(LanguageText.Discord);
+            tblDonations.DataContext = new Language(LanguageText.Donations);
+            btnDonate.DataContext = new Language(LanguageText.ClickToDonate);
+            tblDonationInfo.DataContext = new Language(LanguageText.DonateMessage);
+            btnAdmin.DataContext = new Language(LanguageText.Admin);
+            btnChangelog.DataContext = new Language(LanguageText.Changelog);
+            btnCheckUpdate.DataContext = new Language(LanguageText.CheckForUpdates);
             _ = CheckDiscordStatus();
 
-            var githubTooltipLang = new Language("GithubTooltip");
+            var githubTooltipLang = new Language(LanguageText.GithubTooltip);
             githubTooltipLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgGithub, x));
             
-            var fluxpointTooltipLang = new Language("FluxpointTooltip");
+            var fluxpointTooltipLang = new Language(LanguageText.FluxpointTooltip);
             fluxpointTooltipLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgFluxpoint, x));
  
-            var discordTooltipLang = new Language("JoinForFunBotsAndSupport");
+            var discordTooltipLang = new Language(LanguageText.JoinForFunBotsAndSupport);
             discordTooltipLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgDiscord, x));
         }
 
         private async Task CheckDiscordStatus()
         {
             brdDiscordStatus.Background = Brushes.Orange;
-            var lang = new Language("CheckingDiscordStatus");
+            var lang = new Language(LanguageText.CheckingDiscordStatus);
             tblDiscordStatus.DataContext = lang;
             var status = await DiscordStatusChecker.GetStatus();
             switch (status)
             {
                 case DiscordStatus.Operational:
                     brdDiscordStatus.Background = Brushes.Green;
-                    lang.ChangeJsonNames("Operational");
+                    lang.ChangeJsonNames(LanguageText.Operational);
                     break;
                 case DiscordStatus.PartialOutage:
                     brdDiscordStatus.Background = Brushes.OrangeRed;
-                    lang.ChangeJsonNames("PartialOutage");
+                    lang.ChangeJsonNames(LanguageText.PartialOutage);
                     break;
                 case DiscordStatus.Degraded:
                     brdDiscordStatus.Background = Brushes.OrangeRed;
-                    lang.ChangeJsonNames("DegradedPerformance");
+                    lang.ChangeJsonNames(LanguageText.DegradedPerformance);
                     break;
                 case DiscordStatus.MajorOutage:
                     brdDiscordStatus.Background = Brushes.Red;
-                    lang.ChangeJsonNames("MajorOutage");
+                    lang.ChangeJsonNames(LanguageText.MajorOutage);
                     break;
             }
         }
@@ -83,6 +83,7 @@ namespace MultiRPC.UI.Pages.Settings
         //TODO: Make cross platform
         private async void BtnAdmin_OnClick(object? sender, RoutedEventArgs e)
         {
+            //TODO: Add warning
             try
             {
                 var processInfo = new ProcessStartInfo(Assembly.GetExecutingAssembly().CodeBase.Replace(".dll", ".exe")) //Net Core tell's us the location of the dll, not the exe so we point it back to the exe
@@ -124,14 +125,13 @@ namespace MultiRPC.UI.Pages.Settings
             Constants.WebsiteUrl.OpenInBrowser();
         }
 
-        private const string DiscordServerUrl = "https://discord.gg/" + Constants.ServerInviteCode;
         private async void ImgDiscord_OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            await MessageBox.Show(Language.GetText("JoinServerMessage"),
-                Language.GetText("DiscordServer"),
+            await MessageBox.Show(Language.GetText(LanguageText.JoinServerMessage),
+                Language.GetText(LanguageText.DiscordServer),
                 MessageBoxButton.Ok,
                 MessageBoxImage.Information);
-            DiscordServerUrl.OpenInBrowser();
+            Constants.DiscordServerUrl.OpenInBrowser();
         }
     }
 }

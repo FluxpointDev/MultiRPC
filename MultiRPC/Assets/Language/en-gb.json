@@ -235,5 +235,6 @@
   "MajorOutage": "Major outage!",
   "LogLevel": "Log Level",
   "GithubTooltip": "Access all the source code",
-  "FluxpointTooltip": "Look at the other services that Fluxpoint offer!"
+  "FluxpointTooltip": "Look at the other services that Fluxpoint offer!",
+  "NA": "N/A"
 }

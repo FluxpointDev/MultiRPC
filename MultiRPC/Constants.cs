@@ -51,6 +51,11 @@ namespace MultiRPC
         public const string ServerInviteCode = "TjF6QDC";
 
         /// <summary>
+        /// Url for the discord server
+        /// </summary>
+        public const string DiscordServerUrl = "https://discord.gg/" + ServerInviteCode;
+
+        /// <summary>
         /// Serializer for JSON
         /// </summary>
         public static JsonSerializerOptions JsonSerializer { get; } = new JsonSerializerOptions

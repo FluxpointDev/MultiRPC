@@ -24,8 +24,8 @@ namespace MultiRPC.Setting.Settings
             Profile = new RpcProfile
             {
                 LargeKey = "multirpc",
-                Details = Language.GetText("Hello"),
-                State = Language.GetText("World")
+                Details = Language.GetText(LanguageText.Hello),
+                State = Language.GetText(LanguageText.World)
             }
         };
 

@@ -11,7 +11,7 @@ namespace MultiRPC
         {
             return new Dictionary<string, string>
             {
-                {Language.GetText("NoImage"), ""},
+                {Language.GetText(LanguageText.NoImage), ""},
                 {"Discord", "https://i.imgur.com/QN5WA4W.png"},
                 {"MultiRPC", "https://i.imgur.com/d6OLF2z.png"},
                 {"Firefox", "https://i.imgur.com/oTuovMT.png"},
@@ -28,12 +28,12 @@ namespace MultiRPC
                 {"Pepe", "https://i.imgur.com/7ybyrw7.png"},
                 {"Trollface", "https://i.imgur.com/tanLvrt.png"},
                 {"Doge", "https://i.imgur.com/ytpmvjg.png"},
-                {Language.GetText("Christmas"), "https://i.imgur.com/NF2enEO.png"},
-                {Language.GetText("Present"), "https://i.imgur.com/qMfJKt6.png"},
+                {Language.GetText(LanguageText.Christmas), "https://i.imgur.com/NF2enEO.png"},
+                {Language.GetText(LanguageText.Present), "https://i.imgur.com/qMfJKt6.png"},
                 {"Neko", "https://i.imgur.com/l2RsYY7.png"},
-                {Language.GetText("Popcorn"), "https://i.imgur.com/xplfztu.png"},
+                {Language.GetText(LanguageText.Popcorn), "https://i.imgur.com/xplfztu.png"},
                 {"Skype", "https://i.imgur.com/PjQFB6d.png"},
-                {Language.GetText("Games"), "https://i.imgur.com/lPrT5BG.png"},
+                {Language.GetText(LanguageText.Games), "https://i.imgur.com/lPrT5BG.png"},
                 {"Steam", "https://i.imgur.com/bKxJ7Lj.png"},
                 {"Minecraft", "https://i.imgur.com/vnw6Z8X.png"},
                 {"Coke", "https://i.imgur.com/GAsmn3P.png"}

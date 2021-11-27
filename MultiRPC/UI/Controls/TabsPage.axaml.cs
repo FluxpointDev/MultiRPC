@@ -27,7 +27,7 @@ namespace MultiRPC.UI.Controls
                     new Point(), 0, PointerPointProperties.None, KeyModifiers.None));
         }
 
-        private static Language naLang = new Language("N/A");
+        private static Language naLang = new Language(LanguageText.NA);
         private Rectangle? _activePageRectangle;
         private Control MakeTab(ITabPage page)
         {

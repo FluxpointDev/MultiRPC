@@ -49,10 +49,10 @@ namespace MultiRPC.UI
         {
             InitializeComponent();
             
-            btnNo.Content = Language.GetText("No");
-            btnYes.Content = Language.GetText("Yes");
-            btnOk.Content = Language.GetText("Ok");
-            btnCancel.Content = Language.GetText("Cancel");
+            btnNo.Content = Language.GetText(LanguageText.No);
+            btnYes.Content = Language.GetText(LanguageText.Yes);
+            btnOk.Content = Language.GetText(LanguageText.Ok);
+            btnCancel.Content = Language.GetText(LanguageText.Cancel);
             tblText.Text = messageBoxText;
 
             if (messageBoxButton == MessageBoxButton.Ok)

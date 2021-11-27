@@ -25,17 +25,17 @@ namespace MultiRPC.Discord
 
             if (responseMessage is null or { IsSuccessStatusCode: false })
             {
-                return (false, Language.GetText("DiscordAPIDown"));
+                return (false, Language.GetText(LanguageText.DiscordAPIDown));
             }
             if (responseMessage.StatusCode == HttpStatusCode.BadRequest)
             {
-                return (false, Language.GetText("ClientIDIsNotValid"));
+                return (false, Language.GetText(LanguageText.ClientIDIsNotValid));
             }
 
             var response = JsonSerializer.Deserialize<ClientCheckResult>(await responseMessage.Content.ReadAsStreamAsync());
 
             return !string.IsNullOrEmpty(response?.Message) ?
-                (false, $"{Language.GetText("ClientIDIsNotValid")}\r\n{response?.Message}")
+                (false, $"{Language.GetText(LanguageText.ClientIDIsNotValid)}\r\n{response?.Message}")
                 : (true, response!.Name);
         }
     }

@@ -16,7 +16,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
     public partial class SharePage : UserControl, ITitlePage
     {
         private readonly ILogging _logging = LoggingCreator.CreateLogger(nameof(SharePage));
-        public Language Title { get; } = new Language("ProfileShare");
+        public Language Title { get; } = new Language(LanguageText.ProfileShare);
 
         public SharePage()
         {
@@ -32,9 +32,9 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
             _activeRichPresence = activeRichPresence;
             InitializeComponent();
 
-            tblGuild.DataContext = new Language("ShareHelp");
-            btnExport.DataContext = new Language("Export");
-            btnImport.DataContext = new Language("Import");
+            tblGuild.DataContext = new Language(LanguageText.ShareHelp);
+            btnExport.DataContext = new Language(LanguageText.Export);
+            btnImport.DataContext = new Language(LanguageText.Import);
             btnImport.IsEnabled = false;
         }
 
@@ -45,7 +45,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
                 var profile = JsonSerializer.Deserialize<RichPresence>(txtData.Text.Base64Decode());
                 if (profile == null)
                 {
-                    await MessageBox.Show(Language.GetText("SharingError"));
+                    await MessageBox.Show(Language.GetText(LanguageText.SharingError));
                     this.TryClose();
                     return;
                 }
@@ -70,7 +70,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
                 _logging.Error(exception);
             }
 
-            await MessageBox.Show(Language.GetText("SharingError"));
+            await MessageBox.Show(Language.GetText(LanguageText.SharingError));
             this.TryClose();
         }
 
@@ -79,7 +79,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
             var profileBase64 = JsonSerializer.Serialize(_activeRichPresence);
             await Application.Current.Clipboard.SetTextAsync(profileBase64 = profileBase64.Base64Encode());
             txtData.Text = profileBase64;
-            await MessageBox.Show(Language.GetText("ProfileCopyMessage"));
+            await MessageBox.Show(Language.GetText(LanguageText.ProfileCopyMessage));
         }
     }
 }
