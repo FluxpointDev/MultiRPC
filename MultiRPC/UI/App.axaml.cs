@@ -1,4 +1,5 @@
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -10,7 +11,10 @@ using MultiRPC.UI.Pages.Rpc;
 using MultiRPC.UI.Pages.Rpc.Custom;
 using MultiRPC.UI.Pages.Settings;
 using Splat;
+using TinyUpdate.Binary;
+using TinyUpdate.Core.Extensions;
 using TinyUpdate.Core.Update;
+using TinyUpdate.Github;
 
 namespace MultiRPC.UI
 {

@@ -1,5 +1,7 @@
 using System;
 using System.Reflection;
+using Avalonia;
+using Avalonia.Media;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings.Attributes;
 using MultiRPC.UI.Controls;
@@ -19,7 +21,10 @@ namespace MultiRPC.UI.Pages.Settings
         public override void Initialize(bool loadXaml)
         {
             InitializeComponent(loadXaml);
+            ContentPadding = new Thickness(0);
+            
             var tabPage = new TabsPage();
+            tabPage.Background = (IBrush)Application.Current.Resources["ThemeAccentBrush"]!;
             tabPage.AddTabs(new AboutSettingsTab());
             
             foreach (var setting in Locator.Current.GetServices<BaseSetting>())
@@ -68,7 +73,11 @@ namespace MultiRPC.UI.Pages.Settings
                         continue;
                     }
 
-                    settingPage ??= new SettingsTab { TabName = new Language(setting.Name) };
+                    settingPage ??= new SettingsTab
+                    {
+                        TabName = new Language(setting.Name),
+                        Margin = new Thickness(10)
+                    };
                     if (settingProperty.PropertyType.BaseType == typeof(Enum))
                     {
                         var enumDropdown = new EnumDropdown(settingProperty.PropertyType, name, setting, getMethod, setMethod);

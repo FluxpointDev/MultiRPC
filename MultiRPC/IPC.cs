@@ -167,8 +167,18 @@ namespace MultiRPC
 
             while (true)
             {
-                ReadResult result = await reader.ReadAsync();
-                ReadOnlySequence<byte> buffer = result.Buffer;
+                ReadResult result;
+                ReadOnlySequence<byte> buffer;
+                try
+                {
+                    result = await reader.ReadAsync();
+                    buffer = result.Buffer;
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e);
+                    break;
+                }
 
                 while (TryReadLine(ref buffer, out ReadOnlySequence<byte> line))
                 {

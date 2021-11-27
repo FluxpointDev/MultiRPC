@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:MultiRPC.UI.Pages.Settings"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             Margin="10"
              x:Class="MultiRPC.UI.Pages.Settings.AboutSettingsTab">
     <UserControl.Styles>
         <Style Selector="TextBlock.title">

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Timers;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -48,7 +49,14 @@ namespace MultiRPC.UI.Views
             tblText1.DataContext = _tblText1;
             tblText2.DataContext = _tblText2;
             ViewType = ViewType.Default;
-            _rpcClient.Disconnected += (sender, args) => _timerTime = null;
+            _timer = new Timer(1000);
+            _timer.Elapsed += TimerOnElapsed;
+            _rpcClient.Disconnected += (sender, args) =>
+            {
+                _timer.Stop();
+                _timerTime = null;
+                tblTime.Text = string.Empty;
+            };
         }
         
         private static readonly Dictionary<Uri, IBrush> CachedImages = new Dictionary<Uri, IBrush>();
@@ -111,10 +119,19 @@ namespace MultiRPC.UI.Views
         }
         
         private DateTime? _timerTime;
+        private readonly Timer _timer;
         private void RpcClientOnPresenceUpdated(object? sender, PresenceMessage e) => this.RunUILogic(() =>
         {
             _timerTime = e.Presence.Timestamps?.Start;
-            _ = RunTimer();
+            if (_timerTime != null)
+            {
+                _timer.Start();
+            }
+            else
+            {
+                _timer.Stop();
+                tblTime.Text = string.Empty;
+            }
             
             tblTitle.Text = e.Name;
             tblText1.Text = e.Presence.Details;
@@ -201,27 +218,13 @@ namespace MultiRPC.UI.Views
             }
         }
 
-        private bool _timerRunning;
-        private async Task RunTimer()
+        private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
         {
-            if (_timerRunning)
-            {
-                return;
-            }
-            _timerRunning = true;
+            var ts = DateTime.UtcNow.Subtract(_timerTime.Value);
 
-            while (_timerTime.HasValue)
-            {
-                var ts = DateTime.UtcNow.Subtract(_timerTime.Value);
-
-                var text = ts.Hours > 0 ? ts.Hours.ToString("00") + ":" : string.Empty;
-                text += $"{ts.Minutes:00}:{ts.Seconds:00}";
-                tblTime.Text = text;
-                await Task.Delay(1000);
-            }
-
-            _timerRunning = false;
-            tblText1.Text = string.Empty;
+            var text = ts.Hours > 0 ? ts.Hours.ToString("00") + ":" : string.Empty;
+            text += $"{ts.Minutes:00}:{ts.Seconds:00}";
+            this.RunUILogic(() => tblTime.Text = text);
         }
 
         private async Task<bool> ProcessUri(Uri uri)

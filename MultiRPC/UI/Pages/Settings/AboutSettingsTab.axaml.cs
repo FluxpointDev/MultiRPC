@@ -100,7 +100,7 @@ namespace MultiRPC.UI.Pages.Settings
             
             try
             {
-                var processInfo = new ProcessStartInfo(Assembly.GetExecutingAssembly().CodeBase.Replace(".dll", ".exe")) //Net Core tell's us the location of the dll, not the exe so we point it back to the exe
+                var processInfo = new ProcessStartInfo(Assembly.GetExecutingAssembly().Location.Replace(".dll", ".exe")) //Net Core tell's us the location of the dll, not the exe so we point it back to the exe
                 {
                     UseShellExecute = true,
                     Verb = "runas"
@@ -121,12 +121,12 @@ namespace MultiRPC.UI.Pages.Settings
 
         private async void BtnChangelog_OnClick(object? sender, RoutedEventArgs e)
         {
-            await MessageBox.Show("TO ADD");
+            await MessageBox.Show(Language.GetText(LanguageText.ToAdd));
         }
 
         private async void BtnCheckUpdate_OnClick(object? sender, RoutedEventArgs e)
         {
-            await MessageBox.Show("TO ADD");
+            await MessageBox.Show(Language.GetText(LanguageText.ToAdd));
         }
 
         private void ImgGithub_OnPointerPressed(object? sender, PointerPressedEventArgs e)
