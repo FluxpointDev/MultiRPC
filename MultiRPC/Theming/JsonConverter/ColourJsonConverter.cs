@@ -4,8 +4,8 @@ using System.Text.Json;
 using Avalonia.Media;
 using System.Text.Json.Serialization;
 
-namespace MultiRPC.Theme.JsonConverter;
-public class LegacyColourJsonConverter : JsonConverter<Color>
+namespace MultiRPC.Theming.JsonConverter;
+public class ColourJsonConverter : JsonConverter<Color>
 {
     public override Color Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

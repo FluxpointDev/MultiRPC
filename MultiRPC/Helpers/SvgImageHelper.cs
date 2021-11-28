@@ -5,11 +5,11 @@ namespace MultiRPC.Helpers
 {
     public static class SvgImageHelper
     {
-        public static SvgImage LoadImage(string path, string basePath = "avares://MultiRPC/Assets/", Uri? baseUri = null)
+        public static SvgImage LoadImage(string path)
         {
             return new SvgImage
             {
-                Source = SvgSource.Load(basePath + path, baseUri)
+                Source = AssetManager.LoadSvgImage(path)
             };
         }
     }

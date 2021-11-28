@@ -34,13 +34,20 @@ namespace MultiRPC.UI.Views
         private readonly RpcClient _rpcClient;
         static RpcView()
         {
+            AssetManager.ReloadAssets += AssetManagerOnReloadAssets;
+            AssetManagerOnReloadAssets(null, EventArgs.Empty);
+        }
+
+        private static void AssetManagerOnReloadAssets(object? sender, EventArgs e)
+        {
             LogoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") });
             ErrorVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Icons/Delete.svg") });
         }
-        
+
         public RpcView()
         {
             InitializeComponent();
+            AssetManager.ReloadAssets += (sender, args) => this.RunUILogic(() => UpdateFromType());
             _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException();
 
             brdLarge.Background = LogoVisualBrush;
@@ -63,8 +70,8 @@ namespace MultiRPC.UI.Views
         private readonly Language _titleText = new Language();
         private readonly Language _tblText1 = new Language();
         private readonly Language _tblText2 = new Language();
-        private static readonly VisualBrush LogoVisualBrush;
-        private static readonly VisualBrush ErrorVisualBrush;
+        private static VisualBrush LogoVisualBrush;
+        private static VisualBrush ErrorVisualBrush;
 
         private ViewType _viewType;
         public ViewType ViewType
@@ -164,7 +171,7 @@ namespace MultiRPC.UI.Views
         {
             if (presence != null)
             {
-                if ( _rpcProfile != null)
+                if (_rpcProfile != null)
                 {
                     _rpcProfile.PropertyChanged -= PresenceOnPropertyChanged;
                 }

@@ -8,6 +8,7 @@ using Avalonia.Svg;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
+using MultiRPC.Theming;
 using MultiRPC.UI.Pages;
 using ShimSkiaSharp;
 
@@ -83,19 +84,29 @@ namespace MultiRPC.UI
         private Button? _selectedBtn;
         private Button AddSidePage(ISidePage page)
         {
-            var source = SvgSource.Load("avares://MultiRPC/Assets/" + page.IconLocation + ".svg", null);
+            var source = AssetManager.LoadSvgImage(page.IconLocation + ".svg");
             UpdateIconColour(source, (Color)Application.Current.Resources["ThemeAccentColor3"]!);
+            var img = new Image
+            {
+                Margin = new Thickness(4.5),
+                Source = new SvgImage
+                {
+                    Source = source
+                }
+            };
             var btn = new Button
             {
-                Content = new Image
-                {
-                    Margin = new Thickness(4.5),
-                    Source = new SvgImage
-                    {
-                        Source = source
-                    }
-                },
+                Content = img,
                 Tag = source
+            };
+            AssetManager.ReloadAssets += (sender, args) =>
+            {
+                var newSource = AssetManager.LoadSvgImage(page.IconLocation + ".svg");
+                UpdateIconColour(source, (Color)Application.Current.Resources["ThemeAccentColor3"]!);
+                img.Source = new SvgImage
+                {
+                    Source = newSource
+                };
             };
 
             //Update the colour based on if it's the current page or not when this changes

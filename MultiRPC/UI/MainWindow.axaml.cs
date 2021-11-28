@@ -1,9 +1,14 @@
 using System;
+using System.IO;
+using System.Linq;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Svg;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
+using MultiRPC.Theming;
 using MultiRPC.Utils;
 
 namespace MultiRPC.UI
@@ -52,6 +57,37 @@ namespace MultiRPC.UI
                 ChangeTrayIconText(trayIcon);
                 ShowInTaskbar = !(!disableSettings.HideTaskbarIcon && x == WindowState.Minimized);
             });
+            
+            DragDrop.SetAllowDrop(this, true);
+            AddHandler(DragDrop.DropEvent, DragOver);
+            AddHandler(DragDrop.DragEnterEvent, DragEnter);
+        }
+
+        private void DragEnter(object? sender, DragEventArgs e)
+        {
+            // Only allow Copy or Link as Drop Operations.
+            e.DragEffects = e.DragEffects & (DragDropEffects.Copy | DragDropEffects.Link);
+
+            // Only allow if the dragged data contains text or filenames.
+            if (!e.Data.Contains(DataFormats.FileNames))
+                e.DragEffects = DragDropEffects.None;
+        }
+
+        private void DragOver(object? sender, DragEventArgs e)
+        {
+            // Only allow if the dragged data contains filenames.
+            if (!e.Data.Contains(DataFormats.FileNames))
+            {
+                e.DragEffects = DragDropEffects.None;
+                return;
+            }
+
+            var file = e.Data.GetFileNames().Last();
+            var ext = Path.GetExtension(file);
+            if (ext is Constants.ThemeFileExtension or Constants.LegacyThemeFileExtension)
+            {
+                Theme.Load(file)?.Apply();
+            }
         }
         
         private readonly Control _control;
@@ -89,6 +125,12 @@ namespace MultiRPC.UI
 
         private void InitializeExtra()
         {
+            AssetManager.ReloadAssets += AssetManagerOnReloadAssets;
+            icon.Source = new SvgImage
+            {
+                Source = AssetManager.LoadSvgImage("Logo.svg")
+            };
+            
             var lang = new Language(LanguageText.MultiRPC);
             if (_control is ITitlePage titlePage)
             {
@@ -110,6 +152,14 @@ namespace MultiRPC.UI
                 _control.Margin += new Thickness(0, eabTitleBar.Height, 0, 0);
             };
             grdContent.Children.Insert(1, _control);
+        }
+
+        private void AssetManagerOnReloadAssets(object? sender, EventArgs e)
+        {
+            icon.Source = new SvgImage
+            {
+                Source = AssetManager.LoadSvgImage("Logo.svg")
+            };
         }
     }
 

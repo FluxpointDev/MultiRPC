@@ -7,6 +7,8 @@
     <PublishTrimmed>true</PublishTrimmed>
     <Configurations>Debug;Release;WINSTORE</Configurations>
     <Platforms>AnyCPU</Platforms>
+    <Version>7.0</Version>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
   </PropertyGroup>
   <ItemGroup Label="Packages">
     <PackageReference Include="Avalonia.Desktop" Version="0.10.10" />

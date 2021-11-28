@@ -9,6 +9,8 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Avalonia.Svg;
+using MultiRPC.Helpers;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
@@ -33,7 +35,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
         }
         public override event EventHandler? PresenceChanged;
         public override bool PresenceValid => _rpcControl.RpcValid;
-        public override event EventHandler<bool> PresenceValidChanged;
+        public override event EventHandler<bool>? PresenceValidChanged;
 
         private readonly ProfilesSettings _profilesSettings = SettingManager<ProfilesSettings>.Setting;
         private RichPresence _activeProfile = null!;
@@ -49,6 +51,9 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
                 ContentPadding = new Thickness(0);
             }
             InitializeComponent(loadXaml);
+            
+            _svgImage = SvgImageHelper.LoadImage("Icons/Help.svg");
+            AssetManager.ReloadAssets += (sender, args) => _svgImage = SvgImageHelper.LoadImage("Icons/Help.svg");
             
             //Setup the RPC control
             _rpcControl = new BaseRpcControl
@@ -122,10 +127,12 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
                 _helpImage.IsVisible = stpHelpIcons.IsVisible;
             };
         }
-        
+
+        private SvgImage _svgImage;
         private Image MakeHelpImage(string helpImage)
         {
-            var image = new Image { Classes = { "help" }, Tag = helpImage };
+            var image = new Image { Classes = { "help" }, Tag = helpImage, Source = _svgImage };
+            AssetManager.ReloadAssets += (sender, args) => image.Source = _svgImage;
             image.PointerPressed += ImageOnPointerPressed;
             return image;
         }

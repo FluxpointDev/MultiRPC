@@ -71,7 +71,12 @@ namespace MultiRPC
         /// <summary>
         /// The theme's file extension
         /// </summary>
-        public const string ThemeFileExtension = ".multirpctheme";
+        public const string LegacyThemeFileExtension = ".multirpctheme";
+
+        /// <summary>
+        /// The theme's file extension
+        /// </summary>
+        public const string ThemeFileExtension = ".multitheme";
 
         /// <summary>
         /// The folder with all the languages

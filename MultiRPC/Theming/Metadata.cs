@@ -1,8 +1,8 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace MultiRPC.Theme;
-public class LegacyMetadata
+namespace MultiRPC.Theming;
+public class Metadata
 {
     [JsonPropertyName("MultiRPCVersion")]
     public Version Version { get; init; }

@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 using Avalonia.Media;
 
-namespace MultiRPC.Theme;
-public class LegacyColours
+namespace MultiRPC.Theming;
+public class Colours
 {
     [JsonPropertyName("AccentColour1")]
     public Color ThemeAccentColor { get; init; }
