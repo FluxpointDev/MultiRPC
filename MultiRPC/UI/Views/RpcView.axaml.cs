@@ -34,12 +34,8 @@ namespace MultiRPC.UI.Views
         private readonly RpcClient _rpcClient;
         static RpcView()
         {
-            AssetManager.ReloadAssets += AssetManagerOnReloadAssets;
-            AssetManagerOnReloadAssets(null, EventArgs.Empty);
-        }
-
-        private static void AssetManagerOnReloadAssets(object? sender, EventArgs e)
-        {
+            AssetManager.RegisterForAssetReload("Logo.svg", () => LogoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") }));
+            AssetManager.RegisterForAssetReload("Icons/Delete.svg", () => ErrorVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Icons/Delete.svg") }));
             LogoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") });
             ErrorVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Icons/Delete.svg") });
         }
@@ -49,6 +45,9 @@ namespace MultiRPC.UI.Views
             InitializeComponent();
             AssetManager.ReloadAssets += (sender, args) => this.RunUILogic(() => UpdateFromType());
             _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException();
+            gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
+            AssetManager.RegisterForAssetReload("Loading.gif",
+                () => gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif"));
 
             brdLarge.Background = LogoVisualBrush;
 
@@ -275,7 +274,7 @@ namespace MultiRPC.UI.Views
             tblText1.IsVisible = _viewType is not ViewType.Loading or ViewType.LocalRichPresence;
             tblText2.IsVisible = tblText1.IsVisible && _viewType is not ViewType.Error;
             tblTime.IsVisible = _viewType == ViewType.RpcRichPresence;
-            imgGif.IsVisible = _viewType == ViewType.Loading;
+            gifLoading.IsVisible = _viewType == ViewType.Loading;
             
             var brush = _viewType switch
             {

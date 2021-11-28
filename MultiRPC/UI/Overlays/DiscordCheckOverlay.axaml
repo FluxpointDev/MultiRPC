@@ -25,7 +25,7 @@
     </UserControl.Styles>
     <StackPanel HorizontalAlignment="Center" Margin="10">
         <Grid ColumnDefinitions="Auto,Auto">
-            <Svg x:Name="icon" Height="75" Path="/Assets/Logo.svg" />
+            <Image x:Name="imgIcon" Height="75" />
             <StackPanel Margin="10,0,0,0" Grid.Column="1" VerticalAlignment="Center">
                 <TextBlock FontSize="18" FontWeight="SemiBold" Name="tblMultiRPC" Text="MultiRPC" />
                 <TextBlock Name="tblMadeBy" Margin="0,5" />
@@ -36,7 +36,7 @@
             </StackPanel>
         </Grid>
         <TextBlock HorizontalAlignment="Center" Name="tblDiscordClientMessage" Margin="0,6" />
-        <avaloniaGif:GifImage Width="50" SourceUriRaw="avares://MultiRPC/Assets/Loading.gif" />
+        <avaloniaGif:GifImage Width="50" Height="50" x:Name="gifLoading" Stretch="Uniform" StretchDirection="Both" />
         <Button Margin="0,5,0,0" Name="btnDisableDiscordCheck" Content="{Binding TextObservable^}" 
                 Opacity="0" Click="BtnDisableDiscordCheck_OnClick" HorizontalAlignment="Stretch" />
     </StackPanel>

@@ -10,7 +10,7 @@
         <Style Selector="TextBlock.title">
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
-        <Style Selector="Svg.icon">
+        <Style Selector="Image.icon">
             <Setter Property="Height" Value="27" />
             <Setter Property="Opacity" Value="0.6" />
             <Setter Property="Width" Value="{TemplateBinding Height}" />
@@ -20,7 +20,7 @@
                 </Transitions>
             </Setter>
         </Style>
-        <Style Selector="Svg.icon:pointerover">
+        <Style Selector="Image.icon:pointerover">
             <Setter Property="Opacity" Value="1" />
         </Style>
         <Style Selector="Border.icon">
@@ -39,15 +39,15 @@
     </UserControl.Styles>
     <Grid ColumnDefinitions="Auto *" RowDefinitions="Auto Auto Auto" Margin="0,0,0,10">
         <StackPanel Orientation="Horizontal">
-            <Svg Height="92" Width="92" Path="/Assets/Logo.svg" />
+            <Image Height="92" Width="92" x:Name="imgIcon" />
             <StackPanel Spacing="6" Margin="7,0,0,0">
                 <TextBlock Text="MultiRPC - " x:Name="tblName" Classes="title" />
                 <TextBlock x:Name="tblMadeBy" />
                 <StackPanel Orientation="Horizontal" Spacing="7">
-                    <Svg Classes="icon" Path="/Assets/Icons/Github.svg" x:Name="imgGithub" PointerPressed="ImgGithub_OnPointerPressed" />
-                    <Svg Classes="icon" Path="/Assets/Icons/Fluxpoint.svg" x:Name="imgFluxpoint" PointerPressed="ImgFluxpoint_OnPointerPressed" />
-                    <Border Classes="icon" Height="27" Width="27" CornerRadius="27" Background="{DynamicResource Purple}" x:Name="imgDiscord" PointerPressed="ImgDiscord_OnPointerPressed">
-                        <Svg Margin="5" Path="/Assets/Icons/Discord.svg" />
+                    <Image Classes="icon" x:Name="imgGithub" PointerPressed="ImgGithub_OnPointerPressed" />
+                    <Image Classes="icon" x:Name="imgFluxpoint" PointerPressed="ImgFluxpoint_OnPointerPressed" />
+                    <Border Classes="icon" Height="27" Width="27" CornerRadius="27" Background="{DynamicResource Purple}" x:Name="brdDiscord" PointerPressed="ImgDiscord_OnPointerPressed">
+                        <Image x:Name="imgDiscord" Margin="5" />
                     </Border>
                 </StackPanel>
             </StackPanel>

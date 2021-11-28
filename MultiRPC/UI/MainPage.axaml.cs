@@ -84,7 +84,8 @@ namespace MultiRPC.UI
         private Button? _selectedBtn;
         private Button AddSidePage(ISidePage page)
         {
-            var source = AssetManager.LoadSvgImage(page.IconLocation + ".svg");
+            var key = page.IconLocation + ".svg";
+            var source = AssetManager.LoadSvgImage(key);
             UpdateIconColour(source, (Color)Application.Current.Resources["ThemeAccentColor3"]!);
             var img = new Image
             {
@@ -99,15 +100,15 @@ namespace MultiRPC.UI
                 Content = img,
                 Tag = source
             };
-            AssetManager.ReloadAssets += (sender, args) =>
+            AssetManager.RegisterForAssetReload(key, () =>
             {
                 var newSource = AssetManager.LoadSvgImage(page.IconLocation + ".svg");
-                UpdateIconColour(source, (Color)Application.Current.Resources["ThemeAccentColor3"]!);
+                UpdateIconColour(newSource, (Color)Application.Current.Resources["ThemeAccentColor3"]!);
                 img.Source = new SvgImage
                 {
                     Source = newSource
                 };
-            };
+            });
 
             //Update the colour based on if it's the current page or not when this changes
             Application.Current.GetResourceObservable("ThemeAccentColor3").Subscribe(x =>

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using MultiRPC.Extensions;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using TinyUpdate.Core.Logging;
@@ -26,6 +27,10 @@ namespace MultiRPC.UI.Overlays
             hylServerLinkUri.Text = Constants.ServerInviteCode;
             hylServerLinkUri.Uri = Constants.DiscordServerUrl;
             btnDisableDiscordCheck.DataContext = new Language(LanguageText.TempDisableDiscordCheck);
+            imgIcon.AddSvgAsset("Logo.svg");
+            gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
+            AssetManager.RegisterForAssetReload("Loading.gif",
+                () => gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif"));
 
             _ = WaitForDiscord();
             _ = ShowTmpButton();

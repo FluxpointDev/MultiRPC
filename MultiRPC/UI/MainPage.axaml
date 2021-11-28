@@ -33,7 +33,7 @@
         <Grid Grid.Column="1">
             <Border x:Name="contentBorder" CornerRadius="15,15,0,0" Margin="0,105,0,0">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" >
-                    <ContentControl CornerRadius="{Binding #contentBorder.CornerRadius}" x:Name="cclContent" />
+                    <ContentControl x:Name="cclContent" />
                 </ScrollViewer>
             </Border>
             

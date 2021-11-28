@@ -51,7 +51,12 @@ namespace MultiRPC.UI.Pages.Settings
             fluxpointTooltipLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgFluxpoint, x));
  
             var discordTooltipLang = new Language(LanguageText.JoinForFunBotsAndSupport);
-            discordTooltipLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgDiscord, x));
+            discordTooltipLang.TextObservable.Subscribe(x => ToolTip.SetTip(brdDiscord, x));
+            
+            imgIcon.AddSvgAsset("Logo.svg");
+            imgGithub.AddSvgAsset("Icons/Github.svg");
+            imgFluxpoint.AddSvgAsset("Icons/Fluxpoint.svg");
+            imgDiscord.AddSvgAsset("Icons/Discord.svg");
         }
 
         private async Task CheckDiscordStatus()

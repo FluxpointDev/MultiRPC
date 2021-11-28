@@ -6,12 +6,11 @@
          mc:Ignorable="d"
          d:DesignWidth="800"
          d:DesignHeight="450"
-         Background="{DynamicResource ThemeAccentBrush}"
          x:Class="MultiRPC.UI.Pages.Rpc.Custom.CustomPage">
     <UserControl.Styles>
-        <Style Selector="Svg">
+        <Style Selector="Image">
             <Setter Property="Width" Value="38" />
-            <Setter Property="Height" Value="38" />
+            <Setter Property="Height" Value="{TemplateBinding Width}" />
             <Setter Property="Opacity" Value="0.6" />
             <Setter Property="Transitions">
                 <Setter.Value>
@@ -21,38 +20,30 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style Selector="Svg:pointerover">
+        <Style Selector="Image:pointerover">
             <Setter Property="Opacity" Value="1" />
         </Style>
         <Style Selector="Button.activeProfile">
             <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2Hover}" />
         </Style>
-        <Style Selector="Image">
-            <Setter Property="Transitions">
-                <Setter.Value>
-                    <Transitions>
-                        <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="QuadraticEaseIn" />
-                    </Transitions>
-                </Setter.Value>
-            </Setter>
+        <Style Selector="Image.selected">
+            <Setter Property="Opacity" Value="1" />
         </Style>
         <Style Selector="Image.help">
             <Setter Property="Width" Value="20" />
-            <Setter Property="Height" Value="{TemplateBinding Width}" />
             <Setter Property="Margin" Value="0,4,0,4" />
-            <Setter Property="Opacity" Value="0.6" />
         </Style>
     </UserControl.Styles>
-    <Border x:Name="brdContent" CornerRadius="15, 15, 0, 0">
+    <Border x:Name="brdContent" Background="{DynamicResource ThemeAccentBrush}">
         <Grid x:Name="grdContent" RowDefinitions="Auto Auto *">
-            <WrapPanel x:Name="wrpProfileSelector" MaxWidth="750" Margin="10,10,0,0" />
+            <WrapPanel x:Name="wrpProfileSelector" MaxWidth="750" Margin="10,10,0,0" HorizontalAlignment="Left" />
             <StackPanel Spacing="5" Grid.Row="1" x:Name="stpProfileEditor" Height="40" Orientation="Horizontal" Margin="10,7,0,7">
                 <TextBlock FontWeight="SemiBold" x:Name="tblProfileName" VerticalAlignment="Center" />
                 <Rectangle Margin="0,2" Fill="White" Width="1" VerticalAlignment="Stretch" />
-                <Svg x:Name="imgProfileEdit" Path="/Assets/Icons/Pencil.svg" PointerPressed="ImgProfileEdit_OnPointerPressed" />
-                <Svg x:Name="imgProfileShare" Path="/Assets/Icons/Share.svg" PointerPressed="ImgProfileShare_OnPointerPressed" />
-                <Svg x:Name="imgProfileAdd" Path="/Assets/Icons/Add.svg" PointerPressed="ImgProfileAdd_OnPointerPressed" />
-                <Svg x:Name="imgProfileDelete" Path="/Assets/Icons/Delete.svg" PointerPressed="ImgProfileDelete_OnPointerPressed" IsVisible="False" />
+                <Image x:Name="imgProfileEdit" PointerPressed="ImgProfileEdit_OnPointerPressed" />
+                <Image x:Name="imgProfileShare" PointerPressed="ImgProfileShare_OnPointerPressed" />
+                <Image x:Name="imgProfileAdd" PointerPressed="ImgProfileAdd_OnPointerPressed" />
+                <Image x:Name="imgProfileDelete" PointerPressed="ImgProfileDelete_OnPointerPressed" IsVisible="False" />
             </StackPanel>
         </Grid>
     </Border>

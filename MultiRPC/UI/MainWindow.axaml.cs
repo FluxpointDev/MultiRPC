@@ -93,6 +93,10 @@ namespace MultiRPC.UI
         private readonly Control _control;
         public MainWindow(Control control)
         {
+            Icon = new WindowIcon(AssetManager.GetSeekableStream("Logo.ico"));
+            AssetManager.RegisterForAssetReload("Logo.ico", 
+                () => Icon = new WindowIcon(AssetManager.GetSeekableStream("Logo.ico")));
+            
             _control = control;
             InitializeComponent();
             InitializeExtra();
@@ -125,7 +129,10 @@ namespace MultiRPC.UI
 
         private void InitializeExtra()
         {
-            AssetManager.ReloadAssets += AssetManagerOnReloadAssets;
+            AssetManager.RegisterForAssetReload("Logo.svg", () =>
+            {
+                icon.Source = new SvgImage { Source = AssetManager.LoadSvgImage("Logo.svg") };
+            });
             icon.Source = new SvgImage
             {
                 Source = AssetManager.LoadSvgImage("Logo.svg")
@@ -152,14 +159,6 @@ namespace MultiRPC.UI
                 _control.Margin += new Thickness(0, eabTitleBar.Height, 0, 0);
             };
             grdContent.Children.Insert(1, _control);
-        }
-
-        private void AssetManagerOnReloadAssets(object? sender, EventArgs e)
-        {
-            icon.Source = new SvgImage
-            {
-                Source = AssetManager.LoadSvgImage("Logo.svg")
-            };
         }
     }
 

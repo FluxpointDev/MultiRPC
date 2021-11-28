@@ -11,8 +11,7 @@
         <StackPanel Margin="5,5" Spacing="10" Orientation="Horizontal">
             <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
                 <Border x:Name="brdLarge" Height="75" Width="75" CornerRadius="5"/>
-                <avaloniaGif:GifImage x:Name="imgGif" Height="75" Width="75" Stretch="Uniform" 
-                                      StretchDirection="Both" SourceUriRaw="avares://MultiRPC/Assets/Loading.gif" />
+                <avaloniaGif:GifImage x:Name="gifLoading" Height="75" Width="75" Stretch="Uniform" StretchDirection="Both" />
                 
                 <Grid Name="gridSmallImage" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,-5,-2.5">
                     <Ellipse Name="ellSmallBackground" Fill="{Binding #brdContent.Background}" Height="30" Width="30" />

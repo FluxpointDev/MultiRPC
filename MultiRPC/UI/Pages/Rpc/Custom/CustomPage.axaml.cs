@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -10,6 +11,7 @@ using Avalonia.Layout;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Svg;
+using MultiRPC.Extensions;
 using MultiRPC.Helpers;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Page;
@@ -52,8 +54,12 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             }
             InitializeComponent(loadXaml);
             
-            _svgImage = SvgImageHelper.LoadImage("Icons/Help.svg");
-            AssetManager.ReloadAssets += (sender, args) => _svgImage = SvgImageHelper.LoadImage("Icons/Help.svg");
+            _svgHelpImage = SvgImageHelper.LoadImage("Icons/Help.svg");
+            AssetManager.RegisterForAssetReload("Icons/Help.svg", () => _svgHelpImage = SvgImageHelper.LoadImage("Icons/Help.svg"));
+            imgProfileEdit.AddSvgAsset("Icons/Pencil.svg");
+            imgProfileShare.AddSvgAsset("Icons/Share.svg");
+            imgProfileAdd.AddSvgAsset("Icons/Add.svg");
+            imgProfileDelete.AddSvgAsset("Icons/Delete.svg");
             
             //Setup the RPC control
             _rpcControl = new BaseRpcControl
@@ -104,8 +110,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             
             //TODO: Replace image with new images and make help for buttons
             var stpHelpIcons = new StackPanel { Spacing = 5, HorizontalAlignment = HorizontalAlignment.Left };
-            string[] helpImages = { "ClientID.jpg", "Text1.jpg", "Text2.jpg", 
-                "SmallAndLargeKey.jpg", "LargeText.jpg", "SmallAndLargeKey.jpg", "SmallText.jpg" };
+            string[] helpImages = { "ClientID.jpg", "Text1.jpg", "Text2.jpg", "SmallAndLargeKey.jpg", "LargeText.jpg", "SmallAndLargeKey.jpg", "SmallText.jpg" };
             stpHelpIcons.Children.AddRange(helpImages.Select(MakeHelpImage));
             stpHelpIcons.IsVisible = !_disableSettings.HelpIcons;
             helpGrid.Children.Add(stpHelpIcons);
@@ -113,9 +118,10 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             _helpImage = new Image
             {
                 Height = 200, 
+                Width = double.NaN,
                 Margin = new Thickness(10,0,0,0), 
                 Opacity = 0,
-                IsVisible = stpHelpIcons.IsVisible
+                IsVisible = stpHelpIcons.IsVisible,
             };
             Grid.SetColumn(_helpImage, 1);
             helpGrid.Children.Add(_helpImage);
@@ -128,11 +134,11 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             };
         }
 
-        private SvgImage _svgImage;
+        private SvgImage _svgHelpImage;
         private Image MakeHelpImage(string helpImage)
         {
-            var image = new Image { Classes = { "help" }, Tag = helpImage, Source = _svgImage };
-            AssetManager.ReloadAssets += (sender, args) => image.Source = _svgImage;
+            var image = new Image { Classes = { "help" }, Tag = helpImage, Source = _svgHelpImage };
+            AssetManager.ReloadAssets += (sender, args) => image.Source = _svgHelpImage;
             image.PointerPressed += ImageOnPointerPressed;
             return image;
         }
@@ -146,7 +152,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
 
             if (_selectedHelpImage != null)
             {
-                _selectedHelpImage.Opacity = 0.6;
+                _selectedHelpImage.Classes.Remove("selected");
                 // ReSharper disable once PossibleUnintendedReferenceComparison
                 if (_selectedHelpImage == image)
                 {
@@ -157,20 +163,28 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             }
 
             _selectedHelpImage = image;
-            _selectedHelpImage.Opacity = 1;
+            _selectedHelpImage.Classes.Add("selected");
             _helpImage.Opacity = 1;
 
             var key = image.Tag!.ToString()!;
             if (!_helpImages.ContainsKey(key))
             {
-                var assetLocator = AvaloniaLocator.Current.GetService<IAssetLoader>();
-                var stream = assetLocator.Open(new Uri("avares://MultiRPC/Assets/Images/Help/" + key));
-                _helpImages[key] = new Bitmap(stream);
+                var path = "Images/Help/" + key;
+                AssetManager.RegisterForAssetReload(path, () =>
+                {
+                    _helpImages[key] = new Bitmap(AssetManager.GetSeekableStream(path));
+                    //If this is the selected image then reshow it
+                    if (image.Tag!.ToString()! == _selectedHelpImage.Tag!.ToString()!)
+                    {
+                        _helpImage.Source = _helpImages[key];
+                    }
+                });
+                _helpImages[key] = new Bitmap(AssetManager.GetSeekableStream(path));
             }
 
             _helpImage.Source = _helpImages[key];
         }
-        
+
         private readonly Language _editLang = new Language(LanguageText.ProfileEdit);
         private readonly Language _shareLang = new Language(LanguageText.ProfileShare);
         private readonly Language _addLang = new Language(LanguageText.ProfileAdd);

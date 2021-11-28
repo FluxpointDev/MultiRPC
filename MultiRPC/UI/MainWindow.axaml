@@ -9,7 +9,6 @@
         SizeToContent="WidthAndHeight"
         Background="Transparent"
         CanResize="False"
-        Icon="/Assets/Logo.ico"
         Title="{Binding #txtTitle.Text}"
         x:Class="MultiRPC.UI.MainWindow">
     <Window.Styles>

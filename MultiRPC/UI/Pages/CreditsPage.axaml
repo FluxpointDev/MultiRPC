@@ -29,7 +29,7 @@
         
         <Grid RowDefinitions="Auto,5,*">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Image Name="imgCommunityAdmins" Source="{SvgImage /Assets/Icons/Shield.svg}" />
+                <Image Name="imgCommunityAdmins" />
                 <TextBlock Name="tblCommunityAdminsTitle" Classes="title" Text="{Binding TextObservable^}" />
             </StackPanel>
             <Border Grid.Row="2" CornerRadius="15" Background="{DynamicResource ThemeAccentBrush}" />
@@ -40,7 +40,7 @@
         
         <Grid RowDefinitions="Auto,5,*" Grid.Column="2">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Image Name="imgPatreonDonators" Source="{SvgImage /Assets/Icons/Heart.svg}" />
+                <Image Name="imgPatreonDonators" />
                 <TextBlock Name="tblPatreonDonatorsTitle" Classes="title" Text="{Binding TextObservable^}" />
             </StackPanel>
             <Border Grid.Row="2" CornerRadius="15" Background="{DynamicResource ThemeAccentBrush}" />
@@ -51,7 +51,7 @@
         
         <Grid RowDefinitions="Auto,5,*" Grid.Column="4">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Image Name="imgPaypalDonators" Source="{SvgImage /Assets/Icons/Heart.svg}" />
+                <Image Name="imgPaypalDonators" />
                 <TextBlock Name="tblPaypalDonatorsTitle" Classes="title" Text="{Binding TextObservable^}" />
             </StackPanel>
             <Border Grid.Row="2" CornerRadius="15" Background="{DynamicResource ThemeAccentBrush}" />
@@ -62,7 +62,7 @@
         
         <Grid RowDefinitions="Auto,5,*" Grid.Column="6">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Image Name="imgIconProviders" Source="{SvgImage /Assets/Icons/Heart.svg}" />
+                <Image Name="imgIconProviders" />
                 <TextBlock Name="tblIconProvidersTitle" Classes="title" Text="{Binding TextObservable^}" />
             </StackPanel>
             <Border Grid.Row="2" CornerRadius="15" Background="{DynamicResource ThemeAccentBrush}" />

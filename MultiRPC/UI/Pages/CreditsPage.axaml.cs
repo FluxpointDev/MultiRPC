@@ -26,6 +26,11 @@ namespace MultiRPC.UI.Pages
             NetworkChange.NetworkAddressChanged += NetworkChangeOnNetworkAddressChanged;
             UpdateCredits();
             _ = DownloadAndShow();
+            
+            imgCommunityAdmins.AddSvgAsset("Icons/Shield.svg");
+            imgPatreonDonators.AddSvgAsset("Icons/Heart.svg");
+            imgPaypalDonators.AddSvgAsset("Icons/Heart.svg");
+            imgIconProviders.AddSvgAsset("Icons/Heart.svg");
             Language.LanguageChanged += OnLanguageChanged;
         }
 
@@ -44,7 +49,7 @@ namespace MultiRPC.UI.Pages
         private async Task DownloadAndShow()
         {
             await DownloadCredits();
-            UpdateCredits();
+            this.RunUILogic(UpdateCredits);
         }
         
         private void UpdateCredits()

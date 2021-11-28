@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Avalonia;
 using Avalonia.Platform;
@@ -12,11 +13,55 @@ namespace MultiRPC;
 public static class AssetManager
 {
     internal static event EventHandler? ReloadAssets;
+    internal static void FireReloadAssets(object? sender)
+    {
+        if (Theme.ActiveTheme == null)
+        {
+            ReloadAssets?.Invoke(sender, EventArgs.Empty);
+            return;
+        }
+        
+        foreach (var (key, value) in LoadedAssets)
+        {
+            var haveAsset = Theme.ActiveTheme.HaveAsset(key);
+            if (AssetReloadActions.ContainsKey(key)
+                && haveAsset != value || (haveAsset && value))
+            {
+                AssetReloadActions[key].ForEach(x => x.Invoke());
+            }
+        }
+        
+        ReloadAssets?.Invoke(sender, EventArgs.Empty);
+    }
 
-    internal static void FireReloadAssets(object? sender) => ReloadAssets?.Invoke(sender, EventArgs.Empty);
+    private static readonly Dictionary<string, List<Action>> AssetReloadActions = new Dictionary<string, List<Action>>();
+    public static void RegisterForAssetReload(string key, Action action)
+    {
+        if (!AssetReloadActions.ContainsKey(key))
+        {
+            AssetReloadActions[key] = new List<Action>();
+        }
+        AssetReloadActions[key].Add(action);
+    }
 
+    public static Stream GetSeekableStream(string key)
+    {
+        var st = GetAsset(key);
+        if (st.CanSeek)
+        {
+            return st;
+        }
+
+        var mem = new MemoryStream();
+        st.CopyTo(mem);
+        mem.Seek(0, SeekOrigin.Begin);
+        st.Dispose();
+        return mem;
+    }
+    
+    private static readonly Dictionary<string, bool> LoadedAssets = new Dictionary<string, bool>();
     /// <summary>
-    /// Grabs
+    /// Grabs the stream for the asset
     /// </summary>
     /// <param name="key"></param>
     /// <param name="theme"></param>
@@ -24,10 +69,15 @@ public static class AssetManager
     public static Stream GetAsset(string key, Theme? theme = null)
     {
         var stream = Stream.Null;
+        var fromDefaultTheme = theme == null;
         theme ??= Theme.ActiveTheme;
         if (theme?.HaveAsset(key) ?? false)
         {
             stream = theme.GetAssetStream(key);
+            if (fromDefaultTheme)
+            {
+                LoadedAssets[key] = true;
+            }
         }
         
         //If we wasn't able to load in from the theme, use default assets
@@ -35,6 +85,10 @@ public static class AssetManager
         {
             var loader = AvaloniaLocator.Current.GetService<IAssetLoader>();
             stream = loader.Open(new Uri("avares://MultiRPC/Assets/" + key, UriKind.RelativeOrAbsolute));
+            if (fromDefaultTheme)
+            {
+                LoadedAssets[key] = false;
+            }
         }
         
         return stream;
