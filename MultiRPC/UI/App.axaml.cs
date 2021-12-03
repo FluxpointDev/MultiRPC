@@ -10,6 +10,7 @@ using MultiRPC.UI.Pages;
 using MultiRPC.UI.Pages.Rpc;
 using MultiRPC.UI.Pages.Rpc.Custom;
 using MultiRPC.UI.Pages.Settings;
+using MultiRPC.UI.Pages.Theme;
 using Splat;
 using TinyUpdate.Binary;
 using TinyUpdate.Core.Extensions;
@@ -42,7 +43,7 @@ namespace MultiRPC.UI
             PageManager.AddPage(new SettingsPage());
             PageManager.AddPage(new LoggingPage());
             PageManager.AddPage(new CreditsPage());
-            PageManager.AddPage(new ThemeEditorPage());
+            PageManager.AddPage(new MasterThemeEditorPage());
 
             //Anything else here
             Locator.CurrentMutable.RegisterLazySingleton(() => new RpcClient());

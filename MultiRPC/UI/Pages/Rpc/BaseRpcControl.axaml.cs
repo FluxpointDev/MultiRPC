@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using MultiRPC.Discord;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
@@ -64,6 +65,12 @@ namespace MultiRPC.UI.Pages.Rpc
             txtButton2Text.Text = richPresence.Profile.Button2Text;
             ckbElapsedTime.IsChecked = richPresence.Profile.ShowTime;
         }
+        
+        private void OnAttachedToLogicalTree(object? sender, LogicalTreeAttachmentEventArgs e)
+        {
+            txtClientID.Text = RichPresence.ID.ToString();
+            this.AttachedToLogicalTree -= OnAttachedToLogicalTree;
+        }
 
         private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
         private bool _lastValid;
@@ -101,7 +108,8 @@ namespace MultiRPC.UI.Pages.Rpc
                         _lastIDCheckStatus = true;
                     }
                     return new CheckResult(true);
-                }, OnProfileChanged, RichPresence.ID.ToString());
+                }, OnProfileChanged);
+                this.AttachedToLogicalTree += OnAttachedToLogicalTree;
             }
 
             if (ImageType == ImagesType.Custom)
@@ -157,7 +165,7 @@ namespace MultiRPC.UI.Pages.Rpc
             ckbElapsedTime.IsChecked = RichPresence.UseTimestamp;
             ckbElapsedTime.DataContext = new Language(LanguageText.ShowElapsedTime);
         }
-
+        
         private void OnProfileChanged(bool _)
         {
             ProfileChanged?.Invoke(this, EventArgs.Empty);

@@ -20,7 +20,7 @@ namespace MultiRPC.UI.Pages.Settings
 
         public override void Initialize(bool loadXaml)
         {
-            InitializeComponent(loadXaml);
+            this.Background = (IBrush)App.Current.Resources["ThemeAccentBrush"];
             ContentPadding = new Thickness(0);
             
             var tabPage = new TabsPage();

@@ -108,6 +108,7 @@ namespace MultiRPC.UI
                 {
                     Source = newSource
                 };
+                btn.Tag = newSource;
             });
 
             //Update the colour based on if it's the current page or not when this changes

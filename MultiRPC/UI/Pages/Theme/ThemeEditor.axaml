@@ -4,6 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pages="clr-namespace:MultiRPC.UI.Pages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             Background="{DynamicResource ThemeAccentBrush}"
-             x:Class="MultiRPC.UI.Pages.Settings.SettingsPage">
+             x:Class="MultiRPC.UI.Pages.Theme.ThemeEditorPage">
+    Come back soon when the Theme editor has been readded!
 </pages:SidePage>

@@ -107,6 +107,7 @@ namespace MultiRPC.UI.Views
                     btnUpdatePresence.IsEnabled = false;
                     btnStart.Classes.Remove("red");
                     btnStart.Classes.Add("green");
+                    btnStart.IsEnabled = _page?.PresenceValid ?? true;
                     btnAfk.IsEnabled = true;
                 });
             };
