@@ -44,14 +44,14 @@ namespace MultiRPC.UI.Views
             };
 
             btnStart.DataContext = _startButton = new Language(LanguageText.Start, LanguageText.MultiRPC);
-            btnUpdatePresence.DataContext = new Language(LanguageText.UpdatePresence);
-            btnAfk.DataContext = new Language(LanguageText.Afk);
-            btnAuto.DataContext = new Language(LanguageText.Auto);
-            txtAfk.DataContext = new Language(LanguageText.AfkText);
+            btnUpdatePresence.DataContext = Language.GetLanguage(LanguageText.UpdatePresence);
+            btnAfk.DataContext = Language.GetLanguage(LanguageText.Afk);
+            btnAuto.DataContext = Language.GetLanguage(LanguageText.Auto);
+            txtAfk.DataContext = Language.GetLanguage(LanguageText.AfkText);
 
             _statusKind = new Language(LanguageText.Disconnected);
-            _statusText = new Language(LanguageText.Status);
-            _userText = new Language(LanguageText.User);
+            _statusText = Language.GetLanguage(LanguageText.Status);
+            _userText = Language.GetLanguage(LanguageText.User);
 
             _statusKind.TextObservable.Subscribe(_ => UpdateStatus());
             _statusText.TextObservable.Subscribe(_ => UpdateStatus());

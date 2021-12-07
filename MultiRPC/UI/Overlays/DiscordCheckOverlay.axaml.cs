@@ -26,7 +26,7 @@ namespace MultiRPC.UI.Overlays
             rDiscordServer.Text = Language.GetText(LanguageText.DiscordServer) + ": ";
             hylServerLinkUri.Text = Constants.ServerInviteCode;
             hylServerLinkUri.Uri = Constants.DiscordServerUrl;
-            btnDisableDiscordCheck.DataContext = new Language(LanguageText.TempDisableDiscordCheck);
+            btnDisableDiscordCheck.DataContext = Language.GetLanguage(LanguageText.TempDisableDiscordCheck);
             imgIcon.AddSvgAsset("Logo.svg");
             gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
             AssetManager.RegisterForAssetReload("Loading.gif",

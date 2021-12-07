@@ -19,10 +19,10 @@ namespace MultiRPC.UI.Pages
         {
             InitializeComponent(loadXaml);
 
-            tblCommunityAdminsTitle.DataContext = new Language(LanguageText.CommunityAdmins);
-            tblPatreonDonatorsTitle.DataContext = new Language(LanguageText.PatreonDonators);
-            tblPaypalDonatorsTitle.DataContext = new Language(LanguageText.PaypalDonators);
-            tblIconProvidersTitle.DataContext = new Language(LanguageText.IconProviders);
+            tblCommunityAdminsTitle.DataContext = Language.GetLanguage(LanguageText.CommunityAdmins);
+            tblPatreonDonatorsTitle.DataContext = Language.GetLanguage(LanguageText.PatreonDonators);
+            tblPaypalDonatorsTitle.DataContext = Language.GetLanguage(LanguageText.PaypalDonators);
+            tblIconProvidersTitle.DataContext = Language.GetLanguage(LanguageText.IconProviders);
             NetworkChange.NetworkAddressChanged += NetworkChangeOnNetworkAddressChanged;
             UpdateCredits();
             _ = DownloadAndShow();

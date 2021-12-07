@@ -42,7 +42,7 @@ namespace MultiRPC.UI.Controls.Settings
             //Set what should be shown
             if (languageSourceAttribute == null)
             {
-                cboSelection.Items = isLocalizable ? values.Select(x => new Language(x?.ToString() ?? "")) : values;
+                cboSelection.Items = isLocalizable ? values.Select(x => Language.GetLanguage(x?.ToString() ?? "")) : values;
             }
             else
             {

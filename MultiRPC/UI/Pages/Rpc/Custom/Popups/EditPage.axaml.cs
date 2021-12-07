@@ -19,7 +19,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
             }
         }
         
-        public Language Title { get; } = new Language(LanguageText.ProfileEdit);
+        public Language Title { get; } = Language.GetLanguage(LanguageText.ProfileEdit);
         
         private readonly ProfilesSettings _profiles = SettingManager<ProfilesSettings>.Setting;
         private readonly RichPresence _activeRichPresence = null!;
@@ -31,7 +31,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom.Popups
             _newName = activeRichPresence.Name;
             InitializeComponent();
             
-            btnDone.DataContext = new Language(LanguageText.Done);
+            btnDone.DataContext = Language.GetLanguage(LanguageText.Done);
             txtNewName.AddValidation(null, s => _newName = s,
                 s =>
                 {

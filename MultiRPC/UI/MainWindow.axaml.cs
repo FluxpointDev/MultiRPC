@@ -138,7 +138,7 @@ namespace MultiRPC.UI
                 Source = AssetManager.LoadSvgImage("Logo.svg")
             };
             
-            var lang = new Language(LanguageText.MultiRPC);
+            var lang = Language.GetLanguage(LanguageText.MultiRPC);
             if (_control is ITitlePage titlePage)
             {
                 lang.TextObservable.Subscribe(s => UpdateTitle(s, titlePage.Title.Text));

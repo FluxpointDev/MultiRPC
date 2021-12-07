@@ -27,13 +27,13 @@ namespace MultiRPC.UI.Controls
                     new Point(), 0, PointerPointProperties.None, KeyModifiers.None));
         }
 
-        private static Language naLang = new Language(LanguageText.NA);
+        private static readonly Language NaLang = Language.GetLanguage(LanguageText.NA);
         private Rectangle? _activePageRectangle;
         private Control MakeTab(ITabPage page)
         {
             var text = new TextBlock
             {
-                [!TextBlock.TextProperty] = (page.TabName?.TextObservable ?? naLang.TextObservable).ToBinding(),
+                [!TextBlock.TextProperty] = (page.TabName?.TextObservable ?? NaLang.TextObservable).ToBinding(),
                 Margin = new Thickness(0, 0, 0, 6)
             };
 

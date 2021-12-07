@@ -43,7 +43,7 @@ namespace MultiRPC.UI.Pages.Settings
                         switch (attribute)
                         {
                             case SettingNameAttribute nameAttribute:
-                                name = new Language(nameAttribute.Name);
+                                name = Language.GetLanguage(nameAttribute.Name);
                                 isSetting = true;
                                 break;
                             case SettingSourceAttribute settingSourceAttribute:
@@ -75,7 +75,7 @@ namespace MultiRPC.UI.Pages.Settings
 
                     settingPage ??= new SettingsTab
                     {
-                        TabName = new Language(setting.Name),
+                        TabName = Language.GetLanguage(setting.Name),
                         Margin = new Thickness(10)
                     };
                     if (settingProperty.PropertyType.BaseType == typeof(Enum))

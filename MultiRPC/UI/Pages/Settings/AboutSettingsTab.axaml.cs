@@ -25,7 +25,7 @@ namespace MultiRPC.UI.Pages.Settings
             InitializeComponent();
         }
 
-        public Language? TabName { get; } = new Language(LanguageText.About);
+        public Language? TabName { get; } = Language.GetLanguage(LanguageText.About);
         public bool IsDefaultPage => true;
         public void Initialize(bool loadXaml)
         {
@@ -33,24 +33,24 @@ namespace MultiRPC.UI.Pages.Settings
             btnAdmin.IsEnabled = !AdminUtil.IsAdmin && OSHelper.ActiveOS == OSPlatform.Windows;
 
             tblName.Text += Assembly.GetEntryAssembly().GetSemanticVersion();
-            var madeByLang = new Language(LanguageText.MadeBy);
+            var madeByLang = Language.GetLanguage(LanguageText.MadeBy);
             madeByLang.TextObservable.Subscribe(x => tblMadeBy.Text = x + ": " + Constants.AppDeveloper);
-            tblDiscord.DataContext = new Language(LanguageText.Discord);
-            tblDonations.DataContext = new Language(LanguageText.Donations);
-            btnDonate.DataContext = new Language(LanguageText.ClickToDonate);
-            tblDonationInfo.DataContext = new Language(LanguageText.DonateMessage);
-            btnAdmin.DataContext = new Language(LanguageText.Admin);
-            btnChangelog.DataContext = new Language(LanguageText.Changelog);
-            btnCheckUpdate.DataContext = new Language(LanguageText.CheckForUpdates);
+            tblDiscord.DataContext = Language.GetLanguage(LanguageText.Discord);
+            tblDonations.DataContext = Language.GetLanguage(LanguageText.Donations);
+            btnDonate.DataContext = Language.GetLanguage(LanguageText.ClickToDonate);
+            tblDonationInfo.DataContext = Language.GetLanguage(LanguageText.DonateMessage);
+            btnAdmin.DataContext = Language.GetLanguage(LanguageText.Admin);
+            btnChangelog.DataContext = Language.GetLanguage(LanguageText.Changelog);
+            btnCheckUpdate.DataContext = Language.GetLanguage(LanguageText.CheckForUpdates);
             _ = CheckDiscordStatus();
 
-            var githubTooltipLang = new Language(LanguageText.GithubTooltip);
+            var githubTooltipLang = Language.GetLanguage(LanguageText.GithubTooltip);
             githubTooltipLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgGithub, x));
             
-            var fluxpointTooltipLang = new Language(LanguageText.FluxpointTooltip);
+            var fluxpointTooltipLang = Language.GetLanguage(LanguageText.FluxpointTooltip);
             fluxpointTooltipLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgFluxpoint, x));
  
-            var discordTooltipLang = new Language(LanguageText.JoinForFunBotsAndSupport);
+            var discordTooltipLang = Language.GetLanguage(LanguageText.JoinForFunBotsAndSupport);
             discordTooltipLang.TextObservable.Subscribe(x => ToolTip.SetTip(brdDiscord, x));
             
             imgIcon.AddSvgAsset("Logo.svg");

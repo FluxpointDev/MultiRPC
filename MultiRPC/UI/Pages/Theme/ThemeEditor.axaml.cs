@@ -7,7 +7,7 @@ namespace MultiRPC.UI.Pages.Theme
 {
     public partial class ThemeEditorPage : UserControl, ITabPage
     {
-        public Language? TabName { get; } = new Language("ThemeEditor");
+        public Language? TabName { get; } = Language.GetLanguage("ThemeEditor");
         public bool IsDefaultPage => true;
         public void Initialize(bool loadXaml)
         {

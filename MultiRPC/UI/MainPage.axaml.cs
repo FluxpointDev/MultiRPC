@@ -127,7 +127,7 @@ namespace MultiRPC.UI
                 }
             });
 
-            var lang = new Language(page.LocalizableName);
+            var lang = Language.GetLanguage(page.LocalizableName);
             lang.TextObservable.Subscribe(s => ToolTip.SetTip(btn,  _disableSetting.ShowPageTooltips ? null : s));
             _disableSetting.PropertyChanged += (sender, args) =>
             {

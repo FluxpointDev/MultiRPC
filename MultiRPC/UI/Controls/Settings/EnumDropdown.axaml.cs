@@ -20,7 +20,7 @@ namespace MultiRPC.UI.Controls.Settings
 
             header.TextObservable.Subscribe(x => tblHeader.Text = x + ":");
             var names = Enum.GetNames(enumType);
-            cboSelection.Items = names.Select(x => new Language(x));
+            cboSelection.Items = names.Select(x => Language.GetLanguage(x));
             
             var n = getMethod.Invoke(setting, null)?.ToString();
             cboSelection.SelectedIndex = n != null ? names.IndexOf(x => x == n) : -1;

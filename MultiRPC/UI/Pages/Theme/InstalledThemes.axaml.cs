@@ -25,7 +25,7 @@ namespace MultiRPC.UI.Pages.Theme
     {
         //We keep a store of the active theme as we mess with it
         private Theming.Theme? _activeTheme;
-        public Language? TabName { get; } = new Language("InstalledThemes");
+        public Language? TabName { get; } = Language.GetLanguage("InstalledThemes");
         public bool IsDefaultPage { get; }
         public void Initialize(bool loadXaml)
         {
@@ -68,14 +68,14 @@ namespace MultiRPC.UI.Pages.Theme
                 //TODO: Make different UI for this
                 return new TextBlock
                 {
-                    DataContext = new Language("NA"),
+                    DataContext = Language.GetLanguage("NA"),
                     [!TextBlock.TextProperty] = new Binding("TextObservable^"),
                 };
             }
 
             var editButton = new Button
             {
-                DataContext = new Language("Edit"),
+                DataContext = Language.GetLanguage("Edit"),
                 [!ContentProperty] = new Binding("TextObservable^"),
                 IsEnabled = !string.IsNullOrWhiteSpace(file),
                 Tag = theme,
@@ -84,7 +84,7 @@ namespace MultiRPC.UI.Pages.Theme
             
             var removeButton = new Button
             {
-                DataContext = new Language("Remove"),
+                DataContext = Language.GetLanguage("Remove"),
                 [!ContentProperty] = new Binding("TextObservable^"),
                 IsEnabled = editButton.IsEnabled,
                 Tag = theme,
@@ -93,7 +93,7 @@ namespace MultiRPC.UI.Pages.Theme
 
             var cloneButton = new Button
             {
-                DataContext = new Language("Clone"),
+                DataContext = Language.GetLanguage("Clone"),
                 [!ContentProperty] = new Binding("TextObservable^"),
                 Tag = theme,
             };

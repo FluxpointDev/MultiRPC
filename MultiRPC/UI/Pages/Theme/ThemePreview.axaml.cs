@@ -37,15 +37,15 @@ namespace MultiRPC.UI.Pages.Theme
 
         private static readonly Language[] WewComboBox =
         {
-            new Language(LanguageText.WewComboboxItem),
-            new Language(LanguageText.WewComboboxItem2)
+            Language.GetLanguage(LanguageText.WewComboboxItem),
+            Language.GetLanguage(LanguageText.WewComboboxItem2)
         };
         
-        private static readonly Language WewTextBox = new Language(LanguageText.WewTextbox);
-        private static readonly Language WewTextBlock = new Language(LanguageText.WewTextBlock);
-        private static readonly Language WewCheckBox = new Language(LanguageText.WewCheckBox);
-        private static readonly Language WewButton = new Language(LanguageText.WewButton);
-        private static readonly Language WewButtonDisabled = new Language(LanguageText.WewDisabledButton);
+        private static readonly Language WewTextBox = Language.GetLanguage(LanguageText.WewTextbox);
+        private static readonly Language WewTextBlock = Language.GetLanguage(LanguageText.WewTextBlock);
+        private static readonly Language WewCheckBox = Language.GetLanguage(LanguageText.WewCheckBox);
+        private static readonly Language WewButton = Language.GetLanguage(LanguageText.WewButton);
+        private static readonly Language WewButtonDisabled = Language.GetLanguage(LanguageText.WewDisabledButton);
         
         private void UpdateIconColour(SvgSource source, Color color)
         {
@@ -78,7 +78,7 @@ namespace MultiRPC.UI.Pages.Theme
                 Tag = source
             };
             
-            var lang = new Language(page.LocalizableName);
+            var lang = Language.GetLanguage(page.LocalizableName);
             lang.TextObservable.Subscribe(s => ToolTip.SetTip(btn,  _disableSetting.ShowPageTooltips ? null : s));
             _disableSetting.PropertyChanged += (sender, args) =>
             {

@@ -12,15 +12,17 @@ using TinyUpdate.Core.Logging;
 
 namespace MultiRPC
 {
+    //TODO: Clean this up, while it works it's a mess...
     public class Language
     {
         private readonly Lazy<LanguageObservable> _textObservable;
-        private static Dictionary<string, string> _englishLanguageJsonFileContent = null!;
+        private static Dictionary<string, string> _englishLanguageJsonFileContent;
         private static Dictionary<string, string>? _languageJsonFileContent;
         private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Language));
         static Language()
         {
             GrabLanguage();
+            _languages = new List<Language>(_englishLanguageJsonFileContent!.Count);
         }
 
         public Language() : this(LanguageText.NA) { }
@@ -48,6 +50,25 @@ namespace MultiRPC
                 _languageJsonFileContent = lan;
                 LanguageChanged?.Invoke(null, EventArgs.Empty);
             }
+        }
+
+        private static readonly List<Language> _languages;
+        public static Language GetLanguage(LanguageText languageText) => GetLanguage(languageText.ToString());
+
+        /// <summary>
+        /// Gets or makes an language (ONLY USE THIS IF YOU DON'T PLAN TO USE <see cref="ChangeJsonNames(LanguageText[])"/>)
+        /// </summary>
+        /// <param name="languageText"></param>
+        public static Language GetLanguage(string languageText)
+        {
+            var lang = _languages.FirstOrDefault(x => x._textObservable.Value._jsonNames.Any(y => y == languageText));
+            if (lang == null)
+            {
+                lang = new Language(languageText);
+                _languages.Add(lang);
+            }
+
+            return lang;
         }
         
         private static void GrabLanguage()
@@ -145,7 +166,7 @@ namespace MultiRPC
 
         internal string Text => string.Join(' ', GetText());
         
-        private string[] _jsonNames;
+        internal string[] _jsonNames;
         // ReSharper disable once CollectionNeverQueried.Local
         private readonly List<IObserver<string>> _observables = new List<IObserver<string>>();
         public IDisposable Subscribe(IObserver<string> observer)

@@ -66,7 +66,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             {
                 ImageType = ImagesType.Custom,
                 GrabID = true,
-                TabName = new Language(LanguageText.CustomPage),
+                TabName = Language.GetLanguage(LanguageText.CustomPage),
                 Margin = new Thickness(10),
             };
             _rpcControl.ProfileChanged += (sender, args) => PresenceChanged?.Invoke(sender, args);
@@ -185,10 +185,10 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             _helpImage.Source = _helpImages[key];
         }
 
-        private readonly Language _editLang = new Language(LanguageText.ProfileEdit);
-        private readonly Language _shareLang = new Language(LanguageText.ProfileShare);
-        private readonly Language _addLang = new Language(LanguageText.ProfileAdd);
-        private readonly Language _deleteLang = new Language(LanguageText.ProfileDelete);
+        private readonly Language _editLang = Language.GetLanguage(LanguageText.ProfileEdit);
+        private readonly Language _shareLang = Language.GetLanguage(LanguageText.ProfileShare);
+        private readonly Language _addLang = Language.GetLanguage(LanguageText.ProfileAdd);
+        private readonly Language _deleteLang = Language.GetLanguage(LanguageText.ProfileDelete);
         
         private void AddTextBinding()
         {
