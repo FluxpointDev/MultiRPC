@@ -33,7 +33,10 @@ namespace MultiRPC.Setting.Settings
 
         [GeneratedProperty, SettingName("AfkTime")]
         private bool _showAfkTime;
-        
+
+        [GeneratedProperty]
+        private string? _themeFile;
+
         partial void OnLogLevelChanged(LogLevel previous, LogLevel value) => LoggingCreator.GlobalLevel = value;
         partial void OnLanguageChanged(string previous, string value)
         {

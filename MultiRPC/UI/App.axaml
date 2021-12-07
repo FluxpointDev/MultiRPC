@@ -38,5 +38,6 @@
 
     <Application.Styles>
         <FluentTheme Mode="Dark"/>
+        <StyleInclude Source="/UI/Styling.axaml" />
     </Application.Styles>
 </Application>

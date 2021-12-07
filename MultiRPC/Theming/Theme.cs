@@ -38,12 +38,17 @@ public class Theme : IDisposable
     /// <summary>
     /// What colouring that we need to apply
     /// </summary>
-    public Colours Colours { get; private set; }
+    public Colours Colours { get; set; }
     
     /// <summary>
     /// Any metadata about this theme
     /// </summary>
-    public Metadata Metadata { get; private set; }
+    public Metadata Metadata { get; set; }
+
+    /// <summary>
+    /// Where the theme is currently stored
+    /// </summary>
+    public string? Location { get; init; }
 
     /// <summary>
     /// What mode this theme is in
@@ -63,18 +68,18 @@ public class Theme : IDisposable
             return Stream.Null;
         }
         
-        return _archive.Entries
-            .First(x => x.FullName == "Assets/" + key)
-            .Open();
+        return _archive?.Entries
+            .FirstOrDefault(x => x.FullName == "Assets/" + key)?
+            .Open() ?? Stream.Null;
     }
     
-    private ZipArchive _archive;
+    private ZipArchive? _archive;
     /// <summary>
     /// Load's in the theme for being used
     /// </summary>
     /// <param name="filepath">Where the file is</param>
     /// <returns>The theme if we successfully loaded it in</returns>
-    public static Theme? Load(string filepath)
+    public static Theme? Load(string? filepath)
     {
         if (!File.Exists(filepath))
         {
@@ -98,8 +103,11 @@ public class Theme : IDisposable
             return null;
         }
 
-        var theme = new Theme();
-        theme._archive = archive;
+        var theme = new Theme()
+        {
+            Location = filepath,
+            _archive = archive
+        };
         try
         {
             theme.Colours = JsonSerializer.Deserialize<Colours>(coloursEntry.Open(),
@@ -177,7 +185,7 @@ public class Theme : IDisposable
 
     public void Dispose()
     {
-        _archive.Dispose();
+        _archive?.Dispose();
         GC.SuppressFinalize(this);
     }
 }

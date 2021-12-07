@@ -242,5 +242,6 @@
   "AdminWarning": "Running MultiRPC with elevated permissions is NOT recommended and is only intended if you can't get any connection without it (Contact us on the discord server and we'll see if we can fix the connection without elevated permissions).\r\n\r\nNote that it's also NOT recommended to have discord open with elevated permissions, only press 'Ok' if this is the only way for a connection",
   "ToAdd": "To Add",
   "SomethingHappenedWhileGettingThemeColours": "Something happened while getting theme colours in {themepath}",
-  "SomethingHappenedWhileGettingThemeMetadata": "Something happened while getting theme metadata in {themepath}"
+  "SomethingHappenedWhileGettingThemeMetadata": "Something happened while getting theme metadata in {themepath}",
+  "WewCheckBox": "Wew this is a checkbox header"
 }

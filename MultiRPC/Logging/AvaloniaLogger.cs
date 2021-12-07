@@ -1,0 +1,109 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Avalonia.Logging;
+using TinyUpdate.Core.Logging;
+
+namespace MultiRPC.Logging;
+
+public class AvaloniaLogger : ILogSink
+{
+    private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(AvaloniaLogger));
+    private readonly string[] _areas;
+    public AvaloniaLogger(params string[] areas)
+    {
+        _areas = areas;
+    }
+    
+    public bool IsEnabled(LogEventLevel level, string area)
+    {
+        //If we give any areas to look at then only log them
+        if (_areas.Any() && !_areas.Contains(area))
+        {
+            return false;
+        }
+        
+        return LoggingCreator.ShouldProcess(null, ToLogLevel(level));
+    }
+
+    private static LogLevel ToLogLevel(LogEventLevel level)
+    {
+        return level switch
+        {
+            LogEventLevel.Information => LogLevel.Info,
+            LogEventLevel.Warning => LogLevel.Warn,
+            LogEventLevel.Error => LogLevel.Error,
+            LogEventLevel.Fatal => LogLevel.Error,
+            _ => LogLevel.Trace
+        };
+    }
+
+    public void Log(LogEventLevel level, string area, object source, string messageTemplate)
+    {
+        Log(level, area, source, messageTemplate, Array.Empty<object>());
+    }
+
+    public void Log<T0>(LogEventLevel level, string area, object source, string messageTemplate, T0 propertyValue0)
+    {
+        Log(level, area, source, messageTemplate, new object[] { propertyValue0 });
+    }
+
+    public void Log<T0, T1>(LogEventLevel level, string area, object source, string messageTemplate, T0 propertyValue0,
+        T1 propertyValue1)
+    {
+        Log(level, area, source, messageTemplate, new object[] { propertyValue0, propertyValue1 });
+    }
+
+    public void Log<T0, T1, T2>(LogEventLevel level, string area, object source, string messageTemplate, T0 propertyValue0,
+        T1 propertyValue1, T2 propertyValue2)
+    {
+        Log(level, area, source, messageTemplate, new object[] { propertyValue0, propertyValue1, propertyValue2 });
+    }
+
+    public void Log(LogEventLevel level, string area, object source, string messageTemplate, params object[] propertyValues)
+    {
+        messageTemplate = FormatMessage(messageTemplate, propertyValues);
+        //TODO: Use source + area
+        switch (ToLogLevel(level))
+        {
+            case LogLevel.Trace:
+                _logger.Debug(messageTemplate, propertyValues);
+                break;
+            case LogLevel.Info:
+                _logger.Information(messageTemplate, propertyValues);
+                break;
+            case LogLevel.Warn:
+                _logger.Warning(messageTemplate, propertyValues);
+                break;
+            case LogLevel.Error:
+                _logger.Error(messageTemplate, propertyValues);
+                break;
+        }
+    }
+
+    private string FormatMessage(string message, params object[] propertyValues)
+    {
+        var properties = new List<string>();
+        var tmpMes = message;
+        var formattedMessage = message;
+
+        var startIndex = message.IndexOf('{');
+        var endIndex = message.IndexOf('}');
+        while (startIndex != -1 && endIndex != -1)
+        {
+            endIndex++;
+            var prop = tmpMes[startIndex..endIndex];
+            if (!properties.Contains(prop))
+            {
+                properties.Add(prop);
+            }
+            var ind = properties.IndexOf(prop);
+            tmpMes = tmpMes[endIndex..];
+            formattedMessage = formattedMessage[..formattedMessage.IndexOf(prop, StringComparison.Ordinal)] + $"{{{ind}}}" + tmpMes;
+
+            startIndex = tmpMes.IndexOf('{');
+            endIndex = tmpMes.IndexOf('}');
+        }
+        return formattedMessage;
+    }
+}

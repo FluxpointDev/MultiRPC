@@ -8,31 +8,13 @@
              d:DesignWidth="800"
              d:DesignHeight="527"
              x:Class="MultiRPC.UI.MainPage">
-    <UserControl.Styles>
-        <Style Selector="Button.nav /template/ ContentPresenter">
-            <Setter Property="CornerRadius" Value="56" />
-            <Setter Property="Width" Value="56" />
-            <Setter Property="Height" Value="56" />
-            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2}" />
-            <Setter Property="Padding" Value="7.5" />
-        </Style>
-        <Style Selector="Button.nav:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2Hover}" />
-        </Style>
-        <Style Selector="Button.nav:pressed /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
-        </Style>
-        <Style Selector="Button.selected /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource NavButtonSelectedColor}" />
-        </Style>
-    </UserControl.Styles>
     <Grid HorizontalAlignment="Stretch" ColumnDefinitions="72 *">
         <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Stretch">
             <StackPanel Margin="8,10,8,25" Spacing="25" x:Name="splPages" />
         </ScrollViewer>
         <Grid Grid.Column="1">
             <Border x:Name="contentBorder" CornerRadius="15,15,0,0" Margin="0,105,0,0">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" >
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ContentControl x:Name="cclContent" />
                 </ScrollViewer>
             </Border>

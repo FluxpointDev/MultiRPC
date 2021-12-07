@@ -6,6 +6,7 @@ using Avalonia.Markup.Xaml;
 using MultiRPC.Rpc;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
+using MultiRPC.Theming;
 using MultiRPC.UI.Pages;
 using MultiRPC.UI.Pages.Rpc;
 using MultiRPC.UI.Pages.Rpc.Custom;
@@ -32,9 +33,12 @@ namespace MultiRPC.UI
             _updater = new GithubUpdateClient(new BinaryApplier(), "FluxpointDev", "MultiRPC");
 #endif
             AvaloniaXamlLoader.Load(this);
+            var genSettings = SettingManager<GeneralSettings>.Setting;
+            var theme = Theme.Load(genSettings.ThemeFile) ?? Themes.Dark;
+            theme.Apply();
 
             //Add default settings here
-            Locator.CurrentMutable.RegisterLazySingleton<BaseSetting>(() => SettingManager<GeneralSettings>.Setting);
+            Locator.CurrentMutable.RegisterLazySingleton<BaseSetting>(() => genSettings);
             Locator.CurrentMutable.RegisterLazySingleton<BaseSetting>(() => SettingManager<DisableSettings>.Setting);
 
             //Any new pages get added here

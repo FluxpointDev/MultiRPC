@@ -13,6 +13,7 @@ using TinyUpdate.Core;
 using TinyUpdate.Core.Logging;
 using TinyUpdate.Core.Logging.Loggers;
 
+//TODO: Fix issue with not loading presence on linux
 //TODO: Make GIFs loops stop when they're not on screen
 //TODO: Make this be used for the versioning
 [assembly: SemanticVersion("7.0.0-beta4")]
@@ -66,7 +67,6 @@ namespace MultiRPC
             }
         }
 
-        //TODO: Make logger for this
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
@@ -74,7 +74,6 @@ namespace MultiRPC
                 .With(new Win32PlatformOptions
                 {
                     EnableMultitouch = true
-                })
-                .LogToTrace();
+                }).LogToTinyUpdate();
     }
 }
