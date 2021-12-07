@@ -22,7 +22,7 @@ namespace MultiRPC
         static Language()
         {
             GrabLanguage();
-            _languages = new List<Language>(_englishLanguageJsonFileContent!.Count);
+            Languages = new List<Language>(_englishLanguageJsonFileContent!.Count);
         }
 
         public Language() : this(LanguageText.NA) { }
@@ -52,7 +52,7 @@ namespace MultiRPC
             }
         }
 
-        private static readonly List<Language> _languages;
+        private static readonly List<Language> Languages;
         public static Language GetLanguage(LanguageText languageText) => GetLanguage(languageText.ToString());
 
         /// <summary>
@@ -61,11 +61,11 @@ namespace MultiRPC
         /// <param name="languageText"></param>
         public static Language GetLanguage(string languageText)
         {
-            var lang = _languages.FirstOrDefault(x => x._textObservable.Value._jsonNames.Any(y => y == languageText));
+            var lang = Languages.FirstOrDefault(x => x._textObservable.Value._jsonNames.Any(y => y == languageText));
             if (lang == null)
             {
                 lang = new Language(languageText);
-                _languages.Add(lang);
+                Languages.Add(lang);
             }
 
             return lang;

@@ -34,10 +34,10 @@ namespace MultiRPC.UI.Views
         private readonly RpcClient _rpcClient;
         static RpcView()
         {
-            AssetManager.RegisterForAssetReload("Logo.svg", () => LogoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") }));
-            AssetManager.RegisterForAssetReload("Icons/Delete.svg", () => ErrorVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Icons/Delete.svg") }));
-            LogoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") });
-            ErrorVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Icons/Delete.svg") });
+            AssetManager.RegisterForAssetReload("Logo.svg", () => _logoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") }));
+            AssetManager.RegisterForAssetReload("Icons/Delete.svg", () => _errorVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Icons/Delete.svg") }));
+            _logoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") });
+            _errorVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Icons/Delete.svg") });
         }
 
         public RpcView()
@@ -49,7 +49,7 @@ namespace MultiRPC.UI.Views
             AssetManager.RegisterForAssetReload("Loading.gif",
                 () => gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif"));
 
-            brdLarge.Background = LogoVisualBrush;
+            brdLarge.Background = _logoVisualBrush;
 
             tblTitle.DataContext = _titleText;
             tblText1.DataContext = _tblText1;
@@ -69,8 +69,8 @@ namespace MultiRPC.UI.Views
         private readonly Language _titleText = new Language();
         private readonly Language _tblText1 = new Language();
         private readonly Language _tblText2 = new Language();
-        private static VisualBrush LogoVisualBrush;
-        private static VisualBrush ErrorVisualBrush;
+        private static VisualBrush _logoVisualBrush;
+        private static VisualBrush _errorVisualBrush;
 
         private ViewType _viewType;
         public ViewType ViewType
@@ -226,6 +226,10 @@ namespace MultiRPC.UI.Views
 
         private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
         {
+            if (!_timerTime.HasValue)
+            {
+                return;
+            }
             var ts = DateTime.UtcNow.Subtract(_timerTime.Value);
 
             var text = ts.Hours > 0 ? ts.Hours.ToString("00") + ":" : string.Empty;
@@ -296,7 +300,7 @@ namespace MultiRPC.UI.Views
                     _titleText.ChangeJsonNames(LanguageText.MultiRPC);
                     _tblText1.ChangeJsonNames(LanguageText.ThankYouForUsing);
                     _tblText2.ChangeJsonNames(LanguageText.ThisProgram);
-                    brdLarge.Background = LogoVisualBrush;
+                    brdLarge.Background = _logoVisualBrush;
 
                     brdLarge.IsVisible = true;
                     gridSmallImage.IsVisible = false;
@@ -308,7 +312,7 @@ namespace MultiRPC.UI.Views
                     _titleText.ChangeJsonNames(LanguageText.MultiRPC);
                     _tblText1.ChangeJsonNames(LanguageText.Hello);
                     _tblText2.ChangeJsonNames(LanguageText.World);
-                    brdLarge.Background = LogoVisualBrush;
+                    brdLarge.Background = _logoVisualBrush;
 
                     brdLarge.IsVisible = true;
                     gridSmallImage.IsVisible = false;
@@ -330,7 +334,7 @@ namespace MultiRPC.UI.Views
                     tblText1.Text = error;
                     tblText1.Foreground = new SolidColorBrush(Colors.White);
                     
-                    brdLarge.Background = ErrorVisualBrush;
+                    brdLarge.Background = _errorVisualBrush;
                     brdLarge.IsVisible = true;
                     gridSmallImage.IsVisible = false;
                     ToolTip.SetTip(brdLarge, null);

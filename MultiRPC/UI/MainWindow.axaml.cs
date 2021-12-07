@@ -82,7 +82,7 @@ namespace MultiRPC.UI
                 return;
             }
 
-            var file = e.Data.GetFileNames().Last();
+            var file = e.Data.GetFileNames()?.Last();
             var ext = Path.GetExtension(file);
             if (ext is Constants.ThemeFileExtension or Constants.LegacyThemeFileExtension)
             {

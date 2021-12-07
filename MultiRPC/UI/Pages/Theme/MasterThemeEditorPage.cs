@@ -12,8 +12,8 @@ namespace MultiRPC.UI.Pages.Theme
         public override string LocalizableName => "ThemeEditor";
         public override void Initialize(bool loadXaml)
         {
-            Background = (IBrush)App.Current.Resources["ThemeAccentBrush"];
-            var tabPage = new TabsPage()
+            Background = (IBrush)Application.Current.Resources["ThemeAccentBrush"]!;
+            var tabPage = new TabsPage
             {
                 Width = 675,
                 Height = 520

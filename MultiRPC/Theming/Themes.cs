@@ -22,11 +22,7 @@ public class Themes
             NavButtonSelectedColor = Color.FromRgb(0, 171, 235),
             NavButtonSelectedIconColor = Color.FromRgb(255, 255, 255)
         },
-        Metadata = new Metadata
-        {
-            Name = "Dark",
-            Version = Assembly.GetExecutingAssembly().GetName().Version!
-        }
+        Metadata = new Metadata("Dark", Assembly.GetExecutingAssembly().GetName().Version!),
     };
 
     public static readonly Theme Light = new Theme
@@ -46,10 +42,6 @@ public class Themes
             NavButtonSelectedColor = Color.FromRgb(0, 171, 235),
             NavButtonSelectedIconColor = Color.FromRgb(255, 255, 255)
         },
-        Metadata = new Metadata
-        {
-            Name = "Light",
-            Version = Assembly.GetExecutingAssembly().GetName().Version!
-        }
+        Metadata = new Metadata("Light", Assembly.GetExecutingAssembly().GetName().Version!),
     };
 }

@@ -8,7 +8,6 @@ using Avalonia.Svg;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
-using MultiRPC.Theming;
 using MultiRPC.UI.Pages;
 using ShimSkiaSharp;
 
@@ -57,24 +56,24 @@ namespace MultiRPC.UI
 
         private async Task WaitForValidPresence()
         {
-            _autoStartPage.PresenceValidChanged += OnPresenceValidChanged;
-            await Task.Delay(TimeSpan.FromSeconds(5).Milliseconds);
+            _autoStartPage!.PresenceValidChanged += OnPresenceValidChanged;
+            await Task.Delay(5000);
             _autoStartPage.PresenceValidChanged -= OnPresenceValidChanged;
         }
         
-        private readonly RpcPage _autoStartPage;
+        private readonly RpcPage? _autoStartPage;
         private void OnPresenceValidChanged(object? sender, bool e)
         {
             if (e)
             {
                 TriggerStart();
-                _autoStartPage.PresenceValidChanged -= OnPresenceValidChanged;
+                _autoStartPage!.PresenceValidChanged -= OnPresenceValidChanged;
             }
         }
 
         private void TriggerStart()
         {
-            if (_autoStartPage == cclContent.Content)
+            if (ReferenceEquals(_autoStartPage, cclContent.Content))
             {
                 topbar.TriggerStartStop();
             }
@@ -114,14 +113,14 @@ namespace MultiRPC.UI
             //Update the colour based on if it's the current page or not when this changes
             Application.Current.GetResourceObservable("ThemeAccentColor3").Subscribe(x =>
             {
-                if (_selectedBtn != btn)
+                if (!ReferenceEquals(_selectedBtn, btn))
                 {
                     UpdateButtonIconColour(btn, (Color)x!);
                 }
             });
             Application.Current.GetResourceObservable("NavButtonSelectedIconColor").Subscribe(x =>
             {
-                if (_selectedBtn == btn)
+                if (ReferenceEquals(_selectedBtn, btn))
                 {
                     UpdateButtonIconColour(btn, (Color)x!);
                 }
@@ -167,7 +166,7 @@ namespace MultiRPC.UI
         private void SideButton_Clicked(object? sender, RoutedEventArgs e, ISidePage page)
         {
             if (sender is not Button btn 
-                || btn == _selectedBtn)
+                || ReferenceEquals(btn, _selectedBtn))
             {
                 return;
             }

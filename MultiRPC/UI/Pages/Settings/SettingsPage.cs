@@ -20,7 +20,7 @@ namespace MultiRPC.UI.Pages.Settings
 
         public override void Initialize(bool loadXaml)
         {
-            this.Background = (IBrush)App.Current.Resources["ThemeAccentBrush"];
+            this.Background = (IBrush)Application.Current.Resources["ThemeAccentBrush"]!;
             ContentPadding = new Thickness(0);
             
             var tabPage = new TabsPage();
@@ -91,10 +91,15 @@ namespace MultiRPC.UI.Pages.Settings
                     else
                     {
                         var settingDropdownType = typeof(SettingDropdown<>).MakeGenericType(settingProperty.PropertyType);
-                        var settingDropdown = (SettingItem)Activator.CreateInstance(settingDropdownType, name, setting, getMethod, 
+                        var settingDropdown = (SettingItem?)Activator.CreateInstance(settingDropdownType, name, setting, getMethod, 
                             setMethod, sourceAttribute, languageSourceAttribute, settingProperty.GetCustomAttribute<NoneLocalizableAttribute>() == null);
-                        
-                        settingPage.Add(settingDropdown);
+
+                        if (settingDropdown != null)
+                        {
+                            settingPage.Add(settingDropdown);
+                            continue;
+                        }
+                        //TODO: Log
                     }
                 }
 

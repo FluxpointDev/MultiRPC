@@ -26,12 +26,12 @@ namespace MultiRPC.UI.Pages.Theme
         //We keep a store of the active theme as we mess with it
         private Theming.Theme? _activeTheme;
         public Language? TabName { get; } = Language.GetLanguage("InstalledThemes");
-        public bool IsDefaultPage { get; }
+        public bool IsDefaultPage => false;
         public void Initialize(bool loadXaml)
         {
             InitializeComponent(loadXaml);
             wppThemes.Children.AddRange(
-                new Control[]
+                new []
                 {
                     MakePreviewUI(Themes.Dark),
                     MakePreviewUI(Themes.Light)
@@ -207,7 +207,7 @@ namespace MultiRPC.UI.Pages.Theme
                     }
                 }
             };
-            var files = await openDia.ShowAsync(((App)App.Current).DesktopLifetime?.MainWindow);
+            var files = await openDia.ShowAsync(((App)Application.Current).DesktopLifetime?.MainWindow!);
             if (files is null || !files.Any())
             {
                 return;

@@ -15,7 +15,7 @@ namespace MultiRPC.UI.Pages.Rpc
         public override RichPresence RichPresence { get; protected set; } = SettingManager<MultiRPCSettings>.Setting.Presence;
         public override event EventHandler? PresenceChanged;
         public override bool PresenceValid => rpcControl.RpcValid;
-        public override event EventHandler<bool> PresenceValidChanged;
+        public override event EventHandler<bool>? PresenceValidChanged;
 
         public override void Initialize(bool loadXaml)
         {

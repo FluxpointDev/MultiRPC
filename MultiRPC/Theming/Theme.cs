@@ -29,6 +29,7 @@ public class Theme : IDisposable
 {
     private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Theme));
     private static readonly Version ModernVersion = new Version(7, 0);
+    
 
     /// <summary>
     /// The theme that is currently being used
@@ -38,12 +39,12 @@ public class Theme : IDisposable
     /// <summary>
     /// What colouring that we need to apply
     /// </summary>
-    public Colours Colours { get; set; }
+    public Colours Colours { get; set; } = null!;
     
     /// <summary>
     /// Any metadata about this theme
     /// </summary>
-    public Metadata Metadata { get; set; }
+    public Metadata Metadata { get; set; } = null!;
 
     /// <summary>
     /// Where the theme is currently stored
@@ -58,7 +59,7 @@ public class Theme : IDisposable
     public bool HaveAsset(string key)
     {
         return Mode == ThemeMode.Modern
-            && _archive.Entries.Any(x => x.FullName == "Assets/" + key);
+            && (_archive?.Entries.Any(x => x.FullName == "Assets/" + key) ?? false);
     }
 
     public Stream GetAssetStream(string key)
@@ -114,7 +115,7 @@ public class Theme : IDisposable
                 new JsonSerializerOptions(JsonSerializerDefaults.General)
                 {
                     Converters = { new ColourJsonConverter() }
-                });
+                })!;
         }
         catch (Exception e)
         {
@@ -131,7 +132,7 @@ public class Theme : IDisposable
                 new JsonSerializerOptions(JsonSerializerDefaults.General)
                 {
                     Converters = { new LegacyVersionJsonConverter() }
-                });
+                })!;
 
             if (theme.Metadata.Version >= ModernVersion)
             {

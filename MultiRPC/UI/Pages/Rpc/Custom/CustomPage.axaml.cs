@@ -134,7 +134,7 @@ namespace MultiRPC.UI.Pages.Rpc.Custom
             };
         }
 
-        private SvgImage _svgHelpImage;
+        private SvgImage _svgHelpImage = null!;
         private Image MakeHelpImage(string helpImage)
         {
             var image = new Image { Classes = { "help" }, Tag = helpImage, Source = _svgHelpImage };
