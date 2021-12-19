@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -25,16 +26,16 @@ namespace MultiRPC.Discord.Status
 
     public class Component
     {
-        [JsonPropertyName("id")]
+        /*[JsonPropertyName("id")]
         public string Id { get; init; }
 
         [JsonPropertyName("name")]
-        public string Name { get; init; }
+        public string Name { get; init; }*/
 
         [JsonPropertyName("status")]
-        public string Status { get; init; }
+        public string Status { get; set; }
 
-        [JsonPropertyName("created_at")]
+        /*[JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; init; }
 
         [JsonPropertyName("updated_at")]
@@ -65,7 +66,7 @@ namespace MultiRPC.Discord.Status
         public bool OnlyShowIfDegraded { get; init; }
 
         [JsonPropertyName("components")]
-        public string[] Components { get; init; }
+        public string[] Components { get; init; }*/
     }
 
     public class Data
@@ -74,6 +75,9 @@ namespace MultiRPC.Discord.Status
         //public Page Page { get; init; }
 
         [JsonPropertyName("components")]
-        public Component[] Components { get; init; }
+        public Component[] Components { get; set; }
     }
+    
+    [JsonSerializable(typeof(Data))]
+    public partial class DataContext : JsonSerializerContext { }
 }

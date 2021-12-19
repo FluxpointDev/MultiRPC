@@ -5,35 +5,38 @@ namespace MultiRPC.Theming;
 public class Colours
 {
     [JsonPropertyName("AccentColour1")]
-    public Color ThemeAccentColor { get; init; }
+    public Color ThemeAccentColor { get; set; }
 
     [JsonPropertyName("AccentColour2")]
-    public Color ThemeAccentColor2 { get; init; }
+    public Color ThemeAccentColor2 { get; set; }
     
     [JsonPropertyName("AccentColour2Hover")]
-    public Color ThemeAccentColor2Hover { get; init; }
+    public Color ThemeAccentColor2Hover { get; set; }
     
     [JsonPropertyName("AccentColour3")]
-    public Color ThemeAccentColor3 { get; init; }
+    public Color ThemeAccentColor3 { get; set; }
     
     [JsonPropertyName("AccentColour4")]
-    public Color ThemeAccentColor4 { get; init; }
+    public Color ThemeAccentColor4 { get; set; }
     
     [JsonPropertyName("AccentColour5")]
-    public Color ThemeAccentColor5 { get; init; }
+    public Color ThemeAccentColor5 { get; set; }
 
     [JsonPropertyName("DisabledButtonColour")]
-    public Color ThemeAccentDisabledColor { get; init; }
+    public Color ThemeAccentDisabledColor { get; set; }
     
     [JsonPropertyName("DisabledButtonTextColour")]
-    public Color ThemeAccentDisabledTextColor { get; init; }
+    public Color ThemeAccentDisabledTextColor { get; set; }
 
     [JsonPropertyName("NavButtonBackgroundSelected")]
-    public Color NavButtonSelectedColor { get; init; }
+    public Color NavButtonSelectedColor { get; set; }
     
     [JsonPropertyName("NavButtonIconColourSelected")]
-    public Color NavButtonSelectedIconColor { get; init; }
+    public Color NavButtonSelectedIconColor { get; set; }
     
     [JsonPropertyName("TextColour")]
-    public Color TextColour { get; init; }
+    public Color TextColour { get; set; }
 }
+
+[JsonSerializable(typeof(Colours))]
+public partial class ColoursContext : JsonSerializerContext { }

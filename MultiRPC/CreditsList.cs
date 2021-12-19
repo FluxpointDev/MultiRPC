@@ -1,4 +1,6 @@
-﻿namespace MultiRPC
+﻿using System.Text.Json.Serialization;
+
+namespace MultiRPC
 {
     public class CreditsList
     {
@@ -13,4 +15,7 @@
         public string[] Patreon { get; }
         public string[] Paypal { get; }
     }
+    
+    [JsonSerializable(typeof(CreditsList))]
+    public partial class CreditsListContext : JsonSerializerContext { }
 }

@@ -64,6 +64,7 @@ namespace MultiRPC.UI.Pages.Settings
             brdDiscordStatus.Background = Brushes.Orange;
             var lang = new Language(LanguageText.CheckingDiscordStatus);
             tblDiscordStatus.DataContext = lang;
+            //TODO: Put this on another thread so it doesn't make the UI un-responsive
             var status = await DiscordStatusChecker.GetStatus();
             switch (status)
             {

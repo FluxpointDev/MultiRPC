@@ -1,14 +1,18 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
+using MultiRPC.Rpc;
 
 namespace MultiRPC.Setting
 {
-    //TODO: Use source gen to make JsonTypeInfo (Ensures we can process json even when trimming)
     public static class SettingManager<T> 
         where T : BaseSetting, new()
     {
+        [UnconditionalSuppressMessage("Trimming", 
+            "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code",
+            Justification = "We allow SerializerContext to be used when possible")]
         private static readonly Lazy<T> LazySetting = new Lazy<T>(() =>
         {
             var setting = new T();
@@ -17,7 +21,10 @@ namespace MultiRPC.Setting
             if (File.Exists(settingFileLocation))
             {
                 using var fileSteam = File.OpenRead(settingFileLocation);
-                var fileSetting = JsonSerializer.Deserialize<T>(fileSteam);
+                var fileSetting = setting.SerializerContext != null ?
+                    JsonSerializer.Deserialize<T>(fileSteam, setting.SerializerContext.Options) 
+                    : JsonSerializer.Deserialize<T>(fileSteam);
+
                 if (fileSetting != null)
                 {
                     setting = fileSetting;

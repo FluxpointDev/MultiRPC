@@ -42,7 +42,7 @@ namespace MultiRPC.Rpc
         }
 
         private DisableSettings? _disableSettings;
-        private async Task<bool> CheckPresence(string text)
+        private async Task<bool> CheckPresence(string? text)
         {
             if (string.IsNullOrWhiteSpace(text) || !text.ToLower().Contains("discord.gg"))
             {

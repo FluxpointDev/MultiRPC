@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
-using System.IO.Pipelines;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -29,8 +29,17 @@ public class Theme : IDisposable
 {
     private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Theme));
     private static readonly Version ModernVersion = new Version(7, 0);
+    private static readonly JsonTypeInfo<Colours> ColoursJsonContext;
+    private static readonly JsonTypeInfo<Metadata> MetadataJsonContext;
+    static Theme()
+    {
+        ColoursJsonContext = new ColoursContext(new JsonSerializerOptions(JsonSerializerDefaults.General)
+        { Converters = { new ColourJsonConverter() }}).Colours;
+        
+        MetadataJsonContext = new MetadataContext(new JsonSerializerOptions(JsonSerializerDefaults.General)
+        { Converters = { new LegacyVersionJsonConverter() }}).Metadata;
+    }
     
-
     /// <summary>
     /// The theme that is currently being used
     /// </summary>
@@ -58,8 +67,9 @@ public class Theme : IDisposable
 
     public bool HaveAsset(string key)
     {
+        //We can't load in assets from the older theming
         return Mode == ThemeMode.Modern
-            && (_archive?.Entries.Any(x => x.FullName == "Assets/" + key) ?? false);
+               && (_archive?.Entries.Any(x => x.FullName == "Assets/" + key) ?? false);
     }
 
     public Stream GetAssetStream(string key)
@@ -111,11 +121,7 @@ public class Theme : IDisposable
         };
         try
         {
-            theme.Colours = JsonSerializer.Deserialize<Colours>(coloursEntry.Open(),
-                new JsonSerializerOptions(JsonSerializerDefaults.General)
-                {
-                    Converters = { new ColourJsonConverter() }
-                })!;
+            theme.Colours = JsonSerializer.Deserialize(coloursEntry.Open(), ColoursJsonContext)!;
         }
         catch (Exception e)
         {
@@ -128,11 +134,7 @@ public class Theme : IDisposable
 
         try
         {
-            theme.Metadata = JsonSerializer.Deserialize<Metadata>(metadataEntry.Open(),
-                new JsonSerializerOptions(JsonSerializerDefaults.General)
-                {
-                    Converters = { new LegacyVersionJsonConverter() }
-                })!;
+            theme.Metadata = JsonSerializer.Deserialize(metadataEntry.Open(), MetadataJsonContext)!;
 
             if (theme.Metadata.Version >= ModernVersion)
             {

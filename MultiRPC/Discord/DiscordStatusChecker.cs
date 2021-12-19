@@ -1,6 +1,8 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
+using MultiRPC.Discord.Status;
 using MultiRPC.UI;
 using TinyUpdate.Http.Extensions;
 
@@ -26,7 +28,7 @@ namespace MultiRPC.Discord
                 return DiscordStatus.MajorOutage;
             }
 
-            var data = JsonSerializer.Deserialize<Status.Data>(await response.Content.ReadAsStreamAsync());
+            var data = await response.Content.ReadFromJsonAsync(DataContext.Default.Data);
             var status = data?.Components[0].Status switch
             {
                 "operational" => DiscordStatus.Operational,

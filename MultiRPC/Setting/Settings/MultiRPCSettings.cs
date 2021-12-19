@@ -40,5 +40,8 @@ namespace MultiRPC.Setting.Settings
 
         [JsonIgnore]
         public override string Name => "MultiRPC";
+
+        //TODO: Wait for PR to fix System.Text.Json source generator in DiscordRPC (PR to be made)
+        public override JsonSerializerContext? SerializerContext { get; }
     }
 }

@@ -49,5 +49,8 @@ namespace MultiRPC.Setting.Settings
 
         [JsonIgnore] 
         public override string Name => "Profiles";
+        
+        //TODO: Wait for PR to fix System.Text.Json source generator in DiscordRPC (PR to be made)
+        public override JsonSerializerContext? SerializerContext { get; }
     }
 }

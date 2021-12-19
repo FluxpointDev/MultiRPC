@@ -5,7 +5,10 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading;
+using MultiRPC.Discord.Status;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using TinyUpdate.Core.Logging;
@@ -21,6 +24,13 @@ namespace MultiRPC
         private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Language));
         static Language()
         {
+            LangContext = new LangContext
+            (new JsonSerializerOptions(JsonSerializerDefaults.General)
+            {
+                //We know that the file in question is safe as we provide the files 
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                ReadCommentHandling = JsonCommentHandling.Skip
+            }).DictionaryStringString;
             GrabLanguage();
             Languages = new List<Language>(_englishLanguageJsonFileContent!.Count);
         }
@@ -61,7 +71,7 @@ namespace MultiRPC
         /// <param name="languageText"></param>
         public static Language GetLanguage(string languageText)
         {
-            var lang = Languages.FirstOrDefault(x => x._textObservable.Value._jsonNames.Any(y => y == languageText));
+            var lang = Languages.FirstOrDefault(x => x._textObservable.Value.JsonNames.Any(y => y == languageText));
             if (lang == null)
             {
                 lang = new Language(languageText);
@@ -105,6 +115,7 @@ namespace MultiRPC
             }
         }
 
+        private static readonly JsonTypeInfo<Dictionary<string, string>> LangContext;
         private static string GetFilePath(string name) => Path.Combine(Constants.LanguageFolder, name + ".json");
         private static Dictionary<string, string>? GrabLanguageFile(string fileLocation)
         {
@@ -115,13 +126,7 @@ namespace MultiRPC
            
             try
             {
-                return JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(fileLocation), 
-                    new JsonSerializerOptions(JsonSerializerDefaults.General)
-                    {
-                        //We know that the file in question is safe as we provide the files 
-                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                        ReadCommentHandling = JsonCommentHandling.Skip
-                    });
+                return JsonSerializer.Deserialize(File.ReadAllText(fileLocation), LangContext);
             }
             catch (Exception e)
             {
@@ -155,18 +160,18 @@ namespace MultiRPC
     {
         public LanguageObservable(params string[] jsonNames)
         {
-            _jsonNames = jsonNames;
+            JsonNames = jsonNames;
         }
 
         internal void ChangeJsonNames(params string[] jsonNames)
         {
-            _jsonNames = jsonNames;
+            JsonNames = jsonNames;
             _observables.ForEach(x => x.OnNext(Text));
         }
 
         internal string Text => string.Join(' ', GetText());
         
-        internal string[] _jsonNames;
+        internal string[] JsonNames;
         // ReSharper disable once CollectionNeverQueried.Local
         private readonly List<IObserver<string>> _observables = new List<IObserver<string>>();
         public IDisposable Subscribe(IObserver<string> observer)
@@ -182,6 +187,9 @@ namespace MultiRPC
             _observables.ForEach(x => x.OnNext(Text));
         }
 
-        private IEnumerable<string> GetText() => _jsonNames.Select(Language.GetText);
+        private IEnumerable<string> GetText() => JsonNames.Select(Language.GetText);
     }
+    
+    [JsonSerializable(typeof(Dictionary<string, string>))]
+    public partial class LangContext : JsonSerializerContext { }
 }

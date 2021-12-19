@@ -62,7 +62,7 @@ namespace MultiRPC.UI.Pages
             _writeTime = creditsFileInfo.LastWriteTime;
 
             using var reader = creditsFileInfo.OpenRead();
-            _creditsList = JsonSerializer.Deserialize<CreditsList>(reader);
+            _creditsList = JsonSerializer.Deserialize(reader, CreditsListContext.Default.CreditsList);
             if (_creditsList != null)
             {
                 tblCommunityAdmins.Text = string.Join("\r\n\r\n", _creditsList.Admins);

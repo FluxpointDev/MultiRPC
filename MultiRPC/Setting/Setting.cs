@@ -1,5 +1,7 @@
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MultiRPC.Setting
 {
@@ -14,6 +16,11 @@ namespace MultiRPC.Setting
     {
         public abstract string Name { get; }
 
+        public abstract JsonSerializerContext? SerializerContext { get; }
+
+        [UnconditionalSuppressMessage("Trimming", 
+            "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code",
+            Justification = "We allow SerializerContext to be used when possible")]
         public void Save()
         {
             var settingFileLocation = Path.Combine(Constants.SettingsFolder, Name + ".json");
@@ -22,7 +29,15 @@ namespace MultiRPC.Setting
                 File.Delete(settingFileLocation);
             }
             var stream = File.OpenWrite(settingFileLocation);
-            JsonSerializer.Serialize(stream, this, GetType(), Constants.JsonSerializer);
+
+            if (SerializerContext != null)
+            {
+                JsonSerializer.Serialize(stream, this, GetType(), SerializerContext);
+            }
+            else
+            {
+                JsonSerializer.Serialize(stream, this, GetType(), Constants.JsonSerializer);
+            }
             stream.Dispose();
         }
     }

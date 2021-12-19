@@ -12,8 +12,11 @@ public class Metadata
     }
 
     [JsonPropertyName("MultiRPCVersion")]
-    public Version Version { get; init; }
+    public Version Version { get; set; }
 
     [JsonPropertyName("ThemeName")]
-    public string Name { get; init; }
+    public string Name { get; set; }
 }
+
+[JsonSerializable(typeof(Metadata))]
+public partial class MetadataContext : JsonSerializerContext { }

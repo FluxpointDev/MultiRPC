@@ -8,7 +8,9 @@ namespace MultiRPC.Setting.Settings
     {
         [JsonIgnore]
         public override string Name => "Disable";
-        
+
+        public override JsonSerializerContext? SerializerContext { get; } = DisableSettingsContext.Default;
+
         [GeneratedProperty, SettingName("DiscordCheck")]
         private bool _discordCheck;
         
@@ -30,4 +32,7 @@ namespace MultiRPC.Setting.Settings
         [GeneratedProperty]
         private bool _inviteWarn;
     }
+            
+    [JsonSerializable(typeof(DisableSettings))]
+    public partial class DisableSettingsContext : JsonSerializerContext { }
 }

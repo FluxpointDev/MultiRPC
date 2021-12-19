@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using DiscordRPC;
 using Fonderie;
@@ -22,11 +22,13 @@ namespace MultiRPC.Rpc
         public DiscordRPC.RichPresence ToRichPresence()
         {
             var buttons = new List<Button>();
-            if (Uri.TryCreate(_button1Url, UriKind.Absolute, out _))
+            if (!string.IsNullOrWhiteSpace(_button1Text) 
+                && Uri.TryCreate(_button1Url, UriKind.Absolute, out _))
             {
                 buttons.Add(new Button { Label = _button1Text, Url = _button1Url });
             }
-            if (Uri.TryCreate(_button2Url, UriKind.Absolute, out _))
+            if (!string.IsNullOrWhiteSpace(_button2Text) 
+                && Uri.TryCreate(_button2Url, UriKind.Absolute, out _))
             {
                 buttons.Add(new Button { Label = _button2Text, Url = _button2Url });
             }

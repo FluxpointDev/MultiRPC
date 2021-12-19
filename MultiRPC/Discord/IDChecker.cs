@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -32,7 +33,8 @@ namespace MultiRPC.Discord
                 return (false, Language.GetText(LanguageText.ClientIDIsNotValid));
             }
 
-            var response = JsonSerializer.Deserialize<ClientCheckResult>(await responseMessage.Content.ReadAsStreamAsync());
+            var response = await responseMessage.Content
+                .ReadFromJsonAsync(ClientCheckResultContext.Default.ClientCheckResult);
 
             return !string.IsNullOrEmpty(response?.Message) ?
                 (false, $"{Language.GetText(LanguageText.ClientIDIsNotValid)}\r\n{response.Message}")
@@ -55,4 +57,7 @@ namespace MultiRPC.Discord
         [JsonPropertyName("name")]
         public string Name { get; }
     }
+    
+    [JsonSerializable(typeof(ClientCheckResult))]
+    public partial class ClientCheckResultContext : JsonSerializerContext { }
 }

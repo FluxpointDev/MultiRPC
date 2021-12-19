@@ -16,6 +16,8 @@ namespace MultiRPC.Setting.Settings
         [JsonIgnore]
         public override string Name => "General";
 
+        public override JsonSerializerContext? SerializerContext { get; } = GeneralSettingsContext.Default;
+
         [GeneratedProperty]
         private string? _lastUser = "NA#0000";
 
@@ -73,4 +75,7 @@ namespace MultiRPC.Setting.Settings
             return l.ToArray();
         }
     }
+        
+    [JsonSerializable(typeof(GeneralSettings))]
+    public partial class GeneralSettingsContext : JsonSerializerContext { }
 }
