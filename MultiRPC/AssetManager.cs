@@ -10,6 +10,7 @@ using SM = Svg.Model;
 using SP = Svg.Model;
 
 namespace MultiRPC;
+
 public static class AssetManager
 {
     internal static event EventHandler? ReloadAssets;

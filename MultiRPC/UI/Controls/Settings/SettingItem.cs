@@ -3,19 +3,18 @@ using Avalonia.Controls;
 using MultiRPC.Exceptions;
 using MultiRPC.Setting;
 
-namespace MultiRPC.UI.Controls.Settings
-{
-    public class SettingItem : UserControl
-    {
-        public SettingItem()
-        {
-            if (!Design.IsDesignMode)
-            {
-                throw new DesignException();
-            }
-        }
+namespace MultiRPC.UI.Controls.Settings;
 
-        public SettingItem(Language header, BaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
-        { }
+public class SettingItem : UserControl
+{
+    public SettingItem()
+    {
+        if (!Design.IsDesignMode)
+        {
+            throw new DesignException();
+        }
     }
+
+    public SettingItem(Language header, BaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
+    { }
 }

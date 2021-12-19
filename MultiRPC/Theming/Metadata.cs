@@ -2,6 +2,7 @@ using System;
 using System.Text.Json.Serialization;
 
 namespace MultiRPC.Theming;
+
 public class Metadata
 {
     [JsonConstructor]

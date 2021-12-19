@@ -1,11 +1,10 @@
-﻿namespace MultiRPC.Rpc
+﻿namespace MultiRPC.Rpc;
+
+public enum DiscordClients
 {
-    public enum DiscordClients
-    {
-        Auto,
-        Discord,
-        DiscordPTB,
-        DiscordCanary,
-        DiscordDevelopment
-    }
+    Auto,
+    Discord,
+    DiscordPTB,
+    DiscordCanary,
+    DiscordDevelopment
 }

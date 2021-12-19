@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using Avalonia.Media;
 
 namespace MultiRPC.Theming;
+
 public class Colours
 {
     [JsonPropertyName("AccentColour1")]

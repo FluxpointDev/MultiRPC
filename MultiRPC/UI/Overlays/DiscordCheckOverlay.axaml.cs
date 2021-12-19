@@ -7,112 +7,111 @@ using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using TinyUpdate.Core.Logging;
 
-namespace MultiRPC.UI.Overlays
+namespace MultiRPC.UI.Overlays;
+
+public partial class DiscordCheckOverlay : UserControl
 {
-    public partial class DiscordCheckOverlay : UserControl
+    private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(DiscordCheckOverlay));
+    private bool _ranFadeOut;
+    public DiscordCheckOverlay()
     {
-        private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(DiscordCheckOverlay));
-        private bool _ranFadeOut;
-        public DiscordCheckOverlay()
+        if (SettingManager<DisableSettings>.Setting.DiscordCheck)
         {
-            if (SettingManager<DisableSettings>.Setting.DiscordCheck)
-            {
-                IsVisible = false;
-                return;
-            }
-
-            InitializeComponent();
-            tblMadeBy.Text = Language.GetText(LanguageText.MadeBy) + ": " + Constants.AppDeveloper;
-            rDiscordServer.Text = Language.GetText(LanguageText.DiscordServer) + ": ";
-            hylServerLinkUri.Text = Constants.ServerInviteCode;
-            hylServerLinkUri.Uri = Constants.DiscordServerUrl;
-            btnDisableDiscordCheck.DataContext = Language.GetLanguage(LanguageText.TempDisableDiscordCheck);
-            imgIcon.AddSvgAsset("Logo.svg");
-            gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
-            AssetManager.RegisterForAssetReload("Loading.gif",
-                () => gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif"));
-
-            _ = WaitForDiscord();
-            _ = ShowTmpButton();
+            IsVisible = false;
+            return;
         }
 
-        private async Task ShowTmpButton()
-        {
-            await Task.Delay(5000);
-            btnDisableDiscordCheck.Opacity = 1;
-        }
+        InitializeComponent();
+        tblMadeBy.Text = Language.GetText(LanguageText.MadeBy) + ": " + Constants.AppDeveloper;
+        rDiscordServer.Text = Language.GetText(LanguageText.DiscordServer) + ": ";
+        hylServerLinkUri.Text = Constants.ServerInviteCode;
+        hylServerLinkUri.Uri = Constants.DiscordServerUrl;
+        btnDisableDiscordCheck.DataContext = Language.GetLanguage(LanguageText.TempDisableDiscordCheck);
+        imgIcon.AddSvgAsset("Logo.svg");
+        gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
+        AssetManager.RegisterForAssetReload("Loading.gif",
+            () => gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif"));
 
-        private bool GetClient(string requestedClient, out string client)
-        {
-            var haveClient = Process.GetProcessesByName(requestedClient).Length != 0;
-            client = haveClient ? requestedClient : "";
-            return haveClient;
-        }
+        _ = WaitForDiscord();
+        _ = ShowTmpButton();
+    }
+
+    private async Task ShowTmpButton()
+    {
+        await Task.Delay(5000);
+        btnDisableDiscordCheck.Opacity = 1;
+    }
+
+    private bool GetClient(string requestedClient, out string client)
+    {
+        var haveClient = Process.GetProcessesByName(requestedClient).Length != 0;
+        client = haveClient ? requestedClient : "";
+        return haveClient;
+    }
         
-        private async Task WaitForDiscord()
+    private async Task WaitForDiscord()
+    {
+        try
         {
-            try
+            //Lets first try to find what discord is open
+            string discordClient = "";
+            while (!_ranFadeOut)
             {
-                //Lets first try to find what discord is open
-                string discordClient = "";
-                while (!_ranFadeOut)
+                if (GetClient("Discord", out discordClient))
                 {
-                    if (GetClient("Discord", out discordClient))
-                    {
-                        break;
-                    }
-                    if (GetClient("DiscordCanary", out discordClient))
-                    {
-                        break;
-                    }
-                    if (GetClient("DiscordPTB", out discordClient))
-                    {
-                        break;
-                    }
-                    if (GetClient("DiscordDevelopment", out discordClient))
-                    {
-                        break;
-                    }
+                    break;
+                }
+                if (GetClient("DiscordCanary", out discordClient))
+                {
+                    break;
+                }
+                if (GetClient("DiscordPTB", out discordClient))
+                {
+                    break;
+                }
+                if (GetClient("DiscordDevelopment", out discordClient))
+                {
+                    break;
+                }
                     
-                    tblDiscordClientMessage.Text = Language.GetText(LanguageText.CantFindDiscord);
-                    await Task.Delay(750);
-                }
-
-                if (!_ranFadeOut)
-                {
-                    tblMultiRPC.Text = "MultiRPC - " + Language.GetText(discordClient);
-                }
-
-                while (!_ranFadeOut)
-                {
-                    //If we have less then 4 processes from discord then discord itself is still loading
-                    var processCount = Process.GetProcessesByName(discordClient).Length;
-                    if (processCount < 4)
-                    {
-                        tblDiscordClientMessage.Text =
-                            $"{Language.GetText(discordClient)} {Language.GetText(LanguageText.IsLoading)}....";
-                        await Task.Delay(750);
-                        continue;
-                    }
-
-                    _ = FadeOut();
-                }
+                tblDiscordClientMessage.Text = Language.GetText(LanguageText.CantFindDiscord);
+                await Task.Delay(750);
             }
-            catch
+
+            if (!_ranFadeOut)
             {
-                _logger.Error(Language.GetText(LanguageText.ProcessFindError));
+                tblMultiRPC.Text = "MultiRPC - " + Language.GetText(discordClient);
+            }
+
+            while (!_ranFadeOut)
+            {
+                //If we have less then 4 processes from discord then discord itself is still loading
+                var processCount = Process.GetProcessesByName(discordClient).Length;
+                if (processCount < 4)
+                {
+                    tblDiscordClientMessage.Text =
+                        $"{Language.GetText(discordClient)} {Language.GetText(LanguageText.IsLoading)}....";
+                    await Task.Delay(750);
+                    continue;
+                }
+
                 _ = FadeOut();
             }
         }
-
-        private async Task FadeOut()
+        catch
         {
-            _ranFadeOut = true;
-            Opacity = 0;
-            await Task.Delay(500);
-            IsVisible = false;
+            _logger.Error(Language.GetText(LanguageText.ProcessFindError));
+            _ = FadeOut();
         }
-
-        private void BtnDisableDiscordCheck_OnClick(object? sender, RoutedEventArgs e) => _ = FadeOut();
     }
+
+    private async Task FadeOut()
+    {
+        _ranFadeOut = true;
+        Opacity = 0;
+        await Task.Delay(500);
+        IsVisible = false;
+    }
+
+    private void BtnDisableDiscordCheck_OnClick(object? sender, RoutedEventArgs e) => _ = FadeOut();
 }

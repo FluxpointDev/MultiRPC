@@ -2,42 +2,41 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace MultiRPC.Extensions
-{
-    public static class UriExt
-    {
-        public static bool OpenInBrowser(this Uri url) => OpenInBrowser(url.AbsoluteUri);
+namespace MultiRPC.Extensions;
 
-        //https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
-        public static bool OpenInBrowser(this string url)
+public static class UriExt
+{
+    public static bool OpenInBrowser(this Uri url) => OpenInBrowser(url.AbsoluteUri);
+
+    //https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
+    public static bool OpenInBrowser(this string url)
+    {
+        try
         {
-            try
+            Process.Start(url);
+            return true;
+        }
+        catch
+        {
+            // hack because of this: https://github.com/dotnet/corefx/issues/10361
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Process.Start(url);
+                url = url.Replace("&", "^&");
+                Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
                 return true;
             }
-            catch
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                // hack because of this: https://github.com/dotnet/corefx/issues/10361
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    url = url.Replace("&", "^&");
-                    Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
-                    return true;
-                }
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    Process.Start("xdg-open", url);
-                    return true;
-                }
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    Process.Start("open", url);
-                    return true;
-                }
+                Process.Start("xdg-open", url);
+                return true;
             }
-
-            return false;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                Process.Start("open", url);
+                return true;
+            }
         }
+
+        return false;
     }
 }

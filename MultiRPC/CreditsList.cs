@@ -1,21 +1,20 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace MultiRPC
-{
-    public class CreditsList
-    {
-        public CreditsList(string[] admins, string[] patreon, string[] paypal)
-        {
-            Admins = admins;
-            Patreon = patreon;
-            Paypal = paypal;
-        }
+namespace MultiRPC;
 
-        public string[] Admins { get; }
-        public string[] Patreon { get; }
-        public string[] Paypal { get; }
+public class CreditsList
+{
+    public CreditsList(string[] admins, string[] patreon, string[] paypal)
+    {
+        Admins = admins;
+        Patreon = patreon;
+        Paypal = paypal;
     }
-    
-    [JsonSerializable(typeof(CreditsList))]
-    public partial class CreditsListContext : JsonSerializerContext { }
+
+    public string[] Admins { get; }
+    public string[] Patreon { get; }
+    public string[] Paypal { get; }
 }
+    
+[JsonSerializable(typeof(CreditsList))]
+public partial class CreditsListContext : JsonSerializerContext { }

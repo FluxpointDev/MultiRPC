@@ -3,18 +3,18 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using TinyUpdate.Core.Helper;
 
-namespace MultiRPC.Utils
+namespace MultiRPC.Utils;
+
+public static class AdminUtil
 {
-    public static class AdminUtil
+    public static bool IsAdmin { get; } = GetIsAdministrator();
+
+    [DllImport("libc", SetLastError = true)]
+    private static extern uint geteuid();
+
+    private static bool GetIsAdministrator()
     {
-        public static bool IsAdmin { get; } = GetIsAdministrator();
-
-        [DllImport("libc", SetLastError = true)]
-        private static extern uint geteuid();
-
-        private static bool GetIsAdministrator()
-        {
-            return TaskHelper.RunTaskBasedOnOS(() =>
+        return TaskHelper.RunTaskBasedOnOS(() =>
             {
                 if (!OperatingSystem.IsWindows()) return false;
 
@@ -24,6 +24,5 @@ namespace MultiRPC.Utils
                 return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
             }, () => geteuid() == 0, 
             () => geteuid() == 0);
-        }
     }
 }

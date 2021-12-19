@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Pipes;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using DiscordRPC;
 using DiscordRPC.Message;
@@ -13,173 +9,171 @@ using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using MultiRPC.UI;
 using MultiRPC.Utils;
-using TinyUpdate.Core.Helper;
 using TinyUpdate.Core.Logging;
 
-namespace MultiRPC.Rpc
+namespace MultiRPC.Rpc;
+
+public class RpcClient
 {
-    public class RpcClient
+    private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(RpcClient));
+    private DateTime _rpcStart;
+    private string _presenceName = "Unknown";
+    private long _presenceId;
+    private DiscordRpcClient? _client;
+
+    public bool IsRunning => Status != ConnectionStatus.Disconnected;
+    public long ID => _presenceId;
+    public ConnectionStatus Status { get; private set; }
+
+    public event EventHandler<ReadyMessage>? Ready;
+    public event EventHandler<ErrorMessage>? Errored;
+    public event EventHandler? Disconnected;
+    public event EventHandler? Loading;
+    public event EventHandler<PresenceMessage>? PresenceUpdated;
+
+    public void ClearPresence()
     {
-        private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(RpcClient));
-        private DateTime _rpcStart;
-        private string _presenceName = "Unknown";
-        private long _presenceId;
-        private DiscordRpcClient? _client;
+        _client?.ClearPresence();
+    }
 
-        public bool IsRunning => Status != ConnectionStatus.Disconnected;
-        public long ID => _presenceId;
-        public ConnectionStatus Status { get; private set; }
-
-        public event EventHandler<ReadyMessage>? Ready;
-        public event EventHandler<ErrorMessage>? Errored;
-        public event EventHandler? Disconnected;
-        public event EventHandler? Loading;
-        public event EventHandler<PresenceMessage>? PresenceUpdated;
-
-        public void ClearPresence()
+    private DisableSettings? _disableSettings;
+    private async Task<bool> CheckPresence(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text) || !text.ToLower().Contains("discord.gg"))
         {
-            _client?.ClearPresence();
+            return true;
         }
 
-        private DisableSettings? _disableSettings;
-        private async Task<bool> CheckPresence(string? text)
+        _disableSettings ??= SettingManager<DisableSettings>.Setting;
+        if (_disableSettings.InviteWarn)
         {
-            if (string.IsNullOrWhiteSpace(text) || !text.ToLower().Contains("discord.gg"))
-            {
-                return true;
-            }
+            return true;
+        }
+        var result = await MessageBox.Show(
+            Language.GetText(LanguageText.AdvertisingWarning), 
+            Language.GetText(LanguageText.Warning),
+            MessageBoxButton.OkCancel,
+            MessageBoxImage.Warning);
 
-            _disableSettings ??= SettingManager<DisableSettings>.Setting;
-            if (_disableSettings.InviteWarn)
-            {
-                return true;
-            }
-            var result = await MessageBox.Show(
-                Language.GetText(LanguageText.AdvertisingWarning), 
-                Language.GetText(LanguageText.Warning),
-                MessageBoxButton.OkCancel,
-                MessageBoxImage.Warning);
+        if (result == MessageBoxResult.Ok)
+        {
+            _disableSettings.InviteWarn = true;
 
-            if (result == MessageBoxResult.Ok)
-            {
-                _disableSettings.InviteWarn = true;
-
-                _logger.Warning(Language.GetText(LanguageText.AdvertisingWarningDisabled));
-                return true;
-            }
-
-            return result != MessageBoxResult.Cancel;
+            _logger.Warning(Language.GetText(LanguageText.AdvertisingWarningDisabled));
+            return true;
         }
 
-        public void Start(long? applicationId, string? applicationName)
-        {
-            _presenceId = applicationId ?? RpcPageManager.CurrentPage?.RichPresence.ID ?? Constants.MultiRPCID;
-            var idS = _presenceId.ToString();
+        return result != MessageBoxResult.Cancel;
+    }
 
-            var name = applicationName ?? RpcPageManager.CurrentPage?.RichPresence.Name ?? Language.GetText(LanguageText.MultiRPC);
-            _presenceName = name;
+    public void Start(long? applicationId, string? applicationName)
+    {
+        _presenceId = applicationId ?? RpcPageManager.CurrentPage?.RichPresence.ID ?? Constants.MultiRPCID;
+        var idS = _presenceId.ToString();
+
+        var name = applicationName ?? RpcPageManager.CurrentPage?.RichPresence.Name ?? Language.GetText(LanguageText.MultiRPC);
+        _presenceName = name;
             
-            //If we are running already then stop it if we aren't using the same ID
-            if (IsRunning && _client?.ApplicationID != idS)
-            {
-                Stop();
-            }
-            _logger.Information(Language.GetText(LanguageText.StartingRpc));
+        //If we are running already then stop it if we aren't using the same ID
+        if (IsRunning && _client?.ApplicationID != idS)
+        {
+            Stop();
+        }
+        _logger.Information(Language.GetText(LanguageText.StartingRpc));
 
-            var processName = SettingManager<GeneralSettings>.Setting.Client switch
-            {
-                DiscordClients.Discord => "Discord",
-                DiscordClients.DiscordPTB => "DiscordPTB",
-                DiscordClients.DiscordCanary => "DiscordCanary",
-                DiscordClients.DiscordDevelopment => "DiscordDevelopment",
-                _ => null
-            };
-            _client?.Dispose();
+        var processName = SettingManager<GeneralSettings>.Setting.Client switch
+        {
+            DiscordClients.Discord => "Discord",
+            DiscordClients.DiscordPTB => "DiscordPTB",
+            DiscordClients.DiscordCanary => "DiscordCanary",
+            DiscordClients.DiscordDevelopment => "DiscordDevelopment",
+            _ => null
+        };
+        _client?.Dispose();
 
-            var pipe = PipeUtil.FindPipe(processName);
+        var pipe = PipeUtil.FindPipe(processName);
 
-            if (LoggingCreator.ShouldProcess(_logger.LogLevel, LogLevel.Trace))
-            {
-                var debugMessage = Language.GetText(LanguageText.DiscordClientCheck)
-                    .Replace("{discordProcess}", (Language.GetText(processName ?? "NA")))
-                    .Replace("{wasFound}", (pipe != -1).ToString());
-                _logger.Debug(debugMessage);
-            }
-            _client = new DiscordRpcClient(idS, pipe)
-            {
-                SkipIdenticalPresence = false, 
-                Logger = new RpcLogger(),
-                ShutdownOnly = true
-            };
+        if (LoggingCreator.ShouldProcess(_logger.LogLevel, LogLevel.Trace))
+        {
+            var debugMessage = Language.GetText(LanguageText.DiscordClientCheck)
+                .Replace("{discordProcess}", (Language.GetText(processName ?? "NA")))
+                .Replace("{wasFound}", (pipe != -1).ToString());
+            _logger.Debug(debugMessage);
+        }
+        _client = new DiscordRpcClient(idS, pipe)
+        {
+            SkipIdenticalPresence = false, 
+            Logger = new RpcLogger(),
+            ShutdownOnly = true
+        };
 
-            _client.OnPresenceUpdate += (sender, e) => PresenceUpdated?.Invoke(sender, e);
-            _client.OnReady += (sender, e) => 
-            {
-                Status = ConnectionStatus.Connected;
-                Ready?.Invoke(sender, e);
-            };
-            _client.OnError += (sender, e) =>
-            {
-                Status = ConnectionStatus.Connecting;
-                Errored?.Invoke(this, e);
-            };
-            _rpcStart = DateTime.UtcNow;
-            _client.Initialize();
-
+        _client.OnPresenceUpdate += (sender, e) => PresenceUpdated?.Invoke(sender, e);
+        _client.OnReady += (sender, e) => 
+        {
+            Status = ConnectionStatus.Connected;
+            Ready?.Invoke(sender, e);
+        };
+        _client.OnError += (sender, e) =>
+        {
             Status = ConnectionStatus.Connecting;
-            Loading?.Invoke(this, EventArgs.Empty);
-        }
+            Errored?.Invoke(this, e);
+        };
+        _rpcStart = DateTime.UtcNow;
+        _client.Initialize();
 
-        public void Stop()
+        Status = ConnectionStatus.Connecting;
+        Loading?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void Stop()
+    {
+        _logger.Information(Language.GetText(LanguageText.ShuttingDown));
+        ClearPresence();
+        _client?.Deinitialize();
+        _client?.Dispose();
+        Status = ConnectionStatus.Disconnected;
+        _presenceId = 0;
+        _presenceName = "Unknown";
+
+        Disconnected?.Invoke(this, EventArgs.Empty);
+    }
+
+    public async Task UpdatePresence(DiscordRPC.RichPresence richPresence)
+    {
+        //Check that the presence isn't doing any advertising
+        if (!await CheckPresence(richPresence.Details) || !await CheckPresence(richPresence.State))
         {
-            _logger.Information(Language.GetText(LanguageText.ShuttingDown));
-            ClearPresence();
-            _client?.Deinitialize();
-            _client?.Dispose();
-            Status = ConnectionStatus.Disconnected;
-            _presenceId = 0;
-            _presenceName = "Unknown";
-
-            Disconnected?.Invoke(this, EventArgs.Empty);
+            Stop();
+            return;
         }
-
-        public async Task UpdatePresence(DiscordRPC.RichPresence richPresence)
+            
+        if (_client?.IsDisposed ?? true)
         {
-            //Check that the presence isn't doing any advertising
-            if (!await CheckPresence(richPresence.Details) || !await CheckPresence(richPresence.State))
-            {
-                Stop();
-                return;
-            }
-            
-            if (_client?.IsDisposed ?? true)
-            {
-                return;
-            }
-            
-            _client?.SetPresence(richPresence);
+            return;
         }
+            
+        _client?.SetPresence(richPresence);
+    }
         
-        public async Task UpdatePresence(RichPresence? richPresence)
+    public async Task UpdatePresence(RichPresence? richPresence)
+    {
+        if (richPresence == null)
         {
-            if (richPresence == null)
-            {
-                return;
-            }
-            
-            var pre = richPresence.Presence;
-            pre.Buttons = pre.Buttons?.Where(x => !string.IsNullOrWhiteSpace(x.Url) && !string.IsNullOrWhiteSpace(x.Label)).ToArray();
-            pre.Timestamps = richPresence.UseTimestamp ? new Timestamps
-            {
-                Start = _rpcStart
-            } : null;
-            
-            if (richPresence.ID != _presenceId)
-            {
-                Stop();
-                Start(richPresence.ID, richPresence.Name);
-            }
-            await UpdatePresence(pre);
+            return;
         }
+            
+        var pre = richPresence.Presence;
+        pre.Buttons = pre.Buttons?.Where(x => !string.IsNullOrWhiteSpace(x.Url) && !string.IsNullOrWhiteSpace(x.Label)).ToArray();
+        pre.Timestamps = richPresence.UseTimestamp ? new Timestamps
+        {
+            Start = _rpcStart
+        } : null;
+            
+        if (richPresence.ID != _presenceId)
+        {
+            Stop();
+            Start(richPresence.ID, richPresence.Name);
+        }
+        await UpdatePresence(pre);
     }
 }

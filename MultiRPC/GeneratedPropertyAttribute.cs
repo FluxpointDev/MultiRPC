@@ -1,6 +1,5 @@
 ﻿using System;
 
-namespace Fonderie
-{
-    public class GeneratedPropertyAttribute : Attribute { }
-}
+namespace Fonderie;
+
+public class GeneratedPropertyAttribute : Attribute { }

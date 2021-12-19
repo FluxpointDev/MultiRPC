@@ -1,9 +1,8 @@
-﻿namespace MultiRPC.Rpc
+﻿namespace MultiRPC.Rpc;
+
+public enum ConnectionStatus
 {
-    public enum ConnectionStatus
-    {
-        Disconnected,
-        Connecting,
-        Connected,
-    }
+    Disconnected,
+    Connecting,
+    Connected,
 }

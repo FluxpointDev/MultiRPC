@@ -2,19 +2,18 @@
 using Avalonia;
 using Avalonia.Threading;
 
-namespace MultiRPC.Extensions
+namespace MultiRPC.Extensions;
+
+public static class AvaloniaObjectExt
 {
-    public static class AvaloniaObjectExt
+    public static void RunUILogic(this AvaloniaObject avaloniaObject, Action action)
     {
-        public static void RunUILogic(this AvaloniaObject avaloniaObject, Action action)
+        if (!avaloniaObject.CheckAccess())
         {
-            if (!avaloniaObject.CheckAccess())
-            {
-                Dispatcher.UIThread.Post(action);
-                return;
-            }
-            
-            action.Invoke();
+            Dispatcher.UIThread.Post(action);
+            return;
         }
+            
+        action.Invoke();
     }
 }

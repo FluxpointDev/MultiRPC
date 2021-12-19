@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace MultiRPC.Theming.JsonConverter;
+
 public class LegacyVersionJsonConverter : JsonConverter<Version>
 {
     public override Version? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

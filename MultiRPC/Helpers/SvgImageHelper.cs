@@ -1,16 +1,14 @@
-﻿using System;
-using Avalonia.Svg;
+﻿using Avalonia.Svg;
 
-namespace MultiRPC.Helpers
+namespace MultiRPC.Helpers;
+
+public static class SvgImageHelper
 {
-    public static class SvgImageHelper
+    public static SvgImage LoadImage(string path)
     {
-        public static SvgImage LoadImage(string path)
+        return new SvgImage
         {
-            return new SvgImage
-            {
-                Source = AssetManager.LoadSvgImage(path)
-            };
-        }
+            Source = AssetManager.LoadSvgImage(path)
+        };
     }
 }

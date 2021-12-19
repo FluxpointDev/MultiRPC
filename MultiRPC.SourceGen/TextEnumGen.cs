@@ -1,74 +1,70 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Uno.RoslynHelpers;
 
-namespace MultiRPC.SourceGen
+namespace MultiRPC.SourceGen;
+
+/// <summary>
+/// This takes our en-gb.json language and makes LanguageText for us!
+/// </summary>
+[Generator]
+public class TextEnumGen : ISourceGenerator
 {
-    /// <summary>
-    /// This takes our en-gb.json language and makes LanguageText for us!
-    /// </summary>
-    [Generator]
-    public class TextEnumGen : ISourceGenerator
+    public void Initialize(GeneratorInitializationContext context) { }
+
+    public void Execute(GeneratorExecutionContext context)
     {
-        public void Initialize(GeneratorInitializationContext context) { }
-
-        public void Execute(GeneratorExecutionContext context)
+        var langFile = context.AdditionalFiles.First(at => at.Path.EndsWith("en-gb.json")).GetText();
+        if (langFile == null)
         {
-            var langFile = context.AdditionalFiles.First(at => at.Path.EndsWith("en-gb.json")).GetText();
-            if (langFile == null)
-            {
-                return;
-            }
+            return;
+        }
 
-            var builder = new IndentedStringBuilder();
-            using (builder.BlockInvariant("namespace MultiRPC"))
+        var builder = new IndentedStringBuilder();
+        using (builder.BlockInvariant("namespace MultiRPC"))
+        {
+            using (builder.BlockInvariant("public enum LanguageText"))
             {
-                using (builder.BlockInvariant("public enum LanguageText"))
+                foreach (var line in langFile.Lines)
                 {
-                    foreach (var line in langFile.Lines)
-                    {
-                        var firstLine = false;
-                        var startIndex = 0;
-                        var endIndex = 0;
-                        var s = line.ToString();
+                    var firstLine = false;
+                    var startIndex = 0;
+                    var endIndex = 0;
+                    var s = line.ToString();
                         
-                        //If it contains this then the line is a comment, skip it
-                        if (s.Contains("/*"))
+                    //If it contains this then the line is a comment, skip it
+                    if (s.Contains("/*"))
+                    {
+                        continue;
+                    }
+                        
+                    for (int i = 0; i < s.Length; i++)
+                    {
+                        if (s[i] != '\"')
                         {
                             continue;
                         }
-                        
-                        for (int i = 0; i < s.Length; i++)
+                        if (firstLine)
                         {
-                            if (s[i] != '\"')
-                            {
-                                continue;
-                            }
-                            if (firstLine)
-                            {
-                                endIndex = i;
-                                break;
-                            }
-                        
-                            firstLine = true;
-                            startIndex = i + 1;
+                            endIndex = i;
+                            break;
                         }
+                        
+                        firstLine = true;
+                        startIndex = i + 1;
+                    }
 
-                        if (startIndex > 0 && endIndex > 0)
-                        {
-                            var li = s[startIndex..endIndex];
-                            builder.AppendLineInvariant(li + ",");
-                        }
-                    }                    
-                }
+                    if (startIndex > 0 && endIndex > 0)
+                    {
+                        var li = s[startIndex..endIndex];
+                        builder.AppendLineInvariant(li + ",");
+                    }
+                }                    
             }
-
-            // inject the created source into the users compilation
-            context.AddSource("MultiRPC.LanguageText.cs", SourceText.From(builder.ToString(), Encoding.UTF8));
         }
-    }   
+
+        // inject the created source into the users compilation
+        context.AddSource("MultiRPC.LanguageText.cs", SourceText.From(builder.ToString(), Encoding.UTF8));
+    }
 }
