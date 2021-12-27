@@ -40,7 +40,7 @@ public sealed partial class TabsPage : UserControl
         var rec = new Rectangle
         {
             Height = 0,
-            Fill = Brushes.White
+            [!Shape.FillProperty] = Application.Current.GetResourceObservable("ThemeForegroundBrush").ToBinding()
         };
 
         var stc = new StackPanel

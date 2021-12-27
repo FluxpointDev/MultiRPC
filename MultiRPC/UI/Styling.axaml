@@ -6,7 +6,7 @@
             <!-- Add Controls for Previewer Here -->
         </Border>
     </Design.PreviewWith>
-
+    
     <Style Selector="Button.nav /template/ ContentPresenter">
         <Setter Property="CornerRadius" Value="56" />
         <Setter Property="Width" Value="56" />
@@ -38,11 +38,16 @@
     <Style Selector="CheckBox">
         <Setter Property="FontSize" Value="12" />
     </Style>
+    <Style Selector="ComboBox /template/ Path#DropDownGlyph">
+        <Setter Property="Fill" Value="{DynamicResource ThemeAccentBrush4}" />
+    </Style>
+    <Style Selector="ComboBox /template/ ContentControl#ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+    </Style>
     <Style Selector="ComboBox">
         <Setter Property="Height" Value="{TemplateBinding MinHeight}" />
         <Setter Property="MinHeight" Value="{DynamicResource TextControlThemeMinHeight}" />
         <Setter Property="FontSize" Value="12" />
-        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
         <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush4}" />
         <Setter Property="ItemTemplate">
@@ -103,6 +108,7 @@
     </Style>
 
     <Style Selector="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
         <Setter Property="FontSize" Value="12" />
     </Style>
     <Style Selector="TextBlock.subtitle">
@@ -111,15 +117,12 @@
     <Style Selector="TextBlock.title">
         <Setter Property="FontSize" Value="25" />
     </Style>
-
+    
     <Style Selector="Button">
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
         <Setter Property="Padding" Value="5,1" />
-    </Style>
-    <Style Selector="AccessText">
-        <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
     <Style Selector="Button /template/ ContentPresenter">
         <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
@@ -140,6 +143,7 @@
     </Style>
 
     <Style Selector="Button.red /template/ ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="White" />
         <Setter Property="Background" Value="{DynamicResource Red}" />
     </Style>
     <Style Selector="Button.red:pointerover /template/ ContentPresenter">
@@ -154,6 +158,7 @@
     </Style>
 
     <Style Selector="Button.green /template/ ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="White" />
         <Setter Property="Background" Value="{DynamicResource Green}" />
     </Style>
     <Style Selector="Button.green:pointerover /template/ ContentPresenter">
@@ -168,6 +173,7 @@
     </Style>
 
     <Style Selector="Button.purple /template/ ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="White" />
         <Setter Property="Background" Value="{DynamicResource Purple}" />
     </Style>
     <Style Selector="Button.purple:pointerover /template/ ContentPresenter">
@@ -179,5 +185,9 @@
     <Style Selector="Button.purple:disabled /template/ ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource ThemeAccentDisabledBrush}" />
         <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeAccentDisabledTextBrush}" />
+    </Style>
+    
+    <Style Selector="AccessText">
+        <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
 </Styles>

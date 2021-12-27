@@ -9,7 +9,8 @@ public partial class DisableSettings : BaseSetting
     [JsonIgnore]
     public override string Name => "Disable";
 
-    public override JsonSerializerContext? SerializerContext { get; } = DisableSettingsContext.Default;
+    [JsonIgnore]
+    public override JsonSerializerContext? SerializerContext { get; }
 
     [GeneratedProperty, SettingName("DiscordCheck")]
     private bool _discordCheck;
@@ -29,9 +30,12 @@ public partial class DisableSettings : BaseSetting
     [GeneratedProperty, SettingName("ShowPageTooltips")]
     private bool _showPageTooltips;
 
+    [GeneratedProperty, SettingName("ShowAllTooltips")]
+    private bool _allTooltips;
+
     [GeneratedProperty]
     private bool _inviteWarn;
 }
             
-[JsonSerializable(typeof(DisableSettings))]
-public partial class DisableSettingsContext : JsonSerializerContext { }
+/*[JsonSerializable(typeof(DisableSettings))]
+public partial class DisableSettingsContext : JsonSerializerContext { }*/

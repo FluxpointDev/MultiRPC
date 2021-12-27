@@ -95,14 +95,14 @@ public partial class RpcView : UserControl
         if (e.PropertyName == nameof(RpcProfile.Profile.LargeText))
         {
             var text = RpcProfile!.Profile.LargeText;
-            ToolTip.SetTip(brdLarge, string.IsNullOrWhiteSpace(text) ? null : text);
+            CustomToolTip.SetTip(brdLarge, string.IsNullOrWhiteSpace(text) ? null : text);
             return;
         }
             
         if (e.PropertyName == nameof(RpcProfile.Profile.SmallText))
         {
             var text = RpcProfile!.Profile.SmallText;
-            ToolTip.SetTip(gridSmallImage, string.IsNullOrWhiteSpace(text) ? null : text);
+            CustomToolTip.SetTip(gridSmallImage, string.IsNullOrWhiteSpace(text) ? null : text);
         }
     }
         
@@ -147,14 +147,14 @@ public partial class RpcView : UserControl
         {
             brdLarge.IsVisible = false;
             gridSmallImage.IsVisible = false;
-            ToolTip.SetTip(brdLarge, null);
-            ToolTip.SetTip(gridSmallImage, null);
+            CustomToolTip.SetTip(brdLarge, null);
+            CustomToolTip.SetTip(gridSmallImage, null);
             return;
         }
             
         var baseurl = "https://cdn.discordapp.com/app-assets/" + e.ApplicationID;
-        ToolTip.SetTip(brdLarge, e.Presence.Assets.LargeImageText);
-        ToolTip.SetTip(gridSmallImage, e.Presence.Assets.SmallImageText);
+        CustomToolTip.SetTip(brdLarge, e.Presence.Assets.LargeImageText);
+        CustomToolTip.SetTip(gridSmallImage, e.Presence.Assets.SmallImageText);
         _ = UpdateSmallImage(
             e.Presence.Assets.SmallImageID.HasValue ? 
                 new Uri(baseurl + "/" + e.Presence.Assets.SmallImageID + ".png")
@@ -304,7 +304,7 @@ public partial class RpcView : UserControl
 
                 brdLarge.IsVisible = true;
                 gridSmallImage.IsVisible = false;
-                ToolTip.SetTip(brdLarge, null);
+                CustomToolTip.SetTip(brdLarge, null);
             }
                 break;
             case ViewType.Default2:
@@ -316,7 +316,7 @@ public partial class RpcView : UserControl
 
                 brdLarge.IsVisible = true;
                 gridSmallImage.IsVisible = false;
-                ToolTip.SetTip(brdLarge, null);
+                CustomToolTip.SetTip(brdLarge, null);
             }
                 break;
             case ViewType.Loading:
@@ -337,7 +337,7 @@ public partial class RpcView : UserControl
                 brdLarge.Background = _errorVisualBrush;
                 brdLarge.IsVisible = true;
                 gridSmallImage.IsVisible = false;
-                ToolTip.SetTip(brdLarge, null);
+                CustomToolTip.SetTip(brdLarge, null);
             }
                 break;
             case ViewType.LocalRichPresence:

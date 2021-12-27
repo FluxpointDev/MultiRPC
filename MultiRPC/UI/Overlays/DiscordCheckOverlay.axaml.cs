@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MultiRPC.Extensions;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
+using TinyUpdate.Core.Helper;
 using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.UI.Overlays;
@@ -83,11 +85,13 @@ public partial class DiscordCheckOverlay : UserControl
                 tblMultiRPC.Text = "MultiRPC - " + Language.GetText(discordClient);
             }
 
+            var processExpectedCount = OSHelper.ActiveOS == OSPlatform.Windows ? 4 : 2;
+            
             while (!_ranFadeOut)
             {
                 //If we have less then 4 processes from discord then discord itself is still loading
                 var processCount = Process.GetProcessesByName(discordClient).Length;
-                if (processCount < 4)
+                if (processCount < processExpectedCount)
                 {
                     tblDiscordClientMessage.Text =
                         $"{Language.GetText(discordClient)} {Language.GetText(LanguageText.IsLoading)}....";

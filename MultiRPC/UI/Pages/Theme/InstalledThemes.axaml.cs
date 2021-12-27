@@ -20,7 +20,6 @@ namespace MultiRPC.UI.Pages.Theme;
 //TODO: Add Showing/Active/Editing Text
 //TODO: Disable Remove button on active theme
 //TODO: Add Edit button when theme editor has progress
-//TODO: Fix disposing issue (Modern theming with assets)
 public partial class InstalledThemes : UserControl, ITabPage
 {
     //We keep a store of the active theme as we mess with it
@@ -36,7 +35,12 @@ public partial class InstalledThemes : UserControl, ITabPage
                 MakePreviewUI(Themes.Dark),
                 MakePreviewUI(Themes.Light)
             });
-            
+
+        if (!Directory.Exists(_themeLocation))
+        {
+            return;
+        }
+
         wppThemes.Children.AddRange(
             Directory.EnumerateFiles(_themeLocation)
                 .Select(MakePreviewUI));

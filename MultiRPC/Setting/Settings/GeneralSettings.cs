@@ -16,7 +16,7 @@ public partial class GeneralSettings : BaseSetting
     [JsonIgnore]
     public override string Name => "General";
 
-    public override JsonSerializerContext? SerializerContext { get; } = GeneralSettingsContext.Default;
+    public override JsonSerializerContext? SerializerContext { get; }
 
     [GeneratedProperty]
     private string? _lastUser = "NA#0000";
@@ -76,5 +76,5 @@ public partial class GeneralSettings : BaseSetting
     }
 }
         
-[JsonSerializable(typeof(GeneralSettings))]
-public partial class GeneralSettingsContext : JsonSerializerContext { }
+/*[JsonSerializable(typeof(GeneralSettings))]
+public partial class GeneralSettingsContext : JsonSerializerContext { }*/

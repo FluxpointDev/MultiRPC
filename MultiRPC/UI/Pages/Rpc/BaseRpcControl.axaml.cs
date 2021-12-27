@@ -192,7 +192,7 @@ public partial class BaseRpcControl : UserControl, ITabPage
             txtClientID.Classes.Remove("checking");
             if (successful)
             {
-                ToolTip.SetTip(txtClientID, null);
+                CustomToolTip.SetTip(txtClientID, null);
                 RichPresence.ID = id;
                 if (RichPresence.Name.StartsWith("Profile"))
                 {
@@ -205,7 +205,7 @@ public partial class BaseRpcControl : UserControl, ITabPage
         }
         txtClientID.Classes.Add("error");
         error ??= Language.GetText(LanguageText.ClientIDIsNotValid);
-        ToolTip.SetTip(txtClientID, error);
+        CustomToolTip.SetTip(txtClientID, error);
         ProfileChanged?.Invoke(this, EventArgs.Empty);
     }
         

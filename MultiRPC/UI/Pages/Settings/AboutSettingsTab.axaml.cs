@@ -45,13 +45,13 @@ public partial class AboutSettingsTab : UserControl, ITabPage
         _ = CheckDiscordStatus();
 
         var githubTooltipLang = Language.GetLanguage(LanguageText.GithubTooltip);
-        githubTooltipLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgGithub, x));
+        githubTooltipLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgGithub, x));
             
         var fluxpointTooltipLang = Language.GetLanguage(LanguageText.FluxpointTooltip);
-        fluxpointTooltipLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgFluxpoint, x));
+        fluxpointTooltipLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgFluxpoint, x));
  
         var discordTooltipLang = Language.GetLanguage(LanguageText.JoinForFunBotsAndSupport);
-        discordTooltipLang.TextObservable.Subscribe(x => ToolTip.SetTip(brdDiscord, x));
+        discordTooltipLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(brdDiscord, x));
             
         imgIcon.AddSvgAsset("Logo.svg");
         imgGithub.AddSvgAsset("Icons/Github.svg");

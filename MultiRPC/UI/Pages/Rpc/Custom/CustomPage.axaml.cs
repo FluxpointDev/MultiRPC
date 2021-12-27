@@ -93,10 +93,10 @@ public partial class CustomPage : RpcPage
         tabPage.Initialize();
 
         //Setup tooltips
-        _editLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgProfileEdit, x));
-        _shareLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgProfileShare, x));
-        _addLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgProfileAdd, x));
-        _deleteLang.TextObservable.Subscribe(x => ToolTip.SetTip(imgProfileDelete, x));
+        _editLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgProfileEdit, x));
+        _shareLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgProfileShare, x));
+        _addLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgProfileAdd, x));
+        _deleteLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgProfileDelete, x));
             
         //Make help controls
         var helpGrid = new Grid

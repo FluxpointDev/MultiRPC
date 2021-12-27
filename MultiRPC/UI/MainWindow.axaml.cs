@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
@@ -42,6 +43,21 @@ public partial class MainWindow : FluentWindow
 {
     public MainWindow() : this(new MainPage())
     {
+        DragDrop.SetAllowDrop(this, true);
+        AddHandler(DragDrop.DropEvent, DragOver);
+        AddHandler(DragDrop.DragEnterEvent, DragEnter);
+
+        /*Tray Icon seems to be a bit broken on anything other then windows
+         after running for a while, skip if we aren't on windows but we also 
+         crash on shutdown which is an issue for passing Microsoft store validation 
+         so skip if deploying to it*/
+#if !WINSTORE
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+#endif
+        {
+            return;
+        }
+
         var disableSettings = SettingManager<DisableSettings>.Setting;
         var trayIcon = new TrayIcon
         {
@@ -57,10 +73,6 @@ public partial class MainWindow : FluentWindow
             ChangeTrayIconText(trayIcon);
             ShowInTaskbar = !(!disableSettings.HideTaskbarIcon && x == WindowState.Minimized);
         });
-            
-        DragDrop.SetAllowDrop(this, true);
-        AddHandler(DragDrop.DropEvent, DragOver);
-        AddHandler(DragDrop.DragEnterEvent, DragEnter);
     }
 
     private void DragEnter(object? sender, DragEventArgs e)

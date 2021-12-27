@@ -67,9 +67,17 @@ public class Theme : IDisposable
 
     public bool HaveAsset(string key)
     {
+        if (Mode == ThemeMode.Modern)
+        {
+            if (!_archiveLoaded)
+            {
+                ReloadAssets();
+            }
+            return _archive?.Entries.Any(x => x.FullName == "Assets/" + key) ?? false;
+        }
+
         //We can't load in assets from the older theming
-        return Mode == ThemeMode.Modern
-               && (_archive?.Entries.Any(x => x.FullName == "Assets/" + key) ?? false);
+        return false;
     }
 
     public Stream GetAssetStream(string key)
@@ -78,12 +86,17 @@ public class Theme : IDisposable
         {
             return Stream.Null;
         }
-        
+        if (!_archiveLoaded)
+        {
+            ReloadAssets();
+        }
+
         return _archive?.Entries
             .FirstOrDefault(x => x.FullName == "Assets/" + key)?
             .Open() ?? Stream.Null;
     }
-    
+
+    private string _filepath = null!;
     private ZipArchive? _archive;
     /// <summary>
     /// Load's in the theme for being used
@@ -114,10 +127,12 @@ public class Theme : IDisposable
             return null;
         }
 
-        var theme = new Theme()
+        var theme = new Theme
         {
             Location = filepath,
-            _archive = archive
+            _archive = archive,
+            _filepath = filepath,
+            _archiveLoaded = true
         };
         try
         {
@@ -154,10 +169,27 @@ public class Theme : IDisposable
         if (theme.Mode == ThemeMode.Legacy)
         {
             archive.Dispose();
+            theme._archiveLoaded = false;
         }
         return theme;
     }
 
+    private bool _archiveLoaded = false;
+    public void ReloadAssets()
+    {
+        UnloadAssets();
+        
+        var fileStream = StreamUtil.SafeOpenRead(_filepath);
+        _archive = new ZipArchive(fileStream, ZipArchiveMode.Read);
+        _archiveLoaded = true;
+    }
+    
+    public void UnloadAssets()
+    {
+        _archive?.Dispose();
+        _archiveLoaded = false;
+    }
+    
     /// <summary>
     /// Applies the theming to a IResourceDictionary (or App.Current.Resources if nothing is applied)
     /// </summary>
@@ -167,7 +199,7 @@ public class Theme : IDisposable
         if (resourceDictionary == null)
         {
             resourceDictionary = Application.Current.Resources;
-            ActiveTheme?.Dispose();
+            ActiveTheme?.UnloadAssets();
             ActiveTheme = this;
         }
         resourceDictionary["ThemeAccentColor"] = Colours.ThemeAccentColor;
@@ -188,7 +220,6 @@ public class Theme : IDisposable
 
     public void Dispose()
     {
-        _archive?.Dispose();
         GC.SuppressFinalize(this);
     }
 }

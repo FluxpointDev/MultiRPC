@@ -13,8 +13,8 @@ public class MasterThemeEditorPage : SidePage
         Background = (IBrush)Application.Current.Resources["ThemeAccentBrush"]!;
         var tabPage = new TabsPage
         {
-            Width = 675,
-            Height = 520
+            MinWidth = 675,
+            MinHeight = 520
         };
         ContentPadding = new Thickness(0);
         tabPage.AddTabs(new ThemeEditorPage()

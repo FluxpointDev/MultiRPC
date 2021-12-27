@@ -77,12 +77,12 @@ public partial class ThemePreview : UserControl
         };
             
         var lang = Language.GetLanguage(page.LocalizableName);
-        lang.TextObservable.Subscribe(s => ToolTip.SetTip(btn,  _disableSetting.ShowPageTooltips ? null : s));
+        lang.TextObservable.Subscribe(s => CustomToolTip.SetTip(btn,  _disableSetting.ShowPageTooltips ? null : s));
         _disableSetting.PropertyChanged += (sender, args) =>
         {
             if (args.PropertyName == nameof(DisableSettings.ShowPageTooltips))
             {
-                ToolTip.SetTip(btn, _disableSetting.ShowPageTooltips ? null : lang.Text);
+                CustomToolTip.SetTip(btn, _disableSetting.ShowPageTooltips ? null : lang.Text);
             }
         };
 
