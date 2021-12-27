@@ -20,6 +20,12 @@ using System.Runtime.InteropServices;
 
 namespace MultiRPC.UI;
 
+/*TODO:
+ * Styling:
+   * CheckBox (Actual Box)
+   * Tooltip
+   * Text on purple RpcView
+   * Min/Max Buttons*/
 public class App : Application
 {
     public static readonly HttpClient HttpClient = new HttpClient();

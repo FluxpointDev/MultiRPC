@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Threading;
 using TinyUpdate.Core.Logging;
 
@@ -78,7 +79,8 @@ public class LoggingPageLogger : ILogging
     {
         return new TextBlock()
         {
-            Text = header + " " + message
+            Text = header + " " + message,
+            Foreground = Brushes.White
         };
     }
 

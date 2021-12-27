@@ -14,7 +14,8 @@ public class MasterThemeEditorPage : SidePage
         var tabPage = new TabsPage
         {
             MinWidth = 675,
-            MinHeight = 520
+            MaxWidth = 997.5,
+            MaxHeight = 520
         };
         ContentPadding = new Thickness(0);
         tabPage.AddTabs(new ThemeEditorPage()

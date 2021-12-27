@@ -1,4 +1,4 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
+<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:multirpc="clr-namespace:MultiRPC">
     <Design.PreviewWith>
@@ -41,8 +41,8 @@
     <Style Selector="ComboBox /template/ Path#DropDownGlyph">
         <Setter Property="Fill" Value="{DynamicResource ThemeAccentBrush4}" />
     </Style>
-    <Style Selector="ComboBox /template/ ContentControl#ContentPresenter">
-        <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+    <Style Selector="ComboBox:pointerover /template/ Path#DropDownGlyph">
+        <Setter Property="Fill" Value="{DynamicResource ThemeAccentBrush5}" />
     </Style>
     <Style Selector="ComboBox">
         <Setter Property="Height" Value="{TemplateBinding MinHeight}" />
@@ -74,6 +74,17 @@
         <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush4}" />
     </Style>
+
+    <Style Selector="TextBox:focus">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+    </Style>
+    <Style Selector="TextBox:focus /template/ TextBlock#PART_Watermark, TextBox:focus /template/ TextBlock#PART_FloatingWatermark">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+    </Style>
+    <Style Selector="TextBox:pointerover /template/ TextBlock#PART_Watermark, TextBox:focus /template/ TextBlock#PART_FloatingWatermark">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+    </Style>
+
     <Style Selector="TextBox:pointerover /template/ Border">
         <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush5}" />
@@ -131,9 +142,11 @@
         <Setter Property="BorderThickness" Value="1" />
     </Style>
     <Style Selector="Button:pointerover /template/ ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
         <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2Hover}" />
     </Style>
     <Style Selector="Button:pressed /template/ ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
         <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
     </Style>
     <Style Selector="Button:disabled /template/ ContentPresenter">

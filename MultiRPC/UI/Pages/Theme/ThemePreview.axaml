@@ -15,6 +15,7 @@
         </Style>
     </UserControl.Styles>
     <UserControl.Resources>
+        <SolidColorBrush x:Key="ThemeForegroundBrush" Color="White" />
         <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="{DynamicResource ThemeAccentColor2}" />
         <SolidColorBrush x:Key="ThemeAccentBrush" Color="{DynamicResource ThemeAccentColor}"/>
         <SolidColorBrush x:Key="ThemeAccentBrush2" Color="{DynamicResource ThemeAccentColor2}"/>

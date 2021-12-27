@@ -180,8 +180,11 @@ public class Theme : IDisposable
         UnloadAssets();
         
         var fileStream = StreamUtil.SafeOpenRead(_filepath);
-        _archive = new ZipArchive(fileStream, ZipArchiveMode.Read);
-        _archiveLoaded = true;
+        if (fileStream != null)
+        {
+            _archive = new ZipArchive(fileStream, ZipArchiveMode.Read);
+            _archiveLoaded = true;
+        }
     }
     
     public void UnloadAssets()
@@ -214,6 +217,13 @@ public class Theme : IDisposable
         resourceDictionary["NavButtonSelectedColor"] = Colours.NavButtonSelectedColor;
         resourceDictionary["NavButtonSelectedIconColor"] = Colours.NavButtonSelectedIconColor;
         resourceDictionary["ThemeForegroundBrush"] = new SolidColorBrush(Colours.TextColour);
+
+        resourceDictionary["CheckBoxForegroundUnchecked"] = resourceDictionary["ThemeForegroundBrush"];
+        resourceDictionary["CheckBoxForegroundChecked"] = resourceDictionary["ThemeForegroundBrush"];
+        resourceDictionary["CheckBoxForegroundCheckedPointerOver"] = resourceDictionary["ThemeForegroundBrush"];
+        resourceDictionary["CheckBoxForegroundUncheckedPointerOver"] = resourceDictionary["ThemeForegroundBrush"];
+        resourceDictionary["CheckBoxForegroundCheckedPressed"] = resourceDictionary["ThemeForegroundBrush"];
+        resourceDictionary["CheckBoxForegroundUncheckedPressed"] = resourceDictionary["ThemeForegroundBrush"];
         
         AssetManager.FireReloadAssets(this);
     }

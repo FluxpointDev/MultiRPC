@@ -78,7 +78,7 @@ public partial class MainWindow : FluentWindow
     private void DragEnter(object? sender, DragEventArgs e)
     {
         // Only allow Copy or Link as Drop Operations.
-        e.DragEffects = e.DragEffects & (DragDropEffects.Copy | DragDropEffects.Link);
+        e.DragEffects &= DragDropEffects.Copy | DragDropEffects.Link;
 
         // Only allow if the dragged data contains text or filenames.
         if (!e.Data.Contains(DataFormats.FileNames))

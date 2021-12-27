@@ -10,6 +10,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
+using MultiRPC.Extensions;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using MultiRPC.Theming;
@@ -17,6 +18,7 @@ using MultiRPC.UI.Controls;
 
 namespace MultiRPC.UI.Pages.Theme;
 
+//TODO: Make it faster when loading in the theme
 //TODO: Add Showing/Active/Editing Text
 //TODO: Disable Remove button on active theme
 //TODO: Add Edit button when theme editor has progress
@@ -41,9 +43,11 @@ public partial class InstalledThemes : UserControl, ITabPage
             return;
         }
 
-        wppThemes.Children.AddRange(
-            Directory.EnumerateFiles(_themeLocation)
-                .Select(MakePreviewUI));
+        _ = Task.Run(() =>
+        {
+            var files = Directory.GetFiles(_themeLocation);
+            MakePreviewUIs(files);
+        });
     }
 
     private void OnAttachedToLogicalTree(object? sender, LogicalTreeAttachmentEventArgs e)
@@ -64,7 +68,22 @@ public partial class InstalledThemes : UserControl, ITabPage
     private async void BtnAdd_OnClick(object? sender, RoutedEventArgs e) => await GetTheme(false);
     private async void BtnAddAndApply_OnClick(object? sender, RoutedEventArgs e) => await GetTheme(true);
 
-    private Control MakePreviewUI(string file) => MakePreviewUI(Theming.Theme.Load(file), file);
+    private async void MakePreviewUIs(string[] files)
+    {
+        foreach (var file in files)
+        {
+            /*Funnily enough, if we load in things too
+             fast then it'll make the whole UI unresponsive*/
+            await Task.Delay(50);
+            var theme = Theming.Theme.Load(file);
+            this.RunUILogic(() =>
+            {
+                var control = MakePreviewUI(theme, file);
+                wppThemes.Children.Add(control);
+            });
+        }
+    }
+
     private Control MakePreviewUI(Theming.Theme? theme, string? file = null)
     {
         if (theme == null)
@@ -90,7 +109,7 @@ public partial class InstalledThemes : UserControl, ITabPage
         {
             DataContext = Language.GetLanguage("Remove"),
             [!ContentProperty] = new Binding("TextObservable^"),
-            IsEnabled = editButton.IsEnabled,
+            IsEnabled = false,//editButton.IsEnabled,
             Tag = theme,
         };
         removeButton.Click += RemoveButtonOnClick;
@@ -123,10 +142,14 @@ public partial class InstalledThemes : UserControl, ITabPage
         };
 
         var themeUI = new ThemePreview(theme)
-            { Margin = new Thickness(0, 0, 15, 15) };
+        {
+            Margin = new Thickness(0, 0, 15, 15)
+        };
         themeUI.PointerEnter += ThemeUIOnPointerEnter;
         themeUI.PointerLeave += ThemeUIOnPointerLeave;
         themeUI.DoubleTapped += ThemeUIOnDoubleTapped;
+        themeUI.AttachedToLogicalTree += (sender, args) => _ = Task.Run(theme.ReloadAssets);
+        themeUI.DetachedFromLogicalTree += (sender, args) => _ = Task.Run(theme.UnloadAssets);
         return new StackPanel
         {
             Children =
@@ -137,25 +160,33 @@ public partial class InstalledThemes : UserControl, ITabPage
         };
     }
 
+    private Theming.Theme? _tmpTheme;
     private void ThemeUIOnPointerLeave(object? sender, PointerEventArgs e)
     {
         //We want to restore the old theme if it didn't become the new active theme
         var th = (ThemePreview)sender!;
-        if (_activeTheme != th.Theme)
+        if (_tmpTheme != null
+            && _activeTheme != th.Theme)
         {
             _activeTheme?.Apply();
+            _tmpTheme = null;
         }
     }
 
     private async void ThemeUIOnPointerEnter(object? sender, PointerEventArgs e)
     {
-        await Task.Delay(1000);
+        await Task.Delay(500);
         var th = (ThemePreview)sender!;
-        if (_activeTheme != th.Theme 
-            && th.IsPointerOver)
+            
+        this.RunUILogic(() =>
         {
-            th.Theme.Apply();
-        }
+            if (_activeTheme != th.Theme
+                && th.IsPointerOver)
+            {
+                _tmpTheme = th.Theme;
+                th.Theme.Apply();
+            }
+        });
     }
 
     private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
