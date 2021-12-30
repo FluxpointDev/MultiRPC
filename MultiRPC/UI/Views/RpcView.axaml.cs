@@ -161,15 +161,18 @@ public partial class RpcView : UserControl
             brdLarge.IsVisible = false;
             gridSmallImage.IsVisible = false;
             CustomToolTip.SetTip(brdLarge, null);
+            CustomToolTip.SetTip(gifLarge, null);
             CustomToolTip.SetTip(gridSmallImage, null);
+            CustomToolTip.SetTip(gifSmallImage, null);
             return;
         }
         
-        //TODO: Add Gif to UI
         //Update key and asset
         var baseurl = "https://cdn.discordapp.com/app-assets/" + e.ApplicationID;
         CustomToolTip.SetTip(brdLarge, e.Presence.Assets.LargeImageText);
+        CustomToolTip.SetTip(gifLarge, e.Presence.Assets.LargeImageText);
         CustomToolTip.SetTip(gridSmallImage, e.Presence.Assets.SmallImageText);
+        CustomToolTip.SetTip(gifSmallImage, e.Presence.Assets.SmallImageText);
         _ = UpdateSmallImage(GetUri(e.Presence.Assets.SmallImageID, e.Presence.Assets.SmallImageKey, baseurl));
         _ = UpdateLargeImage(GetUri(e.Presence.Assets.LargeImageID, e.Presence.Assets.LargeImageKey, baseurl));
     });
@@ -406,6 +409,7 @@ public partial class RpcView : UserControl
                 brdLarge.IsVisible = true;
                 gridSmallImage.IsVisible = false;
                 CustomToolTip.SetTip(brdLarge, null);
+                CustomToolTip.SetTip(gifLarge, null);
             }
             break;
             case ViewType.Default2:
@@ -418,6 +422,7 @@ public partial class RpcView : UserControl
                 brdLarge.IsVisible = true;
                 gridSmallImage.IsVisible = false;
                 CustomToolTip.SetTip(brdLarge, null);
+                CustomToolTip.SetTip(gifLarge, null);
             }
             break;
             case ViewType.Loading:
@@ -442,6 +447,7 @@ public partial class RpcView : UserControl
                 brdLarge.IsVisible = true;
                 gridSmallImage.IsVisible = false;
                 CustomToolTip.SetTip(brdLarge, null);
+                CustomToolTip.SetTip(gifLarge, null);
             }
             break;
             case ViewType.LocalRichPresence:
