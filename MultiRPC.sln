@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ext", "ext", "{B7AAF9E7-1C1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiRPC.SourceGen", "MultiRPC.SourceGen\MultiRPC.SourceGen.csproj", "{3369169D-31C0-4A74-A5A9-F2BB1EA80705}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordRPC", "ext\discord-rpc-csharp\DiscordRPC\DiscordRPC.csproj", "{136AA836-1892-4350-A00F-4103D14B5A17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,12 @@ Global
 		{3369169D-31C0-4A74-A5A9-F2BB1EA80705}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3369169D-31C0-4A74-A5A9-F2BB1EA80705}.WINSTORE|Any CPU.ActiveCfg = Debug|Any CPU
 		{3369169D-31C0-4A74-A5A9-F2BB1EA80705}.WINSTORE|Any CPU.Build.0 = Debug|Any CPU
+		{136AA836-1892-4350-A00F-4103D14B5A17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{136AA836-1892-4350-A00F-4103D14B5A17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{136AA836-1892-4350-A00F-4103D14B5A17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{136AA836-1892-4350-A00F-4103D14B5A17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{136AA836-1892-4350-A00F-4103D14B5A17}.WINSTORE|Any CPU.ActiveCfg = Debug|Any CPU
+		{136AA836-1892-4350-A00F-4103D14B5A17}.WINSTORE|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,5 +62,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D4EBB986-EDAC-4C0B-AB58-70E4A5C7D2A4} = {B7AAF9E7-1C1E-4376-BAF6-D2FCA8B39CDF}
 		{8BEB0A2C-9491-406C-A2B8-9E34C1800243} = {B7AAF9E7-1C1E-4376-BAF6-D2FCA8B39CDF}
+		{136AA836-1892-4350-A00F-4103D14B5A17} = {B7AAF9E7-1C1E-4376-BAF6-D2FCA8B39CDF}
 	EndGlobalSection
 EndGlobal

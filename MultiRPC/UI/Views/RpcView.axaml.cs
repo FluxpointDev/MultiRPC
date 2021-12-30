@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Timers;
@@ -45,9 +46,15 @@ public partial class RpcView : UserControl
         InitializeComponent();
         AssetManager.ReloadAssets += (sender, args) => this.RunUILogic(() => UpdateFromType());
         _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException();
-        gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
-        AssetManager.RegisterForAssetReload("Loading.gif",
-            () => gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif"));
+        AssetManager.RegisterForAssetReload("Loading.gif",() =>
+        {
+            if (ViewType == ViewType.Loading)
+            {
+                gifLarge.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
+            }
+        });
+        gifSmallImage.SourceStream = Stream.Null;
+        gifLarge.SourceStream = Stream.Null;
 
         brdLarge.Background = _logoVisualBrush;
 
@@ -66,6 +73,7 @@ public partial class RpcView : UserControl
     }
         
     private static readonly Dictionary<Uri, IBrush> CachedImages = new Dictionary<Uri, IBrush>();
+    private static readonly Dictionary<Uri, Stream> CachedStreams = new Dictionary<Uri, Stream>();
     private readonly Language _titleText = new Language();
     private readonly Language _tblText1 = new Language();
     private readonly Language _tblText2 = new Language();
@@ -151,20 +159,32 @@ public partial class RpcView : UserControl
             CustomToolTip.SetTip(gridSmallImage, null);
             return;
         }
-            
+        
+        //TODO: Add Gif to UI
+        //Update key and asset
         var baseurl = "https://cdn.discordapp.com/app-assets/" + e.ApplicationID;
         CustomToolTip.SetTip(brdLarge, e.Presence.Assets.LargeImageText);
         CustomToolTip.SetTip(gridSmallImage, e.Presence.Assets.SmallImageText);
-        _ = UpdateSmallImage(
-            e.Presence.Assets.SmallImageID.HasValue ? 
-                new Uri(baseurl + "/" + e.Presence.Assets.SmallImageID + ".png")
-                : null);
-
-        _ = UpdateLargeImage(
-            e.Presence.Assets.LargeImageID.HasValue ? 
-                new Uri(baseurl + "/" + e.Presence.Assets.LargeImageID + ".png")
-                : null);
+        _ = UpdateSmallImage(GetUri(e.Presence.Assets.SmallImageID, e.Presence.Assets.SmallImageKey, baseurl));
+        _ = UpdateLargeImage(GetUri(e.Presence.Assets.LargeImageID, e.Presence.Assets.LargeImageKey, baseurl));
     });
+
+    private Uri? GetUri(ulong? id, string key, string baseurl)
+    {
+        if (id.HasValue)
+        {
+            return new Uri(baseurl + "/" + id + ".png");
+        }
+
+        if (!string.IsNullOrWhiteSpace(key)
+            && key.StartsWith("mp:external/")
+            && Uri.TryCreate("https://media.discordapp.net/external/" + key[12..], UriKind.Absolute, out var url))
+        {
+            return url;
+        }
+
+        return null;
+    }
         
     private void UpdateFromRichPresence(RichPresence? presence)
     {
@@ -204,7 +224,7 @@ public partial class RpcView : UserControl
         {
             brdLarge.Background = CachedImages[uri];
             brdLarge.IsVisible = true;
-            gridSmallImage.IsVisible = ellSmallImage.Fill != null;
+            gridSmallImage.IsVisible = ellSmallImage.Fill != null || gifSmallImage.SourceStream != Stream.Null;
         }
     }
         
@@ -213,6 +233,7 @@ public partial class RpcView : UserControl
         if (uri is null)
         {
             ellSmallImage.Fill = null;
+            gifSmallImage.SourceStream = Stream.Null;
             gridSmallImage.IsVisible = false;
             return;
         }
@@ -243,7 +264,7 @@ public partial class RpcView : UserControl
         {
             return true;
         }
-            
+        
         var largeImage = await App.HttpClient.GetResponseMessage(new HttpRequestMessage(HttpMethod.Get, uri));
         if (largeImage is { IsSuccessStatusCode: true })
         {
@@ -278,8 +299,12 @@ public partial class RpcView : UserControl
         tblText1.IsVisible = _viewType is not ViewType.Loading or ViewType.LocalRichPresence;
         tblText2.IsVisible = tblText1.IsVisible && _viewType is not ViewType.Error;
         tblTime.IsVisible = _viewType == ViewType.RpcRichPresence;
-        gifLoading.IsVisible = _viewType == ViewType.Loading;
-            
+        gifLarge.IsVisible = _viewType == ViewType.Loading;
+        if (!gifLarge.IsVisible)
+        {
+            gifLarge.SourceStream = Stream.Null;
+        }
+
         var brush = _viewType switch
         {
             ViewType.Default => Application.Current.Resources["ThemeAccentBrush2"],
@@ -306,7 +331,7 @@ public partial class RpcView : UserControl
                 gridSmallImage.IsVisible = false;
                 CustomToolTip.SetTip(brdLarge, null);
             }
-                break;
+            break;
             case ViewType.Default2:
             {
                 _titleText.ChangeJsonNames(LanguageText.MultiRPC);
@@ -318,14 +343,15 @@ public partial class RpcView : UserControl
                 gridSmallImage.IsVisible = false;
                 CustomToolTip.SetTip(brdLarge, null);
             }
-                break;
+            break;
             case ViewType.Loading:
             {
+                gifLarge.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
                 _titleText.ChangeJsonNames(LanguageText.Loading);
                 gridSmallImage.IsVisible = false;
                 brdLarge.IsVisible = false;
             }
-                break;
+            break;
             case ViewType.Error:
             {
                 _titleText.ChangeJsonNames(LanguageText.Error);
@@ -339,17 +365,17 @@ public partial class RpcView : UserControl
                 gridSmallImage.IsVisible = false;
                 CustomToolTip.SetTip(brdLarge, null);
             }
-                break;
+            break;
             case ViewType.LocalRichPresence:
             {
                 UpdateFromRichPresence(richPresence);
             }
-                break;
+            break;
             case ViewType.RpcRichPresence:
             {
                 _rpcClient.PresenceUpdated += RpcClientOnPresenceUpdated;
             }
-                break;
+            break;
         }
     }
 }

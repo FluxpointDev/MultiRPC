@@ -112,6 +112,19 @@ public partial class BaseRpcControl : UserControl, ITabPage
             this.AttachedToLogicalTree += OnAttachedToLogicalTree;
         }
 
+        txtText1.AddValidation(Language.GetLanguage(LanguageText.Text1), s => RichPresence.Profile.Details = s, Check, OnProfileChanged, RichPresence.Profile.Details);
+        txtText2.AddValidation(Language.GetLanguage(LanguageText.Text2), s => RichPresence.Profile.State = s, Check, OnProfileChanged, RichPresence.Profile.State);
+        txtLargeText.AddValidation(Language.GetLanguage(LanguageText.LargeText), s => RichPresence.Profile.LargeText = s, Check, OnProfileChanged, RichPresence.Profile.LargeText);
+        txtSmallText.AddValidation(Language.GetLanguage(LanguageText.SmallText), s => RichPresence.Profile.SmallText = s, Check, OnProfileChanged, RichPresence.Profile.SmallText);
+
+        txtButton1Url.AddValidation(Language.GetLanguage(LanguageText.Button1Url), s => RichPresence.Profile.Button1Url = s, x => CheckUrl(x), OnProfileChanged, RichPresence.Profile.Button1Url);
+        txtButton1Text.AddValidation(Language.GetLanguage(LanguageText.Button1Text), s => RichPresence.Profile.Button1Text = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.Button1Text);
+        txtButton2Url.AddValidation(Language.GetLanguage(LanguageText.Button2Url), s => RichPresence.Profile.Button2Url = s, x => CheckUrl(x), OnProfileChanged, RichPresence.Profile.Button2Url);
+        txtButton2Text.AddValidation(Language.GetLanguage(LanguageText.Button2Text), s => RichPresence.Profile.Button2Text = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.Button2Text);
+
+        ckbElapsedTime.IsChecked = RichPresence.UseTimestamp;
+        ckbElapsedTime.DataContext = Language.GetLanguage(LanguageText.ShowElapsedTime);
+        
         if (ImageType == ImagesType.Custom)
         {
             cboLargeKey.IsVisible = false;
@@ -119,51 +132,39 @@ public partial class BaseRpcControl : UserControl, ITabPage
 
             txtLargeKey.IsVisible = true;
             txtSmallKey.IsVisible = true;
-            txtLargeKey.AddValidation(Language.GetLanguage(LanguageText.LargeKey), s => RichPresence.Profile.LargeKey = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.LargeKey);
-            txtSmallKey.AddValidation(Language.GetLanguage(LanguageText.SmallKey), s => RichPresence.Profile.SmallKey = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.SmallKey);
-        }
-        else
-        {
-            Language.LanguageChanged += (sender, args) =>
-            {
-                Data.MultiRPCImages = Data.MakeImagesDictionary();
-                var largeKey = cboLargeKey.SelectedIndex;
-                var smallKey = cboSmallKey.SelectedIndex;
 
-                cboLargeKey.Items = Data.MultiRPCImages.Keys;
-                cboSmallKey.Items = Data.MultiRPCImages.Keys;
-                cboLargeKey.SelectedIndex = largeKey;
-                cboSmallKey.SelectedIndex = smallKey;
-            };
+            //TODO: Add a way to check if it's an url and to check the url
+            txtLargeKey.AddValidation(Language.GetLanguage(LanguageText.LargeKey), s => RichPresence.Profile.LargeKey = s, s => Check(s, 256), OnProfileChanged, RichPresence.Profile.LargeKey);
+            txtSmallKey.AddValidation(Language.GetLanguage(LanguageText.SmallKey), s => RichPresence.Profile.SmallKey = s, s => Check(s, 256), OnProfileChanged, RichPresence.Profile.SmallKey);
+            return;
+        }
+        
+        Language.LanguageChanged += (sender, args) =>
+        {
+            Data.MultiRPCImages = Data.MakeImagesDictionary();
+            var largeKey = cboLargeKey.SelectedIndex;
+            var smallKey = cboSmallKey.SelectedIndex;
+
             cboLargeKey.Items = Data.MultiRPCImages.Keys;
             cboSmallKey.Items = Data.MultiRPCImages.Keys;
-            var largeKey = Data.MultiRPCImages.Keys.IndexOf(x => x?.ToLower() == RichPresence.Profile.LargeKey);
-            if (largeKey == -1)
-            {
-                largeKey = 0;
-            }
             cboLargeKey.SelectedIndex = largeKey;
-                
-            var smallKey = Data.MultiRPCImages.Keys.IndexOf(x => x?.ToLower() == RichPresence.Profile.SmallKey);
-            if (smallKey == -1)
-            {
-                smallKey = 0;
-            }
             cboSmallKey.SelectedIndex = smallKey;
+        };
+        cboLargeKey.Items = Data.MultiRPCImages.Keys;
+        cboSmallKey.Items = Data.MultiRPCImages.Keys;
+        var largeKey = Data.MultiRPCImages.Keys.IndexOf(x => x?.ToLower() == RichPresence.Profile.LargeKey);
+        if (largeKey == -1)
+        {
+            largeKey = 0;
         }
-
-        txtText1.AddValidation(Language.GetLanguage(LanguageText.Text1), s => RichPresence.Profile.Details = s, Check, OnProfileChanged, RichPresence.Profile.Details);
-        txtText2.AddValidation(Language.GetLanguage(LanguageText.Text2), s => RichPresence.Profile.State = s, Check, OnProfileChanged, RichPresence.Profile.State);
-        txtLargeText.AddValidation(Language.GetLanguage(LanguageText.LargeText), s => RichPresence.Profile.LargeText = s, Check, OnProfileChanged, RichPresence.Profile.LargeText);
-        txtSmallText.AddValidation(Language.GetLanguage(LanguageText.SmallText), s => RichPresence.Profile.SmallText = s, Check, OnProfileChanged, RichPresence.Profile.SmallText);
-
-        txtButton1Url.AddValidation(Language.GetLanguage(LanguageText.Button1Url), s => RichPresence.Profile.Button1Url = s, CheckUrl, OnProfileChanged, RichPresence.Profile.Button1Url);
-        txtButton1Text.AddValidation(Language.GetLanguage(LanguageText.Button1Text), s => RichPresence.Profile.Button1Text = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.Button1Text);
-        txtButton2Url.AddValidation(Language.GetLanguage(LanguageText.Button2Url), s => RichPresence.Profile.Button2Url = s, CheckUrl, OnProfileChanged, RichPresence.Profile.Button2Url);
-        txtButton2Text.AddValidation(Language.GetLanguage(LanguageText.Button2Text), s => RichPresence.Profile.Button2Text = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.Button2Text);
-
-        ckbElapsedTime.IsChecked = RichPresence.UseTimestamp;
-        ckbElapsedTime.DataContext = Language.GetLanguage(LanguageText.ShowElapsedTime);
+        cboLargeKey.SelectedIndex = largeKey;
+                
+        var smallKey = Data.MultiRPCImages.Keys.IndexOf(x => x?.ToLower() == RichPresence.Profile.SmallKey);
+        if (smallKey == -1)
+        {
+            smallKey = 0;
+        }
+        cboSmallKey.SelectedIndex = smallKey;
     }
         
     private void OnProfileChanged(bool _)
@@ -209,11 +210,11 @@ public partial class BaseRpcControl : UserControl, ITabPage
         ProfileChanged?.Invoke(this, EventArgs.Empty);
     }
         
-    private CheckResult CheckUrl(string s)
+    private CheckResult CheckUrl(string s, int byteCount = 512)
     {
         if (string.IsNullOrWhiteSpace(s) || Uri.TryCreate(s, UriKind.Absolute, out _))
         {
-            return s.CheckBytes(512)
+            return s.CheckBytes(byteCount)
                 ? new CheckResult(true)
                 : new CheckResult(false, Language.GetText(LanguageText.UriTooBig));
         }

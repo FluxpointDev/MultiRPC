@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -32,7 +33,13 @@ public partial class DiscordCheckOverlay : UserControl
         imgIcon.AddSvgAsset("Logo.svg");
         gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
         AssetManager.RegisterForAssetReload("Loading.gif",
-            () => gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif"));
+            () =>
+            {
+                if (IsVisible)
+                {
+                    gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
+                }
+            });
 
         _ = WaitForDiscord();
         _ = ShowTmpButton();
@@ -115,6 +122,7 @@ public partial class DiscordCheckOverlay : UserControl
         Opacity = 0;
         await Task.Delay(500);
         IsVisible = false;
+        gifLoading.SourceStream = Stream.Null;
     }
 
     private void BtnDisableDiscordCheck_OnClick(object? sender, RoutedEventArgs e) => _ = FadeOut();
