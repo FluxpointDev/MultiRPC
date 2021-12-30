@@ -10,6 +10,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using AvaloniaGif.Decoding;
 using DiscordRPC.Message;
 using MultiRPC.Exceptions;
 using MultiRPC.Extensions;
@@ -103,14 +104,18 @@ public partial class RpcView : UserControl
         if (e.PropertyName == nameof(RpcProfile.Profile.LargeText))
         {
             var text = RpcProfile!.Profile.LargeText;
-            CustomToolTip.SetTip(brdLarge, string.IsNullOrWhiteSpace(text) ? null : text);
+            text = string.IsNullOrWhiteSpace(text) ? null : text;
+            CustomToolTip.SetTip(brdLarge, text);
+            CustomToolTip.SetTip(gifLarge, text);
             return;
         }
             
         if (e.PropertyName == nameof(RpcProfile.Profile.SmallText))
         {
             var text = RpcProfile!.Profile.SmallText;
-            CustomToolTip.SetTip(gridSmallImage, string.IsNullOrWhiteSpace(text) ? null : text);
+            text = string.IsNullOrWhiteSpace(text) ? null : text;
+            CustomToolTip.SetTip(gridSmallImage, text);
+            CustomToolTip.SetTip(gifSmallImage, text);
         }
     }
         
@@ -217,31 +222,88 @@ public partial class RpcView : UserControl
             brdLarge.Background = null;
             brdLarge.IsVisible = false;
             gridSmallImage.IsVisible = false;
+            gifLarge.IsVisible = false;
+            gifLarge.Tag = null;
+            gifLarge.SourceStream = Stream.Null;
             return;
         }
 
         if (await ProcessUri(uri))
         {
-            brdLarge.Background = CachedImages[uri];
-            brdLarge.IsVisible = true;
-            gridSmallImage.IsVisible = ellSmallImage.Fill != null || gifSmallImage.SourceStream != Stream.Null;
+            gridSmallImage.IsVisible = ellSmallImage.Fill != null || gifSmallImage.Tag != null;
+            if (CachedImages.ContainsKey(uri))
+            {
+                brdLarge.Background = CachedImages[uri];
+                brdLarge.IsVisible = true;
+                gifLarge.IsVisible = false;
+                gifLarge.Tag = null;
+                gifLarge.SourceStream = Stream.Null;
+                return;
+            }
+            
+            gifLarge.IsVisible = true;
+
+            if (!gifLarge.Tag?.Equals(uri) ?? true)
+            {
+                gifLarge.Tag = uri;
+                var memStream = new MemoryStream();
+                lock (_streamLock)
+                {
+                    var stream = CachedStreams[uri];
+                    stream.Seek(0, SeekOrigin.Begin);
+                    stream.CopyTo(memStream);
+                    memStream.Seek(0, SeekOrigin.Begin);
+                }
+
+                gifLarge.SourceStream = memStream;
+            }
+
+            brdLarge.IsVisible = false;
         }
     }
-        
+
+    private readonly object _streamLock = new object();
     private async Task UpdateSmallImage(Uri? uri)
     {
         if (uri is null)
         {
             ellSmallImage.Fill = null;
+            gifSmallImage.IsVisible = false;
             gifSmallImage.SourceStream = Stream.Null;
+            gifSmallImage.Tag = null;
             gridSmallImage.IsVisible = false;
             return;
         }
 
         if (await ProcessUri(uri))
         {
-            ellSmallImage.Fill = CachedImages[uri];
             gridSmallImage.IsVisible = brdLarge.Background != null;
+            if (CachedImages.ContainsKey(uri))
+            {
+                ellSmallImage.Fill = CachedImages[uri];
+                ellSmallImage.IsVisible = true;
+                gifSmallImage.IsVisible = false;
+                gifSmallImage.SourceStream = Stream.Null;
+                gifSmallImage.Tag = null;
+                return;
+            }
+            
+            gifSmallImage.IsVisible = true;
+            if (!gifSmallImage.Tag?.Equals(uri) ?? true)
+            {
+                gifSmallImage.Tag = uri;
+                var memStream = new MemoryStream();
+                lock (_streamLock)
+                {
+                    var stream = CachedStreams[uri];
+                    stream.Seek(0, SeekOrigin.Begin);
+                    stream.CopyTo(memStream);
+                    memStream.Seek(0, SeekOrigin.Begin);
+                }
+
+                gifSmallImage.SourceStream = memStream;
+            }
+            ellSmallImage.IsVisible = false;
         }
     }
 
@@ -260,22 +322,35 @@ public partial class RpcView : UserControl
 
     private async Task<bool> ProcessUri(Uri uri)
     {
-        if (CachedImages.ContainsKey(uri))
+        if (CachedImages.ContainsKey(uri) 
+            || CachedStreams.ContainsKey(uri))
         {
-            return true;
-        }
-        
-        var largeImage = await App.HttpClient.GetResponseMessage(new HttpRequestMessage(HttpMethod.Get, uri));
-        if (largeImage is { IsSuccessStatusCode: true })
-        {
-            await using var imageStream = await largeImage.Content.ReadAsStreamAsync();
-            var image = Bitmap.DecodeToHeight(imageStream, (int)brdLarge.Height * 3);
-            var brush = new ImageBrush(image);
-            CachedImages[uri] = brush;
             return true;
         }
 
-        return false;
+        var imageResponse = await App.HttpClient.GetResponseMessage(new HttpRequestMessage(HttpMethod.Get, uri));
+        if (imageResponse is not { IsSuccessStatusCode: true })
+        {
+            return false;
+        }
+
+        var imageStream = await imageResponse.Content.ReadAsStreamAsync();
+        var isGif = GifDecoder.IsGif(imageStream);
+        imageStream.Seek(0, SeekOrigin.Begin);
+        if (isGif)
+        {
+            lock (_streamLock)
+            {
+                CachedStreams[uri] = imageStream;
+            }
+            return true;
+        }
+
+        var image = Bitmap.DecodeToHeight(imageStream, (int)brdLarge.Height * 3);
+        await imageStream.DisposeAsync();
+        var brush = new ImageBrush(image);
+        CachedImages[uri] = brush;
+        return true;
     }
 
     private static void DoBinding(RpcProfile presence, string path, IAvaloniaObject control)
@@ -303,6 +378,7 @@ public partial class RpcView : UserControl
         if (!gifLarge.IsVisible)
         {
             gifLarge.SourceStream = Stream.Null;
+            gifLarge.Tag = null;
         }
 
         var brush = _viewType switch
@@ -347,6 +423,8 @@ public partial class RpcView : UserControl
             case ViewType.Loading:
             {
                 gifLarge.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
+                gifLarge.Tag = null;
+
                 _titleText.ChangeJsonNames(LanguageText.Loading);
                 gridSmallImage.IsVisible = false;
                 brdLarge.IsVisible = false;
