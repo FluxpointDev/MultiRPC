@@ -57,7 +57,7 @@ public class TextEnumGen : ISourceGenerator
 
                     if (startIndex > 0 && endIndex > 0)
                     {
-                        var li = s[startIndex..endIndex];
+                        var li = s.Substring(startIndex, endIndex - startIndex);
                         builder.AppendLineInvariant(li + ",");
                     }
                 }                    

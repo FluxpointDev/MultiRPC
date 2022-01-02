@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Media;
 
-namespace MultiRPC.UI;
+namespace MultiRPC.UI.Pages;
 
 public interface ISidePage
 {
@@ -14,7 +14,7 @@ public interface ISidePage
     public void Initialize();
 
     Color? BackgroundColour { get; }
-        
+
     bool IsInitialized { get; }
 
     Thickness ContentPadding { get; }

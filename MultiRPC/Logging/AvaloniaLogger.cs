@@ -38,31 +38,31 @@ public class AvaloniaLogger : ILogSink
         };
     }
 
-    public void Log(LogEventLevel level, string area, object source, string messageTemplate)
+    public void Log(LogEventLevel level, string area, object? source, string messageTemplate)
     {
         Log(level, area, source, messageTemplate, Array.Empty<object>());
     }
 
-    public void Log<T0>(LogEventLevel level, string area, object source, string messageTemplate, T0 propertyValue0)
+    public void Log<T0>(LogEventLevel level, string area, object? source, string messageTemplate, T0? propertyValue0)
     {
-        Log(level, area, source, messageTemplate, new object[] { propertyValue0! });
+        Log(level, area, source, messageTemplate, new object?[] { propertyValue0 });
     }
 
-    public void Log<T0, T1>(LogEventLevel level, string area, object source, string messageTemplate, T0 propertyValue0,
-        T1 propertyValue1)
+    public void Log<T0, T1>(LogEventLevel level, string area, object? source, string messageTemplate, T0? propertyValue0,
+        T1? propertyValue1)
     {
-        Log(level, area, source, messageTemplate, new object[] { propertyValue0!, propertyValue1! });
+        Log(level, area, source, messageTemplate, new object?[] { propertyValue0, propertyValue1 });
     }
 
-    public void Log<T0, T1, T2>(LogEventLevel level, string area, object source, string messageTemplate, T0 propertyValue0,
-        T1 propertyValue1, T2 propertyValue2)
+    public void Log<T0, T1, T2>(LogEventLevel level, string area, object? source, string messageTemplate, T0? propertyValue0,
+        T1? propertyValue1, T2? propertyValue2)
     {
-        Log(level, area, source, messageTemplate, new object[] { propertyValue0!, propertyValue1!, propertyValue2! });
+        Log(level, area, source, messageTemplate, new object?[] { propertyValue0, propertyValue1, propertyValue2 });
     }
 
-    public void Log(LogEventLevel level, string area, object source, string messageTemplate, params object[] propertyValues)
+    public void Log(LogEventLevel level, string area, object? source, string messageTemplate, params object?[] propertyValues)
     {
-        messageTemplate = FormatMessage(messageTemplate, propertyValues);
+        messageTemplate = FormatMessage(messageTemplate);
         //TODO: Use source + area
         switch (ToLogLevel(level))
         {
@@ -81,7 +81,7 @@ public class AvaloniaLogger : ILogSink
         }
     }
 
-    private string FormatMessage(string message, params object[] propertyValues)
+    private string FormatMessage(string message)
     {
         var properties = new List<string>();
         var tmpMes = message;
