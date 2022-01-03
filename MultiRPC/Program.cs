@@ -74,5 +74,5 @@ class Program
             .With(new Win32PlatformOptions
             {
                 EnableMultitouch = true
-            }).LogToTinyUpdate();
+            }).LogToTinyUpdate("Property", "Visual", "Layout");
 }

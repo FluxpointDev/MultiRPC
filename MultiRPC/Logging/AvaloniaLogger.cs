@@ -17,13 +17,16 @@ public class AvaloniaLogger : ILogSink
     
     public bool IsEnabled(LogEventLevel level, string area)
     {
+        var logLevel = ToLogLevel(level);
         //If we give any areas to look at then only log them
-        if (_areas.Any() && !_areas.Contains(area))
+        if (_areas.Any() 
+            && _areas.Contains(area)
+            && logLevel is LogLevel.Info or LogLevel.Trace)
         {
             return false;
         }
         
-        return LoggingCreator.ShouldProcess(null, ToLogLevel(level));
+        return LoggingCreator.ShouldProcess(null, logLevel);
     }
 
     private static LogLevel ToLogLevel(LogEventLevel level)
@@ -60,9 +63,17 @@ public class AvaloniaLogger : ILogSink
         Log(level, area, source, messageTemplate, new object?[] { propertyValue0, propertyValue1, propertyValue2 });
     }
 
-    public void Log(LogEventLevel level, string area, object? source, string messageTemplate, params object?[] propertyValues)
+    public void Log(LogEventLevel level, string area, object? source, string message, object?[] propertyValues)
     {
-        messageTemplate = FormatMessage(messageTemplate);
+        var messageTemplate = FormatMessage(message, out var correctlyProcessedMessage);
+        
+        //If we fail to format the message then do this so we don't crash
+        if (!correctlyProcessedMessage)
+        {
+            _logger.Warning("Wasn't able to process avalonia logging properly!");
+            propertyValues = Array.Empty<object>();
+            messageTemplate = message;
+        }
         //TODO: Use source + area
         switch (ToLogLevel(level))
         {
@@ -81,7 +92,7 @@ public class AvaloniaLogger : ILogSink
         }
     }
 
-    private string FormatMessage(string message)
+    private string FormatMessage(string message, out bool correctlyProcessedMessage)
     {
         var properties = new List<string>();
         var tmpMes = message;
@@ -104,6 +115,8 @@ public class AvaloniaLogger : ILogSink
             startIndex = tmpMes.IndexOf('{');
             endIndex = tmpMes.IndexOf('}');
         }
+
+        correctlyProcessedMessage = !tmpMes.Contains('{') && !tmpMes.Contains('}');
         return formattedMessage;
     }
 }
