@@ -8,7 +8,7 @@ namespace MultiRPC.Logging;
 
 public class AvaloniaLogger : ILogSink
 {
-    private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(AvaloniaLogger));
+    private readonly Dictionary<string, ILogging> _loggers = new Dictionary<string, ILogging>();
     private readonly string[] _areas;
     public AvaloniaLogger(params string[] areas)
     {
@@ -66,11 +66,17 @@ public class AvaloniaLogger : ILogSink
     public void Log(LogEventLevel level, string area, object? source, string message, object?[] propertyValues)
     {
         var messageTemplate = FormatMessage(message, out var correctlyProcessedMessage);
-        
+
+        if (!_loggers.ContainsKey(area))
+        {
+            _loggers[area] = LoggingCreator.CreateLogger(nameof(AvaloniaLogger) + " (" + area + ")");
+        }
+        var logger = _loggers[area];
+
         //If we fail to format the message then do this so we don't crash
         if (!correctlyProcessedMessage)
         {
-            _logger.Warning("Wasn't able to process avalonia logging properly!");
+            logger.Warning("Wasn't able to process avalonia logging properly!");
             propertyValues = Array.Empty<object>();
             messageTemplate = message;
         }
@@ -78,16 +84,16 @@ public class AvaloniaLogger : ILogSink
         switch (ToLogLevel(level))
         {
             case LogLevel.Trace:
-                _logger.Debug(messageTemplate, propertyValues);
+                logger.Debug(messageTemplate, propertyValues);
                 break;
             case LogLevel.Info:
-                _logger.Information(messageTemplate, propertyValues);
+                logger.Information(messageTemplate, propertyValues);
                 break;
             case LogLevel.Warn:
-                _logger.Warning(messageTemplate, propertyValues);
+                logger.Warning(messageTemplate, propertyValues);
                 break;
             case LogLevel.Error:
-                _logger.Error(messageTemplate, propertyValues);
+                logger.Error(messageTemplate, propertyValues);
                 break;
         }
     }
