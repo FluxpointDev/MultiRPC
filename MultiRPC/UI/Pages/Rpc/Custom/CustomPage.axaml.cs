@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -58,7 +59,8 @@ public partial class CustomPage : RpcPage
         imgProfileShare.AddSvgAsset("Icons/Share.svg");
         imgProfileAdd.AddSvgAsset("Icons/Add.svg");
         imgProfileDelete.AddSvgAsset("Icons/Delete.svg");
-            
+        imgProfileClone.AddSvgAsset("Icons/Clone.svg");
+
         //Setup the RPC control
         _rpcControl = new BaseRpcControl
         {
@@ -97,6 +99,7 @@ public partial class CustomPage : RpcPage
         _shareLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgProfileShare, x));
         _addLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgProfileAdd, x));
         _deleteLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgProfileDelete, x));
+        _cloneLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgProfileClone, x));
             
         //Make help controls
         var helpGrid = new Grid
@@ -187,6 +190,7 @@ public partial class CustomPage : RpcPage
     private readonly Language _shareLang = Language.GetLanguage(LanguageText.ProfileShare);
     private readonly Language _addLang = Language.GetLanguage(LanguageText.ProfileAdd);
     private readonly Language _deleteLang = Language.GetLanguage(LanguageText.ProfileDelete);
+    private readonly Language _cloneLang = Language.GetLanguage(LanguageText.ProfileClone);
         
     private void AddTextBinding()
     {
@@ -261,5 +265,16 @@ public partial class CustomPage : RpcPage
         }
         _profilesSettings.Profiles.Remove(_activeProfile);
         BtnChangePresence(wrpProfileSelector.Children[profileIndex], e);
+    }
+
+    private void ImgProfileClone_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        var profile = JsonSerializer.Deserialize<RichPresence>(JsonSerializer.Serialize(_activeProfile));
+        
+        var profiles = SettingManager<ProfilesSettings>.Setting.Profiles;
+        profiles.CheckName(profile);
+        profiles.Add(profile);
+
+        BtnChangePresence(wrpProfileSelector.Children[^1], e);
     }
 }

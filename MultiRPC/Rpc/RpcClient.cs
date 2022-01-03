@@ -127,6 +127,11 @@ public class RpcClient
 
     public void Stop()
     {
+        if (_client?.IsDisposed ?? true)
+        {
+            return;
+        }
+        
         _logger.Information(Language.GetText(LanguageText.ShuttingDown));
         ClearPresence();
         _client?.Deinitialize();

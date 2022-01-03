@@ -51,16 +51,8 @@ public partial class SharePage : UserControl, ITitlePage
             }
                 
             var profiles = SettingManager<ProfilesSettings>.Setting.Profiles;
-            if (profiles.Any(x => profile.Name == x.Name))
-            {
-                var count = 0;
-                while (profiles.Any(x => profile.Name + $" {count}" == x.Name))
-                {
-                    count++;
-                }
-                profile.Name += $" {count}";
-            }
-                
+            profiles.CheckName(profile);
+
             profiles.Add(profile);
             this.TryClose();
             return;

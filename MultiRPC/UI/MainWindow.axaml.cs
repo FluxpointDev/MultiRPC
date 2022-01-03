@@ -2,11 +2,11 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Svg;
+using MultiRPC.Commands;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using MultiRPC.Theming;
@@ -14,31 +14,6 @@ using MultiRPC.Utils;
 
 namespace MultiRPC.UI;
 
-class TrayCommand : ICommand
-{
-    public bool CanExecute(object? parameter) => true;
-
-    public void Execute(object? parameter)
-    {
-        var mainWin = ((App)Application.Current).DesktopLifetime!.MainWindow!;
-        switch (mainWin.WindowState)
-        {
-            case WindowState.Normal:
-            case WindowState.Maximized:
-            case WindowState.FullScreen:
-                mainWin.WindowState = WindowState.Minimized;
-                break;
-            case WindowState.Minimized:
-                mainWin.WindowState = WindowState.Normal;
-                return;
-            default:
-                return;
-        }
-    }
-
-    public event EventHandler? CanExecuteChanged;
-}
-    
 public partial class MainWindow : FluentWindow
 {
     public MainWindow() : this(new MainPage())

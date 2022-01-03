@@ -19,7 +19,7 @@
 	</ProjectReference>
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)'!='WINSTORE'">
-	<ProjectReference Include="..\ext\discord-rpc-csharp\DiscordRPC\DiscordRPC.csproj"/>
+	<ProjectReference Include="..\ext\discord-rpc-csharp\DiscordRPC\DiscordRPC.csproj" />
   </ItemGroup>
   <ItemGroup Label="Packages">
     <PackageReference Include="Avalonia.Desktop" Version="0.10.11" />

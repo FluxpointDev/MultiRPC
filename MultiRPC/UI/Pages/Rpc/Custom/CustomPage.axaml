@@ -43,6 +43,7 @@
                 <Image x:Name="imgProfileEdit" PointerPressed="ImgProfileEdit_OnPointerPressed" />
                 <Image x:Name="imgProfileShare" PointerPressed="ImgProfileShare_OnPointerPressed" />
                 <Image x:Name="imgProfileAdd" PointerPressed="ImgProfileAdd_OnPointerPressed" />
+                <Image x:Name="imgProfileClone" PointerPressed="ImgProfileClone_OnPointerPressed" />
                 <Image x:Name="imgProfileDelete" PointerPressed="ImgProfileDelete_OnPointerPressed" IsVisible="False" />
             </StackPanel>
         </Grid>

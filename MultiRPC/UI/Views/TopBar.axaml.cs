@@ -22,7 +22,7 @@ public partial class TopBar : UserControl
     public TopBar()
     {
         InitializeComponent();
-        _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException(); 
+        _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException();
         if (RpcPageManager.CurrentPage != null)
         {
             _page = RpcPageManager.CurrentPage;

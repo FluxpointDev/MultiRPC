@@ -244,5 +244,8 @@
   "SomethingHappenedWhileGettingThemeColours": "Something happened while getting theme colours in {themepath}",
   "SomethingHappenedWhileGettingThemeMetadata": "Something happened while getting theme metadata in {themepath}",
   "WewCheckBox": "Wew this is a checkbox header",
-  "ShowAllTooltips": "Disable all tooltips (Helps with Tile Window Managers)"
+  "ShowAllTooltips": "Disable all tooltips (Helps with Tile Window Managers)",
+  "ProfileClone": "Clone profile",
+  "RPC": "RPC",
+  "GUI": "GUI"
 }

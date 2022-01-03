@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using MultiRPC.Commands;
 using MultiRPC.Exceptions;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
@@ -32,6 +34,13 @@ public partial class EditPage : UserControl, ITitlePage
         InitializeComponent();
             
         btnDone.DataContext = Language.GetLanguage(LanguageText.Done);
+        btnDone.Command = new ActionCommand((ob) =>
+        {
+            if (btnDone.IsEnabled)
+            {
+                BtnDone_OnClick(ob, null!);
+            }
+        });
         txtNewName.AddValidation(null, s => _newName = s,
             s =>
             {

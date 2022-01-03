@@ -17,6 +17,7 @@ using TinyUpdate.Binary;
 using TinyUpdate.Github;
 using TinyUpdate.Core.Extensions;
 using System.Runtime.InteropServices;
+using MultiRPC.Utils;
 
 namespace MultiRPC.UI;
 
@@ -54,6 +55,10 @@ public class App : Application
         PageManager.AddPage(new LoggingPage());
         PageManager.AddPage(new CreditsPage());
         PageManager.AddPage(new MasterThemeEditorPage());
+        if (DebugUtil.IsDebugBuild)
+        {
+            PageManager.AddPage(new DebugPage());
+        }
 
         //Anything else here
         Locator.CurrentMutable.RegisterLazySingleton(() => new RpcClient());
