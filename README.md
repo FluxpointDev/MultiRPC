@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img align="center" width="20%" src="MultiRPC/Assets/Svg%20files/MultiRPCLogo.svg" alt="MultiRPC logo">
+    <a href="#"><img align="center" width="20%" src="MultiRPC/Assets/Svg%20files/MultiRPCLogo.svg" alt="MultiRPC logo"></a>
     <p align="center" style="line-height: 0">MultiRPC</h1>
     <h3 align="center">A Discord rich presence manager with a cool GUI and support for custom status and multiple profiles!</h3>
 </h1>
@@ -9,7 +9,7 @@
 ## Info
 This application allows you to control what is shown on your account using discord rich presence! Giving you the ability to provide custom images and statuses on your profile!
 
-![Image](https://i.imgur.com/UpqlwSd.png)
+<a href="#info"><img src="https://i.imgur.com/UpqlwSd.png" alt="Rich presence example"></a>
 <hr/>
 
 # Features!
