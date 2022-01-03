@@ -1,40 +1,69 @@
-# Info
-![Image](https://img.fluxpoint.dev/258597428385546240.png)
+<h1 align="center">
+    <img align="center" width="20%" src="MultiRPC/Assets/Svg%20files/MultiRPCLogo.svg" alt="MultiRPC logo">
+    <p align="center" style="line-height: 0">MultiRPC</h1>
+    <h3 align="center">A Discord rich presence manager with a cool GUI and support for custom status and multiple profiles!</h3>
+</h1>
+<hr/>
+<div align="center" style="text-align: center">
 
-This supports Windows and Linux!
-
-Translations, themes and custom theme support now available!
-
-Ram usage: 50mb | Language: C# | GUI: Wpf
-
-# Support 
-
-Contact me Builderb#0001 or join the Discord server https://discord.gg/fluxpoint for more info and support
-
-# Install
-Install the app from our website https://fluxpoint.dev/multirpc
-
-Click more info and run anyway (windows limitation)
-
-![Image](https://i.imgur.com/jV9jIte.png)
-
-![Image](https://img.fluxpoint.dev/med/2531938422226944.png)
-
-# MultiRPC
-
-Default rpc profile change the text and select any images or set the tooltip
+## Info
+This application allows you to control what is shown on your account using discord rich presence! Giving you the ability to provide custom images and statuses on your profile!
 
 ![Image](https://i.imgur.com/UpqlwSd.png)
+<hr/>
 
-# Custom
+# Features!
+* Set a custom status on Discord with text and default images.
+* Add 2 button which contain links onto your status for your own website or social(s).
+* Create custom profiles with your own images and title.
+* Preview the rpc status in the app itself.
+* Profile data is saved when you close the app.
+* Support for multiple Discord clients like canary.
+* Set a quick afk status within the app.
+* Share custom profiles easily with other users.
+* The ability to theme the application to your liking.
+* Translations for the whole UI.
 
-You can create your own custom RPC using https://discordapp.com/developers/applications
+## **New features (Only in the rewrite!)**
+* External Url support (meaning you can give a url which points to an image on the web and discord will show it!).
+* Gif support.
+* More theming options (Editor coming soon).
+<hr/>
 
-This allows you to change the main RPC title and add your own images
+## Sounds like an epic application! Where can I get it?
+### Windows
+We have the active rewrite of this application on the [Microsoft Store](https://www.microsoft.com/store/productId/9N1K4GH3GN86). If you don't like the Microsoft Store then you can manually download the application from the [Release Page](https://github.com/FluxpointDev/MultiRPC/releases)
 
-# Resources
-Big thanks to https://github.com/Lachee/discord-rpc-csharp for providing the core code 
-and example for a C# rich presence that is being used in this app
+<a target="_blank" href='//www.microsoft.com/store/productId/9N1K4GH3GN86?cid=storebadge&ocid=badge'>
+<img height="50" src='https://developer.microsoft.com/en-us/store/badges/images/English_Get_L.png' alt='Get it from Microsoft'/>
+</a>
 
-# Other
+### Linux
+Linux users can go to the [Release Page](https://github.com/FluxpointDev/MultiRPC/releases) and download the rewrite. Packages will be created soon™
+
+### macOS
+macOS is *technically* supported but we currently don't create any packages for macOS just yet, this will come at a later date. In the meantime you can build MultiRPC and run it that way.
+<hr/>
+
+## Something's not working!
+Contact Builderb#0001 or join the [Discord server](https://discord.gg/TjF6QDC) and we'll help you out with any issue your currently facing!
+<hr/>
+
+## How do I use the Custom page?
+First you need to create your own custom RPC by going to https://discordapp.com/developers/applications and pressing 'New Application'. 
+
+Once given an name, you copy the Application ID (That goes into Client ID) and upload any images you want to use in the Rich Presence tab. Once done, you use the name you gave the image in Large/Small Key.
+<hr/>
+
+## Wait why is the rewrite at V7 when stable is currently V5?
+Because we had another version of the rewrite ([rewrite-old](https://github.com/FluxpointDev/MultiRPC/tree/rewrite-old)) which was V6 but that ended up becoming more of a mess then the current stable version so we ended up doing the rewrite from the ground up again. 
+<hr/>
+
+## Resources
+Big thanks to https://github.com/Lachee/discord-rpc-csharp for providing the core code which powers the RPC connection to discord!
+<hr/>
+
+## Other
 [![Widget](https://discordservices.net/bot/434556304661544960/widget.svg?v=2)](https://dbot.page/waifu)
+
+</div>
