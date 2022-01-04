@@ -11,12 +11,12 @@ using TinyUpdate.Core.Update;
 using MultiRPC.UI.Pages.Theme;
 using MultiRPC.Setting.Settings;
 using MultiRPC.UI.Pages.Settings;
-using MultiRPC.UI.Pages.Rpc.Custom;
 using Avalonia.Controls.ApplicationLifetimes;
 using TinyUpdate.Binary;
 using TinyUpdate.Github;
 using TinyUpdate.Core.Extensions;
 using System.Runtime.InteropServices;
+using MultiRPC.Updating;
 using MultiRPC.Utils;
 
 namespace MultiRPC.UI;
@@ -36,8 +36,12 @@ public class App : Application
         
     public override void Initialize()
     {
-#if !WINSTORE && !DEBUG
+#if !DEBUG
+#if _UWP
+            _updater = new WinStoreUpdater();
+#else
             _updater = new GithubUpdateClient(new BinaryApplier(), "FluxpointDev", "MultiRPC");
+#endif
 #endif
         AvaloniaXamlLoader.Load(this);
         var genSettings = SettingManager<GeneralSettings>.Setting;
@@ -72,7 +76,7 @@ public class App : Application
     }
 
     public IClassicDesktopStyleApplicationLifetime? DesktopLifetime;
-        
+
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

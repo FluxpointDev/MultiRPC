@@ -21,7 +21,6 @@ public class ColourJsonConverter : JsonConverter<Color>
 
     public override void Write(Utf8JsonWriter writer, Color value, JsonSerializerOptions options)
     {
-        var s = value.ToString();
-        writer.WriteStringValue(s.ToUpper());
+        writer.WriteStringValue($"#{value.ToUint32():x8}");
     }
 }

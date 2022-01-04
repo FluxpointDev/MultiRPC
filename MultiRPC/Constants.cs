@@ -13,7 +13,7 @@ public static class Constants
     {
         // Windows apps have restricted access, use the appdata folder instead of document.
         SettingsFolder =
-#if WINSTORE
+#if _UWP
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Packages/29025FluxpointDevelopment.MultiRPC_q026kjacpk46y/AppData");
 #else
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "MultiRPC-Beta");

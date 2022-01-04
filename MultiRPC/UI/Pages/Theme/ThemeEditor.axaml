@@ -3,7 +3,32 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pages="clr-namespace:MultiRPC.UI.Pages"
+             xmlns:colorpicker="clr-namespace:AvaloniaColorPicker;assembly=AvaloniaColorPicker"
+             xmlns:theme="clr-namespace:MultiRPC.UI.Pages.Theme"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MultiRPC.UI.Pages.Theme.ThemeEditorPage">
-    Come back soon when the Theme editor has been readded!
+    <ScrollViewer>
+        <StackPanel Margin="0, 10">
+            <TextBlock Text="Let's make a theme!" Classes="title" />
+            <StackPanel x:Name="stpC" Spacing="13">
+                <colorpicker:ColorPicker x:Name="clpPicker"  />
+                <TextBox x:Name="txtName" Watermark="Theme Name" />
+                <Grid ColumnDefinitions="Auto *" x:Name="gidPreview">
+                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                        <Expander Header="Wew" IsExpanded="True">
+                            <TextBlock Text="Magicall" />
+                        </Expander>
+                        <Expander Header="Wew 2" IsExpanded="True">
+                            <TextBlock Text="Magicall" />
+                        </Expander>
+                    </StackPanel>
+                </Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="7">
+                    <Button Content="Save Theme" />
+                    <Button Content="Save and Apply Theme" />
+                    <Button Content="Reset Theme" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </pages:SidePage>

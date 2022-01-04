@@ -5,7 +5,7 @@
              mc:Ignorable="d"
              Width="320"
              MinHeight="75"
-             x:Class="MultiRPC.UI.Pages.Rpc.Custom.Popups.EditPage">
+             x:Class="MultiRPC.UI.Pages.Rpc.Popups.EditPage">
     <StackPanel Spacing="10" Margin="10">
         <TextBox x:Name="txtNewName" Text="{Binding Result, Mode=TwoWay}" />
         <Button IsDefault="True" Classes="green" x:Name="btnDone" Click="BtnDone_OnClick" Content="{Binding TextObservable^}" />

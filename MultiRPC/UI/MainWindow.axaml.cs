@@ -26,7 +26,7 @@ public partial class MainWindow : FluentWindow
          after running for a while, skip if we aren't on windows but we also 
          crash on shutdown which is an issue for passing Microsoft store validation 
          so skip if deploying to it*/
-#if !WINSTORE
+#if !_UWP
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 #endif
         {

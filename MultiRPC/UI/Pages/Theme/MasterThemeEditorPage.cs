@@ -20,7 +20,7 @@ public class MasterThemeEditorPage : SidePage
         ContentPadding = new Thickness(0);
         tabPage.AddTabs(new ThemeEditorPage()
         {
-            Margin = new Thickness(10)
+            Margin = new Thickness(10, 0)
         }, new InstalledThemes());
         tabPage.Initialize();
         Content = tabPage;

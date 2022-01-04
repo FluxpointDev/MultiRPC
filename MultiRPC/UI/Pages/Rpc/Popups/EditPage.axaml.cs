@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Interactivity;
 using MultiRPC.Commands;
 using MultiRPC.Exceptions;
@@ -9,7 +8,7 @@ using MultiRPC.Rpc;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 
-namespace MultiRPC.UI.Pages.Rpc.Custom.Popups;
+namespace MultiRPC.UI.Pages.Rpc.Popups;
 
 public partial class EditPage : UserControl, ITitlePage
 {

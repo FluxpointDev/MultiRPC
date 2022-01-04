@@ -82,9 +82,9 @@
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <NoWarn>$(NoWarn);NU1702</NoWarn>
-    <EntryPointProjectUniqueName>..\MultiRPC\MultiRPC.csproj</EntryPointProjectUniqueName>
     <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
     <PackageCertificateThumbprint>11B1263E797F2500D079382148EBFA4669720245</PackageCertificateThumbprint>
+    <EntryPointProjectUniqueName>..\MultiRPC\MultiRPC.UWP.csproj</EntryPointProjectUniqueName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='WINSTORE'">
   </PropertyGroup>
@@ -196,6 +196,6 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MultiRPC\MultiRPC.csproj" />
+    <ProjectReference Include="..\MultiRPC\MultiRPC.UWP.csproj" />
   </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@
              mc:Ignorable="d" 
              Width="400" 
              Height="200"
-             x:Class="MultiRPC.UI.Pages.Rpc.Custom.Popups.SharePage">
+             x:Class="MultiRPC.UI.Pages.Rpc.Popups.SharePage">
     <Grid RowDefinitions="Auto * Auto" Margin="10">
         <TextBlock x:Name="tblGuild" Text="{Binding TextObservable^}" TextWrapping="Wrap" />
         <TextBox Grid.Row="1" x:Name="txtData" Margin="0, 10" TextWrapping="Wrap" />

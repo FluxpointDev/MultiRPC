@@ -1,16 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ApplicationIcon>Assets/Logo.ico</ApplicationIcon>
     <PublishTrimmed>true</PublishTrimmed>
     <Configurations>Debug;Release</Configurations>
+	<RootNamespace>MultiRPC</RootNamespace>
+	<AssemblyName>MultiRPC</AssemblyName>
     <Version>7.0</Version>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <DefineConstants>$(DefineConstants);_UWP</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='WINSTORE'">
+    <Optimize>True</Optimize>
   </PropertyGroup>
 
   <ItemGroup Label="Packages">
+    <ProjectReference Include="..\ext\discord-rpc-csharp\DiscordRPC\DiscordRPC.csproj">
+		<Optimize>True</Optimize>
+	</ProjectReference>
+    
     <PackageReference Include="Avalonia.Desktop" Version="0.10.11" />
     <PackageReference Include="Avalonia.Svg" Version="0.10.11" />
     <PackageReference Include="AvaloniaColorPicker" Version="1.1.0" />
@@ -21,7 +31,6 @@
     <PackageReference Include="TinyUpdate.Github" Version="0.0.0.10-alpha" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
     <ProjectReference Include="..\ext\avalonia.gif\AvaloniaGif\AvaloniaGif.csproj" />
-    <ProjectReference Include="..\ext\discord-rpc-csharp\DiscordRPC\DiscordRPC.csproj" />
     <ProjectReference Include="..\ext\fonderie\Fonderie.INPC\Fonderie.INPC.Generator\Fonderie.INPC.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\MultiRPC.SourceGen\MultiRPC.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>

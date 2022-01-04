@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using Avalonia;
 using Avalonia.Controls;
@@ -11,7 +10,7 @@ using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using TinyUpdate.Core.Logging;
 
-namespace MultiRPC.UI.Pages.Rpc.Custom.Popups;
+namespace MultiRPC.UI.Pages.Rpc.Popups;
 
 public partial class SharePage : UserControl, ITitlePage
 {

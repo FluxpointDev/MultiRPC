@@ -17,9 +17,9 @@ using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using MultiRPC.UI.Controls;
-using MultiRPC.UI.Pages.Rpc.Custom.Popups;
+using MultiRPC.UI.Pages.Rpc.Popups;
 
-namespace MultiRPC.UI.Pages.Rpc.Custom;
+namespace MultiRPC.UI.Pages.Rpc;
 
 //TODO: Make a toolbar which can also have a popup when they is too little space to show all profiles
 public partial class CustomPage : RpcPage
@@ -78,7 +78,7 @@ public partial class CustomPage : RpcPage
         {
             foreach (RichPresence profile in args.OldItems ?? Array.Empty<object>())
             {
-                wrpProfileSelector.Children.Remove(wrpProfileSelector.Children.First(x => x.DataContext == profile));
+                wrpProfileSelector.Children.Remove(wrpProfileSelector.Children.First<IControl>(x => x.DataContext == profile));
             }
             foreach (RichPresence profile in args.NewItems ?? Array.Empty<object>())
             {

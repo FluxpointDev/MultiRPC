@@ -232,4 +232,14 @@ public class Theme : IDisposable
     {
         GC.SuppressFinalize(this);
     }
+
+    public Theme Clone(string? name = null)
+    {
+        return new Theme()
+        {
+            Metadata = new Metadata(name ?? this.Metadata.Name, this.Metadata.Version),
+            Colours = JsonSerializer.Deserialize(JsonSerializer.Serialize(this.Colours, ColoursJsonContext), ColoursJsonContext)!,
+            Mode = this.Mode
+        };
+    }
 }

@@ -13,8 +13,6 @@ using TinyUpdate.Core;
 using TinyUpdate.Core.Logging;
 using TinyUpdate.Core.Logging.Loggers;
 
-//TODO: Fix issue with not loading presence on linux
-//TODO: Make GIFs loops stop when they're not on screen
 //TODO: Make this be used for the versioning
 [assembly: SemanticVersion("7.0.0-beta5+1")]
 namespace MultiRPC;
@@ -22,7 +20,7 @@ namespace MultiRPC;
 class Program
 {
     private static IPC _ipc = null!;
-        
+
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
@@ -32,7 +30,7 @@ class Program
         LoggingCreator.GlobalLevel = SettingManager<GeneralSettings>.Setting.LogLevel;
 
         // Set the current directory to the app install location to get assets.
-#if WINSTORE
+#if _UWP
             Directory.SetCurrentDirectory(AppContext.BaseDirectory + "/");
 #else
         // This seems to break windows apps even though it *can* write to the log folder.
