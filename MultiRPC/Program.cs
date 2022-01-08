@@ -14,7 +14,7 @@ using TinyUpdate.Core.Logging;
 using TinyUpdate.Core.Logging.Loggers;
 
 //TODO: Make this be used for the versioning
-[assembly: SemanticVersion("7.0.0-beta5+1")]
+[assembly: SemanticVersion("7.0.0-beta6")]
 namespace MultiRPC;
 
 class Program
