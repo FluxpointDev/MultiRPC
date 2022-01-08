@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MultiRPC;
 
+//TODO: Drop this when we add proper asset manager for profiles
 public static class Data
 {
     public static Dictionary<string, string> MultiRPCImages { get; internal set; } = MakeImagesDictionary();

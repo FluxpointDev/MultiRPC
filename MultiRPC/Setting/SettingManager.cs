@@ -6,6 +6,7 @@ using System.Text.Json;
 
 namespace MultiRPC.Setting;
 
+//TODO: See if we can make use of static for SerializerContext?
 public static class SettingManager<T> 
     where T : BaseSetting, new()
 {

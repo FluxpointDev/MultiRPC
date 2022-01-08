@@ -11,6 +11,7 @@ using TinyUpdate.Core.Logging;
 
 namespace MultiRPC;
 
+//TODO: Cleanup
 //TODO: Use Name to check if this is a valid IPC
 //Works on top of this example
 //https://github.com/davidfowl/TcpEcho

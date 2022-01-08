@@ -17,6 +17,7 @@ using TinyUpdate.Github;
 using TinyUpdate.Core.Extensions;
 using System.Runtime.InteropServices;
 using MultiRPC.Utils;
+using MultiRPC.Updating;
 
 namespace MultiRPC.UI;
 
@@ -32,14 +33,14 @@ public class App : Application
 
     //TODO: Put this somewhere else, for now this works
     private UpdateClient? _updater;
-        
+
     public override void Initialize()
     {
 #if !DEBUG
 #if _UWP
-            _updater = new WinStoreUpdater();
+        _updater = new WinStoreUpdater();
 #else
-            _updater = new GithubUpdateClient(new BinaryApplier(), "FluxpointDev", "MultiRPC");
+        _updater = new GithubUpdateClient(new BinaryApplier(), "FluxpointDev", "MultiRPC");
 #endif
 #endif
         AvaloniaXamlLoader.Load(this);
@@ -67,10 +68,10 @@ public class App : Application
         Locator.CurrentMutable.RegisterLazySingleton(() => new RpcClient());
 
 #if !DEBUG
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                _= _updater?.UpdateApp(null);
-            }
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            _= _updater?.UpdateApp(null);
+        }
 #endif
     }
 

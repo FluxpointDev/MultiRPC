@@ -26,6 +26,7 @@ public enum ThemeMode
     Modern
 }
 
+//TODO: Add bool to tell if the theme has any assets (for making things quicker)
 public class Theme : IDisposable
 {
     private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Theme));

@@ -13,6 +13,7 @@ using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.Rpc;
 
+//TODO: Possible cleanup?
 public class RpcClient
 {
     private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(RpcClient));

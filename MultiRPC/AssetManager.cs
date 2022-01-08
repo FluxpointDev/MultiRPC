@@ -64,9 +64,6 @@ public static class AssetManager
     /// <summary>
     /// Grabs the stream for the asset
     /// </summary>
-    /// <param name="key"></param>
-    /// <param name="theme"></param>
-    /// <returns></returns>
     public static Stream GetAsset(string key, Theme? theme = null)
     {
         var stream = Stream.Null;

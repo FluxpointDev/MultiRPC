@@ -47,7 +47,7 @@ public partial class ProfilesSettings : BaseSetting
         
     public ObservableCollection<RichPresence> Profiles { get; }
 
-    [JsonIgnore] 
+    [JsonIgnore]
     public override string Name => "Profiles";
         
     //TODO: Wait for PR to fix System.Text.Json source generator in DiscordRPC (PR to be made)

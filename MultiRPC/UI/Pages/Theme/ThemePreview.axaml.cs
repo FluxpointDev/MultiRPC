@@ -10,6 +10,7 @@ using ShimSkiaSharp;
 
 namespace MultiRPC.UI.Pages.Theme;
 
+//TODO: Make it apply new colors on icons
 public partial class ThemePreview : UserControl
 {
     private Theming.Theme _theme;

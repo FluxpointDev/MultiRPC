@@ -14,6 +14,7 @@ namespace MultiRPC.Setting;
 /// </remarks>
 public abstract class BaseSetting
 {
+    [JsonIgnore]
     public abstract string Name { get; }
 
     public abstract JsonSerializerContext? SerializerContext { get; }

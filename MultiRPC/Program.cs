@@ -31,7 +31,7 @@ class Program
 
         // Set the current directory to the app install location to get assets.
 #if _UWP
-            Directory.SetCurrentDirectory(AppContext.BaseDirectory + "/");
+        Directory.SetCurrentDirectory(AppContext.BaseDirectory + "/");
 #else
         // This seems to break windows apps even though it *can* write to the log folder.
         var logFolder = Path.Combine(Constants.SettingsFolder, "Logging");
@@ -40,7 +40,7 @@ class Program
 #endif
         LoggingCreator.AddLogBuilder(new LoggingPageBuilder());
         _ipc = IPC.GetOrMakeConnection();
-            
+
         //Now check if we are already currently open, if so tell that instance to show
         if (!DebugUtil.IsDebugBuild && Process.GetProcessesByName("MultiRPC").Length > 1)
         {

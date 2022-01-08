@@ -80,6 +80,7 @@ public static class Constants
     /// </summary>
     public const string ThemeFileExtension = ".multitheme";
 
+    //TODO: Add comments
     public static string ThemeFolder { get; }
 
     public static Version CurrentVersion = Assembly.GetExecutingAssembly().GetName().Version!;
