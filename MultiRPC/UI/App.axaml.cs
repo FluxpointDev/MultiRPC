@@ -68,10 +68,10 @@ public class App : Application
         Locator.CurrentMutable.RegisterLazySingleton(() => new RpcClient());
 
 #if !DEBUG
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        /*if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             _= _updater?.UpdateApp(null);
-        }
+        }*/
 #endif
     }
 
