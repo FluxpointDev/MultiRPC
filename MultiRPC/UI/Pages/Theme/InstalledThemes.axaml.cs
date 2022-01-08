@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,11 +26,15 @@ public partial class InstalledThemes : UserControl, ITabPage
 {
     //We keep a store of the active theme as we mess with it
     private Theming.Theme? _activeTheme;
-    public Language? TabName { get; } = Language.GetLanguage("InstalledThemes");
+    public Language? TabName { get; } = Language.GetLanguage(LanguageText.InstalledThemes);
     public bool IsDefaultPage => false;
     public void Initialize(bool loadXaml)
     {
         InitializeComponent(loadXaml);
+
+        btnAdd.DataContext = Language.GetLanguage(LanguageText.AddTheme);
+        btnAddAndApply.DataContext = Language.GetLanguage(LanguageText.AddAndApplyTheme);
+        
         wppThemes.Children.AddRange(
             new []
             {
@@ -38,16 +42,25 @@ public partial class InstalledThemes : UserControl, ITabPage
                 MakePreviewUI(Themes.Light)
             });
 
-        if (!Directory.Exists(_themeLocation))
+        if (!Directory.Exists(Constants.ThemeFolder))
         {
             return;
         }
 
         _ = Task.Run(() =>
         {
-            var files = Directory.GetFiles(_themeLocation);
+            var files = Directory.GetFiles(Constants.ThemeFolder);
             MakePreviewUIs(files);
         });
+
+        Theming.Theme.NewTheme += (sender, theme) =>
+        {
+            this.RunUILogic(() =>
+            {
+                var control = MakePreviewUI(theme, theme.Location);
+                wppThemes.Children.Add(control);
+            });
+        };
     }
 
     private void OnAttachedToLogicalTree(object? sender, LogicalTreeAttachmentEventArgs e)
@@ -91,14 +104,14 @@ public partial class InstalledThemes : UserControl, ITabPage
             //TODO: Make different UI for this
             return new TextBlock
             {
-                DataContext = Language.GetLanguage("NA"),
+                DataContext = Language.GetLanguage(LanguageText.NA),
                 [!TextBlock.TextProperty] = new Binding("TextObservable^"),
             };
         }
 
         var editButton = new Button
         {
-            DataContext = Language.GetLanguage("Edit"),
+            DataContext = Language.GetLanguage(LanguageText.Edit),
             [!ContentProperty] = new Binding("TextObservable^"),
             IsEnabled = !string.IsNullOrWhiteSpace(file),
             Tag = theme,
@@ -107,7 +120,7 @@ public partial class InstalledThemes : UserControl, ITabPage
             
         var removeButton = new Button
         {
-            DataContext = Language.GetLanguage("Remove"),
+            DataContext = Language.GetLanguage(LanguageText.Remove),
             [!ContentProperty] = new Binding("TextObservable^"),
             IsEnabled = false,//editButton.IsEnabled,
             Tag = theme,
@@ -116,7 +129,7 @@ public partial class InstalledThemes : UserControl, ITabPage
 
         var cloneButton = new Button
         {
-            DataContext = Language.GetLanguage("Clone"),
+            DataContext = Language.GetLanguage(LanguageText.Clone),
             [!ContentProperty] = new Binding("TextObservable^"),
             Tag = theme,
         };
@@ -224,7 +237,6 @@ public partial class InstalledThemes : UserControl, ITabPage
         }
     }
 
-    private readonly string _themeLocation = Path.Combine(Constants.SettingsFolder, "Themes");
     private async Task GetTheme(bool apply)
     {
         var openDia = new OpenFileDialog
@@ -258,8 +270,8 @@ public partial class InstalledThemes : UserControl, ITabPage
                 continue;
             }
 
-            Directory.CreateDirectory(_themeLocation);
-            var newThemeLoc = Path.Combine(_themeLocation, Path.GetFileName(file));
+            Directory.CreateDirectory(Constants.ThemeFolder);
+            var newThemeLoc = Path.Combine(Constants.ThemeFolder, Path.GetFileName(file));
             File.Copy(file, newThemeLoc);
         }
         if (!apply)

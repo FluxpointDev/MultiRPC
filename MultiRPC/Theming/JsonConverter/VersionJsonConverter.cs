@@ -4,10 +4,22 @@ using System.Text.Json.Serialization;
 
 namespace MultiRPC.Theming.JsonConverter;
 
-public class LegacyVersionJsonConverter : JsonConverter<Version>
+public class VersionJsonConverter : JsonConverter<Version>
 {
     public override Version? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            var versionS = reader.GetString();
+            if (string.IsNullOrWhiteSpace(versionS)
+                || !Version.TryParse(versionS, out var version))
+            {
+                throw new Exception();
+            }
+
+            return version;
+        }
+        
         if (reader.TokenType != JsonTokenType.StartObject)
         {
             throw new Exception();
@@ -49,6 +61,6 @@ public class LegacyVersionJsonConverter : JsonConverter<Version>
 
     public override void Write(Utf8JsonWriter writer, Version value, JsonSerializerOptions options)
     {
-        throw new NotImplementedException();
+        writer.WriteStringValue(value.ToString());
     }
 }

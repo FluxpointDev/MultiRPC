@@ -12,12 +12,21 @@ namespace MultiRPC.UI.Pages.Theme;
 
 public partial class ThemePreview : UserControl
 {
-    public Theming.Theme Theme { get; }
+    private Theming.Theme _theme;
+    public Theming.Theme Theme
+    {
+        get => _theme;
+        set
+        {
+            _theme = value;
+            _theme.Apply(Resources);
+        }
+    }
 
     public ThemePreview() => throw new DesignException();
     public ThemePreview(Theming.Theme theme)
     {
-        Theme = theme;
+        _theme = theme;
         InitializeComponent();
         Theme.Apply(Resources);
 

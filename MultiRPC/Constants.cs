@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Text.Json;
 
 namespace MultiRPC;
@@ -18,6 +19,7 @@ public static class Constants
 #else
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "MultiRPC-Beta");
 #endif
+        ThemeFolder = Path.Combine(SettingsFolder, "Themes");
     }
 
     /// <summary>
@@ -77,6 +79,10 @@ public static class Constants
     /// The theme's file extension
     /// </summary>
     public const string ThemeFileExtension = ".multitheme";
+
+    public static string ThemeFolder { get; }
+
+    public static Version CurrentVersion = Assembly.GetExecutingAssembly().GetName().Version!;
 
     /// <summary>
     /// The folder with all the languages

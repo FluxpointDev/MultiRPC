@@ -7,7 +7,7 @@ namespace MultiRPC.Updating;
 
 public class UpdateManager
 {
-    private UpdateClient _updateClient;
+    private readonly UpdateClient _updateClient;
     public UpdateManager(UpdateClient updateClient)
     {
         _updateClient = updateClient;

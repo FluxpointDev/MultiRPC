@@ -8,8 +8,8 @@
              x:Class="MultiRPC.UI.Pages.Theme.InstalledThemes">
     <Grid RowDefinitions="Auto *">
         <StackPanel Margin="10" Orientation="Horizontal">
-            <Button Content="Add Theme" x:Name="btnAdd" Click="BtnAdd_OnClick" />
-            <Button Content="Add and Apply Theme" x:Name="btnAddAndApply" Click="BtnAddAndApply_OnClick" />
+            <Button Content="{Binding TextObservable^}" x:Name="btnAdd" Click="BtnAdd_OnClick" />
+            <Button Content="{Binding TextObservable^}" x:Name="btnAddAndApply" Click="BtnAddAndApply_OnClick" />
         </StackPanel>
         <ScrollViewer Margin="15,0,0,0" HorizontalContentAlignment="Center" Grid.Row="1">
             <WrapPanel Margin="10" x:Name="wppThemes" />

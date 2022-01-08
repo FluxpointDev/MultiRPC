@@ -247,5 +247,10 @@
   "ShowAllTooltips": "Disable all tooltips (Helps with Tile Window Managers)",
   "ProfileClone": "Clone profile",
   "RPC": "RPC",
-  "GUI": "GUI"
+  "GUI": "GUI",
+  "Primary": "Primary",
+  "Secondary": "Secondary",
+  "Buttons": "Buttons",
+  "Pages": "Pages",
+  "Other": "Other"
 }

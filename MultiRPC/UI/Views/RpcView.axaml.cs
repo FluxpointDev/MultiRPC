@@ -10,6 +10,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Media.Immutable;
 using AvaloniaGif.Decoding;
 using DiscordRPC.Message;
 using MultiRPC.Exceptions;
@@ -439,9 +440,9 @@ public partial class RpcView : UserControl
             {
                 _titleText.ChangeJsonNames(LanguageText.Error);
 
-                tblTitle.Foreground = new SolidColorBrush(Colors.White);
+                tblTitle.Foreground = new ImmutableSolidColorBrush(Colors.White.ToUint32());
                 tblText1.Text = error;
-                tblText1.Foreground = new SolidColorBrush(Colors.White);
+                tblText1.Foreground = tblTitle.Foreground;
                     
                 brdLarge.Background = _errorVisualBrush;
                 brdLarge.IsVisible = true;

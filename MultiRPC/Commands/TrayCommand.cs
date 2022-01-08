@@ -8,9 +8,9 @@ namespace MultiRPC.Commands;
 
 class TrayCommand : ICommand
 {
-    public bool CanExecute(object? parameter) => true;
+    public bool CanExecute(object? _) => true;
 
-    public void Execute(object? parameter)
+    public void Execute(object? _)
     {
         var mainWin = ((App)Application.Current).DesktopLifetime!.MainWindow!;
         switch (mainWin.WindowState)

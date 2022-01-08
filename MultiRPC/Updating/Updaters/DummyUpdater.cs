@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using SemVersion;
 using TinyUpdate.Core;
 using TinyUpdate.Core.Update;

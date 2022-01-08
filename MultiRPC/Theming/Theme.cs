@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -6,7 +6,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Media;
+using Avalonia.Media.Immutable;
+using MultiRPC.Extensions;
 using MultiRPC.Theming.JsonConverter;
 using TinyUpdate.Core.Logging;
 using TinyUpdate.Core.Utils;
@@ -37,7 +38,7 @@ public class Theme : IDisposable
         { Converters = { new ColourJsonConverter() }}).Colours;
         
         MetadataJsonContext = new MetadataContext(new JsonSerializerOptions(JsonSerializerDefaults.General)
-        { Converters = { new LegacyVersionJsonConverter() }}).Metadata;
+        { Converters = { new VersionJsonConverter() }}).Metadata;
     }
     
     /// <summary>
@@ -58,7 +59,7 @@ public class Theme : IDisposable
     /// <summary>
     /// Where the theme is currently stored
     /// </summary>
-    public string? Location { get; init; }
+    public string? Location { get; set; }
 
     /// <summary>
     /// What mode this theme is in
@@ -96,6 +97,47 @@ public class Theme : IDisposable
             .Open() ?? Stream.Null;
     }
 
+    public static event EventHandler<Theme>? NewTheme; 
+
+    public bool Save(string? filename)
+    {
+        //We need to unload assets quickly as we can't write if we don't
+        UnloadAssets();
+
+        var fireNewTheme = false;
+        if (string.IsNullOrWhiteSpace(Location))
+        {
+            fireNewTheme = true;
+            Location ??= Path.Combine(Constants.ThemeFolder, filename + Constants.ThemeFileExtension);
+        }
+        if (File.Exists(Location))
+        {
+            File.Delete(Location);
+        }
+        
+        var fileStream = File.Create(Location);
+        var archive = new ZipArchive(fileStream, ZipArchiveMode.Create);
+
+        var coloursEntry = archive.CreateEntry("colours.json");
+        var colourStream = coloursEntry.Open();
+        JsonSerializer.Serialize(colourStream, this.Colours, ColoursJsonContext);
+        colourStream.Dispose();
+
+        var metadataEntry = archive.CreateEntry("metadataEntry.json");
+        var metadataStream = metadataEntry.Open();
+        Metadata.Version = Constants.CurrentVersion;
+        JsonSerializer.Serialize(metadataStream, this.Metadata, MetadataJsonContext);
+        metadataStream.Dispose();
+
+        archive.Dispose();
+
+        if (fireNewTheme)
+        {
+            NewTheme?.Invoke(null, this);
+        }
+        return true;
+    }
+
     private string _filepath = null!;
     private ZipArchive? _archive;
     /// <summary>
@@ -119,7 +161,18 @@ public class Theme : IDisposable
             return null;
         }
 
-        var archive = new ZipArchive(fileStream, ZipArchiveMode.Read);
+        ZipArchive archive;
+        try
+        {
+            archive = new ZipArchive(fileStream, ZipArchiveMode.Read);
+        }
+        catch (Exception e)
+        {
+            Logger.Error(e);
+            Logger.Error(Language.GetText(LanguageText.CantOpenOrSaveThemeFile)
+                .Replace("{open/save}", Language.GetText(LanguageText.Open)));
+            return null;
+        }
         var coloursEntry = archive.GetEntry("colours.json");
         var metadataEntry = archive.GetEntry("metadataEntry.json");
         if (coloursEntry == null || metadataEntry == null)
@@ -192,12 +245,13 @@ public class Theme : IDisposable
         _archive?.Dispose();
         _archiveLoaded = false;
     }
-    
+
     /// <summary>
     /// Applies the theming to a IResourceDictionary (or App.Current.Resources if nothing is applied)
     /// </summary>
     /// <param name="resourceDictionary">IResourceDictionary to apply to</param>
-    public void Apply(IResourceDictionary? resourceDictionary = null)
+    /// <param name="fireAssetChange">If we should fire asset changes</param>
+    public void Apply(IResourceDictionary? resourceDictionary = null, bool fireAssetChange = true)
     {
         if (resourceDictionary == null)
         {
@@ -205,29 +259,32 @@ public class Theme : IDisposable
             ActiveTheme?.UnloadAssets();
             ActiveTheme = this;
         }
-        resourceDictionary["ThemeAccentColor"] = Colours.ThemeAccentColor;
-        resourceDictionary["ThemeAccentColor2"] = Colours.ThemeAccentColor2;
-        resourceDictionary["ThemeAccentColor2Hover"] = Colours.ThemeAccentColor2Hover;
-        resourceDictionary["ThemeAccentColor3"] = Colours.ThemeAccentColor3;
-        resourceDictionary["ThemeAccentColor4"] = Colours.ThemeAccentColor4;
-        resourceDictionary["ThemeAccentColor5"] = Colours.ThemeAccentColor5;
+        resourceDictionary.UpdateIfDifferent("ThemeAccentColor", Colours.ThemeAccentColor);
+        resourceDictionary.UpdateIfDifferent("ThemeAccentColor2", Colours.ThemeAccentColor2);
+        resourceDictionary.UpdateIfDifferent("ThemeAccentColor2Hover", Colours.ThemeAccentColor2Hover);
+        resourceDictionary.UpdateIfDifferent("ThemeAccentColor3", Colours.ThemeAccentColor3);
+        resourceDictionary.UpdateIfDifferent("ThemeAccentColor4", Colours.ThemeAccentColor4);
+        resourceDictionary.UpdateIfDifferent("ThemeAccentColor5", Colours.ThemeAccentColor5);
 
-        resourceDictionary["ThemeAccentDisabledColor"] = Colours.ThemeAccentDisabledColor;
-        resourceDictionary["ThemeAccentDisabledTextColor"] = Colours.ThemeAccentDisabledTextColor;
-        resourceDictionary["NavButtonSelectedColor"] = Colours.NavButtonSelectedColor;
-        resourceDictionary["NavButtonSelectedIconColor"] = Colours.NavButtonSelectedIconColor;
-        resourceDictionary["ThemeForegroundBrush"] = new SolidColorBrush(Colours.TextColour);
+        resourceDictionary.UpdateIfDifferent("ThemeAccentDisabledColor", Colours.ThemeAccentDisabledColor);
+        resourceDictionary.UpdateIfDifferent("ThemeAccentDisabledTextColor", Colours.ThemeAccentDisabledTextColor);
+        resourceDictionary.UpdateIfDifferent("NavButtonSelectedColor", Colours.NavButtonSelectedColor);
+        resourceDictionary.UpdateIfDifferent("NavButtonSelectedIconColor", Colours.NavButtonSelectedIconColor);
+        resourceDictionary.UpdateIfDifferent("ThemeForegroundBrush",  new ImmutableSolidColorBrush(Colours.TextColour));
 
-        resourceDictionary["CheckBoxForegroundUnchecked"] = resourceDictionary["ThemeForegroundBrush"];
-        resourceDictionary["CheckBoxForegroundChecked"] = resourceDictionary["ThemeForegroundBrush"];
-        resourceDictionary["CheckBoxForegroundCheckedPointerOver"] = resourceDictionary["ThemeForegroundBrush"];
-        resourceDictionary["CheckBoxForegroundUncheckedPointerOver"] = resourceDictionary["ThemeForegroundBrush"];
-        resourceDictionary["CheckBoxForegroundCheckedPressed"] = resourceDictionary["ThemeForegroundBrush"];
-        resourceDictionary["CheckBoxForegroundUncheckedPressed"] = resourceDictionary["ThemeForegroundBrush"];
-        
-        AssetManager.FireReloadAssets(this);
+        resourceDictionary.UpdateIfDifferent("CheckBoxForegroundUnchecked", resourceDictionary["ThemeForegroundBrush"]);
+        resourceDictionary.UpdateIfDifferent("CheckBoxForegroundChecked", resourceDictionary["ThemeForegroundBrush"]);
+        resourceDictionary.UpdateIfDifferent("CheckBoxForegroundCheckedPointerOver", resourceDictionary["ThemeForegroundBrush"]);
+        resourceDictionary.UpdateIfDifferent("CheckBoxForegroundUncheckedPointerOver", resourceDictionary["ThemeForegroundBrush"]);
+        resourceDictionary.UpdateIfDifferent("CheckBoxForegroundCheckedPressed", resourceDictionary["ThemeForegroundBrush"]);
+        resourceDictionary.UpdateIfDifferent("CheckBoxForegroundUncheckedPressed", resourceDictionary["ThemeForegroundBrush"]);
+
+        if (fireAssetChange)
+        {
+            AssetManager.FireReloadAssets(this);
+        }
     }
-
+    
     public void Dispose()
     {
         GC.SuppressFinalize(this);
@@ -239,7 +296,8 @@ public class Theme : IDisposable
         {
             Metadata = new Metadata(name ?? this.Metadata.Name, this.Metadata.Version),
             Colours = JsonSerializer.Deserialize(JsonSerializer.Serialize(this.Colours, ColoursJsonContext), ColoursJsonContext)!,
-            Mode = this.Mode
+            Mode = this.Mode,
+            Location = null,
         };
     }
 }

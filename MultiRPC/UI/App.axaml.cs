@@ -16,7 +16,6 @@ using TinyUpdate.Binary;
 using TinyUpdate.Github;
 using TinyUpdate.Core.Extensions;
 using System.Runtime.InteropServices;
-using MultiRPC.Updating;
 using MultiRPC.Utils;
 
 namespace MultiRPC.UI;
