@@ -42,7 +42,7 @@ We have the active rewrite of this application on the [Microsoft Store](https://
 Linux users can go to the [Release Page](https://github.com/FluxpointDev/MultiRPC/releases) and download the rewrite. Packages will be created soon™
 
 ### macOS
-macOS is *technically* supported but we currently don't create any packages for macOS just yet, this will come at a later date. In the meantime you can build MultiRPC and run it that way.
+macOS packages can be found at the [Release Page](https://github.com/FluxpointDev/MultiRPC/releases), download the version based on your device (arm64 for M1, x64 for anything else)
 <hr/>
 
 ## Something's not working!
