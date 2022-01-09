@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
@@ -12,10 +12,6 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <DefineConstants>$(DefineConstants);_UWP</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='WINSTORE'">
-    <Optimize>True</Optimize>
-  </PropertyGroup>
-
   <ItemGroup Label="Packages">
     <ProjectReference Include="..\..\ext\discord-rpc-csharp\DiscordRPC\DiscordRPC.csproj">
 		<Optimize>True</Optimize>

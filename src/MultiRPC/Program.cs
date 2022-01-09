@@ -50,12 +50,7 @@ class Program
         _ipc.NewMessage += IpcOnNewMessage;
 
         var builder = BuildAvaloniaApp();
-        //Seems to cause exceptions when closing the app
-        try
-        {
-            builder.StartWithClassicDesktopLifetime(args);
-        }
-        catch { }
+        builder.StartWithClassicDesktopLifetime(args);
         _ipc.StopServer();
     }
 
