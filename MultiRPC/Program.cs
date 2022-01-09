@@ -30,9 +30,8 @@ class Program
         LoggingCreator.GlobalLevel = SettingManager<GeneralSettings>.Setting.LogLevel;
 
         // Set the current directory to the app install location to get assets.
-#if _UWP
         Directory.SetCurrentDirectory(AppContext.BaseDirectory + "/");
-#else
+#if !_UWP
         // This seems to break windows apps even though it *can* write to the log folder.
         var logFolder = Path.Combine(Constants.SettingsFolder, "Logging");
         Directory.CreateDirectory(logFolder);

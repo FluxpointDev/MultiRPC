@@ -112,10 +112,16 @@ public partial class MainWindow : FluentWindow
     private void UpdateTitle(string title, string? subTitle)
     {
         txtTitle.Text = title + (subTitle != null ? " - " + subTitle : null) + (AdminUtil.IsAdmin ? $" ({Language.GetText(LanguageText.Administrator)})" : null);
+        Title = txtTitle.Text;
     }
 
     private void InitializeExtra()
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            eabTitleBar.IsVisible = false;
+        }
+        
         AssetManager.RegisterForAssetReload("Logo.svg", () =>
         {
             icon.Source = new SvgImage { Source = AssetManager.LoadSvgImage("Logo.svg") };
