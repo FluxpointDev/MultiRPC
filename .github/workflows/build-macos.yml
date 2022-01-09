@@ -26,21 +26,15 @@ jobs:
         with:
             dotnet-version: '6.0.x' # SDK Version to use; x will use the latest version of the 3.1 channel
 
-      - name: Build x64 and arm64 version for macOS
-        run: dotnet publish .\src\MultiRPC\MultiRPC.csproj -c Release -r osx-x64 && dotnet publish .\src\MultiRPC\MultiRPC.csproj -c Release -r osx-arm64
-
-      - name: Create x64 .app
-        run: cp -r .\macOS Templates\MultiRPC.app .\macOS Templates\MultiRPC-x64.app && cp -r .\src\MultiRPC\bin\Release\net6.0\osx-x64\publish\ .\macOS Templates\MultiRPC-x64.app\Contents\MacOS
-
-      - name: Create arm64 .app
-        run: cp -r .\macOS Templates\MultiRPC.app .\macOS Templates\MultiRPC-arm64.app && cp -r .\src\MultiRPC\bin\Release\net6.0\osx-arm64\publish\ .\macOS Templates\MultiRPC-arm64.app\Contents\MacOS
+      - name: Build and package x64 and arm64 version for macOS
+        run: sh build-macos.sh
 
       - uses: actions/upload-artifact@v2
         with:
           name: MultiRPC-arm64.app
-          path: .\macOS Templates\MultiRPC-arm64.app
+          path: ./macOS Templates/MultiRPC-arm64.app
 
       - uses: actions/upload-artifact@v2
         with:
           name: MultiRPC-x64.app
-          path: .\macOS Templates\MultiRPC-x64.app
+          path: ./macOS Templates.MultiRPC-x64.app

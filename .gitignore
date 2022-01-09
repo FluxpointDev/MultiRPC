@@ -264,3 +264,5 @@ __pycache__/
 *.pyc
 
 MultiRPC.sln.DotSettings
+MultiRPC-arm64.app/
+MultiRPC-x64.app/
