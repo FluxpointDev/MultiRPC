@@ -117,11 +117,6 @@ public partial class MainWindow : FluentWindow
 
     private void InitializeExtra()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            eabTitleBar.IsVisible = false;
-        }
-        
         AssetManager.RegisterForAssetReload("Logo.svg", () =>
         {
             icon.Source = new SvgImage { Source = AssetManager.LoadSvgImage("Logo.svg") };
@@ -130,18 +125,7 @@ public partial class MainWindow : FluentWindow
         {
             Source = AssetManager.LoadSvgImage("Logo.svg")
         };
-            
-        var lang = Language.GetLanguage(LanguageText.MultiRPC);
-        if (_control is ITitlePage titlePage)
-        {
-            lang.TextObservable.Subscribe(s => UpdateTitle(s, titlePage.Title.Text));
-            titlePage.Title.TextObservable.Subscribe(s => UpdateTitle(lang.Text, s));
-        }
-        else
-        {
-            lang.TextObservable.Subscribe(s => UpdateTitle(s, null));
-        }
-            
+
         eabTitleBar.PointerPressed += (sender, args) => BeginMoveDrag(args);
         Opened += (sender, args) =>
         {
@@ -152,6 +136,23 @@ public partial class MainWindow : FluentWindow
             _control.Margin += new Thickness(0, eabTitleBar.Height, 0, 0);
         };
         grdContent.Children.Insert(1, _control);
+        
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            eabTitleBar.IsVisible = false;
+            return;
+        }
+        
+        var lang = Language.GetLanguage(LanguageText.MultiRPC);
+        if (_control is ITitlePage titlePage)
+        {
+            lang.TextObservable.Subscribe(s => UpdateTitle(s, titlePage.Title.Text));
+            titlePage.Title.TextObservable.Subscribe(s => UpdateTitle(lang.Text, s));
+        }
+        else
+        {
+            lang.TextObservable.Subscribe(s => UpdateTitle(s, null));
+        }
     }
 }
 
