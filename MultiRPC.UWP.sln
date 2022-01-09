@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "MultiRPC.UWP.Package", "MultiRPC.UWP\MultiRPC.UWP.Package.wapproj", "{452579BF-FF89-46FD-953D-E9D02D71EFDD}"
+Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "MultiRPC.UWP.Package", "src\MultiRPC.UWP\MultiRPC.UWP.Package.wapproj", "{452579BF-FF89-46FD-953D-E9D02D71EFDD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiRPC.SourceGen", "MultiRPC.SourceGen\MultiRPC.SourceGen.csproj", "{919C3FE7-14E4-48D5-A119-690827FD04B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiRPC.SourceGen", "src\MultiRPC.SourceGen\MultiRPC.SourceGen.csproj", "{919C3FE7-14E4-48D5-A119-690827FD04B7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvaloniaGif", "ext\avalonia.gif\AvaloniaGif\AvaloniaGif.csproj", "{C89E50F1-7914-4E4C-AAAA-3D66E1FE851B}"
 EndProject
@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscordRPC", "ext\discord-r
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fonderie.INPC.Generator", "ext\fonderie\Fonderie.INPC\Fonderie.INPC.Generator\Fonderie.INPC.Generator.csproj", "{521D2F2B-B790-4D75-B58E-3167897EAF52}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiRPC.UWP", "MultiRPC\MultiRPC.UWP.csproj", "{57E1072A-2DDE-4B29-9E32-932C2D749179}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiRPC.UWP", "src\MultiRPC\MultiRPC.UWP.csproj", "{57E1072A-2DDE-4B29-9E32-932C2D749179}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

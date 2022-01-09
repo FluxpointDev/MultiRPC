@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31727.386
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiRPC", "MultiRPC\MultiRPC.csproj", "{FE7EF71E-A0F3-4A23-8125-738FE77797E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiRPC", "src\MultiRPC\MultiRPC.csproj", "{FE7EF71E-A0F3-4A23-8125-738FE77797E2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INPC.Generator", "ext\fonderie\Fonderie.INPC\Fonderie.INPC.Generator\Fonderie.INPC.Generator.csproj", "{8BEB0A2C-9491-406C-A2B8-9E34C1800243}"
 EndProject
@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaGif", "ext\avalonia
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ext", "ext", "{B7AAF9E7-1C1E-4376-BAF6-D2FCA8B39CDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiRPC.SourceGen", "MultiRPC.SourceGen\MultiRPC.SourceGen.csproj", "{3369169D-31C0-4A74-A5A9-F2BB1EA80705}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiRPC.SourceGen", "src\MultiRPC.SourceGen\MultiRPC.SourceGen.csproj", "{3369169D-31C0-4A74-A5A9-F2BB1EA80705}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordRPC", "ext\discord-rpc-csharp\DiscordRPC\DiscordRPC.csproj", "{136AA836-1892-4350-A00F-4103D14B5A17}"
 EndProject
