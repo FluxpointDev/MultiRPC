@@ -44,6 +44,15 @@ public partial class CustomPage : RpcPage
     private Button? _activeButton;
     private IDisposable? _textBindingDis;
     private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
+    private SvgImage _svgHelpImage = null!;
+    private Image _helpImage = null!;
+    private Image? _selectedHelpImage;
+    private readonly Dictionary<string, IBitmap> _helpImages = new Dictionary<string, IBitmap>();
+    private readonly Language _editLang = Language.GetLanguage(LanguageText.ProfileEdit);
+    private readonly Language _shareLang = Language.GetLanguage(LanguageText.ProfileShare);
+    private readonly Language _addLang = Language.GetLanguage(LanguageText.ProfileAdd);
+    private readonly Language _deleteLang = Language.GetLanguage(LanguageText.ProfileDelete);
+    private readonly Language _cloneLang = Language.GetLanguage(LanguageText.ProfileClone);
 
     public override void Initialize(bool loadXaml)
     {
@@ -91,7 +100,7 @@ public partial class CustomPage : RpcPage
         var tabPage = new TabsPage();
         Grid.SetRow(tabPage, 2);
         grdContent.Children.Insert(grdContent.Children.Count - 1, tabPage);
-        tabPage.AddTabs(_rpcControl);
+        tabPage.AddTab(_rpcControl);
         tabPage.Initialize();
 
         //Setup tooltips
@@ -135,7 +144,6 @@ public partial class CustomPage : RpcPage
         };
     }
 
-    private SvgImage _svgHelpImage = null!;
     private Image MakeHelpImage(string helpImage)
     {
         var image = new Image { Classes = { "help" }, Tag = helpImage, Source = _svgHelpImage };
@@ -144,9 +152,6 @@ public partial class CustomPage : RpcPage
         return image;
     }
 
-    private Image _helpImage = null!;
-    private Image? _selectedHelpImage;
-    private readonly Dictionary<string, IBitmap> _helpImages = new Dictionary<string, IBitmap>();
     private void ImageOnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         var image = (Image)sender!;
@@ -185,13 +190,7 @@ public partial class CustomPage : RpcPage
 
         _helpImage.Source = _helpImages[key];
     }
-
-    private readonly Language _editLang = Language.GetLanguage(LanguageText.ProfileEdit);
-    private readonly Language _shareLang = Language.GetLanguage(LanguageText.ProfileShare);
-    private readonly Language _addLang = Language.GetLanguage(LanguageText.ProfileAdd);
-    private readonly Language _deleteLang = Language.GetLanguage(LanguageText.ProfileDelete);
-    private readonly Language _cloneLang = Language.GetLanguage(LanguageText.ProfileClone);
-        
+    
     private void AddTextBinding()
     {
         var textBinding = new Binding
@@ -239,13 +238,13 @@ public partial class CustomPage : RpcPage
     private void ImgProfileEdit_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         var window = new MainWindow(new EditPage(_activeProfile));
-        window.ShowDialog(((App)Application.Current).DesktopLifetime?.MainWindow);
+        window.ShowDialog();
     }
 
     private void ImgProfileShare_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         var window = new MainWindow(new SharePage(_activeProfile));
-        window.ShowDialog(((App)Application.Current).DesktopLifetime?.MainWindow);
+        window.ShowDialog();
     }
 
     private void ImgProfileAdd_OnPointerPressed(object? sender, PointerPressedEventArgs e)

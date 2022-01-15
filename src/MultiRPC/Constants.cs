@@ -15,11 +15,12 @@ public static class Constants
         // Windows apps have restricted access, use the appdata folder instead of document.
         SettingsFolder =
 #if _UWP
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Packages/29025FluxpointDevelopment.MultiRPC_q026kjacpk46y/AppData");
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Packages/29025FluxpointDevelopment.MultiRPC_q026kjacpk46y/AppData");
 #else
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "MultiRPC-Beta");
 #endif
         ThemeFolder = Path.Combine(SettingsFolder, "Themes");
+        LogFolder = Path.Combine(SettingsFolder, "Logging");
     }
 
     /// <summary>
@@ -31,6 +32,16 @@ public static class Constants
     /// Afk Application ID
     /// </summary>
     public const long AfkID = 469643793851744257;
+
+    /// <summary>
+    /// Url to the github repo
+    /// </summary>
+    public const string GithubUrl = "https://github.com/FluxpointDev/MultiRPC";
+
+    /// <summary>
+    /// Url to donate to fluxpoint
+    /// </summary>
+    public const string DonateUrl = "https://fluxpoint.dev/donate";
 
     /// <summary>
     /// How many times you should attempt downloading files
@@ -71,6 +82,11 @@ public static class Constants
     public static string SettingsFolder { get; }
 
     /// <summary>
+    /// Where all the logging should go if being put onto disk
+    /// </summary>
+    public static string LogFolder { get; }
+
+    /// <summary>
     /// The theme's file extension
     /// </summary>
     public const string LegacyThemeFileExtension = ".multirpctheme";
@@ -80,10 +96,15 @@ public static class Constants
     /// </summary>
     public const string ThemeFileExtension = ".multitheme";
 
-    //TODO: Add comments
+    /// <summary>
+    /// Where all the theme's are stored
+    /// </summary>
     public static string ThemeFolder { get; }
 
-    public static Version CurrentVersion = Assembly.GetExecutingAssembly().GetName().Version!;
+    /// <summary>
+    /// What is the current version of MultiRPC!
+    /// </summary>
+    public static readonly Version CurrentVersion = Assembly.GetExecutingAssembly().GetName().Version!;
 
     /// <summary>
     /// The folder with all the languages

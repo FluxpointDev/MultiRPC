@@ -18,10 +18,11 @@ public class MasterThemeEditorPage : SidePage
             MaxHeight = 680
         };
         ContentPadding = new Thickness(0);
-        tabPage.AddTabs(new ThemeEditorPage()
+        tabPage.AddTab(new ThemeEditorPage()
         {
             Margin = new Thickness(10, 0)
-        }, new InstalledThemes());
+        });
+        tabPage.AddTab(new InstalledThemes());
         tabPage.Initialize();
         Content = tabPage;
     }

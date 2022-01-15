@@ -27,8 +27,12 @@ public enum ThemeMode
 }
 
 //TODO: Add bool to tell if the theme has any assets (for making things quicker)
-public class Theme : IDisposable
+public class Theme
 {
+    private string _filepath = null!;
+    private ZipArchive? _archive;
+    private bool _archiveLoaded = false;
+
     private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Theme));
     private static readonly Version ModernVersion = new Version(7, 0);
     private static readonly JsonTypeInfo<Colours> ColoursJsonContext;
@@ -43,12 +47,12 @@ public class Theme : IDisposable
     }
     
     /// <summary>
-    /// The theme that is currently being used
+    /// The theme that is actively being used by the application
     /// </summary>
     public static Theme? ActiveTheme { get; internal set; }
 
     /// <summary>
-    /// What colouring that we need to apply
+    /// What colouring is in the theme
     /// </summary>
     public Colours Colours { get; set; } = null!;
     
@@ -58,7 +62,7 @@ public class Theme : IDisposable
     public Metadata Metadata { get; set; } = null!;
 
     /// <summary>
-    /// Where the theme is currently stored
+    /// Where the theme is stored
     /// </summary>
     public string? Location { get; set; }
 
@@ -78,7 +82,7 @@ public class Theme : IDisposable
             return _archive?.Entries.Any(x => x.FullName == "Assets/" + key) ?? false;
         }
 
-        //We can't load in assets from the older theming
+        //We can't load in assets from the older theming due to it using WPF
         return false;
     }
 
@@ -102,13 +106,14 @@ public class Theme : IDisposable
 
     public bool Save(string? filename)
     {
-        //We need to unload assets quickly as we can't write if we don't
+        //We need to unload assets as we can't write if we don't
         UnloadAssets();
 
         var fireNewTheme = false;
         if (string.IsNullOrWhiteSpace(Location))
         {
             fireNewTheme = true;
+            Directory.CreateDirectory(Constants.ThemeFolder);
             Location ??= Path.Combine(Constants.ThemeFolder, filename + Constants.ThemeFileExtension);
         }
         if (File.Exists(Location))
@@ -131,7 +136,6 @@ public class Theme : IDisposable
         metadataStream.Dispose();
 
         archive.Dispose();
-
         if (fireNewTheme)
         {
             NewTheme?.Invoke(null, this);
@@ -139,8 +143,6 @@ public class Theme : IDisposable
         return true;
     }
 
-    private string _filepath = null!;
-    private ZipArchive? _archive;
     /// <summary>
     /// Load's in the theme for being used
     /// </summary>
@@ -228,7 +230,6 @@ public class Theme : IDisposable
         return theme;
     }
 
-    private bool _archiveLoaded = false;
     public void ReloadAssets()
     {
         UnloadAssets();
@@ -286,11 +287,6 @@ public class Theme : IDisposable
         }
     }
     
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-    }
-
     public Theme Clone(string? name = null)
     {
         return new Theme()

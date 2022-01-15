@@ -12,10 +12,12 @@ public class Hyperlink : TextBlock, IStyleable
 {
     Type IStyleable.StyleKey => typeof(TextBlock);
 
+    private static readonly TextDecorationCollection _texDec = TextDecorationCollection.Parse("Underline");
+    private static readonly Cursor _cursor = new Cursor(StandardCursorType.Hand);
     public Hyperlink()
     {
-        TextDecorations = TextDecorationCollection.Parse("Underline");
-        Cursor = new Cursor(StandardCursorType.Hand);
+        TextDecorations = _texDec;
+        Cursor = _cursor;
         PointerPressed += (sender, args) => Uri.OpenInBrowser();
     }
         

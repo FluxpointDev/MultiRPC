@@ -18,7 +18,11 @@ public partial class TopBar : UserControl
     private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
     private RpcPage? _page;
     private readonly RpcClient _rpcClient;
-        
+    private readonly Language _statusKind;
+    private readonly Language _statusText;
+    private readonly Language _userText;
+    private readonly Language _startButton;
+    
     public TopBar()
     {
         InitializeComponent();
@@ -55,7 +59,7 @@ public partial class TopBar : UserControl
 
         _statusKind.TextObservable.Subscribe(_ => UpdateStatus());
         _statusText.TextObservable.Subscribe(_ => UpdateStatus());
-        _userText.TextObservable.Subscribe(x => UpdateUser());
+        _userText.TextObservable.Subscribe(_ => UpdateUser());
 
         _rpcClient.Loading += (sender, args) =>
         {
@@ -124,11 +128,6 @@ public partial class TopBar : UserControl
         btnUpdatePresence.IsEnabled = _page?.PresenceValid ?? true;
     }
 
-    private readonly Language _statusKind;
-    private readonly Language _statusText;
-    private readonly Language _userText;
-    private readonly Language _startButton;
-        
     private void UpdateStatus()
     {
         this.RunUILogic(() => tblStatus.Text = _statusText.Text + ": " + _statusKind.Text);

@@ -11,19 +11,21 @@ namespace MultiRPC.UI.Controls;
 public sealed partial class TabsPage : UserControl
 {
     private readonly List<ITabPage> _pages = new List<ITabPage>();
-    public void AddTabs(params ITabPage[] pages) => _pages.AddRange(pages);
-        
+    public void AddTabs(IEnumerable<ITabPage> pages) => _pages.AddRange(pages);
+    public void AddTabs(ITabPage[] pages) => _pages.AddRange(pages);
+    public void AddTab(ITabPage page) => _pages.Add(page);
+
+    private readonly PointerPressedEventArgs _arg = new PointerPressedEventArgs(null!, null!, null!,
+        new Point(), 0, PointerPointProperties.None, KeyModifiers.None);
     public void Initialize()
     {
         InitializeComponent();
         stpTabs.Children.AddRange(_pages.Select(MakeTab));
 
         //This grabs the default page if any and triggers the pointer event so it loads up with it
-        var defaultPage = _pages.FirstOrDefault(x => x.IsDefaultPage);
+        var defaultPage = _pages.FirstOrDefault(x => x.IsDefaultPage) ?? _pages.FirstOrDefault();
         var defaultControl = stpTabs.Children.FirstOrDefault(x => x.DataContext == defaultPage);
-        defaultControl?.RaiseEvent(
-            new PointerPressedEventArgs(null!, null!, null!,
-                new Point(), 0, PointerPointProperties.None, KeyModifiers.None));
+        defaultControl?.RaiseEvent(_arg);
     }
 
     private static readonly Language NaLang = Language.GetLanguage(LanguageText.NA);

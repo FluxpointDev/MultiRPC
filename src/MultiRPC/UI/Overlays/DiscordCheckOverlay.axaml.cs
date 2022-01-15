@@ -92,11 +92,18 @@ public partial class DiscordCheckOverlay : UserControl
                 tblMultiRPC.Text = "MultiRPC - " + Language.GetText(discordClient);
             }
 
-            var processExpectedCount = OSHelper.ActiveOS == OSPlatform.Windows ? 4 : 2;
-            
+            var processExpectedCount = 1;
+            if (OSHelper.ActiveOS == OSPlatform.Linux)
+            {
+                processExpectedCount = 2;
+            }
+            else if (OSHelper.ActiveOS == OSPlatform.Windows)
+            {
+                processExpectedCount = 4;
+            }
             while (!_ranFadeOut)
             {
-                //If we have less then 4 processes from discord then discord itself is still loading
+                //If we have less then processExpectedCount from discord then discord itself is still loading
                 var processCount = Process.GetProcessesByName(discordClient).Length;
                 if (processCount < processExpectedCount)
                 {

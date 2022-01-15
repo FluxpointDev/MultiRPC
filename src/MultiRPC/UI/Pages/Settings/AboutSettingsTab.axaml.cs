@@ -89,7 +89,7 @@ public partial class AboutSettingsTab : UserControl, ITabPage
 
     private void BtnDonate_OnClick(object? sender, RoutedEventArgs e)
     {
-        "https://fluxpoint.dev/donate".OpenInBrowser();
+        Constants.DonateUrl.OpenInBrowser();
     }
 
     //TODO: Make cross platform
@@ -137,7 +137,7 @@ public partial class AboutSettingsTab : UserControl, ITabPage
 
     private void ImgGithub_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        "https://github.com/FluxpointDev/MultiRPC".OpenInBrowser();
+        Constants.GithubUrl.OpenInBrowser();
     }
 
     private void ImgFluxpoint_OnPointerPressed(object? sender, PointerPressedEventArgs e)

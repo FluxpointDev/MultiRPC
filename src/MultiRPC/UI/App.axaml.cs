@@ -1,6 +1,7 @@
 using Splat;
 using Avalonia;
 using MultiRPC.Rpc;
+using MultiRPC.Utils;
 using System.Net.Http;
 using MultiRPC.Setting;
 using MultiRPC.Theming;
@@ -16,7 +17,6 @@ using TinyUpdate.Binary;
 using TinyUpdate.Github;
 using TinyUpdate.Core.Extensions;
 using System.Runtime.InteropServices;
-using MultiRPC.Utils;
 using MultiRPC.Updating;
 
 namespace MultiRPC.UI;

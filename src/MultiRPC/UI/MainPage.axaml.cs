@@ -13,6 +13,7 @@ using ShimSkiaSharp;
 
 namespace MultiRPC.UI;
 
+//TODO: Cleanup
 public partial class MainPage : UserControl
 {
     public MainPage()
@@ -185,15 +186,13 @@ public partial class MainPage : UserControl
             page.Initialize();
         }
 
-        contentBorder.Background = page.BackgroundColour.HasValue 
-            ? new SolidColorBrush(page.BackgroundColour.Value) 
-            : (IBrush)Application.Current.Resources["ThemeAccentBrush2"]!;
+        contentBorder.Background = page.BackgroundColour ?? (IBrush)Application.Current.Resources["ThemeAccentBrush2"]!;
         cclContent.Padding = page.ContentPadding;
         cclContent.Content = page;
             
         if (page is RpcPage rpcPage)
         {
-            RpcPageManager.PageMoved(rpcPage);
+            RpcPageManager.NewActivePage(rpcPage);
         }
     }
 }

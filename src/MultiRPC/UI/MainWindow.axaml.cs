@@ -76,10 +76,11 @@ public partial class MainWindow : FluentWindow
             Theme.Load(file)?.Apply();
         }
     }
-        
+
     private readonly Control _control;
     public MainWindow(Control control)
     {
+        WindowStartupLocation = WindowStartupLocation.CenterOwner;
         Icon = new WindowIcon(AssetManager.GetSeekableStream("Logo.ico"));
         AssetManager.RegisterForAssetReload("Logo.ico", 
             () => Icon = new WindowIcon(AssetManager.GetSeekableStream("Logo.ico")));
@@ -153,30 +154,5 @@ public partial class MainWindow : FluentWindow
         {
             lang.TextObservable.Subscribe(s => UpdateTitle(s, null));
         }
-    }
-}
-
-public static class MainWindowExt
-{
-    public static bool TryClose<T>(this UserControl userControl, T result)
-    {
-        if (userControl.Parent?.Parent is MainWindow window)
-        {
-            window.Close(result);
-            return true;
-        }
-
-        return false;
-    }
-        
-    public static bool TryClose(this UserControl userControl)
-    {
-        if (userControl.Parent?.Parent is MainWindow window)
-        {
-            window.Close();
-            return true;
-        }
-
-        return false;
     }
 }

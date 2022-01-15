@@ -11,7 +11,6 @@ using TinyUpdate.Core.Logging;
 
 namespace MultiRPC;
 
-//TODO: Cleanup
 //TODO: Use Name to check if this is a valid IPC
 //Works on top of this example
 //https://github.com/davidfowl/TcpEcho
@@ -21,7 +20,8 @@ public class IPC
     private NetworkStream? _networkStream;
     private readonly Encoding _ipcEncoding = Encoding.Unicode;
     private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(IPC));
-    public IPC(string name)
+    private readonly IPEndPoint _endPoint = new IPEndPoint(IPAddress.Loopback, 8087);
+    private IPC(string name)
     {
         Name = name;
     }
@@ -44,10 +44,10 @@ public class IPC
     /// <summary>
     /// Gets or makes a connection to a IPC server based on if one yet exists
     /// </summary>
-    public static IPC GetOrMakeConnection()
+    public static IPC GetOrMakeConnection(string name = "MultiRPC")
     {
         //We want to run IPC logic in it's own thread
-        var ipcCon = new IPC("MultiRPC")
+        var ipcCon = new IPC(name)
         {
             Type = IPCType.Client
         };
@@ -66,37 +66,7 @@ public class IPC
             
         return ipcCon;
     }
-
-    public void StartServer()
-    {
-        if (Type != IPCType.Server)
-        {
-            throw new NotServerIPCException();
-        }
-            
-        StopServer();
-        _logger.Information("Starting IPC Server");
-        _socket = MakeSocket();
-        _socket.Bind(_endPoint);
-        _socket.Listen(120);
-        _ = WaitForConnection();
-        _logger.Information("IPC Server started!");
-    }
-        
-    public void StopServer()
-    {
-        if (_socket == null)
-        {
-            return;
-        }
-
-        _logger.Information("Stopping IPC Server");
-        _socket.Dispose();
-        _socket = null;
-    }
-
-    private Socket MakeSocket() => new Socket(SocketType.Stream, ProtocolType.Tcp);
-    private readonly IPEndPoint _endPoint = new IPEndPoint(IPAddress.Loopback, 8087);
+    
     public bool ConnectToServer()
     {
         if (Type != IPCType.Client)
@@ -142,14 +112,49 @@ public class IPC
             throw new NotClientIPCException();
         }
 
-        var b = _ipcEncoding.GetBytes(message + "\n");
+        var b = _ipcEncoding.GetBytes(message + '\n');
         _networkStream?.Write(b);
         return true;
     }
 
+    public void StartServer()
+    {
+        if (Type != IPCType.Server)
+        {
+            throw new NotServerIPCException();
+        }
+            
+        StopServer();
+        _logger.Information("Starting IPC Server");
+        _socket = MakeSocket();
+        _socket.Bind(_endPoint);
+        _socket.Listen(120);
+        _ = WaitForConnection();
+        _logger.Information("IPC Server started!");
+    }
+        
+    public void StopServer()
+    {
+        if (_socket == null)
+        {
+            return;
+        }
+
+        _logger.Information("Stopping IPC Server");
+        _socket.Dispose();
+        _socket = null;
+    }
+
+    private static Socket MakeSocket() => new Socket(SocketType.Stream, ProtocolType.Tcp);
+
     private async Task WaitForConnection()
     {
-        var socket = await _socket!.AcceptAsync();
+        if (_socket == null)
+        {
+            return;
+        }
+
+        var socket = await _socket.AcceptAsync();
         _ = ProcessLinesAsync(socket);
 
         if (_socket != null)
@@ -193,6 +198,7 @@ public class IPC
             // Stop reading if there's no more data coming.
             if (result.IsCompleted)
             {
+                _logger.Debug("We finished reading all the data from the stream!");
                 break;
             }
         }

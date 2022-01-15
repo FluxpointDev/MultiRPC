@@ -20,6 +20,6 @@ public abstract class SidePage : UserControl, ISidePage
         }
     }
 
-    public Color? BackgroundColour { get; protected set; }
+    public IBrush? BackgroundColour { get; protected set; }
     public Thickness ContentPadding { get; protected set; } = new Thickness(10, 10, 10, 0);
 }

@@ -22,10 +22,9 @@ public partial class SettingsPage : SidePage
     {
         this.Background = (IBrush)Application.Current.Resources["ThemeAccentBrush"]!;
         ContentPadding = new Thickness(0);
-            
-        var tabPage = new TabsPage();
-        tabPage.Background = (IBrush)Application.Current.Resources["ThemeAccentBrush"]!;
-        tabPage.AddTabs(new AboutSettingsTab());
+
+        var tabPage = new TabsPage { Background = this.Background };
+        tabPage.AddTab(new AboutSettingsTab());
             
         foreach (var setting in Locator.Current.GetServices<BaseSetting>())
         {
@@ -78,6 +77,7 @@ public partial class SettingsPage : SidePage
                     TabName = Language.GetLanguage(setting.Name),
                     Margin = new Thickness(10)
                 };
+
                 if (settingProperty.PropertyType.BaseType == typeof(Enum))
                 {
                     var enumDropdown = new EnumDropdown(settingProperty.PropertyType, name, setting, getMethod, setMethod);
@@ -105,7 +105,7 @@ public partial class SettingsPage : SidePage
 
             if (settingPage != null)
             {
-                tabPage.AddTabs(settingPage);
+                tabPage.AddTab(settingPage);
             }
         }
             

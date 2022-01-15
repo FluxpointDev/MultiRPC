@@ -13,7 +13,6 @@ using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.Rpc;
 
-//TODO: Possible cleanup?
 public class RpcClient
 {
     private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(RpcClient));
@@ -146,18 +145,19 @@ public class RpcClient
 
     public async Task UpdatePresence(DiscordRPC.RichPresence richPresence)
     {
-        //Check that the presence isn't doing any advertising
-        if (!await CheckPresence(richPresence.Details) || !await CheckPresence(richPresence.State))
-        {
-            Stop();
-            return;
-        }
-            
         if (_client?.IsDisposed ?? true)
         {
             return;
         }
-            
+        
+        //Check that the presence isn't doing any advertising
+        if (!await CheckPresence(richPresence.Details) 
+            || !await CheckPresence(richPresence.State))
+        {
+            Stop();
+            return;
+        }
+
         _client?.SetPresence(richPresence);
     }
         
@@ -169,7 +169,9 @@ public class RpcClient
         }
             
         var pre = richPresence.Presence;
-        pre.Buttons = pre.Buttons?.Where(x => !string.IsNullOrWhiteSpace(x.Url) && !string.IsNullOrWhiteSpace(x.Label)).ToArray();
+        pre.Buttons = pre.Buttons?
+            .Where(x => !string.IsNullOrWhiteSpace(x.Url) && !string.IsNullOrWhiteSpace(x.Label))
+            .ToArray();
         pre.Timestamps = richPresence.UseTimestamp ? new Timestamps
         {
             Start = _rpcStart

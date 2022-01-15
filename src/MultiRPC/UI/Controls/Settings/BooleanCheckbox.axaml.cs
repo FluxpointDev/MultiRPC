@@ -1,27 +1,47 @@
 ﻿using System.Reflection;
+using Avalonia.Controls;
+using Avalonia.Data;
 using MultiRPC.Setting;
+using Avalonia;
+using MultiRPC.Exceptions;
 
 namespace MultiRPC.UI.Controls.Settings;
 
-public partial class BooleanCheckbox : SettingItem
+public class BooleanCheckbox : SettingItem
 {
     public BooleanCheckbox()
     {
-        InitializeComponent();
+        if (!Design.IsDesignMode)
+        {
+            throw new DesignException();
+        }
+        //TODO: Add
+        //InitializeComponent(Language.GetLanguage("Test"), TestSetting.STestSetting, );
     }
-        
+    
     public BooleanCheckbox(Language header, BaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
         : base(header, setting, getMethod, setMethod)
     {
-        InitializeComponent();
-            
+        InitializeComponent(header, setting, getMethod, setMethod);
+    }
+
+    private void InitializeComponent(Language header, BaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
+    {
+        var cboUI = new CheckBox();
+        var binding = new Binding
+        {
+            Source = header,
+            Path = "TextObservable^"
+        };
+        cboUI.Bind(ContentControl.ContentProperty, binding);
+        Content = cboUI;
+
         var isChecked = getMethod.Invoke(setting, null);
         if (isChecked != null)
         {
             cboUI.IsChecked = (bool)isChecked;
         }
 
-        cboUI.DataContext = header;
         cboUI.Checked += (sender, args) => setMethod.Invoke(setting, new object[]{ true });
         cboUI.Unchecked += (sender, args) => setMethod.Invoke(setting, new object[]{ false });
     }

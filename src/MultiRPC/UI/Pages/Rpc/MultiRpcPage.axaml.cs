@@ -17,16 +17,21 @@ public partial class MultiRpcPage : RpcPage
     public override bool PresenceValid => rpcControl.RpcValid;
     public override event EventHandler<bool>? PresenceValidChanged;
 
+    private IBrush _white = Brushes.White.ToImmutable();
     public override void Initialize(bool loadXaml)
     {
         InitializeComponent(loadXaml);
 
         tblLookLike.DataContext = Language.GetLanguage(LanguageText.WhatItWillLookLike);
-        AssetManager.ReloadAssets += (sender, args) => 
+        AssetManager.ReloadAssets += (sender, args) =>
+        {
             rpcView.UpdateBackground((IBrush)Application.Current.Resources["PurpleBrush"]!);
+            rpcView.UpdateForeground(_white);
+        };
 
         rpcView.RpcProfile = RichPresence;
         rpcView.UpdateBackground((IBrush)Application.Current.Resources["PurpleBrush"]!);
+        rpcView.UpdateForeground(_white);
 
         rpcControl.PresenceValidChanged += (sender, b) => PresenceValidChanged?.Invoke(sender, b);
         rpcControl.ProfileChanged += (sender, args) => PresenceChanged?.Invoke(sender, args);

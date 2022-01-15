@@ -9,9 +9,6 @@ public partial class DisableSettings : BaseSetting
     [JsonIgnore]
     public override string Name => "Disable";
 
-    [JsonIgnore]
-    public override JsonSerializerContext? SerializerContext { get; }
-
     [GeneratedProperty, SettingName("DiscordCheck")]
     private bool _discordCheck;
         
@@ -36,6 +33,3 @@ public partial class DisableSettings : BaseSetting
     [GeneratedProperty]
     private bool _inviteWarn;
 }
-            
-/*[JsonSerializable(typeof(DisableSettings))]
-public partial class DisableSettingsContext : JsonSerializerContext { }*/

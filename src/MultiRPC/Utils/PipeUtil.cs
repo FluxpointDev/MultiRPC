@@ -37,7 +37,7 @@ public class PipeUtil
             pipeCount++;
             try
             {
-                using NamedPipeClientStream pipeClient =
+                using var pipeClient =
                     new NamedPipeClientStream(".", pipe, PipeDirection.InOut, PipeOptions.Asynchronous);
                 pipeClient.Connect(1000);
                 var canGetPipe =

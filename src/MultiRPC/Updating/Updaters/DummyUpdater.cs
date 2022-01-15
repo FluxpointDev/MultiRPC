@@ -6,6 +6,7 @@ using TinyUpdate.Core.Update;
 
 namespace MultiRPC.Updating;
 
+//TODO: Make
 public class DummyUpdater : UpdateClient
 {
     public DummyUpdater() : base(new DummyApplier())

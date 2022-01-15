@@ -5,14 +5,14 @@
     <Nullable>enable</Nullable>
     <ApplicationIcon>Assets/Logo.ico</ApplicationIcon>
     <PublishTrimmed>true</PublishTrimmed>
-    <Configurations>Debug;Release</Configurations>
-    <Version>7.0</Version>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <LangVersion>preview</LangVersion>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
   </PropertyGroup>
 
   <ItemGroup Label="Packages">
     <PackageReference Include="Avalonia.Desktop" Version="0.10.11" />
-    <PackageReference Include="Avalonia.Svg" Version="0.10.11" />
+    <PackageReference Include="Avalonia.Svg" Version="0.10.11.1" />
     <PackageReference Include="AvaloniaColorPicker" Version="1.1.0" />
     <PackageReference Include="Splat" Version="14.1.17" />
     <PackageReference Include="System.IO.Pipelines" Version="6.0.1" />
@@ -26,7 +26,7 @@
     <ProjectReference Include="..\MultiRPC.SourceGen\MultiRPC.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug' " Label="Debug Packages">
+  <ItemGroup Condition="'$(Configuration)'=='Debug'" Label="Debug Packages">
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.11" />
   </ItemGroup>
   

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MultiRPC.Exceptions;
+using MultiRPC.Extensions;
 using MultiRPC.Helpers;
 
 //This is based off Wpf MessageBox
@@ -33,7 +33,7 @@ public enum MessageBoxImage
     Warning = 48,
     Information = 64,
 }
-    
+
 public partial class MessageBox : UserControl
 {
     public MessageBox()
@@ -152,12 +152,10 @@ public partial class MessageBox : UserControl
             MinHeight = page.MinHeight + 30,
             MaxWidth = 410,
             Title = messageBoxTitle,
-            CanResize = true,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
             ShowInTaskbar = false
         };
 
-        ownerWindow ??= ((App)Application.Current).DesktopLifetime?.MainWindow;
+        ownerWindow ??= WindowExt.GetMainWindow;
         return await window.ShowDialog<MessageBoxResult?>(ownerWindow) ?? DefaultReturn(messageBoxButton, messageBoxResult);
     }
         

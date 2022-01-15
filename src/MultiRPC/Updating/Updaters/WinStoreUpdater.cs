@@ -13,6 +13,7 @@ using TinyUpdate.Github;
 
 namespace MultiRPC.Updating;
 
+//TODO: Test
 public class WinStoreUpdater : UpdateClient
 {
     private readonly StoreContext _storeContext;

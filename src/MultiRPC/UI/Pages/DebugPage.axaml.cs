@@ -41,7 +41,7 @@ public partial class DebugPage : UserControl, ISidePage
 
     public void Initialize() => Initialize(true);
 
-    public Color? BackgroundColour { get; }
+    public IBrush? BackgroundColour { get; }
     public Thickness ContentPadding { get; } = new Thickness(10);
 
     private async void BtnTestUpdate_OnClick(object? sender, RoutedEventArgs e)

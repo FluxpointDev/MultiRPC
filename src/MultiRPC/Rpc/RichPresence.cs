@@ -4,7 +4,6 @@ using Fonderie;
 
 namespace MultiRPC.Rpc;
 
-//TODO: Wait for PR to fix System.Text.Json source generator in DiscordRPC (PR to be made)
 public partial class RichPresence
 {
     public RichPresence(string name, long id)

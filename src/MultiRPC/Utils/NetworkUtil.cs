@@ -20,6 +20,7 @@ public static class NetworkUtil
                 continue; //Exclude virtual networks set up by VMWare and others
             }
 
+            //TODO: Find a way to find if they is an actual connection and not just the device being ready for a connection
             if (item.OperationalStatus == OperationalStatus.Up)
             {
                 return true;

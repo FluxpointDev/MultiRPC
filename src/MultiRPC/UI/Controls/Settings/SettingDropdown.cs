@@ -16,6 +16,10 @@ namespace MultiRPC.UI.Controls.Settings;
 
 public class SettingDropdown<T> : SettingItem
 {
+    // ReSharper disable once StaticMemberInGenericType
+    private static DataTemplate? _dataTemplate;
+    private TextBlock _tblHeader;
+    private ComboBox _cboSelection;
     public SettingDropdown()
     {
         if (!Design.IsDesignMode)
@@ -24,7 +28,7 @@ public class SettingDropdown<T> : SettingItem
         }
         InitializeComponent();
     }
-        
+
     public SettingDropdown(Language header, BaseSetting setting, MethodInfo getMethod, 
         MethodInfo setMethod, SettingSourceAttribute? sourceAttribute, LanguageSourceAttribute? languageSourceAttribute, bool isLocalizable)
         : base(header, setting, getMethod, setMethod)
@@ -115,9 +119,4 @@ public class SettingDropdown<T> : SettingItem
             }
         };
     }
-
-    // ReSharper disable once StaticMemberInGenericType
-    private static DataTemplate? _dataTemplate;
-    private TextBlock _tblHeader;
-    private ComboBox _cboSelection;
 }

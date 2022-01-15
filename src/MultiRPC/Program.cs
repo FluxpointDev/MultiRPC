@@ -13,11 +13,10 @@ using TinyUpdate.Core;
 using TinyUpdate.Core.Logging;
 using TinyUpdate.Core.Logging.Loggers;
 
-//TODO: Make this be used for the versioning
 [assembly: SemanticVersion("7.0.0-beta6")]
 namespace MultiRPC;
 
-class Program
+internal static class Program
 {
     private static IPC _ipc = null!;
 
@@ -30,17 +29,17 @@ class Program
         LoggingCreator.GlobalLevel = SettingManager<GeneralSettings>.Setting.LogLevel;
 
         // Set the current directory to the app install location to get assets.
-        Directory.SetCurrentDirectory(AppContext.BaseDirectory + "/");
+        Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 #if !_UWP
         // This seems to break windows apps even though it *can* write to the log folder.
-        var logFolder = Path.Combine(Constants.SettingsFolder, "Logging");
-        Directory.CreateDirectory(logFolder);
-        LoggingCreator.AddLogBuilder(new FileLoggerBuilder(logFolder));
+        Directory.CreateDirectory(Constants.LogFolder);
+        LoggingCreator.AddLogBuilder(new FileLoggerBuilder(Constants.LogFolder));
 #endif
         LoggingCreator.AddLogBuilder(new LoggingPageBuilder());
         _ipc = IPC.GetOrMakeConnection();
 
-        //Now check if we are already currently open, if so tell that instance to show
+        /*Now check if we are already currently open, if so
+         tell that instance to show and exit (with code based on if the message was sent)*/
         if (!DebugUtil.IsDebugBuild && Process.GetProcessesByName("MultiRPC").Length > 1)
         {
             var sent = _ipc.SendMessage("SHOW");

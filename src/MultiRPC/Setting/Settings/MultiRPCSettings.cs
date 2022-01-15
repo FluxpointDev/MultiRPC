@@ -7,6 +7,9 @@ namespace MultiRPC.Setting.Settings;
 
 public partial class MultiRPCSettings : BaseSetting
 {
+    [JsonIgnore]
+    public override string Name => "MultiRPC";
+
     public MultiRPCSettings()
     {
         _presence.Profile.PropertyChanged += OnPropertyChanged;
@@ -37,10 +40,4 @@ public partial class MultiRPCSettings : BaseSetting
         value.Profile.PropertyChanged += OnPropertyChanged;
         value.PropertyChanged += OnPropertyChanged;
     }
-
-    [JsonIgnore]
-    public override string Name => "MultiRPC";
-
-    //TODO: Wait for PR to fix System.Text.Json source generator in DiscordRPC (PR to be made)
-    public override JsonSerializerContext? SerializerContext { get; }
 }

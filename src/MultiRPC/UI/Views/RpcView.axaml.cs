@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Avalonia;
@@ -10,7 +11,6 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.Media.Immutable;
 using AvaloniaGif.Decoding;
 using DiscordRPC.Message;
 using MultiRPC.Exceptions;
@@ -19,6 +19,7 @@ using MultiRPC.Helpers;
 using MultiRPC.Rpc;
 using Splat;
 using TinyUpdate.Http.Extensions;
+using Timer = System.Timers.Timer;
 
 namespace MultiRPC.UI.Views;
 
@@ -31,10 +32,18 @@ public enum ViewType
     LocalRichPresence,
     RpcRichPresence
 }
-    
+
 public partial class RpcView : UserControl
 {
+    private static readonly Dictionary<Uri, IBrush> CachedImages = new Dictionary<Uri, IBrush>();
+    private static readonly Dictionary<Uri, Stream> CachedStreams = new Dictionary<Uri, Stream>();
+    private readonly Language _titleText = new Language();
+    private readonly Language _tblText1 = new Language();
+    private readonly Language _tblText2 = new Language();
+    private static VisualBrush _logoVisualBrush;
+    private static VisualBrush _errorVisualBrush;
     private readonly RpcClient _rpcClient;
+    private readonly object _streamLock = new object();
     static RpcView()
     {
         AssetManager.RegisterForAssetReload("Logo.svg", () => _logoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") }));
@@ -73,14 +82,6 @@ public partial class RpcView : UserControl
             tblTime.Text = string.Empty;
         };
     }
-        
-    private static readonly Dictionary<Uri, IBrush> CachedImages = new Dictionary<Uri, IBrush>();
-    private static readonly Dictionary<Uri, Stream> CachedStreams = new Dictionary<Uri, Stream>();
-    private readonly Language _titleText = new Language();
-    private readonly Language _tblText1 = new Language();
-    private readonly Language _tblText2 = new Language();
-    private static VisualBrush _logoVisualBrush;
-    private static VisualBrush _errorVisualBrush;
 
     private ViewType _viewType;
     public ViewType ViewType
@@ -169,20 +170,19 @@ public partial class RpcView : UserControl
         }
         
         //Update key and asset
-        var baseurl = "https://cdn.discordapp.com/app-assets/" + e.ApplicationID;
         CustomToolTip.SetTip(brdLarge, e.Presence.Assets.LargeImageText);
         CustomToolTip.SetTip(gifLarge, e.Presence.Assets.LargeImageText);
         CustomToolTip.SetTip(gridSmallImage, e.Presence.Assets.SmallImageText);
         CustomToolTip.SetTip(gifSmallImage, e.Presence.Assets.SmallImageText);
-        _ = UpdateSmallImage(GetUri(e.Presence.Assets.SmallImageID, e.Presence.Assets.SmallImageKey, baseurl));
-        _ = UpdateLargeImage(GetUri(e.Presence.Assets.LargeImageID, e.Presence.Assets.LargeImageKey, baseurl));
+        _ = UpdateSmallImage(GetUri(e.Presence.Assets.SmallImageID, e.Presence.Assets.SmallImageKey, e.ApplicationID));
+        _ = UpdateLargeImage(GetUri(e.Presence.Assets.LargeImageID, e.Presence.Assets.LargeImageKey, e.ApplicationID));
     });
 
-    private Uri? GetUri(ulong? id, string key, string baseurl)
+    private Uri? GetUri(ulong? id, string key, string applicationID)
     {
         if (id.HasValue)
         {
-            return new Uri(baseurl + "/" + id + ".png");
+            return new Uri("https://cdn.discordapp.com/app-assets/" + applicationID + "/" + id + ".png");
         }
 
         if (!string.IsNullOrWhiteSpace(key)
@@ -194,7 +194,8 @@ public partial class RpcView : UserControl
 
         return null;
     }
-        
+
+    protected List<IDisposable> _textboxDisposables = new List<IDisposable>();
     private void UpdateFromRichPresence(RichPresence? presence)
     {
         if (presence != null)
@@ -210,9 +211,13 @@ public partial class RpcView : UserControl
             return;
         }
 
-        //TODO: Make it so we can cancel this binding
-        DoBinding(_rpcProfile.Profile, nameof(presence.Profile.Details), tblText1);
-        DoBinding(_rpcProfile.Profile, nameof(presence.Profile.State), tblText2);
+        _textboxDisposables.ForEach(x => x.Dispose());
+        _textboxDisposables.Clear();
+        _textboxDisposables.Add(
+            DoBinding(_rpcProfile.Profile, nameof(presence.Profile.Details), tblText1));
+        _textboxDisposables.Add(
+            DoBinding(_rpcProfile.Profile, nameof(presence.Profile.State), tblText2));
+
         _rpcProfile.PropertyChanged += PresenceOnPropertyChanged;
         _rpcProfile.Profile.PropertyChanged += ProfileOnPropertyChanged;
         ProfileOnPropertyChanged(this, new PropertyChangedEventArgs(nameof(RpcProfile.Profile.LargeText)));
@@ -266,7 +271,6 @@ public partial class RpcView : UserControl
         }
     }
 
-    private readonly object _streamLock = new object();
     private async Task UpdateSmallImage(Uri? uri)
     {
         if (uri is null)
@@ -326,10 +330,13 @@ public partial class RpcView : UserControl
 
     private async Task<bool> ProcessUri(Uri uri)
     {
-        if (CachedImages.ContainsKey(uri) 
-            || CachedStreams.ContainsKey(uri))
+        lock (_streamLock)
         {
-            return true;
+            if (CachedImages.ContainsKey(uri) 
+                || CachedStreams.ContainsKey(uri))
+            {
+                return true;
+            }
         }
 
         var imageResponse = await App.HttpClient.GetResponseMessage(new HttpRequestMessage(HttpMethod.Get, uri));
@@ -357,7 +364,7 @@ public partial class RpcView : UserControl
         return true;
     }
 
-    private static void DoBinding(RpcProfile presence, string path, IAvaloniaObject control)
+    private static IDisposable DoBinding(RpcProfile presence, string path, TextBlock control)
     {
         var binding = new Binding
         {
@@ -365,12 +372,17 @@ public partial class RpcView : UserControl
             Mode = BindingMode.OneWay,
             Path = path
         };
-        control.Bind(TextBlock.TextProperty, binding);
+        return control.Bind(TextBlock.TextProperty, binding);
     }
 
     public void UpdateBackground(IBrush brush)
     {
         brdContent.Background = brush;
+    }
+    
+    public void UpdateForeground(IBrush brush)
+    {
+        tblTitle.Foreground = brush;
     }
         
     private void UpdateFromType(string? error = null, RichPresence? richPresence = null)
@@ -379,10 +391,19 @@ public partial class RpcView : UserControl
         tblText2.IsVisible = tblText1.IsVisible && _viewType is not ViewType.Error;
         tblTime.IsVisible = _viewType == ViewType.RpcRichPresence;
         gifLarge.IsVisible = _viewType == ViewType.Loading;
+        tblTitle.Foreground = _viewType == ViewType.Error ? 
+            Brushes.White.ToImmutable() 
+            : (IBrush)Application.Current.Resources["ThemeForegroundBrush"];
         if (!gifLarge.IsVisible)
         {
             gifLarge.SourceStream = Stream.Null;
             gifLarge.Tag = null;
+        }
+
+        if (_viewType != ViewType.LocalRichPresence)
+        {
+            _textboxDisposables.ForEach(x => x.Dispose());
+            _textboxDisposables.Clear();
         }
 
         var brush = _viewType switch
@@ -394,8 +415,8 @@ public partial class RpcView : UserControl
             ViewType.LocalRichPresence => Application.Current.Resources["PurpleBrush"],
             ViewType.RpcRichPresence => Application.Current.Resources["PurpleBrush"],
             _ => Application.Current.Resources["ThemeAccentBrush2"]
-        };
-        brdContent.Background = (IBrush)brush!;
+        } as IBrush;
+        brdContent.Background = brush;
 
         _rpcClient.PresenceUpdated -= RpcClientOnPresenceUpdated;
         switch (_viewType)
@@ -439,10 +460,7 @@ public partial class RpcView : UserControl
             case ViewType.Error:
             {
                 _titleText.ChangeJsonNames(LanguageText.Error);
-
-                tblTitle.Foreground = new ImmutableSolidColorBrush(Colors.White.ToUint32());
                 tblText1.Text = error;
-                tblText1.Foreground = tblTitle.Foreground;
                     
                 brdLarge.Background = _errorVisualBrush;
                 brdLarge.IsVisible = true;

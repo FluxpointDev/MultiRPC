@@ -5,6 +5,7 @@ using TinyUpdate.Core.Update;
 
 namespace MultiRPC.Updating;
 
+//TODO: Make
 public class UpdateManager
 {
     private readonly UpdateClient _updateClient;

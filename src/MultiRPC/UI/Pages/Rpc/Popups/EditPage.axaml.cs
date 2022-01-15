@@ -12,6 +12,9 @@ namespace MultiRPC.UI.Pages.Rpc.Popups;
 
 public partial class EditPage : UserControl, ITitlePage
 {
+    private readonly ProfilesSettings _profiles = SettingManager<ProfilesSettings>.Setting;
+    private readonly RichPresence _activeRichPresence = null!;
+    private string _newName = null!;
     public EditPage()
     {
         if (!Design.IsDesignMode)
@@ -19,12 +22,8 @@ public partial class EditPage : UserControl, ITitlePage
             throw new DesignException();
         }
     }
-        
+
     public Language Title { get; } = Language.GetLanguage(LanguageText.ProfileEdit);
-        
-    private readonly ProfilesSettings _profiles = SettingManager<ProfilesSettings>.Setting;
-    private readonly RichPresence _activeRichPresence = null!;
-    private string _newName = null!;
 
     public EditPage(RichPresence activeRichPresence)
     {

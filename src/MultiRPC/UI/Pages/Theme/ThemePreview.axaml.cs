@@ -14,6 +14,12 @@ namespace MultiRPC.UI.Pages.Theme;
 public partial class ThemePreview : UserControl
 {
     private Theming.Theme _theme;
+    private static readonly Language WewTextBox = Language.GetLanguage(LanguageText.WewTextbox);
+    private static readonly Language WewTextBlock = Language.GetLanguage(LanguageText.WewTextBlock);
+    private static readonly Language WewCheckBox = Language.GetLanguage(LanguageText.WewCheckBox);
+    private static readonly Language WewButton = Language.GetLanguage(LanguageText.WewButton);
+    private static readonly Language WewButtonDisabled = Language.GetLanguage(LanguageText.WewDisabledButton);
+
     public Theming.Theme Theme
     {
         get => _theme;
@@ -48,13 +54,7 @@ public partial class ThemePreview : UserControl
         Language.GetLanguage(LanguageText.WewComboboxItem),
         Language.GetLanguage(LanguageText.WewComboboxItem2)
     };
-        
-    private static readonly Language WewTextBox = Language.GetLanguage(LanguageText.WewTextbox);
-    private static readonly Language WewTextBlock = Language.GetLanguage(LanguageText.WewTextBlock);
-    private static readonly Language WewCheckBox = Language.GetLanguage(LanguageText.WewCheckBox);
-    private static readonly Language WewButton = Language.GetLanguage(LanguageText.WewButton);
-    private static readonly Language WewButtonDisabled = Language.GetLanguage(LanguageText.WewDisabledButton);
-        
+    
     private void UpdateIconColour(SvgSource source, Color color)
     {
         foreach (var commands in source.Picture?.Commands ?? ArraySegment<CanvasCommand>.Empty)

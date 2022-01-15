@@ -23,7 +23,7 @@ public static class RpcPageManager
         PageChanged?.Invoke(sender, CurrentPage);
     }
         
-    internal static void PageMoved(RpcPage page)
+    internal static void NewActivePage(RpcPage page)
     {
         if (_rpcClient == null)
         {

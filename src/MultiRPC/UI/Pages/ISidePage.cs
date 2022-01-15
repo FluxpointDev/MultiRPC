@@ -13,7 +13,7 @@ public interface ISidePage
 
     public void Initialize();
 
-    Color? BackgroundColour { get; }
+    IBrush? BackgroundColour { get; }
 
     bool IsInitialized { get; }
 

@@ -25,7 +25,7 @@ public enum ImagesType
     /// </summary>
     BuiltIn
 }
-    
+
 public partial class BaseRpcControl : UserControl, ITabPage
 {
     public RichPresence RichPresence { get; set; } = null!;

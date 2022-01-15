@@ -25,7 +25,10 @@ namespace MultiRPC.UI.Pages.Theme;
 public partial class InstalledThemes : UserControl, ITabPage
 {
     //We keep a store of the active theme as we mess with it
-    private Theming.Theme? _activeTheme;
+    private MultiRPC.Theming.Theme? _activeTheme;
+    private MultiRPC.Theming.Theme? _tmpTheme;
+    private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
+
     public Language? TabName { get; } = Language.GetLanguage(LanguageText.InstalledThemes);
     public bool IsDefaultPage => false;
     public void Initialize(bool loadXaml)
@@ -53,7 +56,7 @@ public partial class InstalledThemes : UserControl, ITabPage
             MakePreviewUIs(files);
         });
 
-        Theming.Theme.NewTheme += (sender, theme) =>
+        MultiRPC.Theming.Theme.NewTheme += (sender, theme) =>
         {
             this.RunUILogic(() =>
             {
@@ -66,13 +69,13 @@ public partial class InstalledThemes : UserControl, ITabPage
     private void OnAttachedToLogicalTree(object? sender, LogicalTreeAttachmentEventArgs e)
     {
         //Grab the current theme
-        _activeTheme = Theming.Theme.ActiveTheme;
+        _activeTheme = MultiRPC.Theming.Theme.ActiveTheme;
     }
 
     private void OnDetachedFromLogicalTree(object? sender, LogicalTreeAttachmentEventArgs e)
     {
         //Restore the old theme if we haven't yet
-        if (_activeTheme != Theming.Theme.ActiveTheme)
+        if (_activeTheme != MultiRPC.Theming.Theme.ActiveTheme)
         {
             _activeTheme?.Apply();
         }
@@ -88,7 +91,7 @@ public partial class InstalledThemes : UserControl, ITabPage
             /*Funnily enough, if we load in things too
              fast then it'll make the whole UI unresponsive*/
             await Task.Delay(50);
-            var theme = Theming.Theme.Load(file);
+            var theme = MultiRPC.Theming.Theme.Load(file);
             this.RunUILogic(() =>
             {
                 var control = MakePreviewUI(theme, file);
@@ -97,7 +100,7 @@ public partial class InstalledThemes : UserControl, ITabPage
         }
     }
 
-    private Control MakePreviewUI(Theming.Theme? theme, string? file = null)
+    private Control MakePreviewUI(MultiRPC.Theming.Theme? theme, string? file = null)
     {
         if (theme == null)
         {
@@ -173,7 +176,6 @@ public partial class InstalledThemes : UserControl, ITabPage
         };
     }
 
-    private Theming.Theme? _tmpTheme;
     private void ThemeUIOnPointerLeave(object? sender, PointerEventArgs e)
     {
         //We want to restore the old theme if it didn't become the new active theme
@@ -202,7 +204,6 @@ public partial class InstalledThemes : UserControl, ITabPage
         });
     }
 
-    private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
     private void ThemeUIOnDoubleTapped(object? sender, RoutedEventArgs e)
     {
         //TODO: Add logic for official themes
@@ -230,7 +231,7 @@ public partial class InstalledThemes : UserControl, ITabPage
     {
         var st = (Button)sender!;
         wppThemes.Children.Remove(st.Parent!.Parent);
-        var theme = (Theming.Theme)st.Tag!;
+        var theme = (MultiRPC.Theming.Theme)st.Tag!;
         if (!string.IsNullOrWhiteSpace(theme.Location))
         {
             File.Delete(theme.Location);
@@ -254,7 +255,7 @@ public partial class InstalledThemes : UserControl, ITabPage
                 }
             }
         };
-        var files = await openDia.ShowAsync(((App)Application.Current).DesktopLifetime?.MainWindow!);
+        var files = await openDia.ShowAsync();
         if (files is null || !files.Any())
         {
             return;
@@ -279,7 +280,7 @@ public partial class InstalledThemes : UserControl, ITabPage
             return;
         }
             
-        var th = Theming.Theme.Load(files[^1]);
+        var th = MultiRPC.Theming.Theme.Load(files[^1]);
         if (th != null)
         {
             th.Apply();
