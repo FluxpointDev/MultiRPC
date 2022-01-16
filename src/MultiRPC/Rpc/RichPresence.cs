@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using Fonderie;
+using MultiRPC.Discord;
 
 namespace MultiRPC.Rpc;
 
@@ -9,27 +10,30 @@ public partial class RichPresence
     public RichPresence(string name, long id)
     {
         _name = name;
-        ID = id;
+        _id = id;
+        _lazyManager = new Lazy<ProfileAssetsManager>(() => ProfileAssetsManager.GetOrAddManager(_id));
     }
 
     [GeneratedProperty]
     private string _name;
 
-    public long ID { get; set; }
+    [GeneratedProperty] 
+    private long _id;
 
+    [GeneratedProperty] 
+    private bool _useTimestamp;
+    
     [JsonIgnore]
     public DiscordRPC.RichPresence Presence => Profile.ToRichPresence();
         
     public RpcProfile Profile { get; set; } = new RpcProfile();
 
-    [GeneratedProperty]
-    [JsonIgnore]
-    private Uri? _customLargeImageUrl;
+    private Lazy<ProfileAssetsManager> _lazyManager;
+    [JsonIgnore] 
+    public ProfileAssetsManager AssetsManager => _lazyManager.Value;
 
-    [GeneratedProperty]
-    [JsonIgnore]
-    private Uri? _customSmallImageUrl;
-
-    [GeneratedProperty] 
-    private bool _useTimestamp;
+    partial void OnIdChanged(long _, long value)
+    {
+        _lazyManager = new Lazy<ProfileAssetsManager>(() => ProfileAssetsManager.GetOrAddManager(value));
+    }
 }

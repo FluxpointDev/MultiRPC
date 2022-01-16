@@ -17,7 +17,7 @@ public partial class MultiRpcPage : RpcPage
     public override bool PresenceValid => rpcControl.RpcValid;
     public override event EventHandler<bool>? PresenceValidChanged;
 
-    private IBrush _white = Brushes.White.ToImmutable();
+    private readonly IBrush _white = Brushes.White.ToImmutable();
     public override void Initialize(bool loadXaml)
     {
         InitializeComponent(loadXaml);
@@ -29,6 +29,7 @@ public partial class MultiRpcPage : RpcPage
             rpcView.UpdateForeground(_white);
         };
 
+        RichPresence.Id = Constants.MultiRPCID;
         rpcView.RpcProfile = RichPresence;
         rpcView.UpdateBackground((IBrush)Application.Current.Resources["PurpleBrush"]!);
         rpcView.UpdateForeground(_white);

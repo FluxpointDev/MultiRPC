@@ -2,8 +2,8 @@
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using MultiRPC.Discord.Status;
+using MultiRPC.Extensions;
 using MultiRPC.UI;
-using TinyUpdate.Http.Extensions;
 
 namespace MultiRPC.Discord;
 
@@ -19,8 +19,7 @@ public static class DiscordStatusChecker
 {
     public static async Task<DiscordStatus> GetStatus()
     {
-        var response = await App.HttpClient.GetResponseMessage(new HttpRequestMessage(HttpMethod.Get,
-            "https://discordstatus.com/api/v2/components.json"));
+        var response = await App.HttpClient.GetResponseMessage("https://discordstatus.com/api/v2/components.json");
 
         if (response is null || !response.IsSuccessStatusCode)
         {

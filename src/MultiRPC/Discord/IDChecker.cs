@@ -3,8 +3,8 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using MultiRPC.Extensions;
 using MultiRPC.UI;
-using TinyUpdate.Http.Extensions;
 
 namespace MultiRPC.Discord;
 
@@ -19,9 +19,7 @@ public static class IDChecker
     public static async Task<(bool Successful, string? ResultMessage)> Check(long id) 
     {
         var responseMessage =
-            await App.HttpClient.GetResponseMessage(
-                new HttpRequestMessage(HttpMethod.Get, 
-                    $"https://discordapp.com/api/v6/oauth2/applications/{id}/rpc")); ;
+            await App.HttpClient.GetResponseMessage($"https://discordapp.com/api/v6/oauth2/applications/{id}/rpc");
 
         if (responseMessage is null or { IsSuccessStatusCode: false })
         {

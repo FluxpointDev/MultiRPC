@@ -68,7 +68,7 @@ public class RpcClient
 
     public void Start(long? applicationId, string? applicationName)
     {
-        _presenceId = applicationId ?? RpcPageManager.CurrentPage?.RichPresence.ID ?? Constants.MultiRPCID;
+        _presenceId = applicationId ?? RpcPageManager.CurrentPage?.RichPresence.Id ?? Constants.MultiRPCID;
         var idS = _presenceId.ToString();
 
         var name = applicationName ?? RpcPageManager.CurrentPage?.RichPresence.Name ?? Language.GetText(LanguageText.MultiRPC);
@@ -177,10 +177,10 @@ public class RpcClient
             Start = _rpcStart
         } : null;
             
-        if (richPresence.ID != _presenceId)
+        if (richPresence.Id != _presenceId)
         {
             Stop();
-            Start(richPresence.ID, richPresence.Name);
+            Start(richPresence.Id, richPresence.Name);
         }
         await UpdatePresence(pre);
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -28,17 +29,24 @@ public enum ImagesType
 
 public partial class BaseRpcControl : UserControl, ITabPage
 {
+    private static string[]? _localizedAssetsNames;
+    private static readonly ProfileAssetsManager MultiRPCAssetManager = ProfileAssetsManager.GetOrAddManager(Constants.MultiRPCID);
+
+    private bool _lastIDCheckStatus = true;
+    private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
+    private bool _lastValid;
+
     public RichPresence RichPresence { get; set; } = null!;
     public ImagesType ImageType { get; set; }
     public bool GrabID { get; init; }
     public Language? TabName { get; init; }
     public bool IsDefaultPage => true;
-        
-    public bool RpcValid => stpContent.Children
-                                .Where(x => x is TextBox && x.Name != nameof(txtClientID))
-                                .Select(x => ((ControlValidation?)((TextBox)x).DataContext)?.LastResultStatus)
-                                .All(x => x.GetValueOrDefault(true))
-                            && _lastIDCheckStatus;
+
+    public bool RpcValid => 
+        stpContent.Children
+            .Where(x => x is TextBox && x.Name != nameof(txtClientID))
+            .Select(x => ((ControlValidation?)((TextBox)x).DataContext)?.LastResultStatus)
+            .All(x => x.GetValueOrDefault(true)) && _lastIDCheckStatus;
 
     public event EventHandler<bool>? PresenceValidChanged;
     public event EventHandler? ProfileChanged;
@@ -52,7 +60,7 @@ public partial class BaseRpcControl : UserControl, ITabPage
             return;
         }
             
-        txtClientID.Text = richPresence.ID.ToString();
+        txtClientID.Text = richPresence.Id.ToString();
         txtText1.Text = richPresence.Profile.Details;
         txtText2.Text = richPresence.Profile.State;
         txtLargeKey.Text = richPresence.Profile.LargeKey;
@@ -68,12 +76,10 @@ public partial class BaseRpcControl : UserControl, ITabPage
         
     private void OnAttachedToLogicalTree(object? sender, LogicalTreeAttachmentEventArgs e)
     {
-        txtClientID.Text = RichPresence.ID.ToString();
+        txtClientID.Text = RichPresence.Id.ToString();
         this.AttachedToLogicalTree -= OnAttachedToLogicalTree;
     }
 
-    private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
-    private bool _lastValid;
     public void Initialize(bool loadXaml)
     {
         InitializeComponent(loadXaml);
@@ -138,28 +144,67 @@ public partial class BaseRpcControl : UserControl, ITabPage
             txtSmallKey.AddValidation(Language.GetLanguage(LanguageText.SmallKey), s => RichPresence.Profile.SmallKey = s, s => Check(s, 256), OnProfileChanged, RichPresence.Profile.SmallKey);
             return;
         }
+
+        _ = GetAssets();
+    }
+
+    private string GetLocalizedOrTitleCase(string s)
+    {
+        switch (s)
+        {
+            case "multirpc":
+                return Language.GetText(LanguageText.MultiRPC);
+            case "mmlol":
+                return "MmLol";
+            case "firefoxnightly":
+                return "Firefox Nightly";
+            case "christmas":
+                return Language.GetText(LanguageText.Christmas);
+            case "present":
+                return Language.GetText(LanguageText.Present);
+            case "popcorn":
+                return Language.GetText(LanguageText.Popcorn);
+            case "games":
+                return Language.GetText(LanguageText.Games);
+            default:
+                return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(s);
+        }
+    }
+    
+    private async Task GetAssets()
+    {
+        await MultiRPCAssetManager.GetAssetsAsync();
+        if (MultiRPCAssetManager.Assets == null)
+        {
+            //TODO: Do something else like retry later
+            return;
+        }
         
         Language.LanguageChanged += (sender, args) =>
         {
-            Data.MultiRPCImages = Data.MakeImagesDictionary();
             var largeKey = cboLargeKey.SelectedIndex;
             var smallKey = cboSmallKey.SelectedIndex;
 
-            cboLargeKey.Items = Data.MultiRPCImages.Keys;
-            cboSmallKey.Items = Data.MultiRPCImages.Keys;
+            cboLargeKey.Items = _localizedAssetsNames = MultiRPCAssetManager.Assets
+                .Select(x => GetLocalizedOrTitleCase(x.Name))
+                .Prepend(Language.GetText(LanguageText.NoImage)).ToArray();
+            cboSmallKey.Items = cboLargeKey.Items;
             cboLargeKey.SelectedIndex = largeKey;
             cboSmallKey.SelectedIndex = smallKey;
         };
-        cboLargeKey.Items = Data.MultiRPCImages.Keys;
-        cboSmallKey.Items = Data.MultiRPCImages.Keys;
-        var largeKey = Data.MultiRPCImages.Keys.IndexOf(x => x?.ToLower() == RichPresence.Profile.LargeKey);
+
+        cboLargeKey.Items = _localizedAssetsNames = MultiRPCAssetManager.Assets
+            .Select(x => GetLocalizedOrTitleCase(x.Name))
+            .Prepend(Language.GetText(LanguageText.NoImage)).ToArray();
+        cboSmallKey.Items = cboLargeKey.Items;
+        var largeKey = MultiRPCAssetManager.Assets.IndexOf(x => x?.Name == RichPresence.Profile.LargeKey);
         if (largeKey == -1)
         {
             largeKey = 0;
         }
         cboLargeKey.SelectedIndex = largeKey;
-                
-        var smallKey = Data.MultiRPCImages.Keys.IndexOf(x => x?.ToLower() == RichPresence.Profile.SmallKey);
+
+        var smallKey = MultiRPCAssetManager.Assets.IndexOf(x => x?.Name == RichPresence.Profile.SmallKey);
         if (smallKey == -1)
         {
             smallKey = 0;
@@ -177,7 +222,6 @@ public partial class BaseRpcControl : UserControl, ITabPage
         gidContent.Children.Add(control);
     }
 
-    private bool _lastIDCheckStatus = true;
     private async Task CheckID(string s)
     {
         txtClientID.Classes.Remove("error");
@@ -194,7 +238,7 @@ public partial class BaseRpcControl : UserControl, ITabPage
             if (successful)
             {
                 CustomToolTip.SetTip(txtClientID, null);
-                RichPresence.ID = id;
+                RichPresence.Id = id;
                 if (RichPresence.Name.StartsWith("Profile"))
                 {
                     RichPresence.Name = resultMessage!;
@@ -237,40 +281,44 @@ public partial class BaseRpcControl : UserControl, ITabPage
         
     private void CboLargeKey_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems.Count == 0)
+        if (e.AddedItems.Count == 0
+            || _localizedAssetsNames == null
+            || MultiRPCAssetManager.Assets == null)
         {
             return;
         }
-            
-        var key = e.AddedItems[0]?.ToString();
-        RichPresence.Profile.LargeKey = cboLargeKey.SelectedIndex != 0 ? 
-            key?.ToLower() ?? string.Empty : string.Empty;
 
-        RichPresence.CustomLargeImageUrl =
-            key != null 
-            && Data.TryGetImageValue(key, out var uriS)
-            && Uri.TryCreate(uriS, UriKind.Absolute, out var uri)
-                ? uri 
-                : null;
+        var key = e.AddedItems[0]?.ToString();
+        var ind = _localizedAssetsNames.IndexOf(x => x == key);
+        if (ind <= 0)
+        {
+            RichPresence.Profile.LargeKey = string.Empty;
+            return;
+        }
+        
+        RichPresence.Profile.LargeKey = cboLargeKey.SelectedIndex != 0 ? 
+            MultiRPCAssetManager.Assets[ind - 1].Name : string.Empty;
     }
 
     private void CboSmallKey_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.AddedItems.Count == 0)
+        if (e.AddedItems.Count == 0
+            || _localizedAssetsNames == null
+            || MultiRPCAssetManager.Assets == null)
         {
             return;
         }
 
         var key = e.AddedItems[0]?.ToString();
+        var ind = _localizedAssetsNames.IndexOf(x => x == key);
+        if (ind <= 0)
+        {
+            RichPresence.Profile.SmallKey = string.Empty;
+            return;
+        }
+        
         RichPresence.Profile.SmallKey = cboSmallKey.SelectedIndex != 0 ? 
-            key?.ToLower() ?? string.Empty : string.Empty;
-            
-        RichPresence.CustomSmallImageUrl =
-            key != null 
-            && Data.TryGetImageValue(key, out var uriS) 
-            && Uri.TryCreate(uriS, UriKind.Absolute, out var uri) 
-                ? uri 
-                : null;
+            MultiRPCAssetManager.Assets[ind - 1].Name : string.Empty;
     }
 
     private void CkbElapsedTime_OnChange(object? sender, RoutedEventArgs e)

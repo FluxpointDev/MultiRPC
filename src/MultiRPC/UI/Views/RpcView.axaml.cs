@@ -13,12 +13,12 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using AvaloniaGif.Decoding;
 using DiscordRPC.Message;
+using MultiRPC.Discord;
 using MultiRPC.Exceptions;
 using MultiRPC.Extensions;
 using MultiRPC.Helpers;
 using MultiRPC.Rpc;
 using Splat;
-using TinyUpdate.Http.Extensions;
 using Timer = System.Timers.Timer;
 
 namespace MultiRPC.UI.Views;
@@ -101,7 +101,7 @@ public partial class RpcView : UserControl
         set => UpdateFromRichPresence(value);
     }
 
-    private void ProfileOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private async void ProfileOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(RpcProfile.Profile.LargeText))
         {
@@ -119,10 +119,7 @@ public partial class RpcView : UserControl
             CustomToolTip.SetTip(gridSmallImage, text);
             CustomToolTip.SetTip(gifSmallImage, text);
         }
-    }
         
-    private async void PresenceOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
         if (_rpcProfile == null)
         {
             return;
@@ -130,15 +127,15 @@ public partial class RpcView : UserControl
 
         switch (e.PropertyName)
         {
-            case nameof(RichPresence.CustomSmallImageUrl):
-                await UpdateSmallImage(_rpcProfile.CustomSmallImageUrl);
+            case nameof(RichPresence.Profile.SmallKey):
+                await UpdateSmallImage(_rpcProfile.AssetsManager.GetUri(_rpcProfile.Profile.SmallKey));
                 return;
-            case nameof(RichPresence.CustomLargeImageUrl):
-                await UpdateLargeImage(_rpcProfile.CustomLargeImageUrl);
+            case nameof(RichPresence.Profile.LargeKey):
+                await UpdateLargeImage(_rpcProfile.AssetsManager.GetUri(_rpcProfile.Profile.LargeKey));
                 break;
         }
     }
-        
+
     private DateTime? _timerTime;
     private readonly Timer _timer;
     private void RpcClientOnPresenceUpdated(object? sender, PresenceMessage e) => this.RunUILogic(() =>
@@ -174,35 +171,18 @@ public partial class RpcView : UserControl
         CustomToolTip.SetTip(gifLarge, e.Presence.Assets.LargeImageText);
         CustomToolTip.SetTip(gridSmallImage, e.Presence.Assets.SmallImageText);
         CustomToolTip.SetTip(gifSmallImage, e.Presence.Assets.SmallImageText);
-        _ = UpdateSmallImage(GetUri(e.Presence.Assets.SmallImageID, e.Presence.Assets.SmallImageKey, e.ApplicationID));
-        _ = UpdateLargeImage(GetUri(e.Presence.Assets.LargeImageID, e.Presence.Assets.LargeImageKey, e.ApplicationID));
+        _ = UpdateSmallImage(DiscordAsset.GetUri(e.ApplicationID, e.Presence.Assets.SmallImageKey, e.Presence.Assets.SmallImageID));
+        _ = UpdateLargeImage(DiscordAsset.GetUri(e.ApplicationID, e.Presence.Assets.LargeImageKey, e.Presence.Assets.LargeImageID));
     });
 
-    private Uri? GetUri(ulong? id, string key, string applicationID)
-    {
-        if (id.HasValue)
-        {
-            return new Uri("https://cdn.discordapp.com/app-assets/" + applicationID + "/" + id + ".png");
-        }
-
-        if (!string.IsNullOrWhiteSpace(key)
-            && key.StartsWith("mp:external/")
-            && Uri.TryCreate("https://media.discordapp.net/external/" + key[12..], UriKind.Absolute, out var url))
-        {
-            return url;
-        }
-
-        return null;
-    }
-
-    protected List<IDisposable> _textboxDisposables = new List<IDisposable>();
+    private readonly List<IDisposable> _textBoxDisposables = new List<IDisposable>();
     private void UpdateFromRichPresence(RichPresence? presence)
     {
         if (presence != null)
         {
             if (_rpcProfile != null)
             {
-                _rpcProfile.PropertyChanged -= PresenceOnPropertyChanged;
+                _rpcProfile.Profile.PropertyChanged -= ProfileOnPropertyChanged;
             }
             _rpcProfile = presence;
         }
@@ -211,14 +191,13 @@ public partial class RpcView : UserControl
             return;
         }
 
-        _textboxDisposables.ForEach(x => x.Dispose());
-        _textboxDisposables.Clear();
-        _textboxDisposables.Add(
+        _textBoxDisposables.ForEach(x => x.Dispose());
+        _textBoxDisposables.Clear();
+        _textBoxDisposables.Add(
             DoBinding(_rpcProfile.Profile, nameof(presence.Profile.Details), tblText1));
-        _textboxDisposables.Add(
+        _textBoxDisposables.Add(
             DoBinding(_rpcProfile.Profile, nameof(presence.Profile.State), tblText2));
 
-        _rpcProfile.PropertyChanged += PresenceOnPropertyChanged;
         _rpcProfile.Profile.PropertyChanged += ProfileOnPropertyChanged;
         ProfileOnPropertyChanged(this, new PropertyChangedEventArgs(nameof(RpcProfile.Profile.LargeText)));
         ProfileOnPropertyChanged(this, new PropertyChangedEventArgs(nameof(RpcProfile.Profile.SmallText)));
@@ -339,7 +318,7 @@ public partial class RpcView : UserControl
             }
         }
 
-        var imageResponse = await App.HttpClient.GetResponseMessage(new HttpRequestMessage(HttpMethod.Get, uri));
+        var imageResponse = await App.HttpClient.GetResponseMessage(uri);
         if (imageResponse is not { IsSuccessStatusCode: true })
         {
             return false;
@@ -402,8 +381,8 @@ public partial class RpcView : UserControl
 
         if (_viewType != ViewType.LocalRichPresence)
         {
-            _textboxDisposables.ForEach(x => x.Dispose());
-            _textboxDisposables.Clear();
+            _textBoxDisposables.ForEach(x => x.Dispose());
+            _textBoxDisposables.Clear();
         }
 
         var brush = _viewType switch

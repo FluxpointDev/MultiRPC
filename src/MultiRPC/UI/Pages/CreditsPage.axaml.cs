@@ -106,7 +106,7 @@ public partial class CreditsPage : SidePage
             this.RunUILogic(() => 
                 tblLastUpdated.Text = Language.GetText(LanguageText.CheckForUpdates).Replace("\r\n", " "));
 
-            var req = await App.HttpClient.GetResponseMessage(new HttpRequestMessage(HttpMethod.Get, Url));
+            var req = await App.HttpClient.GetResponseMessage(Url);
             if (req is null || !req.IsSuccessStatusCode)
             {
                 if (req == null)
