@@ -17,7 +17,7 @@ public partial class RichPresence
     [GeneratedProperty]
     private string _name;
 
-    [GeneratedProperty] 
+    [GeneratedProperty, JsonPropertyName("ID")]
     private long _id;
 
     [GeneratedProperty] 
