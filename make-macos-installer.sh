@@ -9,6 +9,7 @@ rm -rf "MultiRPC.app/*"
 rm -rf "MultiRPC.app/Contents"
 # Copy new files into "MultiRPC.app"
 cp -r "$path/${3}/Contents" "/Volumes/MultiRPC Installer/MultiRPC.app/Contents"
+codesign --force --deep --sign - "$path/${3}"
 # Unmount base .dmg
 cd ../
 hdiutil detach "/Volumes/MultiRPC Installer/"
