@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,9 +28,10 @@ public enum ImagesType
     BuiltIn
 }
 
+//TODO: reset id border if setting changed to not check for id
 public partial class BaseRpcControl : UserControl, ITabPage
 {
-    private static string[]? _localizedAssetsNames;
+    private static string[]? _localizedMultiRPCAssetsNames;
     private static readonly ProfileAssetsManager MultiRPCAssetManager = ProfileAssetsManager.GetOrAddManager(Constants.MultiRPCID);
 
     private bool _lastIDCheckStatus = true;
@@ -93,6 +95,14 @@ public partial class BaseRpcControl : UserControl, ITabPage
             }
             _lastValid = isValid;
         };
+        _disableSettings.PropertyChanged += (sender, args) =>
+        {
+            if (args.PropertyName == nameof(DisableSettings.TokenCheck))
+            {
+                    
+            }
+        };
+        
         if (GrabID)
         {
             txtClientID.IsVisible = true;
@@ -130,20 +140,6 @@ public partial class BaseRpcControl : UserControl, ITabPage
 
         ckbElapsedTime.IsChecked = RichPresence.UseTimestamp;
         ckbElapsedTime.DataContext = Language.GetLanguage(LanguageText.ShowElapsedTime);
-        
-        if (ImageType == ImagesType.Custom)
-        {
-            cboLargeKey.IsVisible = false;
-            cboSmallKey.IsVisible = false;
-
-            txtLargeKey.IsVisible = true;
-            txtSmallKey.IsVisible = true;
-
-            //TODO: Add a way to check if it's an url and to check the url
-            txtLargeKey.AddValidation(Language.GetLanguage(LanguageText.LargeKey), s => RichPresence.Profile.LargeKey = s, s => Check(s, 256), OnProfileChanged, RichPresence.Profile.LargeKey);
-            txtSmallKey.AddValidation(Language.GetLanguage(LanguageText.SmallKey), s => RichPresence.Profile.SmallKey = s, s => Check(s, 256), OnProfileChanged, RichPresence.Profile.SmallKey);
-            return;
-        }
 
         _ = GetAssets();
     }
@@ -173,6 +169,32 @@ public partial class BaseRpcControl : UserControl, ITabPage
     
     private async Task GetAssets()
     {
+        //TODO: See why our assets crash avalonia ui when selecting item in autocomplete
+        if (ImageType == ImagesType.Custom)
+        {
+            cboLargeKey.IsVisible = false;
+            cboSmallKey.IsVisible = false;
+
+            txtLargeKey.IsVisible = true;
+            txtSmallKey.IsVisible = true;
+
+            ProfileChanged += async (sender, args) =>
+            {
+                await RichPresence.AssetsManager.GetAssetsAsync();
+                //txtLargeKey.Items = RichPresence.AssetsManager.Assets?.Select(x => x.Name).ToImmutableArray();
+                //txtSmallKey.Items = txtLargeKey.Items;
+            };
+
+            //TODO: Add a way to check if it's an url and to check the url
+            txtLargeKey.AddValidation(Language.GetLanguage(LanguageText.LargeKey), s => RichPresence.Profile.LargeKey = s, s => Check(s, 256), OnProfileChanged, RichPresence.Profile.LargeKey);
+            txtSmallKey.AddValidation(Language.GetLanguage(LanguageText.SmallKey), s => RichPresence.Profile.SmallKey = s, s => Check(s, 256), OnProfileChanged, RichPresence.Profile.SmallKey);
+            
+            await RichPresence.AssetsManager.GetAssetsAsync();
+            //txtLargeKey.Items = RichPresence.AssetsManager.Assets?.Select(x => x.Name).ToImmutableArray();
+            //txtSmallKey.Items = txtLargeKey.Items;
+            return;
+        }
+        
         await MultiRPCAssetManager.GetAssetsAsync();
         if (MultiRPCAssetManager.Assets == null)
         {
@@ -185,7 +207,7 @@ public partial class BaseRpcControl : UserControl, ITabPage
             var largeKey = cboLargeKey.SelectedIndex;
             var smallKey = cboSmallKey.SelectedIndex;
 
-            cboLargeKey.Items = _localizedAssetsNames = MultiRPCAssetManager.Assets
+            cboLargeKey.Items = _localizedMultiRPCAssetsNames = MultiRPCAssetManager.Assets
                 .Select(x => GetLocalizedOrTitleCase(x.Name))
                 .Prepend(Language.GetText(LanguageText.NoImage)).ToArray();
             cboSmallKey.Items = cboLargeKey.Items;
@@ -193,7 +215,7 @@ public partial class BaseRpcControl : UserControl, ITabPage
             cboSmallKey.SelectedIndex = smallKey;
         };
 
-        cboLargeKey.Items = _localizedAssetsNames = MultiRPCAssetManager.Assets
+        cboLargeKey.Items = _localizedMultiRPCAssetsNames = MultiRPCAssetManager.Assets
             .Select(x => GetLocalizedOrTitleCase(x.Name))
             .Prepend(Language.GetText(LanguageText.NoImage)).ToArray();
         cboSmallKey.Items = cboLargeKey.Items;
@@ -282,14 +304,14 @@ public partial class BaseRpcControl : UserControl, ITabPage
     private void CboLargeKey_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (e.AddedItems.Count == 0
-            || _localizedAssetsNames == null
+            || _localizedMultiRPCAssetsNames == null
             || MultiRPCAssetManager.Assets == null)
         {
             return;
         }
 
         var key = e.AddedItems[0]?.ToString();
-        var ind = _localizedAssetsNames.IndexOf(x => x == key);
+        var ind = _localizedMultiRPCAssetsNames.IndexOf(x => x == key);
         if (ind <= 0)
         {
             RichPresence.Profile.LargeKey = string.Empty;
@@ -303,14 +325,14 @@ public partial class BaseRpcControl : UserControl, ITabPage
     private void CboSmallKey_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (e.AddedItems.Count == 0
-            || _localizedAssetsNames == null
+            || _localizedMultiRPCAssetsNames == null
             || MultiRPCAssetManager.Assets == null)
         {
             return;
         }
 
         var key = e.AddedItems[0]?.ToString();
-        var ind = _localizedAssetsNames.IndexOf(x => x == key);
+        var ind = _localizedMultiRPCAssetsNames.IndexOf(x => x == key);
         if (ind <= 0)
         {
             RichPresence.Profile.SmallKey = string.Empty;
