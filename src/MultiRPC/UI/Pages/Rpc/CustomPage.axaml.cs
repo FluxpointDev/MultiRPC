@@ -64,11 +64,11 @@ public partial class CustomPage : RpcPage
             
         _svgHelpImage = SvgImageHelper.LoadImage("Icons/Help.svg");
         AssetManager.RegisterForAssetReload("Icons/Help.svg", () => _svgHelpImage = SvgImageHelper.LoadImage("Icons/Help.svg"));
-        imgProfileEdit.AddSvgAsset("Icons/Pencil.svg");
-        imgProfileShare.AddSvgAsset("Icons/Share.svg");
-        imgProfileAdd.AddSvgAsset("Icons/Add.svg");
-        imgProfileDelete.AddSvgAsset("Icons/Delete.svg");
-        imgProfileClone.AddSvgAsset("Icons/Clone.svg");
+        btnProfileEdit.AddSvgAsset("Icons/Pencil.svg");
+        btnProfileShare.AddSvgAsset("Icons/Share.svg");
+        btnProfileAdd.AddSvgAsset("Icons/Add.svg");
+        btnProfileDelete.AddSvgAsset("Icons/Delete.svg");
+        btnProfileClone.AddSvgAsset("Icons/Clone.svg");
 
         //Setup the RPC control
         _rpcControl = new BaseRpcControl
@@ -104,11 +104,11 @@ public partial class CustomPage : RpcPage
         tabPage.Initialize();
 
         //Setup tooltips
-        _editLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgProfileEdit, x));
-        _shareLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgProfileShare, x));
-        _addLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgProfileAdd, x));
-        _deleteLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgProfileDelete, x));
-        _cloneLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgProfileClone, x));
+        _editLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(btnProfileEdit, x));
+        _shareLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(btnProfileShare, x));
+        _addLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(btnProfileAdd, x));
+        _deleteLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(btnProfileDelete, x));
+        _cloneLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(btnProfileClone, x));
             
         //Make help controls
         var helpGrid = new Grid
@@ -229,32 +229,32 @@ public partial class CustomPage : RpcPage
         _activeProfile = (RichPresence)_activeButton.DataContext!;
         _textBindingDis?.Dispose();
         AddTextBinding();
-        imgProfileDelete.IsVisible = _profilesSettings.Profiles.First() != _activeProfile;
+        btnProfileDelete.IsVisible = _profilesSettings.Profiles.First() != _activeProfile;
 
         _rpcControl.ChangeRichPresence(_activeProfile);
         RichPresence = _activeProfile;
     }
 
-    private async void ImgProfileEdit_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private async void ImgProfileEdit_OnClick(object? sender, RoutedEventArgs e)
     {
         var window = new MainWindow(new EditPage(_activeProfile)) { DisableMinimiseButton = true };
         await window.ShowDialog();
     }
 
-    private async void ImgProfileShare_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private async void ImgProfileShare_OnClick(object? sender, RoutedEventArgs e)
     {
         var window = new MainWindow(new SharePage(_activeProfile)) { DisableMinimiseButton = true };
         await window.ShowDialog();
     }
 
-    private void ImgProfileAdd_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private void ImgProfileAdd_OnClick(object? sender, RoutedEventArgs e)
     {
         var newProfile = new RichPresence("Profile" + _profilesSettings.Profiles.Count, 0);
         _profilesSettings.Profiles.Add(newProfile);
         BtnChangePresence(wrpProfileSelector.Children[^1], e);
     }
 
-    private void ImgProfileDelete_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private void ImgProfileDelete_OnClick(object? sender, RoutedEventArgs e)
     {
         var profileIndex = wrpProfileSelector.Children.IndexOf(_activeButton);
         //Makes sure we "Click" on a valid button
@@ -266,7 +266,7 @@ public partial class CustomPage : RpcPage
         BtnChangePresence(wrpProfileSelector.Children[profileIndex], e);
     }
 
-    private void ImgProfileClone_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private void ImgProfileClone_OnClick(object? sender, RoutedEventArgs e)
     {
         var profile = JsonSerializer.Deserialize<RichPresence>(JsonSerializer.Serialize(_activeProfile));
         

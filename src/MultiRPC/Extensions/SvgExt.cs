@@ -10,4 +10,13 @@ public static class SvgExt
         image.Source = SvgImageHelper.LoadImage(key);
         AssetManager.RegisterForAssetReload(key, () => image.Source = SvgImageHelper.LoadImage(key));
     }
+    
+    public static void AddSvgAsset(this Button btn, string key)
+    {
+        if (btn.Content is not Image image)
+        {
+            btn.Content = image = new Image();
+        }
+        image.AddSvgAsset(key);
+    }
 }
