@@ -252,5 +252,8 @@
   "Secondary": "Secondary",
   "Buttons": "Buttons",
   "Pages": "Pages",
-  "Other": "Other"
+  "Other": "Other",
+  "FailedToGetOldConfig": "We failed to get your configuration from V5!",
+  "FailedToGetOldProfiles": "We failed to get your profiles from V5!",
+  "FailedToGetOldData": "We failed to get your configuration and profiles from V5!"
 }

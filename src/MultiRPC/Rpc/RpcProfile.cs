@@ -5,7 +5,7 @@ using Fonderie;
 
 namespace MultiRPC.Rpc;
 
-public partial class RpcProfile
+public partial class RpcProfile : IEquatable<RpcProfile>
 {
     [GeneratedProperty] private string _state = string.Empty;
     [GeneratedProperty] private string _details = string.Empty;
@@ -47,5 +47,47 @@ public partial class RpcProfile
             },
             Buttons = buttons.ToArray()
         };
+    }
+
+    public bool Equals(RpcProfile? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return _state == other._state
+               && _details == other._details 
+               && _largeKey == other._largeKey 
+               && _largeText == other._largeText 
+               && _smallKey == other._smallKey 
+               && _smallText == other._smallText 
+               && _showTime == other._showTime
+               && _button1Text == other._button1Text 
+               && _button1Url == other._button1Url 
+               && _button2Text == other._button2Text 
+               && _button2Url == other._button2Url;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+        return Equals((RpcProfile)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = new HashCode();
+        hashCode.Add(_state);
+        hashCode.Add(_details);
+        hashCode.Add(_largeKey);
+        hashCode.Add(_largeText);
+        hashCode.Add(_smallKey);
+        hashCode.Add(_smallText);
+        hashCode.Add(_showTime);
+        hashCode.Add(_button1Text);
+        hashCode.Add(_button1Url);
+        hashCode.Add(_button2Text);
+        hashCode.Add(_button2Url);
+        return hashCode.ToHashCode();
     }
 }

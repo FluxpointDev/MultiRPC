@@ -13,7 +13,7 @@ using TinyUpdate.Core;
 using TinyUpdate.Core.Logging;
 using TinyUpdate.Core.Logging.Loggers;
 
-[assembly: SemanticVersion("7.0.0-beta6")]
+[assembly: SemanticVersion("7.0.0-beta6+1")]
 namespace MultiRPC;
 
 internal static class Program

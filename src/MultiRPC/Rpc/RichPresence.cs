@@ -5,7 +5,7 @@ using MultiRPC.Discord;
 
 namespace MultiRPC.Rpc;
 
-public partial class RichPresence
+public partial class RichPresence : IEquatable<RichPresence>
 {
     public RichPresence(string name, long id)
     {
@@ -35,5 +35,25 @@ public partial class RichPresence
     partial void OnIdChanged(long _, long value)
     {
         _lazyManager = new Lazy<ProfileAssetsManager>(() => ProfileAssetsManager.GetOrAddManager(value));
+    }
+
+    public bool Equals(RichPresence? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return _name == other._name && _id == other._id && _useTimestamp == other._useTimestamp && Profile.Equals(other.Profile);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+        return Equals((RichPresence)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(_name, _id, _useTimestamp, Profile);
     }
 }

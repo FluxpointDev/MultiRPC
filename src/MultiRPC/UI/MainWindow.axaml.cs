@@ -114,7 +114,7 @@ public partial class MainWindow : FluentWindow
     
     private void UpdateTitleBar(TitleBar title, bool shouldEnable, string controlName)
     {
-        var cap = title.GetVisualChildren()
+        var cap = title?.GetVisualChildren()
             .FirstOrDefault()
             ?.GetVisualChildren()
             .LastOrDefault()
