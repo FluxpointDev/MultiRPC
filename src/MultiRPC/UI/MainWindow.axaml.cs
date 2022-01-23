@@ -1,11 +1,16 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Chrome;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Svg;
+using Avalonia.VisualTree;
 using MultiRPC.Commands;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
@@ -16,6 +21,7 @@ namespace MultiRPC.UI;
 
 public partial class MainWindow : FluentWindow
 {
+    private readonly Control _control;
     public MainWindow() : this(new MainPage())
     {
         DragDrop.SetAllowDrop(this, true);
@@ -77,9 +83,54 @@ public partial class MainWindow : FluentWindow
         }
     }
 
-    private readonly Control _control;
+    //TODO: Check that this works on other OS's
+    protected override void UpdateMinimiseButton(bool shouldEnable)
+    {
+        if (IsExtendedIntoWindowDecorations)
+        {
+            UpdateTitleBar(shouldEnable, "PART_MinimiseButton");
+        }
+        //TODO: Add for other OS's
+    }
+
+    protected override void UpdateRestoreButton(bool shouldEnable)
+    {
+        if (IsExtendedIntoWindowDecorations)
+        {
+            UpdateTitleBar(shouldEnable, "PART_RestoreButton");
+        }
+        //TODO: Add for other OS's
+    }
+
+    private void UpdateTitleBar(bool shouldEnable, string controlName)
+    {
+        UpdateTitleBar(tbrTitleBar, shouldEnable, controlName);
+        if (this.GetVisualChildren().FirstOrDefault()?.GetVisualChildren().LastOrDefault() is VisualLayerManager visualLayerManager
+            && visualLayerManager.ChromeOverlayLayer.Children.FirstOrDefault() is TitleBar titleBar)
+        {
+            UpdateTitleBar(titleBar, shouldEnable, controlName);
+        }
+    }
+    
+    private void UpdateTitleBar(TitleBar title, bool shouldEnable, string controlName)
+    {
+        var cap = title.GetVisualChildren()
+            .FirstOrDefault()
+            ?.GetVisualChildren()
+            .LastOrDefault()
+            ?.GetVisualChildren()
+            .LastOrDefault() as CaptionButtons;
+
+        if (cap != null)
+        {
+            var stp = cap.GetVisualChildren().Single() as StackPanel;
+            stp.Children.First(x => x.Name == controlName).IsVisible = shouldEnable;
+        }
+    }
+
     public MainWindow(Control control)
     {
+        DisableRestoreButton = true;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         Icon = new WindowIcon(AssetManager.GetSeekableStream("Logo.ico"));
         AssetManager.RegisterForAssetReload("Logo.ico", 
@@ -118,14 +169,17 @@ public partial class MainWindow : FluentWindow
 
     private void InitializeExtra()
     {
-        AssetManager.RegisterForAssetReload("Logo.svg", () =>
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            icon.Source = new SvgImage { Source = AssetManager.LoadSvgImage("Logo.svg") };
-        });
-        icon.Source = new SvgImage
-        {
-            Source = AssetManager.LoadSvgImage("Logo.svg")
-        };
+            AssetManager.RegisterForAssetReload("Logo.svg", () =>
+            {
+                icon.Source = new SvgImage { Source = AssetManager.LoadSvgImage("Logo.svg") };
+            });
+            icon.Source = new SvgImage
+            {
+                Source = AssetManager.LoadSvgImage("Logo.svg")
+            };
+        }
 
         eabTitleBar.PointerPressed += (sender, args) => BeginMoveDrag(args);
         Opened += (sender, args) =>
@@ -137,13 +191,7 @@ public partial class MainWindow : FluentWindow
             _control.Margin += new Thickness(0, eabTitleBar.Height, 0, 0);
         };
         grdContent.Children.Insert(1, _control);
-        
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            eabTitleBar.IsVisible = false;
-            return;
-        }
-        
+
         var lang = Language.GetLanguage(LanguageText.MultiRPC);
         if (_control is ITitlePage titlePage)
         {
@@ -153,6 +201,13 @@ public partial class MainWindow : FluentWindow
         else
         {
             lang.TextObservable.Subscribe(s => UpdateTitle(s, null));
+        }
+        
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            icon.IsVisible = false;
+            txtTitle.Margin = new Thickness(0);
+            stpTitleBarContent.HorizontalAlignment = HorizontalAlignment.Center;
         }
     }
 }

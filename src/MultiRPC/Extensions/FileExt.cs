@@ -7,6 +7,12 @@ public static class FileExt
 {
     public static string CheckFilename(string filename, string location)
     {
+        //If the directory doesn't even exist then we defo can use the filename
+        if (!Directory.Exists(filename))
+        {
+            return filename;
+        }
+        
         var currentFiles = Directory.EnumerateFiles(location).Select(Path.GetFileNameWithoutExtension).ToArray();
         if (currentFiles.All(x => x != filename))
         {

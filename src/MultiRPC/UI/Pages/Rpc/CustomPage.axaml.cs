@@ -235,16 +235,16 @@ public partial class CustomPage : RpcPage
         RichPresence = _activeProfile;
     }
 
-    private void ImgProfileEdit_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private async void ImgProfileEdit_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        var window = new MainWindow(new EditPage(_activeProfile));
-        window.ShowDialog();
+        var window = new MainWindow(new EditPage(_activeProfile)) { DisableMinimiseButton = true };
+        await window.ShowDialog();
     }
 
-    private void ImgProfileShare_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private async void ImgProfileShare_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        var window = new MainWindow(new SharePage(_activeProfile));
-        window.ShowDialog();
+        var window = new MainWindow(new SharePage(_activeProfile)) { DisableMinimiseButton = true };
+        await window.ShowDialog();
     }
 
     private void ImgProfileAdd_OnPointerPressed(object? sender, PointerPressedEventArgs e)

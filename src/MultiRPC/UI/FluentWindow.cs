@@ -13,6 +13,28 @@ public class FluentWindow : Window, IStyleable
 {
     Type IStyleable.StyleKey => typeof(Window);
 
+    private bool _disableMinimiseButton = false;
+    public bool DisableMinimiseButton
+    {
+        get => _disableMinimiseButton;
+        set
+        {
+            _disableMinimiseButton = value;
+            UpdateMinimiseButton(!value);
+        }
+    }
+    
+    private bool _disableRestoreButton = false;
+    public bool DisableRestoreButton
+    {
+        get => _disableRestoreButton;
+        set
+        {
+            _disableRestoreButton = value;
+            UpdateRestoreButton(!value);
+        }
+    }
+
     public FluentWindow()
     {
         Title = Language.GetText(LanguageText.MultiRPC);
@@ -43,6 +65,8 @@ public class FluentWindow : Window, IStyleable
                     return;
                 }
 
+                UpdateRestoreButton(!DisableRestoreButton);
+                UpdateMinimiseButton(!DisableMinimiseButton);
                 SystemDecorations = SystemDecorations.Full;
                 if (!x)
                 {
@@ -50,6 +74,10 @@ public class FluentWindow : Window, IStyleable
                 }
             });
     }
+
+    protected virtual void UpdateRestoreButton(bool shouldEnable) { }
+
+    protected virtual void UpdateMinimiseButton(bool shouldEnable) { }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {

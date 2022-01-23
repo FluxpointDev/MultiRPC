@@ -152,7 +152,8 @@ public partial class MessageBox : UserControl
             MinHeight = page.MinHeight + 30,
             MaxWidth = 410,
             Title = messageBoxTitle,
-            ShowInTaskbar = false
+            ShowInTaskbar = false,
+            DisableMinimiseButton = true
         };
 
         ownerWindow ??= WindowExt.GetMainWindow;

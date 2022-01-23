@@ -114,7 +114,7 @@ public class Theme
         {
             fireNewTheme = true;
             Directory.CreateDirectory(Constants.ThemeFolder);
-            Location ??= Path.Combine(Constants.ThemeFolder, filename + Constants.ThemeFileExtension);
+            Location = Path.Combine(Constants.ThemeFolder, filename + Constants.ThemeFileExtension);
         }
         if (File.Exists(Location))
         {

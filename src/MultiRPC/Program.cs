@@ -67,8 +67,5 @@ internal static class Program
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .With(new Win32PlatformOptions
-            {
-                EnableMultitouch = true
-            }).LogToTinyUpdate("Property", "Visual", "Layout");
+            .With(new Win32PlatformOptions()).LogToTinyUpdate("Property", "Visual", "Layout");
 }
