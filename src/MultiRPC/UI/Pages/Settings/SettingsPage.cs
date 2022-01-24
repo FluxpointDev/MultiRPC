@@ -20,7 +20,6 @@ public partial class SettingsPage : SidePage
 
     public override void Initialize(bool loadXaml)
     {
-        this.Background = (IBrush)Application.Current.Resources["ThemeAccentBrush"]!;
         ContentPadding = new Thickness(0);
 
         var tabPage = new TabsPage { Background = this.Background };

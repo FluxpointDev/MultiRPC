@@ -112,7 +112,7 @@ public partial class MainWindow : FluentWindow
         }
     }
     
-    private void UpdateTitleBar(TitleBar title, bool shouldEnable, string controlName)
+    private void UpdateTitleBar(IVisual? title, bool shouldEnable, string controlName)
     {
         var cap = title?.GetVisualChildren()
             .FirstOrDefault()
@@ -190,7 +190,7 @@ public partial class MainWindow : FluentWindow
             icon.Width = icon.Height;
             _control.Margin += new Thickness(0, eabTitleBar.Height, 0, 0);
         };
-        grdContent.Children.Insert(1, _control);
+        grdContent.Children.Insert(3, _control);
 
         var lang = Language.GetLanguage(LanguageText.MultiRPC);
         if (_control is ITitlePage titlePage)

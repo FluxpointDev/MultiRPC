@@ -20,6 +20,7 @@ public partial class MultiRpcPage : RpcPage
     private readonly IBrush _white = Brushes.White.ToImmutable();
     public override void Initialize(bool loadXaml)
     {
+        BackgroundColour = (Color)Application.Current.Resources["ThemeAccentColor2"]!;
         InitializeComponent(loadXaml);
 
         tblLookLike.DataContext = Language.GetLanguage(LanguageText.WhatItWillLookLike);

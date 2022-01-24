@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
+using Avalonia.Media.Immutable;
 
 namespace MultiRPC.UI.Controls;
 
@@ -20,6 +23,15 @@ public sealed partial class TabsPage : UserControl
     public void Initialize()
     {
         InitializeComponent();
+        //TODO: Make it change base on user wanting
+        //content.Background = (IBrush)App.Current.Resources["ThemeAccentBrush2"];
+        var colour = (Color)App.Current.Resources["ThemeAccentColor2"];
+        content.Background = new ImmutableSolidColorBrush(colour, 0.7);
+        App.Current.GetResourceObservable("ThemeAccentColor2").Subscribe(x =>
+        {
+            content.Background = new ImmutableSolidColorBrush((Color)x, 0.7);
+        });
+        
         stpTabs.Children.AddRange(_pages.Select(MakeTab));
 
         //This grabs the default page if any and triggers the pointer event so it loads up with it

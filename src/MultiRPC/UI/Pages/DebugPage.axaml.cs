@@ -9,7 +9,7 @@ using System;
 
 namespace MultiRPC.UI.Pages;
 
-public partial class DebugPage : UserControl, ISidePage
+public partial class DebugPage : SidePage
 {
     public DebugPage()
     {
@@ -17,10 +17,11 @@ public partial class DebugPage : UserControl, ISidePage
     }
     private RpcClient _rpcClient;
 
-    public string IconLocation => "Icons/Debug";
-    public string LocalizableName => "Debug";
-    public void Initialize(bool loadXaml)
+    public override string IconLocation => "Icons/Debug";
+    public override string LocalizableName => "Debug";
+    public override void Initialize(bool loadXaml)
     {
+        BackgroundColour = (Color)Application.Current.Resources["ThemeAccentColor2"]!;
         InitializeComponent(loadXaml);
         _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException();
 
@@ -38,11 +39,6 @@ public partial class DebugPage : UserControl, ISidePage
         debugStopRPCTooltip.TextObservable.Subscribe(x => CustomToolTip.SetTip(btnDebugStopRPC, x));
         testUpdateWindowTooltip.TextObservable.Subscribe(x => CustomToolTip.SetTip(btnTestUpdate, x));
     }
-
-    public void Initialize() => Initialize(true);
-
-    public IBrush? BackgroundColour { get; }
-    public Thickness ContentPadding { get; } = new Thickness(10);
 
     private async void BtnTestUpdate_OnClick(object? sender, RoutedEventArgs e)
     {

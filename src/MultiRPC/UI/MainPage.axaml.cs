@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.Svg;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting;
@@ -16,9 +17,23 @@ namespace MultiRPC.UI;
 //TODO: Cleanup
 public partial class MainPage : UserControl
 {
+    private Button? _selectedBtn;
+    private ISidePage? _selectedPage;
+    private readonly RpcPage? _autoStartPage;
+    private readonly DisableSettings _disableSetting = SettingManager<DisableSettings>.Setting;
     public MainPage()
     {
         InitializeComponent();
+        
+        //TODO: Make it change base on user wanting
+        App.Current.GetResourceObservable("ThemeAccentColor").Subscribe(x =>
+        {
+            if (contentBorder.Background != null
+                && ((ImmutableSolidColorBrush)contentBorder.Background).Color != _selectedPage?.BackgroundColour)
+            {
+                contentBorder.Background = new ImmutableSolidColorBrush((Color)x, 0.7);
+            }
+        });
 
         //Make all the buttons which will put onto the sidebar,
         //finding the autostart page if we have it
@@ -62,7 +77,6 @@ public partial class MainPage : UserControl
         _autoStartPage.PresenceValidChanged -= OnPresenceValidChanged;
     }
         
-    private readonly RpcPage? _autoStartPage;
     private void OnPresenceValidChanged(object? sender, bool e)
     {
         if (e)
@@ -80,8 +94,6 @@ public partial class MainPage : UserControl
         }
     }
 
-    private readonly DisableSettings _disableSetting = SettingManager<DisableSettings>.Setting;
-    private Button? _selectedBtn;
     private Button AddSidePage(ISidePage page)
     {
         var key = page.IconLocation + ".svg";
@@ -185,8 +197,11 @@ public partial class MainPage : UserControl
         {
             page.Initialize();
         }
+        
+        //TODO: Make it change base on user wanting
+        var colour = page.BackgroundColour ?? (Color)App.Current.Resources["ThemeAccentColor"];
+        contentBorder.Background = new ImmutableSolidColorBrush(colour, 0.7);
 
-        contentBorder.Background = page.BackgroundColour ?? (IBrush)Application.Current.Resources["ThemeAccentBrush2"]!;
         cclContent.Padding = page.ContentPadding;
         cclContent.Content = page;
             

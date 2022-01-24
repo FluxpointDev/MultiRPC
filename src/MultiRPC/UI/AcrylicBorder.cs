@@ -12,18 +12,21 @@ public class AcrylicBorder : ExperimentalAcrylicBorder
         Material = new ExperimentalAcrylicMaterial
         {
             MaterialOpacity = 0.8,
-            TintOpacity = 0.7
+            TintOpacity = 1,
+            TintColor = TintColor,
+            FallbackColor = TintColor
         };
         TintColorProperty.Changed.Subscribe(x =>
         {
             if (x.NewValue.HasValue)
             {
                 Material.FallbackColor = TintColor;
+                Material.TintColor = TintColor;
             }
         });
     }
 
-    public static readonly StyledProperty<Color> TintColorProperty = AvaloniaProperty.Register<AcrylicBorder, Color>("TintColor");
+    public static readonly StyledProperty<Color> TintColorProperty = AvaloniaProperty.Register<AcrylicBorder, Color>("TintColor", (Color)App.Current.Resources["ThemeAccentColor"]);
     public Color TintColor
     {
         get => GetValue(TintColorProperty);

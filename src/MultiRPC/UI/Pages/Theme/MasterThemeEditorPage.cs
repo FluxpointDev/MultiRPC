@@ -10,7 +10,6 @@ public class MasterThemeEditorPage : SidePage
     public override string LocalizableName => "ThemeEditor";
     public override void Initialize(bool loadXaml)
     {
-        Background = (IBrush)Application.Current.Resources["ThemeAccentBrush"]!;
         var tabPage = new TabsPage
         {
             MinWidth = 675,

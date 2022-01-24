@@ -4,6 +4,8 @@ using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Media;
 using MultiRPC.Extensions;
 using MultiRPC.Utils;
 using TinyUpdate.Core.Logging;
@@ -17,6 +19,7 @@ public partial class CreditsPage : SidePage
     public override string LocalizableName => "Credits";
     public override void Initialize(bool loadXaml)
     {
+        BackgroundColour = (Color)Application.Current.Resources["ThemeAccentColor2"]!;
         InitializeComponent(loadXaml);
 
         tblCommunityAdminsTitle.DataContext = Language.GetLanguage(LanguageText.CommunityAdmins);

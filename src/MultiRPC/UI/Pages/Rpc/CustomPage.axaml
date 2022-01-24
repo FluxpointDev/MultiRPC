@@ -26,6 +26,7 @@
             <Setter Property="Padding" Value="0" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="CornerRadius" Value="38"/>
+            <Setter Property="Background" Value="Transparent" />
         </Style>
         <Style Selector="Button.toolbar:pointerover /template/ ContentPresenter">
             <Setter Property="Background" Value="Transparent" />
@@ -48,7 +49,7 @@
             <Setter Property="Margin" Value="0,4,0,4" />
         </Style>
     </UserControl.Styles>
-    <Border x:Name="brdContent" Background="{DynamicResource ThemeAccentBrush}">
+    <Border x:Name="brdContent">
         <Grid x:Name="grdContent" RowDefinitions="Auto Auto *">
             <WrapPanel x:Name="wrpProfileSelector" MaxWidth="750" Margin="10,10,0,0" HorizontalAlignment="Left" />
             <StackPanel Spacing="5" Grid.Row="1" x:Name="stpProfileEditor" Height="40" Orientation="Horizontal" Margin="10,7,0,7">

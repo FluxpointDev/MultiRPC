@@ -10,7 +10,9 @@
         Background="Transparent"
         CanResize="False"
         x:Class="MultiRPC.UI.MainWindow">
-    <Grid x:Name="grdContent" Background="{DynamicResource ThemeAccentColor}">
+    <Grid x:Name="grdContent">
+        <Image MaxHeight="72" MaxWidth="151" />
+        <Rectangle Opacity="0.85" Fill="{DynamicResource ThemeAccentBrush}"/>
         <Border x:Name="eabTitleBar" VerticalAlignment="Top" Background="Transparent">
             <StackPanel x:Name="stpTitleBarContent" Orientation="Horizontal" Margin="7,0,0,0">
                 <Image x:Name="icon" Height="0" Width="0" Margin="0,4,5,4" />
