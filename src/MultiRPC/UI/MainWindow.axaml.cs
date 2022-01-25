@@ -22,6 +22,7 @@ namespace MultiRPC.UI;
 public partial class MainWindow : FluentWindow
 {
     private readonly Control _control;
+    private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
     public MainWindow() : this(new MainPage())
     {
         DragDrop.SetAllowDrop(this, true);
@@ -39,7 +40,6 @@ public partial class MainWindow : FluentWindow
             return;
         }
 
-        var disableSettings = SettingManager<DisableSettings>.Setting;
         var trayIcon = new TrayIcon
         {
             Icon = this.Icon,
@@ -52,7 +52,7 @@ public partial class MainWindow : FluentWindow
         this.GetObservable(WindowStateProperty).Subscribe(x =>
         {
             ChangeTrayIconText(trayIcon);
-            ShowInTaskbar = !(!disableSettings.HideTaskbarIcon && x == WindowState.Minimized);
+            ShowInTaskbar = !(!_disableSettings.HideTaskbarIcon && x == WindowState.Minimized);
         });
     }
 
@@ -169,6 +169,15 @@ public partial class MainWindow : FluentWindow
 
     private void InitializeExtra()
     {
+        _disableSettings.PropertyChanged += (sender, args) =>
+        {
+            if (args.PropertyName == nameof(DisableSettings.AcrylicEffect))
+            {
+                regBackground.Opacity = _disableSettings.AcrylicEffect ? 1 : 0.85;
+            }
+        };
+        regBackground.Opacity = _disableSettings.AcrylicEffect ? 1 : 0.85;
+
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             AssetManager.RegisterForAssetReload("Logo.svg", () =>

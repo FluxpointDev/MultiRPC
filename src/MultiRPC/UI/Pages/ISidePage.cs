@@ -9,13 +9,14 @@ public interface ISidePage
 
     string LocalizableName { get; }
 
-    void Initialize(bool loadXaml);
-
-    public void Initialize();
-
-    Color? BackgroundColour { get; }
+    string? BackgroundResourceName { get; }
+    Color? PageBackground { get; }
 
     bool IsInitialized { get; }
 
     Thickness ContentPadding { get; }
+    
+    void Initialize(bool loadXaml);
+
+    public void Initialize();
 }

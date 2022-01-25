@@ -1,10 +1,13 @@
 ﻿using Avalonia.Styling;
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
 using Avalonia.Controls.Primitives;
+using MultiRPC.Setting;
+using MultiRPC.Setting.Settings;
 
 namespace MultiRPC.UI;
 
@@ -35,20 +38,15 @@ public class FluentWindow : Window, IStyleable
         }
     }
 
+    private static readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
     public FluentWindow()
     {
         Title = Language.GetText(LanguageText.MultiRPC);
+        _disableSettings.PropertyChanged += UpdateTransparencyLevel;
+        UpdateTransparencyLevel(null, new PropertyChangedEventArgs(nameof(DisableSettings.AcrylicEffect)));
         ExtendClientAreaToDecorationsHint = true;
         ExtendClientAreaTitleBarHeightHint = -1;
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            var version = Environment.OSVersion.Version;
-            if (version.Major >= 10)
-            {
-                TransparencyLevelHint = version.Build >= 22000 ? WindowTransparencyLevel.Mica : WindowTransparencyLevel.AcrylicBlur;
-            }
-        }
 
         this.GetObservable(WindowStateProperty)
             .Subscribe(x =>
@@ -71,8 +69,35 @@ public class FluentWindow : Window, IStyleable
                 if (!x)
                 {
                     TransparencyLevelHint = WindowTransparencyLevel.None;
+                    _disableSettings.PropertyChanged -= UpdateTransparencyLevel;
                 }
             });
+    }
+
+    private void UpdateTransparencyLevel(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(DisableSettings.AcrylicEffect))
+        {
+            return;
+        }
+        if (_disableSettings.AcrylicEffect)
+        {
+            TransparencyLevelHint = WindowTransparencyLevel.None;
+            return;
+        }
+            
+        if (OperatingSystem.IsWindows())
+        {
+            var version = Environment.OSVersion.Version;
+            if (version.Major >= 10)
+            {
+                TransparencyLevelHint = version.Build >= 22000 ? WindowTransparencyLevel.Mica : WindowTransparencyLevel.AcrylicBlur;
+            }
+        }
+        else if (OperatingSystem.IsMacOS())
+        {
+            TransparencyLevelHint = WindowTransparencyLevel.AcrylicBlur;
+        }
     }
 
     protected virtual void UpdateRestoreButton(bool shouldEnable) { }

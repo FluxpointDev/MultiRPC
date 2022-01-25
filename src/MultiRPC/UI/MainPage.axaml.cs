@@ -18,22 +18,27 @@ namespace MultiRPC.UI;
 public partial class MainPage : UserControl
 {
     private Button? _selectedBtn;
-    private ISidePage? _selectedPage;
     private readonly RpcPage? _autoStartPage;
     private readonly DisableSettings _disableSetting = SettingManager<DisableSettings>.Setting;
+    private string? _lastColourName;
+    private Color? _lastColor;
+    private IDisposable? _currentColourBinding;
     public MainPage()
     {
         InitializeComponent();
-        
-        //TODO: Make it change base on user wanting
-        App.Current.GetResourceObservable("ThemeAccentColor").Subscribe(x =>
+        _disableSetting.PropertyChanged += (sender, args) =>
         {
-            if (contentBorder.Background != null
-                && ((ImmutableSolidColorBrush)contentBorder.Background).Color != _selectedPage?.BackgroundColour)
+            if (args.PropertyName == nameof(DisableSettings.AcrylicEffect))
             {
-                contentBorder.Background = new ImmutableSolidColorBrush((Color)x, 0.7);
+                if (!string.IsNullOrWhiteSpace(_lastColourName))
+                {
+                    UpdateFromResource();
+                    return;
+                }
+            
+                UpdateFromColor();
             }
-        });
+        };
 
         //Make all the buttons which will put onto the sidebar,
         //finding the autostart page if we have it
@@ -198,16 +203,40 @@ public partial class MainPage : UserControl
             page.Initialize();
         }
         
-        //TODO: Make it change base on user wanting
-        var colour = page.BackgroundColour ?? (Color)App.Current.Resources["ThemeAccentColor"];
-        contentBorder.Background = new ImmutableSolidColorBrush(colour, 0.7);
+        //Remove old binding
+        _currentColourBinding?.Dispose();
 
+        _lastColor = page.PageBackground;
+        if (!page.PageBackground.HasValue)
+        {
+            _lastColourName = !string.IsNullOrWhiteSpace(page.BackgroundResourceName)
+                              && App.Current.Resources.ContainsKey(page.BackgroundResourceName)
+                ? page.BackgroundResourceName
+                : "ThemeAccentColor";
+        
+            // Get new colours/brushes
+            var obs = App.Current.GetResourceObservable(_lastColourName);
+            _currentColourBinding = obs.Subscribe(x => UpdateFromResource());
+            UpdateFromResource();
+        }
+        else
+        {
+            _lastColourName = null;
+            UpdateFromColor();
+        }
+        
         cclContent.Padding = page.ContentPadding;
         cclContent.Content = page;
-            
         if (page is RpcPage rpcPage)
         {
             RpcPageManager.NewActivePage(rpcPage);
         }
+    }
+
+    private void UpdateFromColor() => contentBorder.Background = new ImmutableSolidColorBrush(_lastColor.Value, _disableSetting.AcrylicEffect ? 1 : 0.7);
+    private void UpdateFromResource()
+    {
+        var resource = App.Current.Resources[_lastColourName];
+        contentBorder.Background = resource is IBrush brush ? brush : new ImmutableSolidColorBrush((Color)resource, _disableSetting.AcrylicEffect ? 1 : 0.7);
     }
 }

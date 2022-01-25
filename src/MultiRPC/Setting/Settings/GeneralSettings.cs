@@ -36,7 +36,7 @@ public partial class GeneralSettings : BaseSetting
 
     [GeneratedProperty]
     private string? _themeFile;
-
+    
     partial void OnLogLevelChanged(LogLevel previous, LogLevel value) => LoggingCreator.GlobalLevel = value;
     partial void OnLanguageChanged(string previous, string value)
     {

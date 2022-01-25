@@ -30,6 +30,9 @@ public partial class DisableSettings : BaseSetting
     [GeneratedProperty, SettingName("ShowAllTooltips")]
     private bool _allTooltips;
 
+    [GeneratedProperty, SettingName("AcrylicEffect")]
+    private bool _acrylicEffect;
+    
     [GeneratedProperty]
     private bool _inviteWarn;
 }

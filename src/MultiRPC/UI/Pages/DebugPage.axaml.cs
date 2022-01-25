@@ -19,9 +19,9 @@ public partial class DebugPage : SidePage
 
     public override string IconLocation => "Icons/Debug";
     public override string LocalizableName => "Debug";
+    public override string? BackgroundResourceName => "ThemeAccentColor2";
     public override void Initialize(bool loadXaml)
     {
-        BackgroundColour = (Color)Application.Current.Resources["ThemeAccentColor2"]!;
         InitializeComponent(loadXaml);
         _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException();
 

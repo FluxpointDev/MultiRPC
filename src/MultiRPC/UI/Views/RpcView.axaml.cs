@@ -44,6 +44,9 @@ public partial class RpcView : UserControl
     private static VisualBrush _errorVisualBrush;
     private readonly RpcClient _rpcClient;
     private readonly object _streamLock = new object();
+    private DateTime? _timerTime;
+    private readonly Timer _timer;
+    private readonly List<IDisposable> _textBoxDisposables = new List<IDisposable>();
     static RpcView()
     {
         AssetManager.RegisterForAssetReload("Logo.svg", () => _logoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") }));
@@ -52,6 +55,24 @@ public partial class RpcView : UserControl
         _errorVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Icons/Delete.svg") });
     }
 
+    private ViewType _viewType;
+    public ViewType ViewType
+    {
+        get => _viewType;
+        set
+        {
+            _viewType = value;
+            this.RunUILogic(() => UpdateFromType());
+        }
+    }
+
+    private RichPresence? _rpcProfile;
+    public RichPresence? RpcProfile
+    {
+        get => _rpcProfile;
+        set => UpdateFromRichPresence(value);
+    }
+    
     public RpcView()
     {
         InitializeComponent();
@@ -83,22 +104,14 @@ public partial class RpcView : UserControl
         };
     }
 
-    private ViewType _viewType;
-    public ViewType ViewType
+    public void UpdateBackground(IBrush brush)
     {
-        get => _viewType;
-        set
-        {
-            _viewType = value;
-            this.RunUILogic(() => UpdateFromType());
-        }
+        brdContent.Background = brush;
     }
-
-    private RichPresence? _rpcProfile;
-    public RichPresence? RpcProfile
+    
+    public void UpdateForeground(IBrush brush)
     {
-        get => _rpcProfile;
-        set => UpdateFromRichPresence(value);
+        tblTitle.Foreground = brush;
     }
 
     private async void ProfileOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -136,8 +149,6 @@ public partial class RpcView : UserControl
         }
     }
 
-    private DateTime? _timerTime;
-    private readonly Timer _timer;
     private void RpcClientOnPresenceUpdated(object? sender, PresenceMessage e) => this.RunUILogic(() =>
     {
         _timerTime = e.Presence.Timestamps?.Start;
@@ -175,7 +186,6 @@ public partial class RpcView : UserControl
         _ = UpdateLargeImage(DiscordAsset.GetUri(e.ApplicationID, e.Presence.Assets.LargeImageKey, e.Presence.Assets.LargeImageID));
     });
 
-    private readonly List<IDisposable> _textBoxDisposables = new List<IDisposable>();
     private void UpdateFromRichPresence(RichPresence? presence)
     {
         if (presence != null)
@@ -354,25 +364,22 @@ public partial class RpcView : UserControl
         return control.Bind(TextBlock.TextProperty, binding);
     }
 
-    public void UpdateBackground(IBrush brush)
+    private void UpdateDefaultForeground()
     {
-        brdContent.Background = brush;
+        tblTitle.Foreground = _viewType is 
+            ViewType.Error or ViewType.LocalRichPresence or ViewType.RpcRichPresence
+                ? Brushes.White.ToImmutable()
+                : (IBrush)Application.Current.Resources["ThemeForegroundBrush"];
     }
-    
-    public void UpdateForeground(IBrush brush)
-    {
-        tblTitle.Foreground = brush;
-    }
-        
+
     private void UpdateFromType(string? error = null, RichPresence? richPresence = null)
     {
         tblText1.IsVisible = _viewType is not ViewType.Loading or ViewType.LocalRichPresence;
         tblText2.IsVisible = tblText1.IsVisible && _viewType is not ViewType.Error;
         tblTime.IsVisible = _viewType == ViewType.RpcRichPresence;
         gifLarge.IsVisible = _viewType == ViewType.Loading;
-        tblTitle.Foreground = _viewType == ViewType.Error ? 
-            Brushes.White.ToImmutable() 
-            : (IBrush)Application.Current.Resources["ThemeForegroundBrush"];
+        UpdateDefaultForeground();
+
         if (!gifLarge.IsVisible)
         {
             gifLarge.SourceStream = Stream.Null;

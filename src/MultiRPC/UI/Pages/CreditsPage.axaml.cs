@@ -17,9 +17,9 @@ public partial class CreditsPage : SidePage
 {
     public override string IconLocation => "Icons/Credits";
     public override string LocalizableName => "Credits";
+    public override string? BackgroundResourceName => "ThemeAccentColor2";
     public override void Initialize(bool loadXaml)
     {
-        BackgroundColour = (Color)Application.Current.Resources["ThemeAccentColor2"]!;
         InitializeComponent(loadXaml);
 
         tblCommunityAdminsTitle.DataContext = Language.GetLanguage(LanguageText.CommunityAdmins);
