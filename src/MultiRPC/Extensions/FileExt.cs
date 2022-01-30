@@ -1,19 +1,22 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace MultiRPC.Extensions;
 
 public static class FileExt
 {
-    public static string CheckFilename(string filename, string location)
+    public static string CheckFilename(string filename, string location, IEnumerable<string>? blacklistedFilenames = null)
     {
         //If the directory doesn't even exist then we defo can use the filename
-        if (!Directory.Exists(filename))
+        if (!Directory.Exists(location))
         {
             return filename;
         }
         
-        var currentFiles = Directory.EnumerateFiles(location).Select(Path.GetFileNameWithoutExtension).ToArray();
+        var currentFiles = Directory.EnumerateFiles(location).Select(Path.GetFileNameWithoutExtension).Concat(blacklistedFilenames ?? ArraySegment<string?>.Empty).ToArray();
         if (currentFiles.All(x => x != filename))
         {
             return filename;

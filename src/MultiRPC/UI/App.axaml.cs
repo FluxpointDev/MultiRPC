@@ -17,6 +17,7 @@ using TinyUpdate.Binary;
 using TinyUpdate.Github;
 using TinyUpdate.Core.Extensions;
 using System.Runtime.InteropServices;
+using Avalonia.Themes.Fluent;
 using MultiRPC.Updating;
 
 namespace MultiRPC.UI;
@@ -45,7 +46,14 @@ public class App : Application
 #endif
         AvaloniaXamlLoader.Load(this);
         var genSettings = SettingManager<GeneralSettings>.Setting;
-        var theme = Theme.Load(genSettings.ThemeFile) ?? Themes.Dark;
+        var theme = (genSettings.ThemeFile?.StartsWith('#') ?? false)
+            ? Themes.ThemeIndexes[genSettings.ThemeFile] 
+            : (Theme.Load(genSettings.ThemeFile) ?? Themes.Dark);
+
+        Theme.ActiveThemeChanged += (sender, newTheme) =>
+        {
+            ((FluentTheme)Styles[0]).Mode = (FluentThemeMode)newTheme.Metadata.Mode;
+        };
         theme.Apply();
 
         //Add default settings here

@@ -13,6 +13,7 @@ using MultiRPC.UI.Controls;
 
 namespace MultiRPC.UI.Pages.Theme;
 
+//TODO: Add control for us to let the user tell us if the theme is a light/dark theme
 public partial class ThemeEditorPage : UserControl, ITabPage
 {
     private ThemePreview _themePreview;

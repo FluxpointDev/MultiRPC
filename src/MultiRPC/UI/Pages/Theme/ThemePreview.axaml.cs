@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
 using Avalonia.Svg;
+using Avalonia.Themes.Fluent;
 using MultiRPC.Exceptions;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
@@ -19,6 +22,7 @@ public partial class ThemePreview : UserControl
     private static readonly Language WewCheckBox = Language.GetLanguage(LanguageText.WewCheckBox);
     private static readonly Language WewButton = Language.GetLanguage(LanguageText.WewButton);
     private static readonly Language WewButtonDisabled = Language.GetLanguage(LanguageText.WewDisabledButton);
+    private readonly DisableSettings _disableSetting = SettingManager<DisableSettings>.Setting;
 
     public Theming.Theme Theme
     {
@@ -66,12 +70,13 @@ public partial class ThemePreview : UserControl
         }
     }
 
-    private readonly DisableSettings _disableSetting = SettingManager<DisableSettings>.Setting;
     private void AddSidePage(ISidePage page, bool firstPage)
     {
         var key = page.IconLocation + ".svg";
         var source = AssetManager.LoadSvgImage(key, Theme);
-        UpdateIconColour(source, (Color)Resources["ThemeAccentColor3"]!);
+
+        var colourName = firstPage ? "NavButtonSelectedIconColor" : "ThemeAccentColor3";
+        UpdateIconColour(source, (Color)Resources[colourName]!);
         var img = new Image
         {
             Margin = new Thickness(4.5),
@@ -85,7 +90,16 @@ public partial class ThemePreview : UserControl
             Content = img,
             Tag = source
         };
-            
+        
+        this.GetResourceObservable(colourName).Subscribe(x =>
+        {
+            UpdateIconColour(source, (Color)x!);
+            ((Image)btn.Content).Source = new SvgImage
+            {
+                Source = source
+            };
+        });
+
         var lang = Language.GetLanguage(page.LocalizableName);
         lang.TextObservable.Subscribe(s => CustomToolTip.SetTip(btn,  _disableSetting.ShowPageTooltips ? null : s));
         _disableSetting.PropertyChanged += (sender, args) =>

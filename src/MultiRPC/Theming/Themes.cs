@@ -1,9 +1,22 @@
-﻿using Avalonia.Media;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Avalonia.Media;
 
 namespace MultiRPC.Theming;
 
 public static class Themes
 {
+    static Themes()
+    {
+        ThemeIndexes = new ReadOnlyDictionary<string, Theme>(new Dictionary<string, Theme>
+        {
+            { Dark.Location, Dark },
+            { Light.Location, Light },
+        });
+    }
+    
+    public static readonly IReadOnlyDictionary<string, Theme> ThemeIndexes;
+
     public static readonly Theme Dark = new Theme
     {
         Colours = new Colours
@@ -22,6 +35,7 @@ public static class Themes
             NavButtonSelectedIconColor = Color.FromRgb(255, 255, 255)
         },
         Metadata = new Metadata("Dark", Constants.CurrentVersion),
+        Location = "#Dark",
     };
 
     public static readonly Theme Light = new Theme
@@ -41,6 +55,8 @@ public static class Themes
             NavButtonSelectedColor = Color.FromRgb(0, 171, 235),
             NavButtonSelectedIconColor = Color.FromRgb(255, 255, 255)
         },
-        Metadata = new Metadata("Light", Constants.CurrentVersion),
+        Metadata = new Metadata("Light", Constants.CurrentVersion)
+        { Mode = ThemeMode.Light },
+        Location = "#Light",
     };
 }

@@ -116,7 +116,7 @@ public partial class InstalledThemes : UserControl, ITabPage
         {
             DataContext = Language.GetLanguage(LanguageText.Edit),
             [!ContentProperty] = new Binding("TextObservable^"),
-            IsEnabled = !string.IsNullOrWhiteSpace(file),
+            IsEnabled = !file?.StartsWith('#') ?? false,
             Tag = theme,
         };
         editButton.Click += EditButtonOnClick;
@@ -125,7 +125,7 @@ public partial class InstalledThemes : UserControl, ITabPage
         {
             DataContext = Language.GetLanguage(LanguageText.Remove),
             [!ContentProperty] = new Binding("TextObservable^"),
-            IsEnabled = false,//editButton.IsEnabled,
+            IsEnabled = editButton.IsEnabled,
             Tag = theme,
         };
         removeButton.Click += RemoveButtonOnClick;
@@ -206,7 +206,6 @@ public partial class InstalledThemes : UserControl, ITabPage
 
     private void ThemeUIOnDoubleTapped(object? sender, RoutedEventArgs e)
     {
-        //TODO: Add logic for official themes
         //Apply the theme and add it to the general setting
         var th = (ThemePreview)sender!;
         th.Theme.Apply();
@@ -220,11 +219,11 @@ public partial class InstalledThemes : UserControl, ITabPage
         await MessageBox.Show(Language.GetText(LanguageText.ToAdd));
     }
         
-    private async void CloneButtonOnClick(object? sender, RoutedEventArgs e)
+    private void CloneButtonOnClick(object? sender, RoutedEventArgs e)
     {
         var st = (Button)sender!;
-        //TODO: Clone
-        await MessageBox.Show(Language.GetText(LanguageText.ToAdd));
+        var theme = ((MultiRPC.Theming.Theme)st.Tag!).Clone();
+        theme.Save(theme.Metadata.Name);
     }
 
     private void RemoveButtonOnClick(object? sender, RoutedEventArgs e)
@@ -232,7 +231,7 @@ public partial class InstalledThemes : UserControl, ITabPage
         var st = (Button)sender!;
         wppThemes.Children.Remove(st.Parent!.Parent);
         var theme = (MultiRPC.Theming.Theme)st.Tag!;
-        if (!string.IsNullOrWhiteSpace(theme.Location))
+        if (File.Exists(theme.Location))
         {
             File.Delete(theme.Location);
         }

@@ -68,6 +68,37 @@
         <Setter Property="BorderBrush" Value="Transparent" />
     </Style>
 
+    <Style Selector="AutoCompleteBox">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush4}" />
+    </Style>
+
+    <Style Selector="AutoCompleteBox:focus">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+    </Style>
+    <Style Selector="AutoCompleteBox:focus /template/ TextBlock#PART_Watermark, AutoCompleteBox:focus /template/ TextBlock#PART_FloatingWatermark">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+    </Style>
+    <Style Selector="AutoCompleteBox:pointerover /template/ TextBlock#PART_Watermark, AutoCompleteBox:focus /template/ TextBlock#PART_FloatingWatermark">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+    </Style>
+
+    <Style Selector="AutoCompleteBox:pointerover /template/ Border">
+        <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush5}" />
+    </Style>
+    <Style Selector="AutoCompleteBox:focus /template/ Border">
+        <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush5}" />
+    </Style>
+    <Style Selector="AutoCompleteBox:disabled /template/ Border">
+        <Setter Property="Background" Value="{DynamicResource ThemeAccentDisabledBrush}" />
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource ThemeAccentDisabledTextBrush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    
     <Style Selector="TextBox">
         <Setter Property="FontSize" Value="12" />
         <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />

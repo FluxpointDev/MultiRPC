@@ -17,6 +17,8 @@ public class Metadata
 
     [JsonPropertyName("ThemeName")]
     public string Name { get; set; }
+
+    public ThemeMode Mode { get; set; } = ThemeMode.Dark;
 }
 
 [JsonSerializable(typeof(Metadata))]

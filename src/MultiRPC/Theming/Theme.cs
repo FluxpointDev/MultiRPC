@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using MultiRPC.Extensions;
 using MultiRPC.Theming.JsonConverter;
@@ -14,7 +15,7 @@ using TinyUpdate.Core.Utils;
 
 namespace MultiRPC.Theming;
 
-public enum ThemeMode 
+public enum ThemeType 
 {
     /// <summary>
     /// This theme was made before V7
@@ -69,11 +70,15 @@ public class Theme
     /// <summary>
     /// What mode this theme is in
     /// </summary>
-    public ThemeMode Mode { get; private set; } = ThemeMode.Legacy;
+    public ThemeType ThemeType { get; private set; } = ThemeType.Legacy;
+
+    public static event EventHandler<Theme>? NewTheme;
+    
+    public static event EventHandler<Theme>? ActiveThemeChanged;
 
     public bool HaveAsset(string key)
     {
-        if (Mode == ThemeMode.Modern)
+        if (ThemeType == ThemeType.Modern)
         {
             if (!_archiveLoaded)
             {
@@ -88,7 +93,7 @@ public class Theme
 
     public Stream GetAssetStream(string key)
     {
-        if (Mode != ThemeMode.Modern)
+        if (ThemeType != ThemeType.Modern)
         {
             return Stream.Null;
         }
@@ -101,9 +106,7 @@ public class Theme
             .FirstOrDefault(x => x.FullName == "Assets/" + key)?
             .Open() ?? Stream.Null;
     }
-
-    public static event EventHandler<Theme>? NewTheme; 
-
+    
     public bool Save(string? filename)
     {
         //We need to unload assets as we can't write if we don't
@@ -209,7 +212,7 @@ public class Theme
 
             if (theme.Metadata.Version >= ModernVersion)
             {
-                theme.Mode = ThemeMode.Modern;
+                theme.ThemeType = ThemeType.Modern;
             }
         }
         catch (Exception e)
@@ -222,7 +225,7 @@ public class Theme
         }
 
         //If this is a legacy theme then we don't need the archive anymore
-        if (theme.Mode == ThemeMode.Legacy)
+        if (theme.ThemeType == ThemeType.Legacy)
         {
             archive.Dispose();
             theme._archiveLoaded = false;
@@ -255,7 +258,8 @@ public class Theme
     /// <param name="fireAssetChange">If we should fire asset changes</param>
     public void Apply(IResourceDictionary? resourceDictionary = null, bool fireAssetChange = true)
     {
-        if (resourceDictionary == null)
+        bool newActiveTheme = resourceDictionary == null;
+        if (newActiveTheme)
         {
             resourceDictionary = Application.Current.Resources;
             ActiveTheme?.UnloadAssets();
@@ -281,9 +285,23 @@ public class Theme
         resourceDictionary.UpdateIfDifferent("CheckBoxForegroundCheckedPressed", resourceDictionary["ThemeForegroundBrush"]);
         resourceDictionary.UpdateIfDifferent("CheckBoxForegroundUncheckedPressed", resourceDictionary["ThemeForegroundBrush"]);
 
+        var color4Brush = new ImmutableSolidColorBrush((Color)resourceDictionary["ThemeAccentColor4"]!);
+        var color5Brush = new ImmutableSolidColorBrush((Color)resourceDictionary["ThemeAccentColor5"]!);
+        resourceDictionary.UpdateIfDifferent("CheckBoxCheckBackgroundStrokeUnchecked", color4Brush);
+        resourceDictionary.UpdateIfDifferent("CheckBoxCheckBackgroundStrokeChecked", color4Brush);
+        resourceDictionary.UpdateIfDifferent("CheckBoxCheckBackgroundStrokeCheckedPointerOver", color5Brush);
+        resourceDictionary.UpdateIfDifferent("CheckBoxCheckBackgroundStrokeUncheckedPointerOver", color5Brush);
+        resourceDictionary.UpdateIfDifferent("CheckBoxCheckBackgroundStrokeCheckedPressed", color5Brush);
+        resourceDictionary.UpdateIfDifferent("CheckBoxCheckBackgroundStrokeUncheckedPressed", color5Brush);
+        
         if (fireAssetChange)
         {
             AssetManager.FireReloadAssets(this);
+        }
+
+        if (newActiveTheme)
+        {
+            ActiveThemeChanged?.Invoke(this, ActiveTheme);
         }
     }
     
@@ -291,9 +309,9 @@ public class Theme
     {
         return new Theme()
         {
-            Metadata = new Metadata(name ?? this.Metadata.Name, this.Metadata.Version),
+            Metadata = new Metadata(FileExt.CheckFilename(name ?? this.Metadata.Name, Constants.ThemeFolder, Themes.ThemeIndexes.Keys.Select(x => x[1..])), this.Metadata.Version),
             Colours = JsonSerializer.Deserialize(JsonSerializer.Serialize(this.Colours, ColoursJsonContext), ColoursJsonContext)!,
-            Mode = this.Mode,
+            ThemeType = this.ThemeType,
             Location = null,
         };
     }
