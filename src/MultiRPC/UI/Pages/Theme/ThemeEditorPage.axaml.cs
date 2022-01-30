@@ -19,6 +19,7 @@ public partial class ThemeEditorPage : UserControl, ITabPage
     private ThemePreview _themePreview;
     private Theming.Theme _theme;
     private ColourButton _colourButton;
+    private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
     
     public Language? TabName { get; } = Language.GetLanguage(LanguageText.ThemeEditor);
     public bool IsDefaultPage => true;
@@ -27,6 +28,7 @@ public partial class ThemeEditorPage : UserControl, ITabPage
         InitializeComponent(loadXaml);
 
         _theme = Themes.Dark.Clone(GetInitialName());
+        _theme.IsBeingEdited = true;
         txtName.Text = _theme.Metadata.Name;
         _themePreview = new ThemePreview(_theme);
         grdMetadata.Children.Insert(0, _themePreview);
@@ -59,6 +61,14 @@ public partial class ThemeEditorPage : UserControl, ITabPage
         SetColours();
         clpPicker.Color = _colourButton.BtnColor.Color;
         ProcessColourPicker();
+    }
+
+    public void EditTheme(Theming.Theme theme)
+    {
+        _theme.IsBeingEdited = false;
+        _theme = theme;
+        _theme.IsBeingEdited = true;
+        SetupForNewTheme();
     }
 
     private string GetInitialName() => Language.GetText(LanguageText.ThemeName);
@@ -184,15 +194,16 @@ public partial class ThemeEditorPage : UserControl, ITabPage
             ? FileExt.CheckFilename(txtName.Text, Constants.ThemeFolder) : null;
         _theme.Metadata.Name = txtName.Text;
         _theme.Save(filename);
+        _theme.IsBeingEdited = false;
         BtnReset_OnClick(sender, e);
     }
 
-    private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
     private void BtnSaveAndApply_OnClick(object? sender, RoutedEventArgs e)
     {
         var filename = FileExt.CheckFilename(txtName.Text, Constants.ThemeFolder);
         _theme.Metadata.Name = txtName.Text;
         _theme.Save(filename);
+        _theme.IsBeingEdited = false;
         _theme.Apply();
         _generalSettings.ThemeFile = _theme.Location;
         BtnReset_OnClick(sender, e);
@@ -200,7 +211,14 @@ public partial class ThemeEditorPage : UserControl, ITabPage
 
     private void BtnReset_OnClick(object? sender, RoutedEventArgs e)
     {
+        _theme.IsBeingEdited = false;
         _theme = Themes.Dark.Clone(GetInitialName());
+        _theme.IsBeingEdited = true;
+        SetupForNewTheme();
+    }
+
+    private void SetupForNewTheme()
+    {
         _themePreview.Theme = _theme;
         SetColours();
         clpPicker.Color = _colourButton.BtnColor.Color;

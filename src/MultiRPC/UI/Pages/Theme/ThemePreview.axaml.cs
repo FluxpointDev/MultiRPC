@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Reactive.Linq;
+using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Media;
 using Avalonia.Svg;
-using Avalonia.Themes.Fluent;
 using MultiRPC.Exceptions;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
@@ -13,7 +11,6 @@ using ShimSkiaSharp;
 
 namespace MultiRPC.UI.Pages.Theme;
 
-//TODO: Make it apply new colors on icons
 public partial class ThemePreview : UserControl
 {
     private Theming.Theme _theme;
@@ -29,15 +26,28 @@ public partial class ThemePreview : UserControl
         get => _theme;
         set
         {
+            _theme.PropertyChanged -= EditingThemeOnIsEditingChanged;
             _theme = value;
+            _theme.PropertyChanged += EditingThemeOnIsEditingChanged;
             _theme.Apply(Resources);
         }
     }
-
+    
+    private void EditingThemeOnIsEditingChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(Theming.Theme.IsBeingEdited)
+            && !Theme.IsBeingEdited)
+        {
+            Theme.Apply(Resources);
+        }
+    }
+    
     public ThemePreview() => throw new DesignException();
     public ThemePreview(Theming.Theme theme)
     {
         _theme = theme;
+        _theme.PropertyChanged += EditingThemeOnIsEditingChanged;
+
         InitializeComponent();
         Theme.Apply(Resources);
 

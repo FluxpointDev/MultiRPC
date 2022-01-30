@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
+using MultiRPC.Exceptions;
 using MultiRPC.Extensions;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
@@ -18,16 +20,32 @@ using MultiRPC.UI.Controls;
 
 namespace MultiRPC.UI.Pages.Theme;
 
-//TODO: Make it faster when loading in the theme
-//TODO: Add Showing/Active/Editing Text
-//TODO: Disable Remove button on active theme
-//TODO: Add Edit button when theme editor has progress
-public partial class InstalledThemes : UserControl, ITabPage
+//TODO: Fix Active text not showing up sometimes
+public partial class InstalledThemesPage : UserControl, ITabPage
 {
+    public InstalledThemesPage()
+    {
+        if (!Design.IsDesignMode)
+        {
+            throw new DesignException();
+        }
+    }
+
+    public InstalledThemesPage(ThemeEditorPage editorPage)
+    {
+        _editorPage = editorPage;
+    }
+    
     //We keep a store of the active theme as we mess with it
-    private MultiRPC.Theming.Theme? _activeTheme;
-    private MultiRPC.Theming.Theme? _tmpTheme;
+    private Theming.Theme? _activeTheme;
+    private Theming.Theme? _tmpTheme;
+    private Theming.Theme? _editingTheme;
+
+    private readonly ThemeEditorPage _editorPage;
     private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
+    private TextBlock? _activeEditTextBlock;
+    private TextBlock? _activeActiveTextBlock;
+    private TextBlock? _activeShowingTextBlock;
 
     public Language? TabName { get; } = Language.GetLanguage(LanguageText.InstalledThemes);
     public bool IsDefaultPage => false;
@@ -64,8 +82,39 @@ public partial class InstalledThemes : UserControl, ITabPage
                 wppThemes.Children.Add(control);
             });
         };
+        Language.LanguageChanged += (sender, args) =>
+        {
+            ProcessShowingText();
+            ProcessActiveText();
+            ProcessEditText();
+        };
+    }
+    
+    private void ProcessShowingText()
+    {
+        if (_activeShowingTextBlock != null)
+        {
+            _activeShowingTextBlock.Text = _activeShowingTextBlock.Tag + " (" + Language.GetText(LanguageText.Showing) + ")";
+        }
     }
 
+    
+    private void ProcessActiveText()
+    {
+        if (_activeActiveTextBlock != null)
+        {
+            _activeActiveTextBlock.Text = _activeActiveTextBlock.Tag + " (" + Language.GetText(LanguageText.Active) + ")";
+        }
+    }
+
+    private void ProcessEditText()
+    {
+        if (_activeEditTextBlock != null)
+        {
+            _activeEditTextBlock.Text = _activeEditTextBlock.Tag + " (" + Language.GetText(LanguageText.Editing) + ")";
+        }
+    }
+    
     private void OnAttachedToLogicalTree(object? sender, LogicalTreeAttachmentEventArgs e)
     {
         //Grab the current theme
@@ -91,7 +140,7 @@ public partial class InstalledThemes : UserControl, ITabPage
             /*Funnily enough, if we load in things too
              fast then it'll make the whole UI unresponsive*/
             await Task.Delay(50);
-            var theme = MultiRPC.Theming.Theme.Load(file);
+            var theme = Theming.Theme.ActiveTheme?.Location == file ? Theming.Theme.ActiveTheme : MultiRPC.Theming.Theme.Load(file);
             this.RunUILogic(() =>
             {
                 var control = MakePreviewUI(theme, file);
@@ -138,16 +187,24 @@ public partial class InstalledThemes : UserControl, ITabPage
         };
         cloneButton.Click += CloneButtonOnClick;
 
+        var isActiveTheme = theme == Theming.Theme.ActiveTheme;
+        var themeNameText = new TextBlock
+        {
+            Text = theme.Metadata.Name + (isActiveTheme ? $" ({Language.GetText(LanguageText.Active)})" : ""),
+            Tag = theme.Metadata.Name,
+            FontWeight = FontWeight.Light,
+            Classes = { "subtitle" }
+        };
+
+        if (isActiveTheme)
+        {
+            _activeActiveTextBlock = themeNameText;
+        }
         var controlStackPanel = new StackPanel
         {
             Children = 
             {
-                new TextBlock
-                {
-                    Text = theme.Metadata.Name,
-                    FontWeight = FontWeight.Light,
-                    Classes = { "subtitle" }
-                },
+                themeNameText,
                 editButton,
                 removeButton,
                 cloneButton,
@@ -185,9 +242,17 @@ public partial class InstalledThemes : UserControl, ITabPage
         {
             _activeTheme?.Apply();
             _tmpTheme = null;
+            if (_activeShowingTextBlock != null)
+            {
+                _activeShowingTextBlock.Text = _activeShowingTextBlock.Tag?.ToString();
+            }
+            _activeShowingTextBlock = null;
+            ProcessEditText();
         }
     }
 
+    private TextBlock GetTextBlockFromThemePreview(ThemePreview th) => (TextBlock)((StackPanel?)((StackPanel?)th.Parent)?.Children[0])?.Children[0]!;
+    
     private async void ThemeUIOnPointerEnter(object? sender, PointerEventArgs e)
     {
         await Task.Delay(500);
@@ -200,10 +265,18 @@ public partial class InstalledThemes : UserControl, ITabPage
             {
                 _tmpTheme = th.Theme;
                 th.Theme.Apply();
+
+                if (_activeShowingTextBlock != null)
+                {
+                    _activeShowingTextBlock.Text = _activeShowingTextBlock.Tag?.ToString();
+                }
+                _activeShowingTextBlock = GetTextBlockFromThemePreview(th);
+                ProcessShowingText();
+                ProcessActiveText();
             }
         });
     }
-
+    
     private void ThemeUIOnDoubleTapped(object? sender, RoutedEventArgs e)
     {
         //Apply the theme and add it to the general setting
@@ -211,14 +284,50 @@ public partial class InstalledThemes : UserControl, ITabPage
         th.Theme.Apply();
         _activeTheme = th.Theme;
         _generalSettings.ThemeFile = th.Theme.Location;
+
+        if (_activeActiveTextBlock != null)
+        {
+            _activeActiveTextBlock.Text = _activeActiveTextBlock.Tag?.ToString();
+        }
+        _activeActiveTextBlock = GetTextBlockFromThemePreview(th);
+        ProcessActiveText();
+        ProcessEditText();
     }
 
-    private async void EditButtonOnClick(object? sender, RoutedEventArgs e)
+    private void EditingThemeOnIsEditingChanged(object? sender, PropertyChangedEventArgs e)
     {
-        //TODO: Add
-        await MessageBox.Show(Language.GetText(LanguageText.ToAdd));
+        if (e.PropertyName == nameof(Theming.Theme.IsBeingEdited)
+            && _activeEditTextBlock != null
+            && (!_editingTheme?.IsBeingEdited ?? true))
+        {
+            _activeEditTextBlock.Text = _activeEditTextBlock.Tag?.ToString();
+            _activeEditTextBlock = null;
+            ProcessActiveText();
+        }
     }
+
+    private void EditButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        if (_editingTheme != null)
+        {
+            _editingTheme.PropertyChanged -= EditingThemeOnIsEditingChanged;
+        }
+
+        var st = (Button)sender!;
+        var th = (MultiRPC.Theming.Theme)st.Tag!;
+        _editingTheme = th;
+        _editorPage.EditTheme(_editingTheme);
+        _editingTheme.PropertyChanged += EditingThemeOnIsEditingChanged;
         
+        if (_activeEditTextBlock != null)
+        {
+            _activeEditTextBlock.Text = _activeEditTextBlock.Tag?.ToString();
+        }
+        _activeEditTextBlock = (TextBlock)((StackPanel)st.Parent).Children[0]!;
+        ProcessEditText();
+        ProcessActiveText();
+    }
+    
     private void CloneButtonOnClick(object? sender, RoutedEventArgs e)
     {
         var st = (Button)sender!;

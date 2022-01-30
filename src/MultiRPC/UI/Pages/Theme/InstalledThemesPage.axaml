@@ -5,7 +5,7 @@
              AttachedToLogicalTree="OnAttachedToLogicalTree"
              DetachedFromLogicalTree="OnDetachedFromLogicalTree"
              mc:Ignorable="d"
-             x:Class="MultiRPC.UI.Pages.Theme.InstalledThemes">
+             x:Class="MultiRPC.UI.Pages.Theme.InstalledThemesPage">
     <Grid RowDefinitions="Auto *">
         <StackPanel Margin="10" Orientation="Horizontal" Spacing="4">
             <Button Content="{Binding TextObservable^}" x:Name="btnAdd" Click="BtnAdd_OnClick" />

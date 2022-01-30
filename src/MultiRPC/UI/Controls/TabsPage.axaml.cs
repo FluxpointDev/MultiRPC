@@ -15,11 +15,14 @@ namespace MultiRPC.UI.Controls;
 
 public sealed partial class TabsPage : UserControl
 {
-    private readonly List<ITabPage> _pages = new List<ITabPage>();
+    public ITabPage this[int index] => _pages[index];
+    public ITabPage this[Index index] => _pages[index];
+
     public void AddTabs(IEnumerable<ITabPage> pages) => _pages.AddRange(pages);
     public void AddTabs(ITabPage[] pages) => _pages.AddRange(pages);
     public void AddTab(ITabPage page) => _pages.Add(page);
 
+    private readonly List<ITabPage> _pages = new List<ITabPage>();
     private Rectangle? _activePageRectangle;
     private static readonly Language NaLang = Language.GetLanguage(LanguageText.NA);
     private static DisableSettings _disableSettings => SettingManager<DisableSettings>.Setting;

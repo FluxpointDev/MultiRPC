@@ -8,6 +8,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Fonderie;
 using MultiRPC.Extensions;
 using MultiRPC.Theming.JsonConverter;
 using TinyUpdate.Core.Logging;
@@ -28,7 +29,7 @@ public enum ThemeType
 }
 
 //TODO: Add bool to tell if the theme has any assets (for making things quicker)
-public class Theme
+public partial class Theme
 {
     private string _filepath = null!;
     private ZipArchive? _archive;
@@ -47,10 +48,13 @@ public class Theme
         { Converters = { new VersionJsonConverter() }}).Metadata;
     }
     
+    [GeneratedProperty]
+    private bool isBeingEdited;
+
     /// <summary>
     /// The theme that is actively being used by the application
     /// </summary>
-    public static Theme? ActiveTheme { get; internal set; }
+    public static Theme? ActiveTheme { get; private set; }
 
     /// <summary>
     /// What colouring is in the theme
@@ -71,7 +75,7 @@ public class Theme
     /// What mode this theme is in
     /// </summary>
     public ThemeType ThemeType { get; private set; } = ThemeType.Legacy;
-
+    
     public static event EventHandler<Theme>? NewTheme;
     
     public static event EventHandler<Theme>? ActiveThemeChanged;
