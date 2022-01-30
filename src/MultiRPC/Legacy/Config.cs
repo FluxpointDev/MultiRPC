@@ -45,7 +45,7 @@ public class Config
     public bool InviteWarn { get; set; }
 
     /// <summary> What the user name and 4 digit number was last time this app was ran </summary>
-    public string LastUser { get; set; } = string.Empty;
+    public string LastUser { get; set; }
 
     /// <summary> Default rich presence config </summary>
     public DefaultConfig MultiRPC { get; set; } = new DefaultConfig();
@@ -55,7 +55,8 @@ public class Config
 
     public bool ShowPageTooltips { get; set; } = true;
     
-    public bool HadTriggerWarning { get; set; }
+    //This ended up not being used as it was for trigger's which never got into the public release of MultiRPC
+    //public bool HadTriggerWarning { get; set; }
 
     private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Config));
     /// <summary> Get the settings stored on disk </summary>
@@ -89,10 +90,10 @@ public class DefaultConfig
     public string SmallText { get; set; }
     public string Text1 { get; set; } = Language.GetText(LanguageText.Hello);
     public string Text2 { get; set; } = Language.GetText(LanguageText.World);
-    public string Button1Name { get; set; } = string.Empty;
-    public string Button1Url { get; set; } = string.Empty;
-    public string Button2Name { get; set; } = string.Empty;
-    public string Button2Url { get; set; } = string.Empty;
+    public string? Button1Name { get; set; }
+    public string? Button1Url { get; set; }
+    public string? Button2Name { get; set; }
+    public string? Button2Url { get; set; }
 }
 
 /// <summary> Disabled settings config </summary>

@@ -31,9 +31,6 @@ public enum ImagesType
 //TODO: reset id border if setting changed to not check for id
 public partial class BaseRpcControl : UserControl, ITabPage
 {
-    private static string[]? _localizedMultiRPCAssetsNames;
-    private static readonly ProfileAssetsManager MultiRPCAssetManager = ProfileAssetsManager.GetOrAddManager(Constants.MultiRPCID);
-
     private bool _lastIDCheckStatus = true;
     private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
     private bool _lastValid;
@@ -46,8 +43,9 @@ public partial class BaseRpcControl : UserControl, ITabPage
 
     public bool RpcValid => 
         stpContent.Children
-            .Where(x => x is TextBox && x.Name != nameof(txtClientID))
-            .Select(x => ((ControlValidation?)((TextBox)x).DataContext)?.LastResultStatus)
+            .Skip(1) //txtClientID is always the first control, just skip it
+            .Where(x => x.DataContext is ControlValidation)
+            .Select(x => ((ControlValidation?)x.DataContext)?.LastResultStatus)
             .All(x => x.GetValueOrDefault(true)) && _lastIDCheckStatus;
 
     public event EventHandler<bool>? PresenceValidChanged;
@@ -56,7 +54,6 @@ public partial class BaseRpcControl : UserControl, ITabPage
     public void ChangeRichPresence(RichPresence richPresence)
     {
         RichPresence = richPresence;
-
         if (!IsInitialized)
         {
             return;
@@ -65,21 +62,13 @@ public partial class BaseRpcControl : UserControl, ITabPage
         txtClientID.Text = richPresence.Id.ToString();
         txtText1.Text = richPresence.Profile.Details;
         txtText2.Text = richPresence.Profile.State;
-        txtLargeKey.Text = richPresence.Profile.LargeKey;
         txtLargeText.Text = richPresence.Profile.LargeText;
-        txtSmallKey.Text = richPresence.Profile.SmallKey;
         txtSmallText.Text = richPresence.Profile.SmallText;
         txtButton1Url.Text = richPresence.Profile.Button1Url;
         txtButton1Text.Text = richPresence.Profile.Button1Text;
         txtButton2Url.Text = richPresence.Profile.Button2Url;
         txtButton2Text.Text = richPresence.Profile.Button2Text;
         ckbElapsedTime.IsChecked = richPresence.Profile.ShowTime;
-    }
-        
-    private void OnAttachedToLogicalTree(object? sender, LogicalTreeAttachmentEventArgs e)
-    {
-        txtClientID.Text = RichPresence.Id.ToString();
-        this.AttachedToLogicalTree -= OnAttachedToLogicalTree;
     }
 
     public void Initialize(bool loadXaml)
@@ -99,7 +88,7 @@ public partial class BaseRpcControl : UserControl, ITabPage
         {
             if (args.PropertyName == nameof(DisableSettings.TokenCheck))
             {
-                    
+                //TODO: Add token check 
             }
         };
         
@@ -124,124 +113,41 @@ public partial class BaseRpcControl : UserControl, ITabPage
                     _lastIDCheckStatus = true;
                 }
                 return new CheckResult(true);
-            }, OnProfileChanged);
-            this.AttachedToLogicalTree += OnAttachedToLogicalTree;
+            }, OnProfileChanged, RichPresence.Id.ToString());
         }
 
-        txtText1.AddValidation(Language.GetLanguage(LanguageText.Text1), s => RichPresence.Profile.Details = s, Check, OnProfileChanged, RichPresence.Profile.Details);
-        txtText2.AddValidation(Language.GetLanguage(LanguageText.Text2), s => RichPresence.Profile.State = s, Check, OnProfileChanged, RichPresence.Profile.State);
-        txtLargeText.AddValidation(Language.GetLanguage(LanguageText.LargeText), s => RichPresence.Profile.LargeText = s, Check, OnProfileChanged, RichPresence.Profile.LargeText);
-        txtSmallText.AddValidation(Language.GetLanguage(LanguageText.SmallText), s => RichPresence.Profile.SmallText = s, Check, OnProfileChanged, RichPresence.Profile.SmallText);
+        txtText1.AddValidation(Language.GetLanguage(LanguageText.Text1), s => RichPresence.Profile.Details = s, s => s.Check(), OnProfileChanged, RichPresence.Profile.Details);
+        txtText2.AddValidation(Language.GetLanguage(LanguageText.Text2), s => RichPresence.Profile.State = s, s => s.Check(), OnProfileChanged, RichPresence.Profile.State);
+        txtLargeText.AddValidation(Language.GetLanguage(LanguageText.LargeText), s => RichPresence.Profile.LargeText = s, s => s.Check(), OnProfileChanged, RichPresence.Profile.LargeText);
+        txtSmallText.AddValidation(Language.GetLanguage(LanguageText.SmallText), s => RichPresence.Profile.SmallText = s, s => s.Check(), OnProfileChanged, RichPresence.Profile.SmallText);
 
-        txtButton1Url.AddValidation(Language.GetLanguage(LanguageText.Button1Url), s => RichPresence.Profile.Button1Url = s, x => CheckUrl(x), OnProfileChanged, RichPresence.Profile.Button1Url);
-        txtButton1Text.AddValidation(Language.GetLanguage(LanguageText.Button1Text), s => RichPresence.Profile.Button1Text = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.Button1Text);
-        txtButton2Url.AddValidation(Language.GetLanguage(LanguageText.Button2Url), s => RichPresence.Profile.Button2Url = s, x => CheckUrl(x), OnProfileChanged, RichPresence.Profile.Button2Url);
-        txtButton2Text.AddValidation(Language.GetLanguage(LanguageText.Button2Text), s => RichPresence.Profile.Button2Text = s, s => Check(s, 32), OnProfileChanged, RichPresence.Profile.Button2Text);
+        txtButton1Url.AddValidation(Language.GetLanguage(LanguageText.Button1Url), s => RichPresence.Profile.Button1Url = s, x => x.CheckUrl(), OnProfileChanged, RichPresence.Profile.Button1Url);
+        txtButton1Text.AddValidation(Language.GetLanguage(LanguageText.Button1Text), s => RichPresence.Profile.Button1Text = s, s => s.Check(32), OnProfileChanged, RichPresence.Profile.Button1Text);
+        txtButton2Url.AddValidation(Language.GetLanguage(LanguageText.Button2Url), s => RichPresence.Profile.Button2Url = s, x => x.CheckUrl(), OnProfileChanged, RichPresence.Profile.Button2Url);
+        txtButton2Text.AddValidation(Language.GetLanguage(LanguageText.Button2Text), s => RichPresence.Profile.Button2Text = s, s => s.Check(32), OnProfileChanged, RichPresence.Profile.Button2Text);
 
-        ckbElapsedTime.IsChecked = RichPresence.UseTimestamp;
+        ckbElapsedTime.IsChecked = RichPresence.Profile.ShowTime;
         ckbElapsedTime.DataContext = Language.GetLanguage(LanguageText.ShowElapsedTime);
-
-        _ = GetAssets();
-    }
-
-    private string GetLocalizedOrTitleCase(string s)
-    {
-        switch (s)
-        {
-            case "multirpc":
-                return Language.GetText(LanguageText.MultiRPC);
-            case "mmlol":
-                return "MmLol";
-            case "firefoxnightly":
-                return "Firefox Nightly";
-            case "christmas":
-                return Language.GetText(LanguageText.Christmas);
-            case "present":
-                return Language.GetText(LanguageText.Present);
-            case "popcorn":
-                return Language.GetText(LanguageText.Popcorn);
-            case "games":
-                return Language.GetText(LanguageText.Games);
-            default:
-                return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(s);
-        }
     }
     
-    private async Task GetAssets()
-    {
-        //TODO: See why our assets crash avalonia ui when selecting item in autocomplete
-        if (ImageType == ImagesType.Custom)
-        {
-            cboLargeKey.IsVisible = false;
-            cboSmallKey.IsVisible = false;
-
-            txtLargeKey.IsVisible = true;
-            txtSmallKey.IsVisible = true;
-
-            ProfileChanged += async (sender, args) =>
-            {
-                await RichPresence.AssetsManager.GetAssetsAsync();
-                //txtLargeKey.Items = RichPresence.AssetsManager.Assets?.Select(x => x.Name).ToImmutableArray();
-                //txtSmallKey.Items = txtLargeKey.Items;
-            };
-
-            //TODO: Add a way to check if it's an url and to check the url
-            txtLargeKey.AddValidation(Language.GetLanguage(LanguageText.LargeKey), s => RichPresence.Profile.LargeKey = s, s => Check(s, 256), OnProfileChanged, RichPresence.Profile.LargeKey);
-            txtSmallKey.AddValidation(Language.GetLanguage(LanguageText.SmallKey), s => RichPresence.Profile.SmallKey = s, s => Check(s, 256), OnProfileChanged, RichPresence.Profile.SmallKey);
-            
-            await RichPresence.AssetsManager.GetAssetsAsync();
-            //txtLargeKey.Items = RichPresence.AssetsManager.Assets?.Select(x => x.Name).ToImmutableArray();
-            //txtSmallKey.Items = txtLargeKey.Items;
-            return;
-        }
-        
-        await MultiRPCAssetManager.GetAssetsAsync();
-        if (MultiRPCAssetManager.Assets == null)
-        {
-            //TODO: Do something else like retry later
-            return;
-        }
-        
-        Language.LanguageChanged += (sender, args) =>
-        {
-            var largeKey = cboLargeKey.SelectedIndex;
-            var smallKey = cboSmallKey.SelectedIndex;
-
-            cboLargeKey.Items = _localizedMultiRPCAssetsNames = MultiRPCAssetManager.Assets
-                .Select(x => GetLocalizedOrTitleCase(x.Name))
-                .Prepend(Language.GetText(LanguageText.NoImage)).ToArray();
-            cboSmallKey.Items = cboLargeKey.Items;
-            cboLargeKey.SelectedIndex = largeKey;
-            cboSmallKey.SelectedIndex = smallKey;
-        };
-
-        cboLargeKey.Items = _localizedMultiRPCAssetsNames = MultiRPCAssetManager.Assets
-            .Select(x => GetLocalizedOrTitleCase(x.Name))
-            .Prepend(Language.GetText(LanguageText.NoImage)).ToArray();
-        cboSmallKey.Items = cboLargeKey.Items;
-        var largeKey = MultiRPCAssetManager.Assets.IndexOf(x => x?.Name == RichPresence.Profile.LargeKey);
-        if (largeKey == -1)
-        {
-            largeKey = 0;
-        }
-        cboLargeKey.SelectedIndex = largeKey;
-
-        var smallKey = MultiRPCAssetManager.Assets.IndexOf(x => x?.Name == RichPresence.Profile.SmallKey);
-        if (smallKey == -1)
-        {
-            smallKey = 0;
-        }
-        cboSmallKey.SelectedIndex = smallKey;
-    }
-        
-    private void OnProfileChanged(bool _)
-    {
-        ProfileChanged?.Invoke(this, EventArgs.Empty);
-    }
-
     public void AddExtraControl(Control control)
     {
         gidContent.Children.Add(control);
+    }
+
+    public void SetLargeControl(Control control)
+    {
+        stpContent.Children.Insert(stpContent.Children.IndexOf(txtLargeText), control);
+    }
+    
+    public void SetSmallControl(Control control)
+    {
+        stpContent.Children.Insert(stpContent.Children.IndexOf(txtSmallText), control);
+    }
+    
+    public void OnProfileChanged(bool _)
+    {
+        ProfileChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private async Task CheckID(string s)
@@ -275,76 +181,9 @@ public partial class BaseRpcControl : UserControl, ITabPage
         CustomToolTip.SetTip(txtClientID, error);
         ProfileChanged?.Invoke(this, EventArgs.Empty);
     }
-        
-    private CheckResult CheckUrl(string s, int byteCount = 512)
-    {
-        if (string.IsNullOrWhiteSpace(s) || Uri.TryCreate(s, UriKind.Absolute, out _))
-        {
-            return s.CheckBytes(byteCount)
-                ? new CheckResult(true)
-                : new CheckResult(false, Language.GetText(LanguageText.UriTooBig));
-        }
-
-        return new CheckResult(false, Language.GetText(LanguageText.InvalidUri));
-    }
-
-    private static CheckResult Check(string s) => Check(s, 128);
-    private static CheckResult Check(string s, int max)
-    {
-        if (s.Length == 1)
-        {
-            return new CheckResult(false, Language.GetText(LanguageText.OneChar));
-        }
-
-        return s.CheckBytes(max)
-            ? new CheckResult(true)
-            : new CheckResult(false, Language.GetText(LanguageText.TooManyChars));
-    }
-        
-    private void CboLargeKey_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (e.AddedItems.Count == 0
-            || _localizedMultiRPCAssetsNames == null
-            || MultiRPCAssetManager.Assets == null)
-        {
-            return;
-        }
-
-        var key = e.AddedItems[0]?.ToString();
-        var ind = _localizedMultiRPCAssetsNames.IndexOf(x => x == key);
-        if (ind <= 0)
-        {
-            RichPresence.Profile.LargeKey = string.Empty;
-            return;
-        }
-        
-        RichPresence.Profile.LargeKey = cboLargeKey.SelectedIndex != 0 ? 
-            MultiRPCAssetManager.Assets[ind - 1].Name : string.Empty;
-    }
-
-    private void CboSmallKey_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (e.AddedItems.Count == 0
-            || _localizedMultiRPCAssetsNames == null
-            || MultiRPCAssetManager.Assets == null)
-        {
-            return;
-        }
-
-        var key = e.AddedItems[0]?.ToString();
-        var ind = _localizedMultiRPCAssetsNames.IndexOf(x => x == key);
-        if (ind <= 0)
-        {
-            RichPresence.Profile.SmallKey = string.Empty;
-            return;
-        }
-        
-        RichPresence.Profile.SmallKey = cboSmallKey.SelectedIndex != 0 ? 
-            MultiRPCAssetManager.Assets[ind - 1].Name : string.Empty;
-    }
 
     private void CkbElapsedTime_OnChange(object? sender, RoutedEventArgs e)
     {
-        RichPresence.UseTimestamp = ckbElapsedTime.IsChecked.GetValueOrDefault(false);
+        RichPresence.Profile.ShowTime = ckbElapsedTime.IsChecked.GetValueOrDefault(false);
     }
 }

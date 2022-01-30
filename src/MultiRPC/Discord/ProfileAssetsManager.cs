@@ -39,7 +39,7 @@ public class ProfileAssetsManager
     private Lazy<DiscordAsset[]?> _lazyAssets;
     public DiscordAsset[]? Assets => _lazyAssets.Value;
 
-    private DiscordAsset[]? GetAssets()
+    public DiscordAsset[]? GetAssets()
     {
         HttpResponseMessage response;
         try
@@ -97,7 +97,7 @@ public class DiscordAsset
     [JsonPropertyName("type")]
     public int Type { get; set; }
     
-    public static Uri? GetUri(string applicationId, string key, ulong? assetId)
+    public static Uri? GetUri(string applicationId, string? key, ulong? assetId)
     {
         if (assetId.HasValue)
         {

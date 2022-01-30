@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,6 +48,7 @@ public partial class RpcView : UserControl
     private DateTime? _timerTime;
     private readonly Timer _timer;
     private readonly List<IDisposable> _textBoxDisposables = new List<IDisposable>();
+
     static RpcView()
     {
         AssetManager.RegisterForAssetReload("Logo.svg", () => _logoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") }));
@@ -72,13 +74,13 @@ public partial class RpcView : UserControl
         get => _rpcProfile;
         set => UpdateFromRichPresence(value);
     }
-    
+
     public RpcView()
     {
         InitializeComponent();
         AssetManager.ReloadAssets += (sender, args) => this.RunUILogic(() => UpdateFromType());
         _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException();
-        AssetManager.RegisterForAssetReload("Loading.gif",() =>
+        AssetManager.RegisterForAssetReload("Loading.gif", () =>
         {
             if (ViewType == ViewType.Loading)
             {
@@ -108,7 +110,7 @@ public partial class RpcView : UserControl
     {
         brdContent.Background = brush;
     }
-    
+
     public void UpdateForeground(IBrush brush)
     {
         tblTitle.Foreground = brush;
@@ -124,7 +126,7 @@ public partial class RpcView : UserControl
             CustomToolTip.SetTip(gifLarge, text);
             return;
         }
-            
+
         if (e.PropertyName == nameof(RpcProfile.Profile.SmallText))
         {
             var text = RpcProfile!.Profile.SmallText;
@@ -132,7 +134,7 @@ public partial class RpcView : UserControl
             CustomToolTip.SetTip(gridSmallImage, text);
             CustomToolTip.SetTip(gifSmallImage, text);
         }
-        
+
         if (_rpcProfile == null)
         {
             return;
@@ -161,12 +163,29 @@ public partial class RpcView : UserControl
             _timer.Stop();
             tblTime.Text = string.Empty;
         }
-            
+
         tblTitle.Text = e.Name;
         tblText1.Text = e.Presence.Details;
         tblText2.Text = e.Presence.State;
-            
-        if (!e.Presence.HasAssets())
+        
+        UpdateImages(
+            e.Presence.Assets?.SmallImageText, 
+            e.Presence.Assets?.LargeImageText,
+            e.Presence.Assets?.SmallImageKey,
+            e.Presence.Assets?.LargeImageKey,
+            e.Presence.Assets?.SmallImageID,
+            e.Presence.Assets?.LargeImageID,
+            e.ApplicationID);
+    });
+
+    private void UpdateImages(
+        string? smallImageText, string? largeImageText, 
+        string? smallImageKey, string? largeImageKey,
+        ulong? smallImageID, ulong? largeImageID,
+        string appID)
+    {
+        if (string.IsNullOrWhiteSpace(smallImageKey)
+            && string.IsNullOrWhiteSpace(largeImageKey))
         {
             brdLarge.IsVisible = false;
             gridSmallImage.IsVisible = false;
@@ -176,15 +195,15 @@ public partial class RpcView : UserControl
             CustomToolTip.SetTip(gifSmallImage, null);
             return;
         }
-        
+
         //Update key and asset
-        CustomToolTip.SetTip(brdLarge, e.Presence.Assets.LargeImageText);
-        CustomToolTip.SetTip(gifLarge, e.Presence.Assets.LargeImageText);
-        CustomToolTip.SetTip(gridSmallImage, e.Presence.Assets.SmallImageText);
-        CustomToolTip.SetTip(gifSmallImage, e.Presence.Assets.SmallImageText);
-        _ = UpdateSmallImage(DiscordAsset.GetUri(e.ApplicationID, e.Presence.Assets.SmallImageKey, e.Presence.Assets.SmallImageID));
-        _ = UpdateLargeImage(DiscordAsset.GetUri(e.ApplicationID, e.Presence.Assets.LargeImageKey, e.Presence.Assets.LargeImageID));
-    });
+        CustomToolTip.SetTip(brdLarge, largeImageText);
+        CustomToolTip.SetTip(gifLarge, largeImageText);
+        CustomToolTip.SetTip(gridSmallImage, smallImageText);
+        CustomToolTip.SetTip(gifSmallImage, smallImageText);
+        _ = UpdateSmallImage(DiscordAsset.GetUri(appID, smallImageKey, smallImageID));
+        _ = UpdateLargeImage(DiscordAsset.GetUri(appID, largeImageKey, largeImageID));
+    }
 
     private void UpdateFromRichPresence(RichPresence? presence)
     {
@@ -209,8 +228,15 @@ public partial class RpcView : UserControl
             DoBinding(_rpcProfile.Profile, nameof(presence.Profile.State), tblText2));
 
         _rpcProfile.Profile.PropertyChanged += ProfileOnPropertyChanged;
-        ProfileOnPropertyChanged(this, new PropertyChangedEventArgs(nameof(RpcProfile.Profile.LargeText)));
-        ProfileOnPropertyChanged(this, new PropertyChangedEventArgs(nameof(RpcProfile.Profile.SmallText)));
+        _rpcProfile.AssetsManager.GetAssets();
+        UpdateImages(
+            _rpcProfile.Profile.SmallText, 
+            _rpcProfile.Profile.LargeText,
+            _rpcProfile.Profile.SmallKey, 
+            _rpcProfile.Profile.LargeKey,
+            _rpcProfile.AssetsManager.Assets?.FirstOrDefault(x => x.Name == _rpcProfile.Profile.SmallKey)?.ID, 
+            _rpcProfile.AssetsManager.Assets?.FirstOrDefault(x => x.Name == _rpcProfile.Profile.LargeKey)?.ID, 
+            _rpcProfile.Id.ToString());
     }
 
     private async Task UpdateLargeImage(Uri? uri)

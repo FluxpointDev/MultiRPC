@@ -27,6 +27,10 @@ public static class SettingManager<T>
         {
             settingNotify.PropertyChanged += (sender, args) =>
             {
+                if (!Directory.Exists(Constants.SettingsFolder))
+                {
+                    Directory.CreateDirectory(Constants.SettingsFolder);
+                }
                 setting.Save();
             };
         }

@@ -12,8 +12,8 @@
   </PropertyGroup>
 
   <ItemGroup Label="Packages">
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.11" />
-    <PackageReference Include="Avalonia.Svg" Version="0.10.11.1" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.12" />
+    <PackageReference Include="Avalonia.Svg" Version="0.10.12" />
     <PackageReference Include="AvaloniaColorPicker" Version="1.1.0" />
     <PackageReference Include="Splat" Version="14.1.17" />
     <PackageReference Include="System.IO.Pipelines" Version="6.0.1" />
@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)'=='Debug'" Label="Debug Packages">
-    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.11" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.12" />
   </ItemGroup>
   
   <ItemGroup Label="Resources">

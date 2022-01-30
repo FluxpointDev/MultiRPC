@@ -172,7 +172,7 @@ public class RpcClient
         pre.Buttons = pre.Buttons?
             .Where(x => !string.IsNullOrWhiteSpace(x.Url) && !string.IsNullOrWhiteSpace(x.Label))
             .ToArray();
-        pre.Timestamps = richPresence.UseTimestamp ? new Timestamps
+        pre.Timestamps = richPresence.Profile.ShowTime ? new Timestamps
         {
             Start = _rpcStart
         } : null;

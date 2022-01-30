@@ -93,10 +93,10 @@ public static class MigrateData
             multiRPC.Presence.Profile.SmallText = oldConfig.MultiRPC.SmallText;
             multiRPC.Presence.Profile.Details = oldConfig.MultiRPC.Text1;
             multiRPC.Presence.Profile.State = oldConfig.MultiRPC.Text2;
-            multiRPC.Presence.Profile.Button1Text = oldConfig.MultiRPC.Button1Name;
-            multiRPC.Presence.Profile.Button1Url = oldConfig.MultiRPC.Button1Url;
-            multiRPC.Presence.Profile.Button2Text = oldConfig.MultiRPC.Button2Name;
-            multiRPC.Presence.Profile.Button2Url = oldConfig.MultiRPC.Button2Url;
+            multiRPC.Presence.Profile.Button1Text = oldConfig.MultiRPC.Button1Name ?? string.Empty;
+            multiRPC.Presence.Profile.Button1Url = oldConfig.MultiRPC.Button1Url ?? string.Empty;
+            multiRPC.Presence.Profile.Button2Text = oldConfig.MultiRPC.Button2Name ?? string.Empty;
+            multiRPC.Presence.Profile.Button2Url = oldConfig.MultiRPC.Button2Url ?? string.Empty;
         }
 
         // Process old profiles
@@ -128,6 +128,10 @@ public static class MigrateData
                 var newFileLoc = Path.Combine(Constants.ThemeFolder, Path.GetFileName(file));
                 if (!File.Exists(newFileLoc) && Theme.Load(file) != null)
                 {
+                    if (!Directory.Exists(Constants.ThemeFolder))
+                    {
+                        Directory.CreateDirectory(Constants.ThemeFolder);
+                    }
                     File.Copy(file, newFileLoc);
                 }
             }

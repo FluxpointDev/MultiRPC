@@ -19,9 +19,6 @@ public partial class RichPresence : IEquatable<RichPresence>
 
     [GeneratedProperty, JsonPropertyName("ID")]
     private long _id;
-
-    [GeneratedProperty] 
-    private bool _useTimestamp;
     
     [JsonIgnore]
     public DiscordRPC.RichPresence Presence => Profile.ToRichPresence();
@@ -41,7 +38,7 @@ public partial class RichPresence : IEquatable<RichPresence>
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return _name == other._name && _id == other._id && _useTimestamp == other._useTimestamp && Profile.Equals(other.Profile);
+        return _name == other._name && _id == other._id && Profile.Equals(other.Profile);
     }
 
     public override bool Equals(object? obj)
@@ -54,6 +51,6 @@ public partial class RichPresence : IEquatable<RichPresence>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_name, _id, _useTimestamp, Profile);
+        return HashCode.Combine(_name, _id, Profile);
     }
 }

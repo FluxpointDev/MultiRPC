@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -34,25 +36,35 @@ public partial class CustomPage : RpcPage
             //Don't do anything
         }
     }
-    public override event EventHandler? PresenceChanged;
     public override bool PresenceValid => _rpcControl.RpcValid;
+    public override event EventHandler? PresenceChanged;
     public override event EventHandler<bool>? PresenceValidChanged;
 
     private readonly ProfilesSettings _profilesSettings = SettingManager<ProfilesSettings>.Setting;
-    private RichPresence _activeProfile = null!;
-    private BaseRpcControl _rpcControl = null!;
-    private Button? _activeButton;
-    private IDisposable? _textBindingDis;
     private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
-    private SvgImage _svgHelpImage = null!;
+    private readonly Dictionary<string, IBitmap> _helpImages = new Dictionary<string, IBitmap>();
     private Image _helpImage = null!;
     private Image? _selectedHelpImage;
-    private readonly Dictionary<string, IBitmap> _helpImages = new Dictionary<string, IBitmap>();
+    private RichPresence _activeProfile = null!;
+    private IDisposable? _textBindingDis;
+    private Button? _activeButton;
+    private BaseRpcControl _rpcControl = null!;
+    private SvgImage _svgHelpImage = null!;
     private readonly Language _editLang = Language.GetLanguage(LanguageText.ProfileEdit);
     private readonly Language _shareLang = Language.GetLanguage(LanguageText.ProfileShare);
     private readonly Language _addLang = Language.GetLanguage(LanguageText.ProfileAdd);
     private readonly Language _deleteLang = Language.GetLanguage(LanguageText.ProfileDelete);
     private readonly Language _cloneLang = Language.GetLanguage(LanguageText.ProfileClone);
+    private readonly AutoCompleteBox txtLargeKey = new AutoCompleteBox
+    {
+        [!AutoCompleteBox.TextProperty] = new Binding("Result", BindingMode.TwoWay),
+        [!AutoCompleteBox.WatermarkProperty] = new Binding("Lang.TextObservable^")
+    };
+    private readonly AutoCompleteBox txtSmallKey = new AutoCompleteBox
+    {
+        [!AutoCompleteBox.TextProperty] = new Binding("Result", BindingMode.TwoWay),
+        [!AutoCompleteBox.WatermarkProperty] = new Binding("Lang.TextObservable^")
+    };
 
     public override void Initialize(bool loadXaml)
     {
@@ -61,7 +73,8 @@ public partial class CustomPage : RpcPage
             ContentPadding = new Thickness(0);
         }
         InitializeComponent(loadXaml);
-            
+
+        //All of this page logic goes here
         _svgHelpImage = SvgImageHelper.LoadImage("Icons/Help.svg");
         AssetManager.RegisterForAssetReload("Icons/Help.svg", () => _svgHelpImage = SvgImageHelper.LoadImage("Icons/Help.svg"));
         btnProfileEdit.AddSvgAsset("Icons/Pencil.svg");
@@ -69,39 +82,6 @@ public partial class CustomPage : RpcPage
         btnProfileAdd.AddSvgAsset("Icons/Add.svg");
         btnProfileDelete.AddSvgAsset("Icons/Delete.svg");
         btnProfileClone.AddSvgAsset("Icons/Clone.svg");
-
-        //Setup the RPC control
-        _rpcControl = new BaseRpcControl
-        {
-            ImageType = ImagesType.Custom,
-            GrabID = true,
-            TabName = Language.GetLanguage(LanguageText.CustomPage),
-            Margin = new Thickness(10),
-        };
-        _rpcControl.ProfileChanged += (sender, args) => PresenceChanged?.Invoke(sender, args);
-        _rpcControl.PresenceValidChanged += (sender, b) => PresenceValidChanged?.Invoke(sender, b);
-
-        //Process current profiles and setup for processing new profiles and profiles that get deleted
-        wrpProfileSelector.Children.AddRange(_profilesSettings.Profiles.Select(MakeProfileSelector));
-        _profilesSettings.Profiles.CollectionChanged += (sender, args) =>
-        {
-            foreach (RichPresence profile in args.OldItems ?? Array.Empty<object>())
-            {
-                wrpProfileSelector.Children.Remove(wrpProfileSelector.Children.First<IControl>(x => x.DataContext == profile));
-            }
-            foreach (RichPresence profile in args.NewItems ?? Array.Empty<object>())
-            {
-                wrpProfileSelector.Children.Add(MakeProfileSelector(profile));
-            }
-        };
-        BtnChangePresence(wrpProfileSelector.Children[_profilesSettings.LastSelectedProfileIndex], null!);
-
-        //Process the tab pages
-        var tabPage = new TabsPage();
-        Grid.SetRow(tabPage, 2);
-        grdContent.Children.Insert(grdContent.Children.Count - 1, tabPage);
-        tabPage.AddTab(_rpcControl);
-        tabPage.Initialize();
 
         //Setup tooltips
         _editLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(btnProfileEdit, x));
@@ -135,13 +115,50 @@ public partial class CustomPage : RpcPage
         };
         Grid.SetColumn(_helpImage, 1);
         helpGrid.Children.Add(_helpImage);
-        _rpcControl.AddExtraControl(helpGrid);
             
         _disableSettings.PropertyChanged += (sender, args) =>
         {
             stpHelpIcons.IsVisible = !_disableSettings.HelpIcons;
             _helpImage.IsVisible = stpHelpIcons.IsVisible;
         };
+        
+        //All of the Rpc control goes here
+        _rpcControl = new BaseRpcControl
+        {
+            ImageType = ImagesType.Custom,
+            GrabID = true,
+            TabName = Language.GetLanguage(LanguageText.CustomPage),
+            Margin = new Thickness(10),
+        };
+        _rpcControl.ProfileChanged += (sender, args) => PresenceChanged?.Invoke(sender, args);
+        _rpcControl.PresenceValidChanged += (sender, b) => PresenceValidChanged?.Invoke(sender, b);
+
+        //Process current profiles and setup for processing new profiles and profiles that get deleted
+        wrpProfileSelector.Children.AddRange(_profilesSettings.Profiles.Select(MakeProfileSelector));
+        _profilesSettings.Profiles.CollectionChanged += (sender, args) =>
+        {
+            foreach (RichPresence profile in args.OldItems ?? Array.Empty<object>())
+            {
+                wrpProfileSelector.Children.Remove(wrpProfileSelector.Children.First<IControl>(x => x.DataContext == profile));
+            }
+            foreach (RichPresence profile in args.NewItems ?? Array.Empty<object>())
+            {
+                wrpProfileSelector.Children.Add(MakeProfileSelector(profile));
+            }
+        };
+        BtnChangePresence(wrpProfileSelector.Children[_profilesSettings.LastSelectedProfileIndex], null!);
+
+        //TODO: Add datacontext to autocompletebox
+        //Process the tab pages
+        var tabPage = new TabsPage();
+        Grid.SetRow(tabPage, 2);
+        grdContent.Children.Insert(grdContent.Children.Count - 1, tabPage);
+        tabPage.AddTab(_rpcControl);
+        tabPage.Initialize();
+        _rpcControl.AddExtraControl(helpGrid);
+        _rpcControl.SetLargeControl(txtLargeKey);
+        _rpcControl.SetSmallControl(txtSmallKey);
+        _ = GetAssets();
     }
 
     private Image MakeHelpImage(string helpImage)
@@ -229,7 +246,11 @@ public partial class CustomPage : RpcPage
         _activeProfile = (RichPresence)_activeButton.DataContext!;
         _textBindingDis?.Dispose();
         AddTextBinding();
-        btnProfileDelete.IsVisible = _profilesSettings.Profiles.First() != _activeProfile;
+        btnProfileDelete.IsVisible = !_profilesSettings.Profiles.First().Equals(_activeProfile);
+
+        /* This sets the controls for rpc page */
+        txtLargeKey.Text = _activeProfile.Profile.LargeKey;
+        txtSmallKey.Text = _activeProfile.Profile.SmallKey;
 
         _rpcControl.ChangeRichPresence(_activeProfile);
         RichPresence = _activeProfile;
@@ -275,5 +296,31 @@ public partial class CustomPage : RpcPage
         profiles.Add(profile);
 
         BtnChangePresence(wrpProfileSelector.Children[^1], e);
+    }
+    
+    /*From here this is all of the RPC logic we add into the BaseRpcControl*/
+    
+    private async Task GetAssets()
+    {
+        //TODO: See why our assets crash avalonia ui when selecting item in autocomplete
+        _rpcControl.ProfileChanged += async (sender, args) =>
+        {
+            await RichPresence.AssetsManager.GetAssetsAsync();
+            //txtLargeKey.Items = RichPresence.AssetsManager.Assets?.Select(x => x.Name).ToImmutableArray();
+            //txtSmallKey.Items = txtLargeKey.Items;
+        };
+
+        //TODO: Add a way to check if it's an url and to check the url
+        txtLargeKey.AddValidation(Language.GetLanguage(LanguageText.LargeKey), s => RichPresence.Profile.LargeKey = s, s => s.Check(256), OnProfileChanged, RichPresence.Profile.LargeKey);
+        txtSmallKey.AddValidation(Language.GetLanguage(LanguageText.SmallKey), s => RichPresence.Profile.SmallKey = s, s => s.Check(256), OnProfileChanged, RichPresence.Profile.SmallKey);
+            
+        await RichPresence.AssetsManager.GetAssetsAsync();
+        //txtLargeKey.Items = RichPresence.AssetsManager.Assets?.Select(x => x.Name).ToImmutableArray();
+        //txtSmallKey.Items = txtLargeKey.Items;
+    }
+    
+    private void OnProfileChanged(bool e)
+    {
+        _rpcControl.OnProfileChanged(e);
     }
 }
