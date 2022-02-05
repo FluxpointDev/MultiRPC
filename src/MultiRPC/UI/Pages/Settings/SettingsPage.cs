@@ -30,6 +30,7 @@ public partial class SettingsPage : SidePage
             SettingsTab? settingPage = null;
             SettingSourceAttribute? sourceAttribute = null;
             LanguageSourceAttribute? languageSourceAttribute = null;
+            IsEditableAttribute? editAttribute = null;
                 
             var type = setting.GetType();
             foreach (var settingProperty in type.GetProperties())
@@ -49,6 +50,9 @@ public partial class SettingsPage : SidePage
                             break;
                         case LanguageSourceAttribute settingLanguageSourceAttribute:
                             languageSourceAttribute = settingLanguageSourceAttribute;
+                            break;
+                        case IsEditableAttribute isEditableAttribute:
+                            editAttribute = isEditableAttribute;
                             break;
                     }
                 }
@@ -76,15 +80,25 @@ public partial class SettingsPage : SidePage
                     TabName = Language.GetLanguage(setting.Name),
                     Margin = new Thickness(10)
                 };
+                
+                //Get if the control can be edited
+                var isEditable = true;
+                if (editAttribute != null)
+                {
+                    var editMethod = !string.IsNullOrEmpty(editAttribute.MethodName) ? 
+                        setting.GetType().GetMethod(editAttribute.MethodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
+                        : null;
+                    isEditable = (bool?)editMethod?.Invoke(setting, Array.Empty<object>()) ?? editAttribute.IsEditable ?? true;
+                }
 
                 if (settingProperty.PropertyType.BaseType == typeof(Enum))
                 {
-                    var enumDropdown = new EnumDropdown(settingProperty.PropertyType, name, setting, getMethod, setMethod);
+                    var enumDropdown = new EnumDropdown(settingProperty.PropertyType, name, setting, getMethod, setMethod) { IsEnabled = isEditable };
                     settingPage.Add(enumDropdown);
                 }
                 else if (settingProperty.PropertyType == typeof(bool))
                 {
-                    var boolCheckbox = new BooleanCheckbox(name, setting, getMethod, setMethod);
+                    var boolCheckbox = new BooleanCheckbox(name, setting, getMethod, setMethod) { IsEnabled = isEditable };
                     settingPage.Add(boolCheckbox);
                 }
                 else
@@ -95,6 +109,7 @@ public partial class SettingsPage : SidePage
 
                     if (settingDropdown != null)
                     {
+                        settingDropdown.IsEnabled = isEditable;
                         settingPage.Add(settingDropdown);
                         continue;
                     }

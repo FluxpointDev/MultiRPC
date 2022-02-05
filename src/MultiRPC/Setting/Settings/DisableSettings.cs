@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using Fonderie;
 using MultiRPC.Setting.Settings.Attributes;
 
@@ -30,9 +31,11 @@ public partial class DisableSettings : BaseSetting
     [GeneratedProperty, SettingName("ShowAllTooltips")]
     private bool _allTooltips;
 
-    [GeneratedProperty, SettingName("AcrylicEffect")]
-    private bool _acrylicEffect;
+    [GeneratedProperty, SettingName("AcrylicEffect"), IsEditable(nameof(CanEditAcrylicEffect))]
+    private bool _acrylicEffect = !CanEditAcrylicEffect();
     
     [GeneratedProperty]
     private bool _inviteWarn;
+
+    private static bool CanEditAcrylicEffect() => !OperatingSystem.IsLinux();
 }
