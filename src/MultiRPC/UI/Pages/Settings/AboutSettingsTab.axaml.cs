@@ -30,7 +30,7 @@ public partial class AboutSettingsTab : UserControl, ITabPage
     public void Initialize(bool loadXaml)
     {
         //TODO: Remove Windows check when we add cross platform support for gaining admin mode
-        btnAdmin.IsEnabled = !AdminUtil.IsAdmin && OSHelper.ActiveOS == OSPlatform.Windows;
+        btnAdmin.IsEnabled = !AdminUtil.IsAdmin && OperatingSystem.IsWindows();
 
         tblName.Text += Assembly.GetEntryAssembly().GetSemanticVersion();
         var madeByLang = Language.GetLanguage(LanguageText.MadeBy);

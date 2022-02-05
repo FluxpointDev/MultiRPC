@@ -34,7 +34,7 @@ public partial class MainWindow : FluentWindow
          crash on shutdown which is an issue for passing Microsoft store validation 
          so skip if deploying to it*/
 #if !_UWP
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (!OperatingSystem.IsWindows())
 #endif
         {
             return;
@@ -178,7 +178,7 @@ public partial class MainWindow : FluentWindow
         };
         regBackground.Opacity = _disableSettings.AcrylicEffect ? 1 : 0.85;
 
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (!OperatingSystem.IsMacOS())
         {
             AssetManager.RegisterForAssetReload("Logo.svg", () =>
             {
@@ -212,7 +212,7 @@ public partial class MainWindow : FluentWindow
             lang.TextObservable.Subscribe(s => UpdateTitle(s, null));
         }
         
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
             icon.IsVisible = false;
             txtTitle.Margin = new Thickness(0);

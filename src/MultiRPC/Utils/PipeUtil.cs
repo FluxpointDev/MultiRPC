@@ -18,7 +18,7 @@ public class PipeUtil
     public static int FindPipe(string? processName)
     {
         //TODO: Make this work on other OS's
-        if (OSHelper.ActiveOS != OSPlatform.Windows
+        if (!OperatingSystem.IsWindows()
             || string.IsNullOrWhiteSpace(processName))
         {
             return -1;

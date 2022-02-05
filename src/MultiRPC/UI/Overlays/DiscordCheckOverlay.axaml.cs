@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -93,11 +94,11 @@ public partial class DiscordCheckOverlay : UserControl
             }
 
             var processExpectedCount = 1;
-            if (OSHelper.ActiveOS == OSPlatform.Linux)
+            if (OperatingSystem.IsLinux())
             {
                 processExpectedCount = 2;
             }
-            else if (OSHelper.ActiveOS == OSPlatform.Windows)
+            else if (OperatingSystem.IsMacOS())
             {
                 processExpectedCount = 4;
             }
