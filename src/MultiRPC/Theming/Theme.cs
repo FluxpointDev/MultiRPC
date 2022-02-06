@@ -110,7 +110,15 @@ public partial class Theme
             .FirstOrDefault(x => x.FullName == "Assets/" + key)?
             .Open() ?? Stream.Null;
     }
-    
+
+    //TODO: Add Edit queue system so we only update what we actually edit
+    private static ZipArchiveEntry GetEntry(ZipArchive archive, string name)
+    {
+        var entry = archive.GetEntry(name);
+        entry?.Delete();
+        return archive.CreateEntry(name);
+    }
+
     public bool Save(string? filename)
     {
         //We need to unload assets as we can't write if we don't
@@ -123,20 +131,21 @@ public partial class Theme
             Directory.CreateDirectory(Constants.ThemeFolder);
             Location = Path.Combine(Constants.ThemeFolder, filename + Constants.ThemeFileExtension);
         }
+
+        Stream? fileStream = null;
         if (File.Exists(Location))
         {
-            File.Delete(Location);
+            fileStream = File.Open(Location, FileMode.Open, FileAccess.ReadWrite);
         }
-        
-        var fileStream = File.Create(Location);
-        var archive = new ZipArchive(fileStream, ZipArchiveMode.Create);
+        fileStream ??= File.Create(Location);
+        var archive = new ZipArchive(fileStream, ZipArchiveMode.Update);
 
-        var coloursEntry = archive.CreateEntry("colours.json");
+        var coloursEntry = GetEntry(archive, "colours.json");
         var colourStream = coloursEntry.Open();
         JsonSerializer.Serialize(colourStream, this.Colours, ColoursJsonContext);
         colourStream.Dispose();
 
-        var metadataEntry = archive.CreateEntry("metadataEntry.json");
+        var metadataEntry = GetEntry(archive, "metadataEntry.json");
         var metadataStream = metadataEntry.Open();
         Metadata.Version = Constants.CurrentVersion;
         JsonSerializer.Serialize(metadataStream, this.Metadata, MetadataJsonContext);
