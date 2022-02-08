@@ -2,9 +2,6 @@
 set -e
 set -o pipefail
 
-echo "Building for all OS's"
-sh build-all.sh && echo "Built for all OS's" || (echo "Wasn't able to build for all OS's, stopping..."; exit -1)
-
 version=`cat version`
 # $1=os $2=arch $3=ext
 getfilelocation() 
@@ -19,7 +16,12 @@ cd "../builds"
 getfilelocation "Linux" "arm"
 mv "linux-arm" "${filename}"
 tar -C "../builds" -czvf "../packages/${filename}.tar.gz" "$filename"
+cd ../scripts
+sh create_deb.sh ../builds/$filename arm multirpc-arm
 
+cd "../builds"
 getfilelocation "Linux" "x64"
 mv "linux-x64" "${filename}"
 tar -C "../builds" -czvf "../packages/${filename}.tar.gz" "$filename"
+cd ../scripts
+sh create_deb.sh ../builds/$filename amd64 multirpc-x64
