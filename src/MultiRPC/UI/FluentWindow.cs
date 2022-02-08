@@ -88,11 +88,9 @@ public class FluentWindow : Window, IStyleable
             
         if (OperatingSystem.IsWindows())
         {
-            var version = Environment.OSVersion.Version;
-            if (version.Major >= 10)
-            {
-                TransparencyLevelHint = version.Build >= 22000 ? WindowTransparencyLevel.Mica : WindowTransparencyLevel.AcrylicBlur;
-            }
+            TransparencyLevelHint = OperatingSystem.IsWindowsVersionAtLeast(10, build: 22000) 
+                ? WindowTransparencyLevel.Mica
+                : WindowTransparencyLevel.AcrylicBlur;
         }
         else if (OperatingSystem.IsMacOS())
         {

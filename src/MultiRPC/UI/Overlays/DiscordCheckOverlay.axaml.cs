@@ -98,7 +98,7 @@ public partial class DiscordCheckOverlay : UserControl
             {
                 processExpectedCount = 2;
             }
-            else if (OperatingSystem.IsMacOS())
+            else if (OperatingSystem.IsWindows())
             {
                 processExpectedCount = 4;
             }
