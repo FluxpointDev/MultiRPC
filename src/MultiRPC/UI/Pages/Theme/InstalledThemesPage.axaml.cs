@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -43,9 +44,10 @@ public partial class InstalledThemesPage : UserControl, ITabPage
 
     private readonly ThemeEditorPage _editorPage;
     private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
-    private TextBlock? _activeEditTextBlock;
-    private TextBlock? _activeActiveTextBlock;
-    private TextBlock? _activeShowingTextBlock;
+    private ActionDisposable<TextBlock>? _activeEditTextBlockDisposable;
+    private ActionDisposable<TextBlock>? _activeActiveTextBlockDisposable;
+    private ActionDisposable<TextBlock>? _activeShowingTextBlockDisposable;
+    private Button _activeRemoveButton;
 
     public Language? TabName { get; } = Language.GetLanguage(LanguageText.InstalledThemes);
     public bool IsDefaultPage => false;
@@ -55,7 +57,7 @@ public partial class InstalledThemesPage : UserControl, ITabPage
 
         btnAdd.DataContext = Language.GetLanguage(LanguageText.AddTheme);
         btnAddAndApply.DataContext = Language.GetLanguage(LanguageText.AddAndApplyTheme);
-        
+
         wppThemes.Children.AddRange(
             new []
             {
@@ -84,37 +86,12 @@ public partial class InstalledThemesPage : UserControl, ITabPage
         };
         Language.LanguageChanged += (sender, args) =>
         {
-            ProcessShowingText();
-            ProcessActiveText();
-            ProcessEditText();
+            _activeEditTextBlockDisposable?.RunAction();
+            _activeActiveTextBlockDisposable?.RunAction();
+            _activeShowingTextBlockDisposable?.RunAction();
         };
     }
-    
-    private void ProcessShowingText()
-    {
-        if (_activeShowingTextBlock != null)
-        {
-            _activeShowingTextBlock.Text = _activeShowingTextBlock.Tag + " (" + Language.GetText(LanguageText.Showing) + ")";
-        }
-    }
 
-    
-    private void ProcessActiveText()
-    {
-        if (_activeActiveTextBlock != null)
-        {
-            _activeActiveTextBlock.Text = _activeActiveTextBlock.Tag + " (" + Language.GetText(LanguageText.Active) + ")";
-        }
-    }
-
-    private void ProcessEditText()
-    {
-        if (_activeEditTextBlock != null)
-        {
-            _activeEditTextBlock.Text = _activeEditTextBlock.Tag + " (" + Language.GetText(LanguageText.Editing) + ")";
-        }
-    }
-    
     private void OnAttachedToLogicalTree(object? sender, LogicalTreeAttachmentEventArgs e)
     {
         //Grab the current theme
@@ -198,7 +175,9 @@ public partial class InstalledThemesPage : UserControl, ITabPage
 
         if (isActiveTheme)
         {
-            _activeActiveTextBlock = themeNameText;
+            MakeActiveDisposable(themeNameText);
+            removeButton.IsEnabled = false;
+            _activeRemoveButton = removeButton;
         }
         var controlStackPanel = new StackPanel
         {
@@ -242,17 +221,11 @@ public partial class InstalledThemesPage : UserControl, ITabPage
         {
             _activeTheme?.Apply();
             _tmpTheme = null;
-            if (_activeShowingTextBlock != null)
-            {
-                _activeShowingTextBlock.Text = _activeShowingTextBlock.Tag?.ToString();
-            }
-            _activeShowingTextBlock = null;
-            ProcessEditText();
+            _activeShowingTextBlockDisposable?.Dispose();
+            _activeShowingTextBlockDisposable = null;
         }
     }
 
-    private TextBlock GetTextBlockFromThemePreview(ThemePreview th) => (TextBlock)((StackPanel?)((StackPanel?)th.Parent)?.Children[0])?.Children[0]!;
-    
     private async void ThemeUIOnPointerEnter(object? sender, PointerEventArgs e)
     {
         await Task.Delay(500);
@@ -266,13 +239,15 @@ public partial class InstalledThemesPage : UserControl, ITabPage
                 _tmpTheme = th.Theme;
                 th.Theme.Apply();
 
-                if (_activeShowingTextBlock != null)
-                {
-                    _activeShowingTextBlock.Text = _activeShowingTextBlock.Tag?.ToString();
-                }
-                _activeShowingTextBlock = GetTextBlockFromThemePreview(th);
-                ProcessShowingText();
-                ProcessActiveText();
+                _activeShowingTextBlockDisposable?.Dispose();
+                _activeShowingTextBlockDisposable = MakeActionDisposable(th, 
+                    tb => tb.Text = tb.Tag + " (" + Language.GetText(LanguageText.Showing) + ")", 
+                    tb =>
+                    {
+                        tb.Text = tb.Tag.ToString();
+                        _activeActiveTextBlockDisposable?.RunAction();
+                        _activeEditTextBlockDisposable?.RunAction();
+                    });
             }
         });
     }
@@ -285,24 +260,42 @@ public partial class InstalledThemesPage : UserControl, ITabPage
         _activeTheme = th.Theme;
         _generalSettings.ThemeFile = th.Theme.Location;
 
-        if (_activeActiveTextBlock != null)
+        _activeRemoveButton.IsEnabled = !((Theming.Theme?)_activeRemoveButton.Tag)?.Location?.StartsWith('#') ?? true;
+        _activeRemoveButton = (Button)((StackPanel?)((StackPanel?)th.Parent)?.Children[0])?.Children[2]!;
+        _activeRemoveButton.IsEnabled = false;
+        
+        MakeActiveDisposable(GetTextBlock(th));
+    }
+
+    private void MakeActiveDisposable(TextBlock textBlock)
+    {
+        _activeActiveTextBlockDisposable?.Dispose();
+        _activeActiveTextBlockDisposable = new ActionDisposable<TextBlock>( 
+            tb => tb.Text = tb.Tag + " (" + Language.GetText(LanguageText.Active) + ")", 
+            tb =>
+            {
+                tb.Text = tb.Tag.ToString();
+                if (tb == _activeEditTextBlockDisposable?.State)
+                {
+                    _activeEditTextBlockDisposable.RunAction();
+                }
+            }, textBlock);
+
+        if (textBlock != _activeEditTextBlockDisposable?.State)
         {
-            _activeActiveTextBlock.Text = _activeActiveTextBlock.Tag?.ToString();
+            _activeActiveTextBlockDisposable.RunAction();
         }
-        _activeActiveTextBlock = GetTextBlockFromThemePreview(th);
-        ProcessActiveText();
-        ProcessEditText();
+        _activeEditTextBlockDisposable?.RunAction();
     }
 
     private void EditingThemeOnIsEditingChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(Theming.Theme.IsBeingEdited)
-            && _activeEditTextBlock != null
+            && _activeEditTextBlockDisposable != null
             && (!_editingTheme?.IsBeingEdited ?? true))
         {
-            _activeEditTextBlock.Text = _activeEditTextBlock.Tag?.ToString();
-            _activeEditTextBlock = null;
-            ProcessActiveText();
+            _activeEditTextBlockDisposable.Dispose();
+            _activeEditTextBlockDisposable = null;
         }
     }
 
@@ -319,13 +312,12 @@ public partial class InstalledThemesPage : UserControl, ITabPage
         _editorPage.EditTheme(_editingTheme);
         _editingTheme.PropertyChanged += EditingThemeOnIsEditingChanged;
         
-        if (_activeEditTextBlock != null)
-        {
-            _activeEditTextBlock.Text = _activeEditTextBlock.Tag?.ToString();
-        }
-        _activeEditTextBlock = (TextBlock)((StackPanel)st.Parent).Children[0]!;
-        ProcessEditText();
-        ProcessActiveText();
+        _activeEditTextBlockDisposable?.Dispose();
+        _activeEditTextBlockDisposable = new ActionDisposable<TextBlock>(
+            tb => tb.Text = tb.Tag + " (" + Language.GetText(LanguageText.Editing) + ")", 
+            tb => tb.Text = tb.Tag.ToString(),  
+            (TextBlock)((StackPanel?)st.Parent)?.Children[0]!);
+        _activeEditTextBlockDisposable.RunAction();
     }
     
     private void CloneButtonOnClick(object? sender, RoutedEventArgs e)
@@ -344,6 +336,16 @@ public partial class InstalledThemesPage : UserControl, ITabPage
         {
             File.Delete(theme.Location);
         }
+    }
+    
+    private TextBlock GetTextBlock(ThemePreview th) =>
+        (TextBlock)((StackPanel?)((StackPanel?)th.Parent)?.Children[0])?.Children[0]!;
+
+    private ActionDisposable<TextBlock> MakeActionDisposable(ThemePreview th, Action<TextBlock?> action, Action<TextBlock?> disposeAction)
+    {
+        var actionDis = new ActionDisposable<TextBlock>(action, disposeAction, GetTextBlock(th));
+        actionDis.RunAction();
+        return actionDis;
     }
 
     private async Task GetTheme(bool apply)

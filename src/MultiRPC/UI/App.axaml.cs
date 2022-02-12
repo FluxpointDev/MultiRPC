@@ -26,7 +26,6 @@ namespace MultiRPC.UI;
  * Styling:
    * CheckBox (Actual Box)
    * Tooltip
-   * Text on purple RpcView
    * Min/Max Buttons*/
 public class App : Application
 {
@@ -56,7 +55,7 @@ public class App : Application
         };
         theme.Apply();
 
-        //Add default settings here
+        //Add settings here
         Locator.CurrentMutable.RegisterLazySingleton<BaseSetting>(() => genSettings);
         Locator.CurrentMutable.RegisterLazySingleton<BaseSetting>(() => SettingManager<DisableSettings>.Setting);
 
