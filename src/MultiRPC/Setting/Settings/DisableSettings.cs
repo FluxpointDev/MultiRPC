@@ -37,5 +37,8 @@ public partial class DisableSettings : BaseSetting
     [GeneratedProperty]
     private bool _inviteWarn;
 
+    [GeneratedProperty]
+    private bool _buttonWarn;
+
     private static bool CanEditAcrylicEffect() => !OperatingSystem.IsLinux();
 }

@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MultiRPC;
+namespace MultiRPC.Extensions;
 
 public static class SemaphoreSlimExt
 {

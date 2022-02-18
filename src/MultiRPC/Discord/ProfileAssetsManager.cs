@@ -17,6 +17,9 @@ public class ProfileAssetsManager
     private static readonly List<ProfileAssetsManager> Managers = new List<ProfileAssetsManager>();
     private readonly string _baseUrl;
     private readonly long _id;
+    private readonly DiscordAssetContext _discordAssetContext = new DiscordAssetContext(new JsonSerializerOptions(JsonSerializerDefaults.Web));
+    private Lazy<DiscordAsset[]?> _lazyAssets;
+
     public ProfileAssetsManager(long id)
     {
         _id = id;
@@ -36,7 +39,6 @@ public class ProfileAssetsManager
         return manager;
     }
 
-    private Lazy<DiscordAsset[]?> _lazyAssets;
     public DiscordAsset[]? Assets => _lazyAssets.Value;
 
     public DiscordAsset[]? GetAssets()
@@ -57,7 +59,7 @@ public class ProfileAssetsManager
         }
 
         var assetsStream = response.Content.ReadAsStream();
-        return JsonSerializer.Deserialize<DiscordAsset[]>(assetsStream, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        return JsonSerializer.Deserialize(assetsStream, _discordAssetContext.DiscordAssetArray);
     }
     
     public async Task<DiscordAsset[]?> GetAssetsAsync()
@@ -73,7 +75,7 @@ public class ProfileAssetsManager
             return null;
         }
 
-        var assets = await response.Content.ReadFromJsonAsync<DiscordAsset[]>();
+        var assets = await response.Content.ReadFromJsonAsync(_discordAssetContext.DiscordAssetArray);
         _lazyAssets = new Lazy<DiscordAsset[]?>(assets);
         return assets;
     }
@@ -114,3 +116,6 @@ public class DiscordAsset
         return null;
     }
 }
+
+[JsonSerializable(typeof(DiscordAsset[]))]
+public partial class DiscordAssetContext : JsonSerializerContext { }

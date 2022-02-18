@@ -1,7 +1,6 @@
 ﻿using Avalonia.Styling;
 using System;
 using System.ComponentModel;
-using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform;
@@ -42,18 +41,23 @@ public class FluentWindow : Window, IStyleable
     public FluentWindow()
     {
         Title = Language.GetText(LanguageText.MultiRPC);
-        _disableSettings.PropertyChanged += UpdateTransparencyLevel;
-        UpdateTransparencyLevel(null, new PropertyChangedEventArgs(nameof(DisableSettings.AcrylicEffect)));
         ExtendClientAreaToDecorationsHint = true;
         ExtendClientAreaTitleBarHeightHint = -1;
-
-
+        
         this.GetObservable(WindowStateProperty)
             .Subscribe(x =>
             {
                 PseudoClasses.Set(":maximized", x == WindowState.Maximized);
                 PseudoClasses.Set(":fullscreen", x == WindowState.FullScreen);
             });
+
+        if (OperatingSystem.IsLinux())
+        {
+            return;
+        }
+        
+        _disableSettings.PropertyChanged += UpdateTransparencyLevel;
+        UpdateTransparencyLevel(null, new PropertyChangedEventArgs(nameof(DisableSettings.AcrylicEffect)));
 
         this.GetObservable(IsExtendedIntoWindowDecorationsProperty)
             .Subscribe(x =>

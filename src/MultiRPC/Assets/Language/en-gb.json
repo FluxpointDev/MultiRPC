@@ -256,5 +256,6 @@
   "FailedToGetOldConfig": "We failed to get your configuration from V5!",
   "FailedToGetOldProfiles": "We failed to get your profiles from V5!",
   "FailedToGetOldData": "We failed to get your configuration and profiles from V5!",
-  "AcrylicEffect": "Acrylic effect"
+  "AcrylicEffect": "Acrylic effect",
+  "ButtonWarn": "We see that you added buttons to your rich presence (nice choice btw ;P)\r\nHere's your notice that in discord's desktop client, your own buttons will not be clickable but others users will be able to just fine :D"
 }

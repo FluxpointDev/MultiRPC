@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DiscordRPC;
@@ -20,6 +20,7 @@ public class RpcClient
     private string _presenceName = "Unknown";
     private long _presenceId;
     private DiscordRpcClient? _client;
+    private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
 
     public bool IsRunning => Status != ConnectionStatus.Disconnected;
     public long ID => _presenceId;
@@ -36,7 +37,6 @@ public class RpcClient
         _client?.ClearPresence();
     }
 
-    private DisableSettings? _disableSettings;
     private async Task<bool> CheckPresence(string? text)
     {
         if (string.IsNullOrWhiteSpace(text) || !text.ToLower().Contains("discord.gg"))
@@ -44,7 +44,6 @@ public class RpcClient
             return true;
         }
 
-        _disableSettings ??= SettingManager<DisableSettings>.Setting;
         if (_disableSettings.InviteWarn)
         {
             return true;
@@ -159,8 +158,14 @@ public class RpcClient
         }
 
         _client?.SetPresence(richPresence);
-    }
         
+        if (richPresence.HasButtons() && !_disableSettings.ButtonWarn)
+        {
+            await MessageBox.Show(Language.GetText(LanguageText.ButtonWarn), Language.GetText(LanguageText.MultiRPC), MessageBoxButton.Ok, MessageBoxImage.Information);
+            _disableSettings.ButtonWarn = true;
+        }
+    }
+
     public async Task UpdatePresence(RichPresence? richPresence)
     {
         if (richPresence == null)
@@ -172,6 +177,7 @@ public class RpcClient
         pre.Buttons = pre.Buttons?
             .Where(x => !string.IsNullOrWhiteSpace(x.Url) && !string.IsNullOrWhiteSpace(x.Label))
             .ToArray();
+
         pre.Timestamps = richPresence.Profile.ShowTime ? new Timestamps
         {
             Start = _rpcStart

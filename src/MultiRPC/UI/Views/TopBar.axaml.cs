@@ -34,6 +34,8 @@ public partial class TopBar : UserControl
             _page.PresenceChanged += PageOnPresenceChanged;
             PageOnPresenceChanged(this, EventArgs.Empty);
         }
+        
+        RpcPageManager.PageChanged += (sender, page) => btnUpdatePresence.IsEnabled = page == RpcPageManager.CurrentPage;
         RpcPageManager.NewCurrentPage += delegate(object? sender, RpcPage page)
         {
             this.RunUILogic(() => RpcPageManagerOnPageChanged(sender, page));

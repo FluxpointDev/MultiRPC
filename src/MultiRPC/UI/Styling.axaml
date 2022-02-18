@@ -1,11 +1,13 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:multirpc="clr-namespace:MultiRPC">
+        xmlns:multirpc="clr-namespace:MultiRPC"
+        xmlns:ui="clr-namespace:MultiRPC.UI">
     <Design.PreviewWith>
         <Border Padding="20">
             <!-- Add Controls for Previewer Here -->
         </Border>
     </Design.PreviewWith>
+    
     <!--TODO: Style AutoCompleteBox and Popup-->
     <Style Selector="Button.nav /template/ ContentPresenter">
         <Setter Property="CornerRadius" Value="56" />

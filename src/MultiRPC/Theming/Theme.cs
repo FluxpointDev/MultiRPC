@@ -28,12 +28,12 @@ public enum ThemeType
     Modern
 }
 
-//TODO: Add bool to tell if the theme has any assets (for making things quicker)
 public partial class Theme
 {
     private string _filepath = null!;
     private ZipArchive? _archive;
     private bool _archiveLoaded = false;
+    private bool _hasAssets = false;
 
     private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Theme));
     private static readonly Version ModernVersion = new Version(7, 0);
@@ -82,7 +82,7 @@ public partial class Theme
 
     public bool HaveAsset(string key)
     {
-        if (ThemeType == ThemeType.Modern)
+        if (ThemeType == ThemeType.Modern && _hasAssets)
         {
             if (!_archiveLoaded)
             {
@@ -166,6 +166,11 @@ public partial class Theme
     /// <returns>The theme if we successfully loaded it in</returns>
     public static Theme? Load(string? filepath)
     {
+        if (string.IsNullOrWhiteSpace(filepath))
+        {
+            return null;
+        }
+        
         if (!File.Exists(filepath))
         {
             Logger.Error($"{filepath} {Language.GetText(LanguageText.DoesntExist)}!!!");
@@ -204,7 +209,8 @@ public partial class Theme
             Location = filepath,
             _archive = archive,
             _filepath = filepath,
-            _archiveLoaded = true
+            _archiveLoaded = true,
+            _hasAssets = archive.Entries.Any(x => x.FullName.StartsWith("Assets/"))
         };
         try
         {
@@ -237,8 +243,8 @@ public partial class Theme
             return null;
         }
 
-        //If this is a legacy theme then we don't need the archive anymore
-        if (theme.ThemeType == ThemeType.Legacy)
+        //If this is a legacy theme or it contains no assets then we don't need the archive anymore
+        if (theme.ThemeType == ThemeType.Legacy || !theme._hasAssets)
         {
             archive.Dispose();
             theme._archiveLoaded = false;
