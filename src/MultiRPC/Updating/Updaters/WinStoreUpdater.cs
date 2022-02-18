@@ -24,6 +24,9 @@ public class WinStoreUpdater : UpdateClient
 
     public override async Task<UpdateInfo?> CheckForUpdate(bool grabDeltaUpdates = true)
     {
+        //Right now we don't want to use this so adding this here
+        return new UpdateInfo(AppMetadata.ApplicationVersion);
+
         var updates = await _storeContext.GetAppAndOptionalStorePackageUpdatesAsync();
         if (!updates.Any())
         {
