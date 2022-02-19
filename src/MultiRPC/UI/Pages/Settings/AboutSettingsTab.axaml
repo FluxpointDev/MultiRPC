@@ -41,7 +41,7 @@
         <StackPanel Orientation="Horizontal">
             <Image Height="92" Width="92" x:Name="imgIcon" />
             <StackPanel Spacing="6" Margin="7,0,0,0">
-                <TextBlock Text="MultiRPC - " x:Name="tblName" Classes="title" />
+                <TextBlock Text="MultiRPC (" x:Name="tblName" Classes="title" />
                 <TextBlock x:Name="tblMadeBy" />
                 <StackPanel Orientation="Horizontal" Spacing="7">
                     <Image Classes="icon" x:Name="imgGithub" PointerPressed="ImgGithub_OnPointerPressed" />

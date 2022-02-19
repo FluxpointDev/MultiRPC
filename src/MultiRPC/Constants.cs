@@ -1,7 +1,9 @@
-﻿using System;
+﻿using SemVersion;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
+using TinyUpdate.Core.Extensions;
 
 namespace MultiRPC;
 
@@ -104,7 +106,7 @@ public static class Constants
     /// <summary>
     /// What is the current version of MultiRPC!
     /// </summary>
-    public static readonly Version CurrentVersion = Assembly.GetExecutingAssembly().GetName().Version!;
+    public static readonly SemanticVersion CurrentVersion = Assembly.GetExecutingAssembly().GetSemanticVersion()!;
 
     /// <summary>
     /// The folder with all the languages

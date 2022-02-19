@@ -32,7 +32,7 @@ public partial class AboutSettingsTab : UserControl, ITabPage
         //TODO: Remove Windows check when we add cross platform support for gaining admin mode
         btnAdmin.IsEnabled = !AdminUtil.IsAdmin && OperatingSystem.IsWindows();
 
-        tblName.Text += Assembly.GetEntryAssembly().GetSemanticVersion();
+        tblName.Text += Constants.CurrentVersion.ToString() + ')';
         var madeByLang = Language.GetLanguage(LanguageText.MadeBy);
         madeByLang.TextObservable.Subscribe(x => tblMadeBy.Text = x + ": " + Constants.AppDeveloper);
         tblDiscord.DataContext = Language.GetLanguage(LanguageText.Discord);

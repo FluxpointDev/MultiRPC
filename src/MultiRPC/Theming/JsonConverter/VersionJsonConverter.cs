@@ -1,23 +1,35 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using SemVersion;
 
 namespace MultiRPC.Theming.JsonConverter;
 
-public class VersionJsonConverter : JsonConverter<Version>
+public class VersionJsonConverter : JsonConverter<SemanticVersion>
 {
-    public override Version? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override SemanticVersion? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType == JsonTokenType.String)
         {
             var versionS = reader.GetString();
-            if (string.IsNullOrWhiteSpace(versionS)
-                || !Version.TryParse(versionS, out var version))
+            if (string.IsNullOrWhiteSpace(versionS))
             {
                 throw new Exception();
             }
 
-            return version;
+            //This allows us to use Version strings nicely
+            var lastDot = versionS.LastIndexOf('.');
+            if (versionS.Count(x => x == '.') == 3)
+            {
+                versionS = versionS[..lastDot] + '-' + versionS[(lastDot + 1)..];
+            }
+
+            if (SemanticVersion.TryParse(versionS, out var version))
+            {
+                return version;
+            }
+            throw new Exception();
         }
         
         if (reader.TokenType != JsonTokenType.StartObject)
@@ -56,10 +68,10 @@ public class VersionJsonConverter : JsonConverter<Version>
             }
             reader.Read();
         }
-        return new Version(major, minor, build, revision);
+        return new SemanticVersion(major, minor, build, revision.ToString());
     }
 
-    public override void Write(Utf8JsonWriter writer, Version value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, SemanticVersion value, JsonSerializerOptions options)
     {
         writer.WriteStringValue(value.ToString());
     }

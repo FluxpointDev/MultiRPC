@@ -11,6 +11,7 @@ using Avalonia.Media.Immutable;
 using Fonderie;
 using MultiRPC.Extensions;
 using MultiRPC.Theming.JsonConverter;
+using SemVersion;
 using TinyUpdate.Core.Logging;
 using TinyUpdate.Core.Utils;
 
@@ -36,7 +37,7 @@ public partial class Theme
     private bool _hasAssets = false;
 
     private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Theme));
-    private static readonly Version ModernVersion = new Version(7, 0);
+    private static readonly SemanticVersion ModernVersion = new SemanticVersion(7, 0, null);
     private static readonly JsonTypeInfo<Colours> ColoursJsonContext;
     private static readonly JsonTypeInfo<Metadata> MetadataJsonContext;
     static Theme()

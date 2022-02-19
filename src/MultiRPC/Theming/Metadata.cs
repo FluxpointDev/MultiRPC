@@ -1,19 +1,20 @@
 using System;
 using System.Text.Json.Serialization;
+using SemVersion;
 
 namespace MultiRPC.Theming;
 
 public class Metadata
 {
     [JsonConstructor]
-    public Metadata(string name, Version version)
+    public Metadata(string name, SemanticVersion version)
     {
         Version = version;
         Name = name;
     }
 
     [JsonPropertyName("MultiRPCVersion")]
-    public Version Version { get; set; }
+    public SemanticVersion Version { get; set; }
 
     [JsonPropertyName("ThemeName")]
     public string Name { get; set; }

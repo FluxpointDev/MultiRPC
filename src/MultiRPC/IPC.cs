@@ -39,8 +39,9 @@ public class IPC
     /// <summary>
     /// When we get a new message from a Client
     /// </summary>
-    public event EventHandler<string>? NewMessage; 
+    public event EventHandler<string>? NewMessage;
 
+    private static readonly object GetLock = new object();
     /// <summary>
     /// Gets or makes a connection to a IPC server based on if one yet exists
     /// </summary>
@@ -53,18 +54,25 @@ public class IPC
         };
         var thread = new Thread(() =>
         {
-            if (!ipcCon.ConnectToServer())
+            lock (GetLock)
             {
-                ipcCon.DisconnectFromServer();
-                ipcCon.Type = IPCType.Server;
-                ipcCon.StartServer();
+                if (!ipcCon.ConnectToServer())
+                {
+                    ipcCon.DisconnectFromServer();
+                    ipcCon.Type = IPCType.Server;
+                    ipcCon.StartServer();
+                }
             }
         });
         thread.Name = "IPC Thread";
         thread.IsBackground = true;
         thread.Start();
-            
-        return ipcCon;
+
+        Thread.Sleep(100);
+        lock (GetLock)
+        {
+            return ipcCon;
+        }
     }
     
     public bool ConnectToServer()

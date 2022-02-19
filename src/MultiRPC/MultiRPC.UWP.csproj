@@ -1,45 +1,51 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ApplicationIcon>Assets/Logo.ico</ApplicationIcon>
-    <PublishTrimmed>true</PublishTrimmed>
-    <Configurations>Debug;Release</Configurations>
-	<RootNamespace>MultiRPC</RootNamespace>
-	<AssemblyName>MultiRPC</AssemblyName>
-    <Version>7.0</Version>
-    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-    <DefineConstants>$(DefineConstants);_UWP</DefineConstants>
+	  <OutputType>WinExe</OutputType>
+	  <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+	  <ApplicationIcon>Assets/Logo.ico</ApplicationIcon>
+		<LangVersion>preview</LangVersion>
+		<Nullable>enable</Nullable>
+		<EnablePreviewFeatures>true</EnablePreviewFeatures>
+		<Version>7.0.0</Version>
+		<RootNamespace>MultiRPC</RootNamespace>
+		<AssemblyName>MultiRPC</AssemblyName>
+	  <DefineConstants>$(DefineConstants);_UWP</DefineConstants>
   </PropertyGroup>
-  <ItemGroup Label="Packages">
-    <ProjectReference Include="..\..\ext\discord-rpc-csharp\DiscordRPC\DiscordRPC.csproj">
-		<Optimize>True</Optimize>
-	</ProjectReference>
-    
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.11" />
-    <PackageReference Include="Avalonia.Svg" Version="0.10.11" />
-    <PackageReference Include="AvaloniaColorPicker" Version="1.1.0" />
-    <PackageReference Include="Splat" Version="14.1.17" />
-    <PackageReference Include="System.IO.Pipelines" Version="6.0.1" />
-    <PackageReference Include="System.Text.Json" Version="6.0.1" />
-    <PackageReference Include="TinyUpdate.Binary" Version="0.0.0.10-alpha" />
-    <PackageReference Include="TinyUpdate.Github" Version="0.0.0.10-alpha" />
-    <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
-    <ProjectReference Include="..\..\ext\avalonia.gif\AvaloniaGif\AvaloniaGif.csproj" />
-    <ProjectReference Include="..\..\ext\fonderie\Fonderie.INPC\Fonderie.INPC.Generator\Fonderie.INPC.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\MultiRPC.SourceGen\MultiRPC.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-  </ItemGroup>
 
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug' " Label="Debug Packages">
-    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.11" />
-  </ItemGroup>
-  
-  <ItemGroup Label="Resources">
-    <AvaloniaResource Include="Assets\**" />
+	<PropertyGroup>
+		<PublishTrimmed>true</PublishTrimmed>
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+		<DebuggerSupport>false</DebuggerSupport>
+		<_AggressiveAttributeTrimming>true</_AggressiveAttributeTrimming>
+		<AutoreleasePoolSupport>true</AutoreleasePoolSupport>
+		<VerifyDependencyInjectionOpenGenericServiceTrimmability>true</VerifyDependencyInjectionOpenGenericServiceTrimmability>
+	</PropertyGroup>
 
-    <AvaloniaResource Remove="Assets\Language\**" />
-    <Content Include="Assets\Language\**" CopyToOutputDirectory="Always" />
-    <AdditionalFiles Include="Assets\Language\en-gb.json" />
-  </ItemGroup>
+	<ItemGroup Label="Packages">
+    	<PackageReference Include="Avalonia.Desktop" Version="0.10.12" />
+    	<PackageReference Include="Avalonia.Svg" Version="0.10.12" />
+    	<PackageReference Include="AvaloniaColorPicker" Version="1.2.0" />
+    	<PackageReference Include="Splat" Version="14.1.45" />
+    	<PackageReference Include="System.IO.Pipelines" Version="6.0.2" />
+    	<PackageReference Include="System.Text.Json" Version="6.0.2" />
+    	<PackageReference Include="TinyUpdate.Binary" Version="0.0.0.10-alpha" />
+    	<PackageReference Include="TinyUpdate.Github" Version="0.0.0.10-alpha" />
+    	<PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
+    	<ProjectReference Include="..\..\ext\avalonia.gif\AvaloniaGif\AvaloniaGif.csproj" />
+    	<ProjectReference Include="..\..\ext\discord-rpc-csharp\DiscordRPC\DiscordRPC.csproj" />
+    	<ProjectReference Include="..\..\ext\fonderie\Fonderie.INPC\Fonderie.INPC.Generator\Fonderie.INPC.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    	<ProjectReference Include="..\MultiRPC.SourceGen\MultiRPC.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)'=='Debug'" Label="Debug Packages">
+		<PackageReference Include="Avalonia.Diagnostics" Version="0.10.12" />
+	</ItemGroup>
+
+	<ItemGroup Label="Resources">
+		<AvaloniaResource Include="Assets\**" />
+
+		<AvaloniaResource Remove="Assets\Language\**" />
+		<Content Include="Assets\Language\**" CopyToOutputDirectory="Always" />
+		<AdditionalFiles Include="Assets\Language\en-gb.json" />
+	</ItemGroup>
 </Project>
