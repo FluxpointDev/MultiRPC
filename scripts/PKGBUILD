@@ -1,0 +1,25 @@
+pkgname=MultiRPC
+pkgver=`cat version-digit`
+pkgrel=1
+pkgdesc="thingy"
+arch=( 'x86_64' 'aarch64' 'arm' )
+url="https://fluxpoint.dev/multirpc"
+license=('GPL3')
+depends=( dotnet-runtime )
+makedepends=(  )
+source=(  )
+md5sum=(  )
+
+arch_=`echo $CARCH | sed -e s/aarch64/arm64/ | sed -e s/x86_64/x64/`
+
+
+prepare() {
+    ln -s $startdir/../builds/linux-$arch_ $srcdir/$pkgname
+}
+
+package() {
+    mkdir -p $pkgdir/opt/$pkgname
+    mkdir -p $pkgdir/usr/bin
+    cp -r $srcdir/$pkgname/* $pkgdir/opt/MultiRPC
+    ln -s /opt/$pkgname/MultiRPC $pkgdir/usr/bin/MultiRPC
+}
