@@ -314,6 +314,9 @@ public partial class Theme
         resourceDictionary.UpdateIfDifferent("CheckBoxCheckBackgroundStrokeCheckedPressed", color5Brush);
         resourceDictionary.UpdateIfDifferent("CheckBoxCheckBackgroundStrokeUncheckedPressed", color5Brush);
         
+        resourceDictionary.UpdateIfDifferent("ToolTipForeground", resourceDictionary["ThemeForegroundBrush"]);
+        resourceDictionary.UpdateIfDifferent("ToolTipBackground", resourceDictionary["ThemeAccentBrush"]);
+        resourceDictionary.UpdateIfDifferent("ToolTipBorderBrush", resourceDictionary["ThemeAccentBrush4"]);
         if (fireAssetChange)
         {
             AssetManager.FireReloadAssets(this);

@@ -77,53 +77,41 @@ public partial class ThemeEditorPage : UserControl, ITabPage
      while they are cool... there'll also be very confusing to the average user*/
     private void ProcessColourPicker()
     {
-        clpPicker.FindControl<ComboBox>("ColorSpaceComboBox").SelectedIndex = 1;
-        clpPicker.FindControl<IControl>("PaletteSelector").IsVisible = false;
-        
         var grid = (Grid)((Grid)clpPicker.Content).Children[0];
-        grid.Children[2].IsVisible = false;
-        grid.Children[6].IsVisible = false;
-
-        var zeroL = GridLength.Parse("0");
-        grid.ColumnDefinitions[3].Width = GridLength.Auto;
-        grid.ColumnDefinitions[4].Width = zeroL;
-        grid.ColumnDefinitions[^1].Width = GridLength.Auto;
-        grid.ColumnDefinitions[^2].Width = zeroL;
-
-        var hsvControls = ((Grid)grid.Children[4]).Children;
-        for (int i = 7; i < hsvControls.Count; i++)
-        {
-            hsvControls[i].IsVisible = false;
-        }
         var clabControls = ((Grid)grid.Children[5]).Children;
-        for (int i = 0; i < 10; i++)
-        {
-            clabControls[i].IsVisible = false;
-        }
-
-        /*Move the hex controls to the next grid controls,
-         we're have more space that way*/
-        var hexHeader = (Control)clabControls[10];
-        Grid.SetRow(hexHeader, 4);
-        clabControls.RemoveAt(10);
+        var hexTextBox = clpPicker.Find<TextBox>("Hex_Box");
+        
+        Grid.SetRow(hexTextBox, 5);
+        clabControls.Remove(hexTextBox);
 
         var hexHashText = (Control)clabControls[10];
         Grid.SetRow(hexHashText, 5);
-        clabControls.RemoveAt(10);
+        clabControls.Remove(hexHashText);
+        
+        var hexHeader = (Control)clabControls[10];
+        Grid.SetRow(hexHeader, 4);
+        clabControls.Remove(hexHeader);
 
-        var hexTextBox = (TextBox)clabControls[10];
-        Grid.SetRow(hexTextBox, 5);
-        clabControls.RemoveAt(10);
-
+        var hsvControls = ((Grid)grid.Children[4]).Children;
         hsvControls.Add(hexHeader);
         hsvControls.Add(hexHashText);
         hsvControls.Add(hexTextBox);
-        
+
         hexTextBox.GetObservable(TextBox.TextProperty).Subscribe(x =>
         {
             _colourButton.BtnColor = new ImmutableSolidColorBrush(clpPicker.Color);
             UpdateTheme(_colourButton.Name, clpPicker.Color);
         });
+        
+        clpPicker.IsPaletteVisible = false;
+        clpPicker.IsHSBVisible = false;
+        clpPicker.IsAlphaVisible = false;
+        clpPicker.IsColourBlindnessSelectorVisible = false;
+        clpPicker.IsCIELABVisible = false;
+        
+        var zeroL = GridLength.Parse("0");
+        grid.ColumnDefinitions[^1].Width = GridLength.Auto;
+        grid.ColumnDefinitions[^2].Width = zeroL;
     }
 
     private void UpdateTheme(string name, Color color)
