@@ -10,7 +10,7 @@ public static class FileExt
 {
     public static string CheckFilename(string filename, string location, IEnumerable<string>? blacklistedFilenames = null)
     {
-        //If the directory doesn't even exist then we defo can use the filename
+        //If the directory doesn't even exist then we definitely can use the filename
         if (!Directory.Exists(location))
         {
             return filename;

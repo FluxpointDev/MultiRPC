@@ -34,7 +34,7 @@ public partial class CreditsPage : SidePage
         imgPatreonDonators.AddSvgAsset("Icons/Heart.svg");
         imgPaypalDonators.AddSvgAsset("Icons/Heart.svg");
         imgIconProviders.AddSvgAsset("Icons/Heart.svg");
-        Language.LanguageChanged += OnLanguageChanged;
+        LanguageGrab.LanguageChanged += OnLanguageChanged;
     }
 
     private async void NetworkChangeOnNetworkAddressChanged(object? sender, EventArgs e)
@@ -109,7 +109,7 @@ public partial class CreditsPage : SidePage
             this.RunUILogic(() => 
                 tblLastUpdated.Text = Language.GetText(LanguageText.CheckForUpdates).Replace("\r\n", " "));
 
-            var req = await App.HttpClient.GetResponseMessage(Url);
+            var req = await App.HttpClient.GetResponseMessageAsync(Url);
             if (req is null || !req.IsSuccessStatusCode)
             {
                 if (req == null)

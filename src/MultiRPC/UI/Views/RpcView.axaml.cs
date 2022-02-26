@@ -354,7 +354,7 @@ public partial class RpcView : UserControl
             }
         }
 
-        var imageResponse = await App.HttpClient.GetResponseMessage(uri);
+        var imageResponse = await App.HttpClient.GetResponseMessageAsync(uri);
         if (imageResponse is not { IsSuccessStatusCode: true })
         {
             return false;

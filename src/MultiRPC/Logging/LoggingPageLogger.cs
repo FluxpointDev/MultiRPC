@@ -9,6 +9,13 @@ namespace MultiRPC.Logging;
 
 public class LoggingPageLogger : ILogging
 {
+    private static Action<TextBlock>? _action;
+    private static readonly List<string[]> StoredLogging = new List<string[]>();
+    private static readonly Language DebugLanguage = Language.GetLanguage(LanguageText.Debug);
+    private static readonly Language InfoLanguage = Language.GetLanguage(LanguageText.Info);
+    private static readonly Language WarnLanguage = Language.GetLanguage(LanguageText.Warn);
+    private static readonly Language ErrorLanguage = Language.GetLanguage(LanguageText.Error);
+
     internal static void AddAction(Action<TextBlock> action)
     {
         _action = action;
@@ -17,17 +24,14 @@ public class LoggingPageLogger : ILogging
             _action.Invoke(MakeTextBlock(log[0], log[1]));
         }
     }
-
-    private static Action<TextBlock>? _action;
-    private static readonly List<string[]> StoredLogging = new List<string[]>();
-        
+    
     public LoggingPageLogger(string name) => Name = name;
 
     public void Debug(string message, params object?[] propertyValues)
     {
         if (LoggingCreator.ShouldProcess(LogLevel, TinyUpdate.Core.Logging.LogLevel.Trace))
         {
-            WriteLog(message, "Debug", propertyValues);
+            WriteLog(message, DebugLanguage.Text, propertyValues);
         }
     }
 
@@ -35,7 +39,7 @@ public class LoggingPageLogger : ILogging
     {
         if (LoggingCreator.ShouldProcess(LogLevel, TinyUpdate.Core.Logging.LogLevel.Info))
         {
-            WriteLog(message, "Info", propertyValues);
+            WriteLog(message, InfoLanguage.Text, propertyValues);
         }
     }
 
@@ -43,7 +47,7 @@ public class LoggingPageLogger : ILogging
     {
         if (LoggingCreator.ShouldProcess(LogLevel, TinyUpdate.Core.Logging.LogLevel.Warn))
         {
-            WriteLog(message, "Warn", propertyValues);
+            WriteLog(message, WarnLanguage.Text, propertyValues);
         }
     }
 
@@ -51,7 +55,7 @@ public class LoggingPageLogger : ILogging
     {
         if (LoggingCreator.ShouldProcess(LogLevel, TinyUpdate.Core.Logging.LogLevel.Error))
         {
-            WriteLog(message, "Error", propertyValues);
+            WriteLog(message, ErrorLanguage.Text, propertyValues);
         }
     }
 

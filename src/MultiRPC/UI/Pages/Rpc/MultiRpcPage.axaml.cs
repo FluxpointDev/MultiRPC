@@ -73,7 +73,7 @@ public partial class MultiRpcPage : RpcPage
                 return;
             }
         
-            Language.LanguageChanged += (sender, args) =>
+            LanguageGrab.LanguageChanged += (sender, args) =>
             {
                 var largeKey = cboLargeKey.SelectedIndex;
                 var smallKey = cboSmallKey.SelectedIndex;

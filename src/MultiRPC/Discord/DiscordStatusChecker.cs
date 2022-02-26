@@ -1,7 +1,5 @@
-﻿using System.Net.Http;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using System.Threading.Tasks;
-using MultiRPC.Discord.Status;
 using MultiRPC.Extensions;
 using MultiRPC.UI;
 
@@ -19,22 +17,13 @@ public static class DiscordStatusChecker
 {
     public static async Task<DiscordStatus> GetStatus()
     {
-        var response = await App.HttpClient.GetResponseMessage("https://discordstatus.com/api/v2/components.json");
+        var response = await App.HttpClient.GetResponseMessageAsync("https://discordstatus.com/api/v2/components.json");
         if (response is null || !response.IsSuccessStatusCode)
         {
             return DiscordStatus.MajorOutage;
         }
 
-        var data = await response.Content.ReadFromJsonAsync(DataContext.Default.Data);
-        var status = data?.Components[0].Status switch
-        {
-            "operational" => DiscordStatus.Operational,
-            "degraded_performance" => DiscordStatus.Degraded,
-            "partial_outage" => DiscordStatus.PartialOutage,
-            "major_outage" => DiscordStatus.MajorOutage,
-            _ => DiscordStatus.MajorOutage
-        };
-
-        return status;
+        var data = await response.Content.ReadFromJsonAsync(StatusContext.Default.Status);
+        return data?.Components[0].Status ?? DiscordStatus.MajorOutage;
     }
 }

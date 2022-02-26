@@ -8,6 +8,8 @@ namespace MultiRPC.Legacy;
 
 public class Config
 {
+    private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Config));
+
     /// <summary> Debug test </summary>
     public bool Debug { get; set; }
 
@@ -58,7 +60,6 @@ public class Config
     //This ended up not being used as it was for trigger's which never got into the public release of MultiRPC
     //public bool HadTriggerWarning { get; set; }
 
-    private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Config));
     /// <summary> Get the settings stored on disk </summary>
     public static Config? Load()
     {

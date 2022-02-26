@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
@@ -14,75 +13,29 @@ using TinyUpdate.Core.Logging;
 
 namespace MultiRPC;
 
-//TODO: Clean this up, while it works it's a mess...
-public class Language
+public static class LanguageGrab
 {
-    private readonly Lazy<LanguageObservable> _textObservable;
-    private static Dictionary<string, string> _englishLanguageJsonFileContent;
-    private static Dictionary<string, string>? _languageJsonFileContent;
-    private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Language));
-    static Language()
+    internal static Dictionary<LanguageText, string> EnglishLanguage;
+    internal static Dictionary<LanguageText, string>? Language;
+    private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(LanguageGrab));
+    private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.General)
     {
-        LangContext = new LangContext
-        (new JsonSerializerOptions(JsonSerializerDefaults.General)
-        {
-            //We know that the file in question is safe as we provide the files 
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            ReadCommentHandling = JsonCommentHandling.Skip
-        }).DictionaryStringString;
+        //We know that the file in question is safe as we provide the files 
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        ReadCommentHandling = JsonCommentHandling.Skip
+    };
+
+    static LanguageGrab()
+    {
         GrabLanguage();
-        Languages = new List<Language>(_englishLanguageJsonFileContent!.Count);
     }
-
-    public Language() : this(LanguageText.NA) { }
-    public Language(params LanguageText[] jsonNames) : this(jsonNames.Select(x => x.ToString()).ToArray()) { }
-    public Language(params string[] jsonNames)
-    {
-        _textObservable = new Lazy<LanguageObservable>(() => new LanguageObservable(jsonNames));
-    }
-
-    public void ChangeJsonNames(params LanguageText[] jsonNames) => ChangeJsonNames(jsonNames.Select(x => x.ToString()).ToArray());
-    public void ChangeJsonNames(params string[] jsonNames)
-    {
-        _textObservable.Value.ChangeJsonNames(jsonNames);
-    }
-
-    public LanguageObservable TextObservable => _textObservable.Value;
-    public string Text => TextObservable.Text;
+    
     public static event EventHandler? LanguageChanged;
-
-    internal static void ChangeLanguage(string file)
-    {
-        var lan = GrabLanguageFile(file);
-        if (lan != null)
-        {
-            _languageJsonFileContent = lan;
-            LanguageChanged?.Invoke(null, EventArgs.Empty);
-        }
-    }
-
-    private static readonly List<Language> Languages;
-    public static Language GetLanguage(LanguageText languageText) => GetLanguage(languageText.ToString());
-
-    /// <summary>
-    /// Gets or makes an language (ONLY USE THIS IF YOU DON'T PLAN TO USE <see cref="ChangeJsonNames(LanguageText[])"/>)
-    /// </summary>
-    /// <param name="languageText"></param>
-    public static Language GetLanguage(string languageText)
-    {
-        var lang = Languages.FirstOrDefault(x => x._textObservable.Value.JsonNames.Any(y => y == languageText));
-        if (lang == null)
-        {
-            lang = new Language(languageText);
-            Languages.Add(lang);
-        }
-
-        return lang;
-    }
-        
+    
+    [MemberNotNull(nameof(EnglishLanguage))]
     private static void GrabLanguage()
     {
-        _englishLanguageJsonFileContent = GrabLanguageFile(GetFilePath("en-gb"))!;
+        EnglishLanguage = GrabLanguageFile(GetFilePath("en-gb"))!;
 
         //If we have a set language then we want to load the current languages we have
         var langName = SettingManager<GeneralSettings>.Setting.Language;
@@ -92,11 +45,11 @@ public class Language
             GeneralSettings.GetLanguages();
             if (GeneralSettings.Languages.ContainsKey(langName))
             {
-                _languageJsonFileContent = GrabLanguageFile(GeneralSettings.Languages[langName]);
+                Language = GrabLanguageFile(GeneralSettings.Languages[langName]);
             }
         }
 
-        if (_languageJsonFileContent != null)
+        if (Language != null)
             return;
 
         /*If we wasn't able to load the users language from
@@ -108,15 +61,14 @@ public class Language
         if (currentLang != "en-gb")
         {
             var currentLangTwoLetter = currentCulture.TwoLetterISOLanguageName.ToLower();
-            _languageJsonFileContent =
+            Language =
                 GrabLanguageFile(GetFilePath(currentLang)) 
                 ?? GrabLanguageFile(GetFilePath(currentLangTwoLetter));
         }
     }
 
-    private static readonly JsonTypeInfo<Dictionary<string, string>> LangContext;
     private static string GetFilePath(string name) => Path.Combine(Constants.LanguageFolder, name + ".json");
-    private static Dictionary<string, string>? GrabLanguageFile(string fileLocation)
+    private static Dictionary<LanguageText, string>? GrabLanguageFile(string fileLocation)
     {
         if (!File.Exists(fileLocation))
         {
@@ -125,7 +77,7 @@ public class Language
            
         try
         {
-            return JsonSerializer.Deserialize(File.ReadAllText(fileLocation), LangContext);
+            return JsonSerializer.Deserialize<Dictionary<LanguageText, string>>(File.ReadAllText(fileLocation), SerializerOptions);
         }
         catch (Exception e)
         {
@@ -134,48 +86,126 @@ public class Language
         return null;
     }
 
-    public static bool HasKey(string jsonName)
+    internal static void ChangeLanguage(string file)
     {
-        return (_languageJsonFileContent?.ContainsKey(jsonName) ?? false) || _englishLanguageJsonFileContent.ContainsKey(jsonName);
+        var lan = GrabLanguageFile(file);
+        if (lan != null)
+        {
+            Language = lan;
+            LanguageChanged?.Invoke(null, EventArgs.Empty);
+        }
+    }
+}
+
+public class Language
+{
+    private readonly Lazy<LanguageObservable> _textObservable;
+    private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Language));
+    private static readonly List<Language> CachedLanguages = new List<Language>();
+    private LanguageText?[]? _jsonNames;
+
+    public Language() : this(LanguageText.NA) { }
+    public Language(params string[] jsonNames) : this(jsonNames.Select(GetLanguageText).ToArray()) { }
+    public Language(params LanguageText?[] jsonNames)
+    {
+        _jsonNames = jsonNames;
+        _textObservable = new Lazy<LanguageObservable>(() =>
+        {
+            _jsonNames = null;
+            return new LanguageObservable(jsonNames);
+        });
     }
 
-    public static string GetText(LanguageText langText) => GetText(langText.ToString());
-    public static string GetText(string? jsonName)
+    
+    public LanguageObservable TextObservable => _textObservable.Value;
+    public string Text
     {
-        if (string.IsNullOrWhiteSpace(jsonName))
+        get
+        {
+            if (!_textObservable.IsValueCreated && _jsonNames != null)
+            {
+                return _jsonNames.Length == 1 ? 
+                    GetText(_jsonNames[0]) :
+                    string.Join(' ', _jsonNames.Select(GetText));
+            }
+            return TextObservable.Text;
+        }
+    }
+
+
+    public void ChangeJsonNames(params string[] jsonNames) => ChangeJsonNames(jsonNames.Select(GetLanguageText).ToArray());
+    public void ChangeJsonNames(params LanguageText?[] jsonNames) => _textObservable.Value.ChangeJsonNames(jsonNames);
+    
+    
+    public static Language GetLanguage(string languageText) => GetLanguage(GetLanguageText(languageText));
+    public static Language GetLanguage(LanguageText? languageText)
+    {
+        languageText ??= LanguageText.NA;
+        var lang = CachedLanguages.FirstOrDefault(x => x._textObservable.Value.JsonNames.Any(y => y == languageText));
+        if (lang == null)
+        {
+            lang = new Language((LanguageText)languageText);
+            CachedLanguages.Add(lang);
+        }
+
+        return lang;
+    }
+
+
+    public static string GetText(string? langText) => GetText(GetLanguageText(langText));
+    public static string GetText(LanguageText? jsonName)
+    {
+        if (jsonName == null)
         {
             return GetText(LanguageText.NA);
         }
-        if (_languageJsonFileContent?.ContainsKey(jsonName) ?? false)
+        if (LanguageGrab.Language?.ContainsKey((LanguageText)jsonName) ?? false)
         {
-            return _languageJsonFileContent[jsonName];
+            return LanguageGrab.Language[(LanguageText)jsonName];
         }
         //We manually have the N/A here in case it isn't seen anywhere (But that would also show a bigger issue)
-        return _englishLanguageJsonFileContent.ContainsKey(jsonName) ? _englishLanguageJsonFileContent[jsonName] : "N/A";
+        return LanguageGrab.EnglishLanguage.ContainsKey((LanguageText)jsonName) ?
+            LanguageGrab.EnglishLanguage[(LanguageText)jsonName] : 
+            GetText(LanguageText.NA);
+    }
+
+    public static bool HasKey(string? jsonName) => GetLanguageText(jsonName) != null;
+
+    private static LanguageText? GetLanguageText(string? lang)
+    {
+        if (string.IsNullOrWhiteSpace(lang))
+        {
+            return null;
+        }
+
+        try
+        {
+            return Enum.Parse<LanguageText>(lang);
+        }
+        catch (Exception e)
+        {
+            Logger.Error(e);
+        }
+
+        return null;
     }
 }
 
 public class LanguageObservable : IObservable<string>
 {
-    public LanguageObservable(params string[] jsonNames)
-    {
-        JsonNames = jsonNames;
-    }
+    internal LanguageText?[] JsonNames;
+    private readonly List<IObserver<string>> _observables = new List<IObserver<string>>();
 
-    internal void ChangeJsonNames(params string[] jsonNames)
+    public LanguageObservable(params LanguageText?[] jsonNames)
     {
         JsonNames = jsonNames;
-        _observables.ForEach(x => x.OnNext(Text));
     }
 
     internal string Text => string.Join(' ', GetText());
-        
-    internal string[] JsonNames;
-    // ReSharper disable once CollectionNeverQueried.Local
-    private readonly List<IObserver<string>> _observables = new List<IObserver<string>>();
+
     public IDisposable Subscribe(IObserver<string> observer)
     {
-        Language.LanguageChanged += LanguageOnLanguageChanged;
+        LanguageGrab.LanguageChanged += LanguageOnLanguageChanged;
         _observables.Add(observer);
         observer.OnNext(Text);
         return Disposable.Create(() => _observables.Remove(observer));
@@ -187,7 +217,10 @@ public class LanguageObservable : IObservable<string>
     }
 
     private IEnumerable<string> GetText() => JsonNames.Select(Language.GetText);
-}
     
-[JsonSerializable(typeof(Dictionary<string, string>))]
-public partial class LangContext : JsonSerializerContext { }
+    internal void ChangeJsonNames(params LanguageText?[] jsonNames)
+    {
+        JsonNames = jsonNames;
+        _observables.ForEach(x => x.OnNext(Text));
+    }
+}

@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using SemVersion;
 
-namespace MultiRPC.Theming.JsonConverter;
+namespace MultiRPC.Converters;
 
 public class VersionJsonConverter : JsonConverter<SemanticVersion>
 {
@@ -15,10 +15,10 @@ public class VersionJsonConverter : JsonConverter<SemanticVersion>
             var versionS = reader.GetString();
             if (string.IsNullOrWhiteSpace(versionS))
             {
-                throw new Exception();
+                throw new JsonException("We was given an empty string when reading the version!");
             }
 
-            //This allows us to use Version strings nicely
+            //This allows us to use Version strings in a way that work for us
             var lastDot = versionS.LastIndexOf('.');
             if (versionS.Count(x => x == '.') == 3)
             {
@@ -29,12 +29,12 @@ public class VersionJsonConverter : JsonConverter<SemanticVersion>
             {
                 return version;
             }
-            throw new Exception();
+            throw new JsonException("Wasn't able to make an SemanticVersion out of the string given! (" + versionS + ")");
         }
         
         if (reader.TokenType != JsonTokenType.StartObject)
         {
-            throw new Exception();
+            throw new JsonException("We haven't been given an old styled version!");
         }
         reader.Read();
 

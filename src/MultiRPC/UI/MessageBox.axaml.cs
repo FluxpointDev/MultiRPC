@@ -156,7 +156,7 @@ public partial class MessageBox : UserControl
             DisableMinimiseButton = true
         };
 
-        ownerWindow ??= WindowExt.GetMainWindow;
+        ownerWindow ??= App.MainWindow;
         return await window.ShowDialog<MessageBoxResult?>(ownerWindow) ?? DefaultReturn(messageBoxButton, messageBoxResult);
     }
         

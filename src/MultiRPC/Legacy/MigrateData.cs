@@ -84,6 +84,7 @@ public static class MigrateData
             disabledSettings.ShowPageTooltips = !oldConfig.ShowPageTooltips;
             disabledSettings.HelpIcons = oldConfig.Disabled.HelpIcons;
 
+            //TODO: Add large key
             // Process MultiRPC profile
             var multiRPC = SettingManager<MultiRPCSettings>.Setting;
             //multiRPC.Presence.Profile.LargeKey = oldConfig.MultiRPC.LargeKey;

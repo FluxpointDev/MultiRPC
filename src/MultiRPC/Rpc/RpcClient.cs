@@ -17,7 +17,7 @@ public class RpcClient
 {
     private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(RpcClient));
     private DateTime _rpcStart;
-    private string _presenceName = "Unknown";
+    private string _presenceName = Language.GetText(LanguageText.Unknown);
     private long _presenceId;
     private DiscordRpcClient? _client;
     private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
@@ -137,7 +137,7 @@ public class RpcClient
         _client?.Dispose();
         Status = ConnectionStatus.Disconnected;
         _presenceId = 0;
-        _presenceName = "Unknown";
+        _presenceName = Language.GetText(LanguageText.Unknown);
 
         Disconnected?.Invoke(this, EventArgs.Empty);
     }

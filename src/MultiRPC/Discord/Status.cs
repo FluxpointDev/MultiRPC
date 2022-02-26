@@ -1,8 +1,9 @@
 ﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
 #pragma warning disable CS8618
-
 using System.Text.Json.Serialization;
-namespace MultiRPC.Discord.Status;
+using MultiRPC.Converters;
+
+namespace MultiRPC.Discord;
 
 /*public class Page
 {
@@ -30,8 +31,8 @@ public class Component
     [JsonPropertyName("name")]
     public string Name { get; init; }*/
 
-    [JsonPropertyName("status")]
-    public string Status { get; set; }
+    [JsonPropertyName("status"), JsonConverter(typeof(StatusConverter))]
+    public DiscordStatus Status { get; set; }
 
     /*[JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; init; }
@@ -67,7 +68,7 @@ public class Component
     public string[] Components { get; init; }*/
 }
 
-public class Data
+public class Status
 {
     //[JsonPropertyName("page")]
     //public Page Page { get; init; }
@@ -76,5 +77,5 @@ public class Data
     public Component[] Components { get; set; }
 }
     
-[JsonSerializable(typeof(Data))]
-public partial class DataContext : JsonSerializerContext { }
+[JsonSerializable(typeof(Status))]
+public partial class StatusContext : JsonSerializerContext { }

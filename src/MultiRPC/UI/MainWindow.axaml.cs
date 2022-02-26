@@ -48,7 +48,7 @@ public partial class MainWindow : FluentWindow
         };
         Closing += (sender, args) => trayIcon.IsVisible = false;
 
-        Language.LanguageChanged += (sender, args) => ChangeTrayIconText(trayIcon);
+        LanguageGrab.LanguageChanged += (sender, args) => ChangeTrayIconText(trayIcon);
         this.GetObservable(WindowStateProperty).Subscribe(x =>
         {
             ChangeTrayIconText(trayIcon);

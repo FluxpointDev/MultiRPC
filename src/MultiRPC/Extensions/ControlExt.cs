@@ -10,13 +10,8 @@ public static class ControlExt
     {
         var rpcControl = new ControlValidation(validation, initialValue) { Lang = language };
         control.DataContext = rpcControl;
-        rpcControl.ResultChanged += (sender, s) =>
-        {
-            resultChanged?.Invoke(s);
-        };
-        rpcControl.ResultStatusChanged += (sender, s) =>
-        {
-            resultStatusChanged?.Invoke(s);
-        };
+
+        rpcControl.ResultChanged += (sender, s) => resultChanged?.Invoke(s);
+        rpcControl.ResultStatusChanged += (sender, s) => resultStatusChanged?.Invoke(s);
     }
 }

@@ -6,13 +6,13 @@ using MultiRPC.UI;
 
 namespace MultiRPC.Commands;
 
-class TrayCommand : ICommand
+internal class TrayCommand : ICommand
 {
     public bool CanExecute(object? _) => true;
 
     public void Execute(object? _)
     {
-        var mainWin = ((App)Application.Current).DesktopLifetime!.MainWindow!;
+        var mainWin = App.MainWindow;
         switch (mainWin.WindowState)
         {
             case WindowState.Normal:

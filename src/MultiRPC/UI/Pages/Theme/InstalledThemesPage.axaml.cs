@@ -84,7 +84,7 @@ public partial class InstalledThemesPage : UserControl, ITabPage
                 wppThemes.Children.Add(control);
             });
         };
-        Language.LanguageChanged += (sender, args) =>
+        LanguageGrab.LanguageChanged += (sender, args) =>
         {
             _activeEditTextBlockDisposable?.RunAction();
             _activeActiveTextBlockDisposable?.RunAction();
@@ -356,7 +356,7 @@ public partial class InstalledThemesPage : UserControl, ITabPage
             {
                 new()
                 {
-                    Name = "MultiRPC Themes",
+                    Name = Language.GetText(LanguageText.MultiRPCThemes),
                     Extensions = new List<string>(new []
                     {
                         Constants.ThemeFileExtension[1..],

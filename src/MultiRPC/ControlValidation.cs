@@ -50,7 +50,7 @@ public class ControlValidation
                 return;
             }
 
-            var error = check?.ReasonWhy ?? "Unknown validation reason";
+            var error = check?.ReasonWhy ?? Language.GetText(LanguageText.UnknownValidationReason);
             _logging.Error(error);
             throw new DataValidationException(error);
         }

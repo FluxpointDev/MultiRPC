@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -43,18 +42,9 @@ public class ProfileAssetsManager
 
     public DiscordAsset[]? GetAssets()
     {
-        HttpResponseMessage response;
-        try
+        var response = App.HttpClient.GetResponseMessage(_baseUrl);
+        if (response is not { IsSuccessStatusCode: true })
         {
-            response = App.HttpClient.Send(new HttpRequestMessage(HttpMethod.Get, _baseUrl));
-            if (response is not { IsSuccessStatusCode: true })
-            {
-                return null;
-            }
-        }
-        catch (Exception e)
-        {
-            //TODO: Log
             return null;
         }
 
@@ -69,7 +59,7 @@ public class ProfileAssetsManager
             return _lazyAssets.Value;
         }
         
-        var response = await App.HttpClient.GetResponseMessage(_baseUrl);
+        var response = await App.HttpClient.GetResponseMessageAsync(_baseUrl);
         if (response is not { IsSuccessStatusCode: true })
         {
             return null;

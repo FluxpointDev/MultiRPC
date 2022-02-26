@@ -42,10 +42,11 @@ public partial class GeneralSettings : BaseSetting
     {
         if (Languages.ContainsKey(value))
         {
-            MultiRPC.Language.ChangeLanguage(Languages[value]);
+            LanguageGrab.ChangeLanguage(Languages[value]);
         }
     }
 
+    //TODO: Move this into languagegrab
     internal static readonly Dictionary<string, string> Languages = new Dictionary<string, string>();
     internal static string[] GetLanguages()
     {
@@ -68,7 +69,8 @@ public partial class GeneralSettings : BaseSetting
     private string[] GetAutoStarts()
     {
         var l = new List<string> { "No" };
-        l.AddRange(PageManager.CurrentPages.Where(x => x is RpcPage)
+        l.AddRange(PageManager.CurrentPages
+            .Where(x => x is RpcPage)
             .Select(x => x.LocalizableName));
         return l.ToArray();
     }

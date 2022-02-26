@@ -9,13 +9,11 @@ public static class WindowExt
 {
     public static Task ShowDialog(this Window window)
     {
-        return window.ShowDialog(GetMainWindow);
+        return window.ShowDialog(App.MainWindow);
     }
     
     public static Task<string[]?> ShowAsync(this OpenFileDialog window)
     {
-        return window.ShowAsync(GetMainWindow);
+        return window.ShowAsync(App.MainWindow);
     }
-    
-    public static Window GetMainWindow => ((App)Application.Current).DesktopLifetime?.MainWindow;
 }

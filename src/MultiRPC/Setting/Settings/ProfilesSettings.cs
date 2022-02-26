@@ -13,7 +13,7 @@ public partial class ProfilesSettings : BaseSetting
     public override string Name => "Profiles";
 
     public ProfilesSettings()
-        : this(new ObservableCollection<RichPresence> { new RichPresence("Profile", 0) }) { }
+        : this(new ObservableCollection<RichPresence> { new RichPresence(Language.GetText(LanguageText.Profile), 0) }) { }
 
     [JsonConstructor]
     public ProfilesSettings(ObservableCollection<RichPresence> profiles)

@@ -30,6 +30,7 @@ namespace MultiRPC.UI;
 public class App : Application
 {
     public static readonly HttpClient HttpClient = new HttpClient();
+    public static MainWindow MainWindow;
 
     //TODO: Put this somewhere else, for now this works
     private UpdateClient? _updater;
@@ -89,7 +90,7 @@ public class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             DesktopLifetime = desktop;
-            desktop.MainWindow = new MainWindow();
+            desktop.MainWindow = MainWindow = new MainWindow();
         }
 
         base.OnFrameworkInitializationCompleted();

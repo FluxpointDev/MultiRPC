@@ -9,8 +9,8 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Fonderie;
+using MultiRPC.Converters;
 using MultiRPC.Extensions;
-using MultiRPC.Theming.JsonConverter;
 using SemVersion;
 using TinyUpdate.Core.Logging;
 using TinyUpdate.Core.Utils;
@@ -174,7 +174,7 @@ public partial class Theme
         
         if (!File.Exists(filepath))
         {
-            Logger.Error($"{filepath} {Language.GetText(LanguageText.DoesntExist)}!!!");
+            Logger.Error($"{{0}} {Language.GetText(LanguageText.DoesntExist)}!!!", filepath);
             return null;
         }
 
@@ -182,7 +182,7 @@ public partial class Theme
         if (fileStream == null)
         {
             Logger.Error(Language.GetText(LanguageText.CantOpenOrSaveThemeFile)
-                .Replace("{open/save}", Language.GetText(LanguageText.Open)));
+                .Replace("{open/save}", "{0}"), Language.GetText(LanguageText.Open));
             return null;
         }
 
@@ -195,7 +195,7 @@ public partial class Theme
         {
             Logger.Error(e);
             Logger.Error(Language.GetText(LanguageText.CantOpenOrSaveThemeFile)
-                .Replace("{open/save}", Language.GetText(LanguageText.Open)));
+                .Replace("{open/save}", "{0}"), Language.GetText(LanguageText.Open));
             return null;
         }
         var coloursEntry = archive.GetEntry("colours.json");
@@ -221,7 +221,7 @@ public partial class Theme
         {
             Logger.Error(e);
             Logger.Error(Language.GetText(LanguageText.SomethingHappenedWhileGettingThemeColours)
-                .Replace("{themepath}", filepath));
+                .Replace("{themepath}", "{0}"), filepath);
             archive.Dispose();
             return null;
         }
@@ -238,8 +238,8 @@ public partial class Theme
         catch (Exception e)
         {
             Logger.Error(e);
-            Logger.Error(Language.GetText(LanguageText.SomethingHappenedWhileGettingThemeMetadata)
-                .Replace("{themepath}", filepath));
+            Logger.Error(Language.GetText(LanguageText.SomethingHappenedWhileGettingThemeColours)
+                .Replace("{themepath}", "{0}"), filepath);
             archive.Dispose();
             return null;
         }
