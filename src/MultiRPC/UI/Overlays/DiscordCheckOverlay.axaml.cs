@@ -30,7 +30,7 @@ public partial class DiscordCheckOverlay : UserControl
         rDiscordServer.Text = Language.GetText(LanguageText.DiscordServer) + ": ";
         hylServerLinkUri.Text = Constants.ServerInviteCode;
         hylServerLinkUri.Uri = Constants.DiscordServerUrl;
-        btnDisableDiscordCheck.DataContext = Language.GetLanguage(LanguageText.TempDisableDiscordCheck);
+        btnDisableDiscordCheck.DataContext = (Language)LanguageText.TempDisableDiscordCheck;
         imgIcon.AddSvgAsset("Logo.svg");
         gifLoading.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
         AssetManager.RegisterForAssetReload("Loading.gif",

@@ -13,7 +13,6 @@ using TinyUpdate.Core;
 using TinyUpdate.Core.Logging;
 using TinyUpdate.Core.Logging.Loggers;
 
-//TODO: Go through app for text that needs to be localized
 //TODO: When reattempting Lottie animations, use https://github.com/AvaloniaUI/Avalonia.Lottie/tree/layercache-impl as a starting point (It works on some animations but crashes on others)
 [assembly: SemanticVersion("7.0.0-beta7")]
 namespace MultiRPC;

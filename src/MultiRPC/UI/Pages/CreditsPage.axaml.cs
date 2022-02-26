@@ -22,10 +22,10 @@ public partial class CreditsPage : SidePage
     {
         InitializeComponent(loadXaml);
 
-        tblCommunityAdminsTitle.DataContext = Language.GetLanguage(LanguageText.CommunityAdmins);
-        tblPatreonDonatorsTitle.DataContext = Language.GetLanguage(LanguageText.PatreonDonators);
-        tblPaypalDonatorsTitle.DataContext = Language.GetLanguage(LanguageText.PaypalDonators);
-        tblIconProvidersTitle.DataContext = Language.GetLanguage(LanguageText.IconProviders);
+        tblCommunityAdminsTitle.DataContext = (Language)LanguageText.CommunityAdmins;
+        tblPatreonDonatorsTitle.DataContext = (Language)LanguageText.PatreonDonators;
+        tblPaypalDonatorsTitle.DataContext = (Language)LanguageText.PaypalDonators;
+        tblIconProvidersTitle.DataContext = (Language)LanguageText.IconProviders;
         NetworkChange.NetworkAddressChanged += NetworkChangeOnNetworkAddressChanged;
         UpdateCredits();
         _ = DownloadAndShow();

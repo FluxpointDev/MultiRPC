@@ -67,6 +67,8 @@ public class RpcClient
 
     public void Start(long? applicationId, string? applicationName)
     {
+        //TODO: Check if discord is running under admin and if we need to restart under admin (But warn about having both apps open with admin in the first place)
+        
         _presenceId = applicationId ?? RpcPageManager.CurrentPage?.RichPresence.Id ?? Constants.MultiRPCID;
         var idS = _presenceId.ToString();
 
@@ -95,9 +97,9 @@ public class RpcClient
         if (LoggingCreator.ShouldProcess(_logger.LogLevel, LogLevel.Trace))
         {
             var debugMessage = Language.GetText(LanguageText.DiscordClientCheck)
-                .Replace("{discordProcess}", (Language.GetText(processName ?? "NA")))
-                .Replace("{wasFound}", (pipe != -1).ToString());
-            _logger.Debug(debugMessage);
+                .Replace("{discordProcess}", "{0}")
+                .Replace("{wasFound}", "{1}");
+            _logger.Debug(debugMessage, (Language.GetText(processName ?? "NA")), (pipe != -1).ToString());
         }
         _client = new DiscordRpcClient(idS, pipe)
         {

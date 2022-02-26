@@ -14,11 +14,11 @@ namespace MultiRPC.UI.Pages.Theme;
 public partial class ThemePreview : UserControl
 {
     private Theming.Theme _theme;
-    private static readonly Language WewTextBox = Language.GetLanguage(LanguageText.WewTextbox);
-    private static readonly Language WewTextBlock = Language.GetLanguage(LanguageText.WewTextBlock);
-    private static readonly Language WewCheckBox = Language.GetLanguage(LanguageText.WewCheckBox);
-    private static readonly Language WewButton = Language.GetLanguage(LanguageText.WewButton);
-    private static readonly Language WewButtonDisabled = Language.GetLanguage(LanguageText.WewDisabledButton);
+    private static readonly Language WewTextBox = LanguageText.WewTextbox;
+    private static readonly Language WewTextBlock = LanguageText.WewTextBlock;
+    private static readonly Language WewCheckBox = LanguageText.WewCheckBox;
+    private static readonly Language WewButton = LanguageText.WewButton;
+    private static readonly Language WewButtonDisabled = LanguageText.WewDisabledButton;
     private readonly DisableSettings _disableSetting = SettingManager<DisableSettings>.Setting;
 
     public Theming.Theme Theme
@@ -65,8 +65,8 @@ public partial class ThemePreview : UserControl
 
     private static readonly Language[] WewComboBox =
     {
-        Language.GetLanguage(LanguageText.WewComboboxItem),
-        Language.GetLanguage(LanguageText.WewComboboxItem2)
+        LanguageText.WewComboboxItem,
+        LanguageText.WewComboboxItem2
     };
     
     private void UpdateIconColour(SvgSource source, Color color)
@@ -110,7 +110,7 @@ public partial class ThemePreview : UserControl
             };
         });
 
-        var lang = Language.GetLanguage(page.LocalizableName);
+        Language lang = page.LocalizableName;
         lang.TextObservable.Subscribe(s => CustomToolTip.SetTip(btn,  _disableSetting.ShowPageTooltips ? null : s));
         _disableSetting.PropertyChanged += (sender, args) =>
         {

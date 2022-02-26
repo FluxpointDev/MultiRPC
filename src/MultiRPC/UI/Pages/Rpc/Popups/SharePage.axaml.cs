@@ -15,7 +15,7 @@ namespace MultiRPC.UI.Pages.Rpc.Popups;
 public partial class SharePage : UserControl, ITitlePage
 {
     private readonly ILogging _logging = LoggingCreator.CreateLogger(nameof(SharePage));
-    public Language Title { get; } = Language.GetLanguage(LanguageText.ProfileShare);
+    public Language Title { get; } = LanguageText.ProfileShare;
 
     public SharePage()
     {
@@ -31,9 +31,9 @@ public partial class SharePage : UserControl, ITitlePage
         _activeRichPresence = activeRichPresence;
         InitializeComponent();
 
-        tblGuild.DataContext = Language.GetLanguage(LanguageText.ShareHelp);
-        btnExport.DataContext = Language.GetLanguage(LanguageText.Export);
-        btnImport.DataContext = Language.GetLanguage(LanguageText.Import);
+        tblGuild.DataContext = (Language)LanguageText.ShareHelp;
+        btnExport.DataContext = (Language)LanguageText.Export;
+        btnImport.DataContext = (Language)LanguageText.Import;
         btnImport.IsEnabled = false;
     }
 

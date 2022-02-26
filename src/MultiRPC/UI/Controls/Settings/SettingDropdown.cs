@@ -56,7 +56,7 @@ public class SettingDropdown<T> : SettingItem
         //Set what should be shown
         if (languageSourceAttribute == null)
         {
-            _cboSelection.Items = isLocalizable ? values.Select(x => Language.GetLanguage(x?.ToString() ?? "")) : values;
+            _cboSelection.Items = isLocalizable ? values.Select(x => (Language)(x?.ToString() ?? "")) : values;
         }
         else
         {

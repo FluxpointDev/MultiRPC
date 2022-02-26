@@ -50,14 +50,14 @@ public partial class TopBar : UserControl
         };
 
         btnStart.DataContext = _startButton = new Language(LanguageText.Start, LanguageText.MultiRPC);
-        btnUpdatePresence.DataContext = Language.GetLanguage(LanguageText.UpdatePresence);
-        btnAfk.DataContext = Language.GetLanguage(LanguageText.Afk);
-        btnAuto.DataContext = Language.GetLanguage(LanguageText.Auto);
-        txtAfk.DataContext = Language.GetLanguage(LanguageText.AfkText);
+        btnUpdatePresence.DataContext = (Language)LanguageText.UpdatePresence;
+        btnAfk.DataContext = (Language)LanguageText.Afk;
+        btnAuto.DataContext = (Language)LanguageText.Auto;
+        txtAfk.DataContext = (Language)LanguageText.AfkText;
 
         _statusKind = new Language(LanguageText.Disconnected);
-        _statusText = Language.GetLanguage(LanguageText.Status);
-        _userText = Language.GetLanguage(LanguageText.User);
+        _statusText = LanguageText.Status;
+        _userText = LanguageText.User;
 
         _statusKind.TextObservable.Subscribe(_ => UpdateStatus());
         _statusText.TextObservable.Subscribe(_ => UpdateStatus());
@@ -91,7 +91,7 @@ public partial class TopBar : UserControl
                 _statusKind.ChangeJsonNames(LanguageText.Connected);
                 if (_rpcClient.ID != Constants.AfkID)
                 {
-                    btnUpdatePresence.IsEnabled = _page?.PresenceValid ?? true;
+                    btnUpdatePresence.IsEnabled = _page == RpcPageManager.PendingPage ? (_page?.PresenceValid ?? true) : false;
                 }
 
                 var user = message.User.Username + "#" + message.User.Discriminator.ToString("0000");

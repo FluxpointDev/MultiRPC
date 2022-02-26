@@ -50,11 +50,11 @@ public partial class CustomPage : RpcPage
     private Button? _activeButton;
     private BaseRpcControl _rpcControl = null!;
     private SvgImage _svgHelpImage = null!;
-    private readonly Language _editLang = Language.GetLanguage(LanguageText.ProfileEdit);
-    private readonly Language _shareLang = Language.GetLanguage(LanguageText.ProfileShare);
-    private readonly Language _addLang = Language.GetLanguage(LanguageText.ProfileAdd);
-    private readonly Language _deleteLang = Language.GetLanguage(LanguageText.ProfileDelete);
-    private readonly Language _cloneLang = Language.GetLanguage(LanguageText.ProfileClone);
+    private readonly Language _editLang = LanguageText.ProfileEdit;
+    private readonly Language _shareLang = LanguageText.ProfileShare;
+    private readonly Language _addLang = LanguageText.ProfileAdd;
+    private readonly Language _deleteLang = LanguageText.ProfileDelete;
+    private readonly Language _cloneLang = LanguageText.ProfileClone;
     private readonly AutoCompleteBox txtLargeKey = new AutoCompleteBox
     {
         [!AutoCompleteBox.TextProperty] = new Binding("Result", BindingMode.TwoWay),
@@ -127,7 +127,7 @@ public partial class CustomPage : RpcPage
         {
             ImageType = ImagesType.Custom,
             GrabID = true,
-            TabName = Language.GetLanguage(LanguageText.CustomPage),
+            TabName = LanguageText.CustomPage,
             Margin = new Thickness(10),
         };
         _rpcControl.ProfileChanged += (sender, args) => PresenceChanged?.Invoke(sender, args);
@@ -311,8 +311,8 @@ public partial class CustomPage : RpcPage
         };
 
         //TODO: Add a way to check if it's an url and to check the url
-        txtLargeKey.AddValidation(Language.GetLanguage(LanguageText.LargeKey), s => RichPresence.Profile.LargeKey = s, s => s.Check(256), OnProfileChanged, RichPresence.Profile.LargeKey);
-        txtSmallKey.AddValidation(Language.GetLanguage(LanguageText.SmallKey), s => RichPresence.Profile.SmallKey = s, s => s.Check(256), OnProfileChanged, RichPresence.Profile.SmallKey);
+        txtLargeKey.AddValidation(LanguageText.LargeKey, s => RichPresence.Profile.LargeKey = s, s => s.Check(256), OnProfileChanged, RichPresence.Profile.LargeKey);
+        txtSmallKey.AddValidation(LanguageText.SmallKey, s => RichPresence.Profile.SmallKey = s, s => s.Check(256), OnProfileChanged, RichPresence.Profile.SmallKey);
             
         await RichPresence.AssetsManager.GetAssetsAsync();
         //txtLargeKey.Items = RichPresence.AssetsManager.Assets?.Select(x => x.Name).ToImmutableArray();

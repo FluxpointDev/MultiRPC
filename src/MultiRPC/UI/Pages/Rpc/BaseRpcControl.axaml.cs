@@ -95,7 +95,7 @@ public partial class BaseRpcControl : UserControl, ITabPage
         if (GrabID)
         {
             txtClientID.IsVisible = true;
-            txtClientID.AddValidation(Language.GetLanguage(LanguageText.ClientID), null, s =>
+            txtClientID.AddValidation(LanguageText.ClientID, null, s =>
             {
                 if (s.Length != 18)
                 {
@@ -116,18 +116,18 @@ public partial class BaseRpcControl : UserControl, ITabPage
             }, OnProfileChanged, RichPresence.Id.ToString());
         }
 
-        txtText1.AddValidation(Language.GetLanguage(LanguageText.Text1), s => RichPresence.Profile.Details = s, s => s.Check(), OnProfileChanged, RichPresence.Profile.Details);
-        txtText2.AddValidation(Language.GetLanguage(LanguageText.Text2), s => RichPresence.Profile.State = s, s => s.Check(), OnProfileChanged, RichPresence.Profile.State);
-        txtLargeText.AddValidation(Language.GetLanguage(LanguageText.LargeText), s => RichPresence.Profile.LargeText = s, s => s.Check(), OnProfileChanged, RichPresence.Profile.LargeText);
-        txtSmallText.AddValidation(Language.GetLanguage(LanguageText.SmallText), s => RichPresence.Profile.SmallText = s, s => s.Check(), OnProfileChanged, RichPresence.Profile.SmallText);
+        txtText1.AddValidation(LanguageText.Text1, s => RichPresence.Profile.Details = s, s => s.Check(), OnProfileChanged, RichPresence.Profile.Details);
+        txtText2.AddValidation(LanguageText.Text2, s => RichPresence.Profile.State = s, s => s.Check(), OnProfileChanged, RichPresence.Profile.State);
+        txtLargeText.AddValidation(LanguageText.LargeText, s => RichPresence.Profile.LargeText = s, s => s.Check(), OnProfileChanged, RichPresence.Profile.LargeText);
+        txtSmallText.AddValidation(LanguageText.SmallText, s => RichPresence.Profile.SmallText = s, s => s.Check(), OnProfileChanged, RichPresence.Profile.SmallText);
 
-        txtButton1Url.AddValidation(Language.GetLanguage(LanguageText.Button1Url), s => RichPresence.Profile.Button1Url = s, x => x.CheckUrl(), OnProfileChanged, RichPresence.Profile.Button1Url);
-        txtButton1Text.AddValidation(Language.GetLanguage(LanguageText.Button1Text), s => RichPresence.Profile.Button1Text = s, s => s.Check(32), OnProfileChanged, RichPresence.Profile.Button1Text);
-        txtButton2Url.AddValidation(Language.GetLanguage(LanguageText.Button2Url), s => RichPresence.Profile.Button2Url = s, x => x.CheckUrl(), OnProfileChanged, RichPresence.Profile.Button2Url);
-        txtButton2Text.AddValidation(Language.GetLanguage(LanguageText.Button2Text), s => RichPresence.Profile.Button2Text = s, s => s.Check(32), OnProfileChanged, RichPresence.Profile.Button2Text);
+        txtButton1Url.AddValidation(LanguageText.Button1Url, s => RichPresence.Profile.Button1Url = s, x => x.CheckUrl(), OnProfileChanged, RichPresence.Profile.Button1Url);
+        txtButton1Text.AddValidation(LanguageText.Button1Text, s => RichPresence.Profile.Button1Text = s, s => s.Check(32), OnProfileChanged, RichPresence.Profile.Button1Text);
+        txtButton2Url.AddValidation(LanguageText.Button2Url, s => RichPresence.Profile.Button2Url = s, x => x.CheckUrl(), OnProfileChanged, RichPresence.Profile.Button2Url);
+        txtButton2Text.AddValidation(LanguageText.Button2Text, s => RichPresence.Profile.Button2Text = s, s => s.Check(32), OnProfileChanged, RichPresence.Profile.Button2Text);
 
         ckbElapsedTime.IsChecked = RichPresence.Profile.ShowTime;
-        ckbElapsedTime.DataContext = Language.GetLanguage(LanguageText.ShowElapsedTime);
+        ckbElapsedTime.DataContext = (Language)LanguageText.ShowElapsedTime;
     }
     
     public void AddExtraControl(Control control)

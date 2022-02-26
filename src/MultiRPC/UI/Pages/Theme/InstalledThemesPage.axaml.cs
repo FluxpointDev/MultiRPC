@@ -49,14 +49,14 @@ public partial class InstalledThemesPage : UserControl, ITabPage
     private ActionDisposable<TextBlock>? _activeShowingTextBlockDisposable;
     private Button _activeRemoveButton;
 
-    public Language? TabName { get; } = Language.GetLanguage(LanguageText.InstalledThemes);
+    public Language? TabName { get; } = LanguageText.InstalledThemes;
     public bool IsDefaultPage => false;
     public void Initialize(bool loadXaml)
     {
         InitializeComponent(loadXaml);
 
-        btnAdd.DataContext = Language.GetLanguage(LanguageText.AddTheme);
-        btnAddAndApply.DataContext = Language.GetLanguage(LanguageText.AddAndApplyTheme);
+        btnAdd.DataContext = (Language)LanguageText.AddTheme;
+        btnAddAndApply.DataContext = (Language)LanguageText.AddAndApplyTheme;
 
         wppThemes.Children.AddRange(
             new []
@@ -133,14 +133,14 @@ public partial class InstalledThemesPage : UserControl, ITabPage
             //TODO: Make different UI for this
             return new TextBlock
             {
-                DataContext = Language.GetLanguage(LanguageText.NA),
+                DataContext = (Language)LanguageText.NA,
                 [!TextBlock.TextProperty] = new Binding("TextObservable^"),
             };
         }
 
         var editButton = new Button
         {
-            DataContext = Language.GetLanguage(LanguageText.Edit),
+            DataContext = (Language)LanguageText.Edit,
             [!ContentProperty] = new Binding("TextObservable^"),
             IsEnabled = !file?.StartsWith('#') ?? false,
             Tag = theme,
@@ -149,7 +149,7 @@ public partial class InstalledThemesPage : UserControl, ITabPage
             
         var removeButton = new Button
         {
-            DataContext = Language.GetLanguage(LanguageText.Remove),
+            DataContext = (Language)LanguageText.Remove,
             [!ContentProperty] = new Binding("TextObservable^"),
             IsEnabled = editButton.IsEnabled,
             Tag = theme,
@@ -158,7 +158,7 @@ public partial class InstalledThemesPage : UserControl, ITabPage
 
         var cloneButton = new Button
         {
-            DataContext = Language.GetLanguage(LanguageText.Clone),
+            DataContext = (Language)LanguageText.Clone,
             [!ContentProperty] = new Binding("TextObservable^"),
             Tag = theme,
         };

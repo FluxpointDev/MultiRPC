@@ -23,7 +23,7 @@ public partial class EditPage : UserControl, ITitlePage
         }
     }
 
-    public Language Title { get; } = Language.GetLanguage(LanguageText.ProfileEdit);
+    public Language Title { get; } = LanguageText.ProfileEdit;
 
     public EditPage(RichPresence activeRichPresence)
     {
@@ -31,7 +31,7 @@ public partial class EditPage : UserControl, ITitlePage
         _newName = activeRichPresence.Name;
         InitializeComponent();
             
-        btnDone.DataContext = Language.GetLanguage(LanguageText.Done);
+        btnDone.DataContext = (Language)LanguageText.Done;
         btnDone.Command = new ActionCommand((ob) =>
         {
             if (btnDone.IsEnabled)

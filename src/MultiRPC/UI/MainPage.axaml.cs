@@ -144,7 +144,7 @@ public partial class MainPage : UserControl
             }
         });
 
-        var lang = Language.GetLanguage(page.LocalizableName);
+        Language lang = page.LocalizableName;
         lang.TextObservable.Subscribe(s => CustomToolTip.SetTip(btn,  _disableSetting.ShowPageTooltips ? null : s));
         _disableSetting.PropertyChanged += (sender, args) =>
         {

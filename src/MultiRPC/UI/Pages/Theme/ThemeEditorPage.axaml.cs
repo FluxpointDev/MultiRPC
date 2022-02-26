@@ -21,7 +21,7 @@ public partial class ThemeEditorPage : UserControl, ITabPage
     private ColourButton _colourButton;
     private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
     
-    public Language? TabName { get; } = Language.GetLanguage(LanguageText.ThemeEditor);
+    public Language? TabName { get; } = LanguageText.ThemeEditor;
     public bool IsDefaultPage => true;
     public void Initialize(bool loadXaml)
     {
@@ -33,29 +33,29 @@ public partial class ThemeEditorPage : UserControl, ITabPage
         _themePreview = new ThemePreview(_theme);
         grdMetadata.Children.Insert(0, _themePreview);
 
-        tblTitle.DataContext = Language.GetLanguage(LanguageText.LetMakeTheme);
-        edrPrimary.DataContext = Language.GetLanguage(LanguageText.Primary);
-        edrSecondary.DataContext = Language.GetLanguage(LanguageText.Secondary);
-        edrButtons.DataContext = Language.GetLanguage(LanguageText.Buttons);
-        edrPages.DataContext = Language.GetLanguage(LanguageText.Pages);
-        edrOther.DataContext = Language.GetLanguage(LanguageText.Other);
+        tblTitle.DataContext = (Language)LanguageText.LetMakeTheme;
+        edrPrimary.DataContext = (Language)LanguageText.Primary;
+        edrSecondary.DataContext = (Language)LanguageText.Secondary;
+        edrButtons.DataContext = (Language)LanguageText.Buttons;
+        edrPages.DataContext = (Language)LanguageText.Pages;
+        edrOther.DataContext = (Language)LanguageText.Other;
 
-        btnSave.DataContext = Language.GetLanguage(LanguageText.SaveTheme);
-        btnSaveAndApply.DataContext = Language.GetLanguage(LanguageText.SaveAndApplyTheme);
-        btnReset.DataContext = Language.GetLanguage(LanguageText.ResetTheme);
-        txtName.DataContext = Language.GetLanguage(LanguageText.ThemeName);
+        btnSave.DataContext = (Language)LanguageText.SaveTheme;
+        btnSaveAndApply.DataContext = (Language)LanguageText.SaveAndApplyTheme;
+        btnReset.DataContext = (Language)LanguageText.ResetTheme;
+        txtName.DataContext = (Language)LanguageText.ThemeName;
         
-        clbColour1.Language = Language.GetLanguage(LanguageText.Colour1);
-        clbColour2.Language = Language.GetLanguage(LanguageText.Colour2);
-        clbColour2Hover.Language = Language.GetLanguage(LanguageText.Colour2Hover);
-        clbColour3.Language = Language.GetLanguage(LanguageText.Colour3);
-        clbColour4.Language = Language.GetLanguage(LanguageText.Colour4);
-        clbColour5.Language = Language.GetLanguage(LanguageText.Colour5);
-        clbTextColour.Language = Language.GetLanguage(LanguageText.TextColour);
-        clbDisabledBtnColour.Language = Language.GetLanguage(LanguageText.DisabledButtonColour);
-        clbDisabledBtnTextColour.Language = Language.GetLanguage(LanguageText.DisabledButtonTextColour);
-        clbSelectedPageColour.Language = Language.GetLanguage(LanguageText.SelectedPageColour);
-        clbSelectedPageIconColour.Language = Language.GetLanguage(LanguageText.SelectedPageIconColour);
+        clbColour1.Language = LanguageText.Colour1;
+        clbColour2.Language = LanguageText.Colour2;
+        clbColour2Hover.Language = LanguageText.Colour2Hover;
+        clbColour3.Language = LanguageText.Colour3;
+        clbColour4.Language = LanguageText.Colour4;
+        clbColour5.Language = LanguageText.Colour5;
+        clbTextColour.Language = LanguageText.TextColour;
+        clbDisabledBtnColour.Language = LanguageText.DisabledButtonColour;
+        clbDisabledBtnTextColour.Language = LanguageText.DisabledButtonTextColour;
+        clbSelectedPageColour.Language = LanguageText.SelectedPageColour;
+        clbSelectedPageIconColour.Language = LanguageText.SelectedPageIconColour;
 
         _colourButton = clbColour1;
         SetColours();

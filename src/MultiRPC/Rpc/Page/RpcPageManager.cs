@@ -7,18 +7,19 @@ namespace MultiRPC.Rpc.Page;
 public static class RpcPageManager
 {
     public static RpcPage? CurrentPage { get; private set; }
+    public static RpcPage? PendingPage { get; private set; }
 
     private static RpcClient? _rpcClient;
-    private static RpcPage? _pendingPage;
+
     private static void RpcClient_Disconnected(object? sender, EventArgs e)
     {
-        if (_pendingPage == null)
+        if (PendingPage == null)
         {
             return;
         }
 
-        CurrentPage = _pendingPage;
-        _pendingPage = null;
+        CurrentPage = PendingPage;
+        PendingPage = null;
         NewCurrentPage?.Invoke(sender, CurrentPage);
         PageChanged?.Invoke(sender, CurrentPage);
     }
@@ -33,7 +34,7 @@ public static class RpcPageManager
             
         if (_rpcClient.IsRunning)
         {
-            _pendingPage = page;
+            PendingPage = page;
             PageChanged?.Invoke(null, page);
             return;
         }

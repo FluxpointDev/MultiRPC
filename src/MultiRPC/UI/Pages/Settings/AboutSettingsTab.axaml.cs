@@ -25,7 +25,7 @@ public partial class AboutSettingsTab : UserControl, ITabPage
         InitializeComponent();
     }
 
-    public Language? TabName { get; } = Language.GetLanguage(LanguageText.About);
+    public Language? TabName { get; } = LanguageText.About;
     public bool IsDefaultPage => true;
     public void Initialize(bool loadXaml)
     {
@@ -33,24 +33,24 @@ public partial class AboutSettingsTab : UserControl, ITabPage
         btnAdmin.IsEnabled = !AdminUtil.IsAdmin && OperatingSystem.IsWindows();
 
         tblName.Text += Constants.CurrentVersion.ToString() + ')';
-        var madeByLang = Language.GetLanguage(LanguageText.MadeBy);
+        Language madeByLang = LanguageText.MadeBy;
         madeByLang.TextObservable.Subscribe(x => tblMadeBy.Text = x + ": " + Constants.AppDeveloper);
-        tblDiscord.DataContext = Language.GetLanguage(LanguageText.Discord);
-        tblDonations.DataContext = Language.GetLanguage(LanguageText.Donations);
-        btnDonate.DataContext = Language.GetLanguage(LanguageText.ClickToDonate);
-        tblDonationInfo.DataContext = Language.GetLanguage(LanguageText.DonateMessage);
-        btnAdmin.DataContext = Language.GetLanguage(LanguageText.Admin);
-        btnChangelog.DataContext = Language.GetLanguage(LanguageText.Changelog);
-        btnCheckUpdate.DataContext = Language.GetLanguage(LanguageText.CheckForUpdates);
+        tblDiscord.DataContext = (Language)LanguageText.Discord;
+        tblDonations.DataContext = (Language)LanguageText.Donations;
+        btnDonate.DataContext = (Language)LanguageText.ClickToDonate;
+        tblDonationInfo.DataContext = (Language)LanguageText.DonateMessage;
+        btnAdmin.DataContext = (Language)LanguageText.Admin;
+        btnChangelog.DataContext = (Language)LanguageText.Changelog;
+        btnCheckUpdate.DataContext = (Language)LanguageText.CheckForUpdates;
         _ = CheckDiscordStatus();
 
-        var githubTooltipLang = Language.GetLanguage(LanguageText.GithubTooltip);
+        Language githubTooltipLang = LanguageText.GithubTooltip;
         githubTooltipLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgGithub, x));
             
-        var fluxpointTooltipLang = Language.GetLanguage(LanguageText.FluxpointTooltip);
+        Language fluxpointTooltipLang = LanguageText.FluxpointTooltip;
         fluxpointTooltipLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(imgFluxpoint, x));
  
-        var discordTooltipLang = Language.GetLanguage(LanguageText.JoinForFunBotsAndSupport);
+        Language discordTooltipLang = LanguageText.JoinForFunBotsAndSupport;
         discordTooltipLang.TextObservable.Subscribe(x => CustomToolTip.SetTip(brdDiscord, x));
             
         imgIcon.AddSvgAsset("Logo.svg");

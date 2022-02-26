@@ -19,7 +19,7 @@ public partial class ColourButton : UserControl
         }
     }
 
-    private readonly StyledProperty<Language> _languageProperty = AvaloniaProperty.Register<ColourButton, Language>(nameof(Language), Language.GetLanguage(LanguageText.NA));
+    private readonly StyledProperty<Language> _languageProperty = AvaloniaProperty.Register<ColourButton, Language>(nameof(Language), LanguageText.NA);
     public Language Language
     {
         get => GetValue(_languageProperty);

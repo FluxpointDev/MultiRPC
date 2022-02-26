@@ -24,7 +24,7 @@ public sealed partial class TabsPage : UserControl
 
     private readonly List<ITabPage> _pages = new List<ITabPage>();
     private Rectangle? _activePageRectangle;
-    private static readonly Language NaLang = Language.GetLanguage(LanguageText.NA);
+    private static readonly Language NaLang = LanguageText.NA;
     private static DisableSettings _disableSettings => SettingManager<DisableSettings>.Setting;
     private static readonly PointerPressedEventArgs PointerArg = new PointerPressedEventArgs(null!, null!, null!,
         new Point(), 0, PointerPointProperties.None, KeyModifiers.None);

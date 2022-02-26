@@ -201,7 +201,7 @@ public partial class MainWindow : FluentWindow
         };
         grdContent.Children.Insert(3, _control);
 
-        var lang = Language.GetLanguage(LanguageText.MultiRPC);
+        Language lang = LanguageText.MultiRPC;
         if (_control is ITitlePage titlePage)
         {
             lang.TextObservable.Subscribe(s => UpdateTitle(s, titlePage.Title.Text));

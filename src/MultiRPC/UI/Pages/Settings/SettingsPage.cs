@@ -42,7 +42,7 @@ public partial class SettingsPage : SidePage
                     switch (attribute)
                     {
                         case SettingNameAttribute nameAttribute:
-                            name = Language.GetLanguage(nameAttribute.Name);
+                            name = nameAttribute.Name;
                             isSetting = true;
                             break;
                         case SettingSourceAttribute settingSourceAttribute:
@@ -77,7 +77,7 @@ public partial class SettingsPage : SidePage
 
                 settingPage ??= new SettingsTab
                 {
-                    TabName = Language.GetLanguage(setting.Name),
+                    TabName = setting.Name,
                     Margin = new Thickness(10)
                 };
                 

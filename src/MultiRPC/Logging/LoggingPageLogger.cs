@@ -11,10 +11,10 @@ public class LoggingPageLogger : ILogging
 {
     private static Action<TextBlock>? _action;
     private static readonly List<string[]> StoredLogging = new List<string[]>();
-    private static readonly Language DebugLanguage = Language.GetLanguage(LanguageText.Debug);
-    private static readonly Language InfoLanguage = Language.GetLanguage(LanguageText.Info);
-    private static readonly Language WarnLanguage = Language.GetLanguage(LanguageText.Warn);
-    private static readonly Language ErrorLanguage = Language.GetLanguage(LanguageText.Error);
+    private static readonly Language DebugLanguage = LanguageText.Debug;
+    private static readonly Language InfoLanguage = LanguageText.Info;
+    private static readonly Language WarnLanguage = LanguageText.Warn;
+    private static readonly Language ErrorLanguage = LanguageText.Error;
 
     internal static void AddAction(Action<TextBlock> action)
     {

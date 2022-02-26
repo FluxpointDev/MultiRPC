@@ -25,16 +25,16 @@ public partial class DebugPage : SidePage
         InitializeComponent(loadXaml);
         _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException();
 
-        tblRPC.DataContext = Language.GetLanguage(LanguageText.RPC);
-        tblGUI.DataContext = Language.GetLanguage(LanguageText.GUI);
+        tblRPC.DataContext = (Language)LanguageText.RPC;
+        tblGUI.DataContext = (Language)LanguageText.GUI;
 
-        btnDebugStartRPC.DataContext = Language.GetLanguage(LanguageText.DebugRPCStart);
-        btnDebugStopRPC.DataContext = Language.GetLanguage(LanguageText.DebugRPCStop);
-        btnTestUpdate.DataContext = Language.GetLanguage(LanguageText.TestUpdateWindow);
+        btnDebugStartRPC.DataContext = (Language)LanguageText.DebugRPCStart;
+        btnDebugStopRPC.DataContext = (Language)LanguageText.DebugRPCStop;
+        btnTestUpdate.DataContext = (Language)LanguageText.TestUpdateWindow;
 
-        var debugStartRPCTooltip = Language.GetLanguage(LanguageText.DebugStartRPCTooltip);
-        var debugStopRPCTooltip = Language.GetLanguage(LanguageText.DebugStopRPCTooltip);
-        var testUpdateWindowTooltip = Language.GetLanguage(LanguageText.TestUpdateWindowTooltip);
+        Language debugStartRPCTooltip = LanguageText.DebugStartRPCTooltip;
+        Language debugStopRPCTooltip = LanguageText.DebugStopRPCTooltip;
+        Language testUpdateWindowTooltip = LanguageText.TestUpdateWindowTooltip;
         debugStartRPCTooltip.TextObservable.Subscribe(x => CustomToolTip.SetTip(btnDebugStartRPC, x));
         debugStopRPCTooltip.TextObservable.Subscribe(x => CustomToolTip.SetTip(btnDebugStopRPC, x));
         testUpdateWindowTooltip.TextObservable.Subscribe(x => CustomToolTip.SetTip(btnTestUpdate, x));

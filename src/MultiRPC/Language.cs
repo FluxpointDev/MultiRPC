@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -16,7 +16,7 @@ namespace MultiRPC;
 public static class LanguageGrab
 {
     internal static Dictionary<LanguageText, string> EnglishLanguage;
-    internal static Dictionary<LanguageText, string>? Language;
+    internal static Dictionary<LanguageText, string>? CurrentLanguage;
     private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(LanguageGrab));
     private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.General)
     {
@@ -45,11 +45,11 @@ public static class LanguageGrab
             GeneralSettings.GetLanguages();
             if (GeneralSettings.Languages.ContainsKey(langName))
             {
-                Language = GrabLanguageFile(GeneralSettings.Languages[langName]);
+                CurrentLanguage = GrabLanguageFile(GeneralSettings.Languages[langName]);
             }
         }
 
-        if (Language != null)
+        if (CurrentLanguage != null)
             return;
 
         /*If we wasn't able to load the users language from
@@ -61,7 +61,7 @@ public static class LanguageGrab
         if (currentLang != "en-gb")
         {
             var currentLangTwoLetter = currentCulture.TwoLetterISOLanguageName.ToLower();
-            Language =
+            CurrentLanguage =
                 GrabLanguageFile(GetFilePath(currentLang)) 
                 ?? GrabLanguageFile(GetFilePath(currentLangTwoLetter));
         }
@@ -91,7 +91,7 @@ public static class LanguageGrab
         var lan = GrabLanguageFile(file);
         if (lan != null)
         {
-            Language = lan;
+            CurrentLanguage = lan;
             LanguageChanged?.Invoke(null, EventArgs.Empty);
         }
     }
@@ -141,7 +141,11 @@ public class Language
     public static Language GetLanguage(LanguageText? languageText)
     {
         languageText ??= LanguageText.NA;
-        var lang = CachedLanguages.FirstOrDefault(x => x._textObservable.Value.JsonNames.Any(y => y == languageText));
+        var lang = CachedLanguages.FirstOrDefault(x => 
+            (x._textObservable.IsValueCreated ? 
+                x._textObservable.Value.JsonNames : 
+                (x._jsonNames ?? x._textObservable.Value.JsonNames))
+            .Any(y => y == languageText));
         if (lang == null)
         {
             lang = new Language((LanguageText)languageText);
@@ -159,9 +163,9 @@ public class Language
         {
             return GetText(LanguageText.NA);
         }
-        if (LanguageGrab.Language?.ContainsKey((LanguageText)jsonName) ?? false)
+        if (LanguageGrab.CurrentLanguage?.ContainsKey((LanguageText)jsonName) ?? false)
         {
-            return LanguageGrab.Language[(LanguageText)jsonName];
+            return LanguageGrab.CurrentLanguage[(LanguageText)jsonName];
         }
         //We manually have the N/A here in case it isn't seen anywhere (But that would also show a bigger issue)
         return LanguageGrab.EnglishLanguage.ContainsKey((LanguageText)jsonName) ?
@@ -189,6 +193,10 @@ public class Language
 
         return null;
     }
+
+    public override string ToString() => Text;
+    public static implicit operator Language(LanguageText b) => GetLanguage(b);
+    public static implicit operator Language(string b) => GetLanguage(b);
 }
 
 public class LanguageObservable : IObservable<string>
