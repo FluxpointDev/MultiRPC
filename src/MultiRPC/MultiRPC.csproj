@@ -2,6 +2,6 @@
   <Import Project="..\MultiRPC\MultiRPC.Base.csproj" />
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <DefineConstants>$(DefineConstants);THEME_EDIT</DefineConstants>
+    <!--<DefineConstants>$(DefineConstants);THEME_EDIT</DefineConstants>-->
   </PropertyGroup>
 </Project>
