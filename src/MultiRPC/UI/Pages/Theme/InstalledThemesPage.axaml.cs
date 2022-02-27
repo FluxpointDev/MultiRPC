@@ -58,13 +58,7 @@ public partial class InstalledThemesPage : UserControl, ITabPage
         btnAdd.DataContext = (Language)LanguageText.AddTheme;
         btnAddAndApply.DataContext = (Language)LanguageText.AddAndApplyTheme;
 
-        wppThemes.Children.AddRange(
-            new []
-            {
-                MakePreviewUI(Themes.Dark),
-                MakePreviewUI(Themes.Light)
-            });
-
+        wppThemes.Children.AddRange(Themes.ThemeIndexes.Values.Select(x => MakePreviewUI(x)));
         if (!Directory.Exists(Constants.ThemeFolder))
         {
             return;

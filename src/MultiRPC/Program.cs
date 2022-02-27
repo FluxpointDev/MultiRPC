@@ -59,7 +59,7 @@ internal static class Program
     {
         if (e == "SHOW")
         {
-            var win = ((App)Application.Current).DesktopLifetime!.MainWindow;
+            var win = App.MainWindow;
             win.RunUILogic(() =>
             {
                 win.WindowState = WindowState.Normal;

@@ -17,24 +17,12 @@ using TinyUpdate.Core.Utils;
 
 namespace MultiRPC.Theming;
 
-public enum ThemeType 
-{
-    /// <summary>
-    /// This theme was made before V7
-    /// </summary>
-    Legacy,
-    /// <summary>
-    /// This theme was made in V7+
-    /// </summary>
-    Modern
-}
-
 public partial class Theme
 {
-    private string _filepath = null!;
+    internal string _filepath;
+    internal bool _hasAssets = false;
     private ZipArchive? _archive;
     private bool _archiveLoaded = false;
-    private bool _hasAssets = false;
 
     private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(Theme));
     private static readonly SemanticVersion ModernVersion = new SemanticVersion(7, 0, null);
@@ -75,7 +63,7 @@ public partial class Theme
     /// <summary>
     /// What mode this theme is in
     /// </summary>
-    public ThemeType ThemeType { get; private set; } = ThemeType.Legacy;
+    public ThemeType ThemeType { get; internal set; } = ThemeType.Legacy;
     
     public static event EventHandler<Theme>? NewTheme;
     
@@ -85,9 +73,9 @@ public partial class Theme
     {
         if (ThemeType == ThemeType.Modern && _hasAssets)
         {
-            if (!_archiveLoaded)
+            if (!_archiveLoaded && !ReloadAssets())
             {
-                ReloadAssets();
+                return false;
             }
             return _archive?.Entries.Any(x => x.FullName == "Assets/" + key) ?? false;
         }
@@ -102,9 +90,9 @@ public partial class Theme
         {
             return Stream.Null;
         }
-        if (!_archiveLoaded)
+        if (!_archiveLoaded && !ReloadAssets())
         {
-            ReloadAssets();
+            return Stream.Null;
         }
 
         return _archive?.Entries
@@ -167,7 +155,7 @@ public partial class Theme
     /// <returns>The theme if we successfully loaded it in</returns>
     public static Theme? Load(string? filepath)
     {
-        if (string.IsNullOrWhiteSpace(filepath))
+        if (string.IsNullOrWhiteSpace(filepath) || filepath[0] == '#')
         {
             return null;
         }
@@ -253,7 +241,7 @@ public partial class Theme
         return theme;
     }
 
-    public void ReloadAssets()
+    public bool ReloadAssets()
     {
         UnloadAssets();
         
@@ -262,7 +250,10 @@ public partial class Theme
         {
             _archive = new ZipArchive(fileStream, ZipArchiveMode.Read);
             _archiveLoaded = true;
+            return true;
         }
+
+        return false;
     }
     
     public void UnloadAssets()
@@ -272,7 +263,7 @@ public partial class Theme
     }
 
     /// <summary>
-    /// Applies the theming to a IResourceDictionary (or App.Current.Resources if nothing is applied)
+    /// Applies the theming to a <see cref="IResourceDictionary"/> (or <see cref="App.Current.Resources"/> if nothing is passed)
     /// </summary>
     /// <param name="resourceDictionary">IResourceDictionary to apply to</param>
     /// <param name="fireAssetChange">If we should fire asset changes</param>
@@ -330,9 +321,15 @@ public partial class Theme
     
     public Theme Clone(string? name = null)
     {
+        var blacklistedNames = 
+#if !THEME_EDIT
+            Themes.ThemeIndexes.Keys.Select(x => x[1..]);
+#else
+            ArraySegment<string>.Empty;
+#endif
         return new Theme()
         {
-            Metadata = new Metadata(FileExt.CheckFilename(name ?? this.Metadata.Name, Constants.ThemeFolder, Themes.ThemeIndexes.Keys.Select(x => x[1..])), this.Metadata.Version),
+            Metadata = new Metadata(FileExt.CheckFilename(name ?? this.Metadata.Name, Constants.ThemeFolder, blacklistedNames), this.Metadata.Version),
             Colours = JsonSerializer.Deserialize(JsonSerializer.Serialize(this.Colours, ColoursJsonContext), ColoursJsonContext)!,
             ThemeType = this.ThemeType,
             Location = null,

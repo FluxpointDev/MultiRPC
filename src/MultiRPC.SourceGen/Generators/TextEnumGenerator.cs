@@ -3,13 +3,13 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Uno.RoslynHelpers;
 
-namespace MultiRPC.SourceGen;
+namespace MultiRPC.SourceGen.Generators;
 
 /// <summary>
 /// This takes our en-gb.json language and makes LanguageText for us!
 /// </summary>
 [Generator]
-public class TextEnumGen : ISourceGenerator
+public class TextEnumGenerator : ISourceGenerator
 {
     public void Initialize(GeneratorInitializationContext context) { }
 

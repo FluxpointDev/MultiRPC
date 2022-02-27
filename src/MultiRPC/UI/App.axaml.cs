@@ -46,9 +46,9 @@ public class App : Application
 #endif
         AvaloniaXamlLoader.Load(this);
         var genSettings = SettingManager<GeneralSettings>.Setting;
-        var theme = (genSettings.ThemeFile?.StartsWith('#') ?? false)
+        var theme = (genSettings.ThemeFile != null && genSettings.ThemeFile.StartsWith('#') && Themes.ThemeIndexes.ContainsKey(genSettings.ThemeFile))
             ? Themes.ThemeIndexes[genSettings.ThemeFile] 
-            : (Theme.Load(genSettings.ThemeFile) ?? Themes.Dark);
+            : (Theme.Load(genSettings.ThemeFile) ?? Themes.Default);
 
         Theme.ActiveThemeChanged += (sender, newTheme) =>
         {

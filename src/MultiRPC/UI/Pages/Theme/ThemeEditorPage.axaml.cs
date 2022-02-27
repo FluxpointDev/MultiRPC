@@ -27,7 +27,7 @@ public partial class ThemeEditorPage : UserControl, ITabPage
     {
         InitializeComponent(loadXaml);
 
-        _theme = Themes.Dark.Clone(GetInitialName());
+        _theme = Themes.Default.Clone(GetInitialName());
         _theme.IsBeingEdited = true;
         txtName.Text = _theme.Metadata.Name;
         _themePreview = new ThemePreview(_theme);
@@ -200,7 +200,7 @@ public partial class ThemeEditorPage : UserControl, ITabPage
     private void BtnReset_OnClick(object? sender, RoutedEventArgs e)
     {
         _theme.IsBeingEdited = false;
-        _theme = Themes.Dark.Clone(GetInitialName());
+        _theme = Themes.Default.Clone(GetInitialName());
         _theme.IsBeingEdited = true;
         SetupForNewTheme();
     }

@@ -6,16 +6,36 @@
 		<IncludeBuildOutput>false</IncludeBuildOutput>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.1" PrivateAssets="all" />
-        <PackageReference Include="Uno.Roslyn" Version="1.3.0-dev.12" PrivateAssets="all" />
+      <Compile Include="..\MultiRPC\Converters\ColourJsonConverter.cs" Link="Converters\ColourJsonConverter.cs" />
+      <Compile Include="..\MultiRPC\Converters\VersionJsonConverter.cs" Link="Converters\VersionJsonConverter.cs" />
+      <Compile Include="..\MultiRPC\Theming\Colours.cs" Link="Theme\Colours.cs" />
+      <Compile Include="..\MultiRPC\Theming\Metadata.cs" Link="Theme\Metadata.cs" />
+      <Compile Include="..\MultiRPC\Theming\ThemeMode.cs" Link="Theme\ThemeMode.cs" />
+      <Compile Include="..\MultiRPC\Theming\ThemeType.cs" Link="Theme\ThemeType.cs" />
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.1" PrivateAssets="all" />
+        <PackageReference Include="SemanticVersion" Version="2.1.0" PrivateAssets="all" GeneratePathProperty="true" />
+        <PackageReference Include="System.Text.Json" Version="6.0.2" PrivateAssets="all" GeneratePathProperty="true" />
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" PrivateAssets="all" GeneratePathProperty="true" />
+        <PackageReference Include="Uno.Roslyn" Version="1.3.0-dev.12" PrivateAssets="all" GeneratePathProperty="true" />
+    </ItemGroup>
+
+    <Target Name="GetDependencyTargetPaths">
+        <ItemGroup>
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGSemanticVersion)\lib\netstandard2.0\SemanticVersion.dll" IncludeRuntimeDependency="false" />
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" IncludeRuntimeDependency="false" />
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_Bcl_AsyncInterfaces)\lib\netstandard2.0\Microsoft.Bcl.AsyncInterfaces.dll" IncludeRuntimeDependency="false" />
+        </ItemGroup>
+    </Target>
+    
     <ItemGroup>
         <!-- Package the generator in the analyzer directory of the nuget package -->
         <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
-
 </Project>
