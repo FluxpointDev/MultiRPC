@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Splat;
 using Avalonia;
 using MultiRPC.Rpc;
@@ -34,6 +36,7 @@ public class App : Application
 
     //TODO: Put this somewhere else, for now this works
     private UpdateClient? _updater;
+    private Action _closeAction;
 
     public override void Initialize()
     {
@@ -83,16 +86,16 @@ public class App : Application
 #endif
     }
 
-    public IClassicDesktopStyleApplicationLifetime? DesktopLifetime;
-
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            DesktopLifetime = desktop;
+            _closeAction = () => desktop.Shutdown();
             desktop.MainWindow = MainWindow = new MainWindow();
         }
 
         base.OnFrameworkInitializationCompleted();
     }
+
+    public void Exit() => _closeAction.Invoke();
 }

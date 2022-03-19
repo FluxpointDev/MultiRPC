@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using MultiRPC.Extensions;
@@ -11,7 +12,7 @@ using MultiRPC.Setting.Settings;
 using MultiRPC.Theming;
 using MultiRPC.UI.Controls;
 
-namespace MultiRPC.UI.Pages.Theme;
+namespace MultiRPC.UI.Pages.Theme.Editor;
 
 //TODO: Add control for us to let the user tell us if the theme is a light/dark theme
 public partial class ThemeEditorPage : UserControl, ITabPage
@@ -21,7 +22,7 @@ public partial class ThemeEditorPage : UserControl, ITabPage
     private ColourButton _colourButton;
     private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
     
-    public Language? TabName { get; } = LanguageText.ThemeEditor;
+    public Language? TabName { get; } = LanguageText.Editor;
     public bool IsDefaultPage => true;
     public void Initialize(bool loadXaml)
     {
@@ -84,17 +85,17 @@ public partial class ThemeEditorPage : UserControl, ITabPage
         Grid.SetRow(hexTextBox, 5);
         clabControls.Remove(hexTextBox);
 
-        var hexHashText = (Control)clabControls[10];
-        Grid.SetRow(hexHashText, 5);
-        clabControls.Remove(hexHashText);
-        
         var hexHeader = (Control)clabControls[10];
         Grid.SetRow(hexHeader, 4);
         clabControls.Remove(hexHeader);
+        
+        var hexHashText = (Control)clabControls[10];
+        Grid.SetRow(hexHashText, 5);
+        clabControls.Remove(hexHashText);
 
         var hsvControls = ((Grid)grid.Children[4]).Children;
-        hsvControls.Add(hexHeader);
         hsvControls.Add(hexHashText);
+        hsvControls.Add(hexHeader);
         hsvControls.Add(hexTextBox);
 
         hexTextBox.GetObservable(TextBox.TextProperty).Subscribe(x =>

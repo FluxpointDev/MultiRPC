@@ -13,6 +13,11 @@ namespace MultiRPC;
 
 public static class AssetManager
 {
+    //Based on TODO: Find Git link
+    private static readonly SM.IAssetLoader AssetLoader = new AvaloniaAssetLoader();
+    private static readonly Dictionary<string, List<Action>> AssetReloadActions = new Dictionary<string, List<Action>>();
+    private static readonly Dictionary<string, bool> LoadedAssets = new Dictionary<string, bool>();
+
     internal static event EventHandler? ReloadAssets;
     internal static void FireReloadAssets(object? sender)
     {
@@ -35,7 +40,6 @@ public static class AssetManager
         ReloadAssets?.Invoke(sender, EventArgs.Empty);
     }
 
-    private static readonly Dictionary<string, List<Action>> AssetReloadActions = new Dictionary<string, List<Action>>();
     public static void RegisterForAssetReload(string key, Action action)
     {
         if (!AssetReloadActions.ContainsKey(key))
@@ -60,7 +64,6 @@ public static class AssetManager
         return mem;
     }
     
-    private static readonly Dictionary<string, bool> LoadedAssets = new Dictionary<string, bool>();
     /// <summary>
     /// Grabs the stream for the asset
     /// </summary>
@@ -92,8 +95,6 @@ public static class AssetManager
         return stream;
     }
 
-    //Based on TODO: Find Git link
-    private static readonly SM.IAssetLoader AssetLoader = new AvaloniaAssetLoader();
     public static SvgSource LoadSvgImage(string key, Theme? theme = null) => new SvgSource { Picture = LoadPicture(key, theme) };
 
     public static SKPicture? LoadPicture(string key, Theme? theme = null)

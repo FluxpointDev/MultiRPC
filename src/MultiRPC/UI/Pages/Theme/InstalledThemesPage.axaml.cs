@@ -18,6 +18,7 @@ using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using MultiRPC.Theming;
 using MultiRPC.UI.Controls;
+using MultiRPC.UI.Pages.Theme.Editor;
 
 namespace MultiRPC.UI.Pages.Theme;
 

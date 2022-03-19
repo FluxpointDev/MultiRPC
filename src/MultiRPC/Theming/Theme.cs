@@ -1,13 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Media.Immutable;
+using Avalonia.Utilities;
 using Fonderie;
 using MultiRPC.Converters;
 using MultiRPC.Extensions;
@@ -69,6 +73,23 @@ public partial class Theme
     
     public static event EventHandler<Theme>? ActiveThemeChanged;
 
+    public static IEnumerable<string> GetAllAssets()
+    {
+        var assembly = Assembly.GetEntryAssembly();
+        using var resources = assembly?.GetManifestResourceStream("!AvaloniaResources");
+        if (resources == null) yield break;
+
+        var indexLength = new BinaryReader(resources).ReadInt32();
+        var resourcesList = AvaloniaResourcesIndexReaderWriter.Read(new SlicedStream(resources, 4, indexLength));
+        foreach (var resource in resourcesList)
+        {
+            if (resource.Path?.StartsWith("/Assets") ?? false)
+            {
+                yield return resource.Path;
+            }
+        }
+    }
+    
     public bool HaveAsset(string key)
     {
         if (ThemeType == ThemeType.Modern && _hasAssets)

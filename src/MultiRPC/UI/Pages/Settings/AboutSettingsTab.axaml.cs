@@ -112,7 +112,7 @@ public partial class AboutSettingsTab : UserControl, ITabPage
                 Verb = "runas"
             };
             Process.Start(processInfo);
-            ((App)Application.Current).DesktopLifetime!.Shutdown();
+            ((App?)Application.Current)?.Exit();
         }
         catch (Win32Exception ex)
         {

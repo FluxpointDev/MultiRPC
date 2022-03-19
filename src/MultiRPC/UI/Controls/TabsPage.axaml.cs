@@ -13,24 +13,29 @@ using MultiRPC.Setting.Settings;
 
 namespace MultiRPC.UI.Controls;
 
-public sealed partial class TabsPage : UserControl
+public sealed partial class TabsPage : UserControl, ITabPage
 {
-    public ITabPage this[int index] => _pages[index];
-    public ITabPage this[Index index] => _pages[index];
-
-    public void AddTabs(IEnumerable<ITabPage> pages) => _pages.AddRange(pages);
-    public void AddTabs(ITabPage[] pages) => _pages.AddRange(pages);
-    public void AddTab(ITabPage page) => _pages.Add(page);
-
     private readonly List<ITabPage> _pages = new List<ITabPage>();
     private Rectangle? _activePageRectangle;
     private static readonly Language NaLang = LanguageText.NA;
     private static DisableSettings _disableSettings => SettingManager<DisableSettings>.Setting;
     private static readonly PointerPressedEventArgs PointerArg = new PointerPressedEventArgs(null!, null!, null!,
         new Point(), 0, PointerPointProperties.None, KeyModifiers.None);
-    public void Initialize()
+
+    public ITabPage this[int index] => _pages[index];
+    public ITabPage this[Index index] => _pages[index];
+
+    public Language? TabName { get; init; }
+    public bool IsDefaultPage { get; init; }
+    public void Initialize() => Initialize(true);
+    
+    public void AddTabs(IEnumerable<ITabPage> pages) => _pages.AddRange(pages);
+    public void AddTabs(ITabPage[] pages) => _pages.AddRange(pages);
+    public void AddTab(ITabPage page) => _pages.Add(page);
+    
+    public void Initialize(bool loadXaml)
     {
-        InitializeComponent();
+        InitializeComponent(loadXaml);
 
         _disableSettings.PropertyChanged += (sender, args) => UpdateBackground();
         App.Current.GetResourceObservable("ThemeAccentColor2").Subscribe(_ => UpdateBackground());
