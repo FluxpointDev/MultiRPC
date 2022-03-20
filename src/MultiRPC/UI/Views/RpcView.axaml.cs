@@ -34,7 +34,7 @@ public enum ViewType
     RpcRichPresence
 }
 
-public partial class RpcView : UserControl
+public partial class RpcView : Border
 {
     private static readonly Dictionary<Uri, IBrush> CachedImages = new Dictionary<Uri, IBrush>();
     private static readonly Dictionary<Uri, Stream> CachedStreams = new Dictionary<Uri, Stream>();
@@ -108,7 +108,7 @@ public partial class RpcView : UserControl
 
     public void UpdateBackground(IBrush brush)
     {
-        brdContent.Background = brush;
+        Background = brush;
     }
 
     public void UpdateForeground(IBrush brush)
@@ -428,7 +428,7 @@ public partial class RpcView : UserControl
             ViewType.RpcRichPresence => Application.Current.Resources["PurpleBrush"],
             _ => Application.Current.Resources["ThemeAccentBrush2"]
         } as IBrush;
-        brdContent.Background = brush;
+        Background = brush;
 
         _rpcClient.PresenceUpdated -= RpcClientOnPresenceUpdated;
         switch (_viewType)

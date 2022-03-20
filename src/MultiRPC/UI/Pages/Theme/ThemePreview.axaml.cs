@@ -11,7 +11,7 @@ using ShimSkiaSharp;
 
 namespace MultiRPC.UI.Pages.Theme;
 
-public partial class ThemePreview : UserControl
+public partial class ThemePreview : Grid
 {
     private Theming.Theme _theme;
     private static readonly Language WewTextBox = LanguageText.WewTextbox;

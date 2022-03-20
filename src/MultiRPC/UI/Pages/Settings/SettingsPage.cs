@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings.Attributes;
@@ -11,20 +12,18 @@ using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.UI.Pages.Settings;
 
-public partial class SettingsPage : SidePage
+public class SettingsPage : TabsPage, ISidePage
 {
     private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(SettingsPage));
         
-    public override string IconLocation => "Icons/Settings";
-    public override string LocalizableName => "Settings";
+    public string IconLocation => "Icons/Settings";
+    public string LocalizableName => "Settings";
+    public Thickness ContentPadding { get; } = new Thickness(0);
+
 
     public override void Initialize(bool loadXaml)
     {
-        ContentPadding = new Thickness(0);
-
-        var tabPage = new TabsPage { Background = this.Background };
-        tabPage.AddTab(new AboutSettingsTab());
-            
+        AddTab(new AboutSettingsTab());
         foreach (var setting in Locator.Current.GetServices<BaseSetting>())
         {
             SettingsTab? settingPage = null;
@@ -119,11 +118,10 @@ public partial class SettingsPage : SidePage
 
             if (settingPage != null)
             {
-                tabPage.AddTab(settingPage);
+                AddTab(settingPage);
             }
         }
-            
-        tabPage.Initialize();
-        Content = tabPage;
+
+        base.Initialize(loadXaml);
     }
 }

@@ -6,7 +6,6 @@ using MultiRPC.Setting.Settings;
 
 namespace MultiRPC.UI;
 
-//TODO: Add custom styling to tooltip's
 /// <summary>
 /// This helps us use our system for disabling tooltips when they are not wanted
 /// </summary>

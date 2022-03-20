@@ -190,14 +190,14 @@ public partial class MainWindow : FluentWindow
             };
         }
 
-        eabTitleBar.PointerPressed += (sender, args) => BeginMoveDrag(args);
+        stpTitleBarContent.PointerPressed += (sender, args) => BeginMoveDrag(args);
         Opened += (sender, args) =>
         {
-            eabTitleBar.Height = WindowDecorationMargin.Top;
-            tbrTitleBar.Height = eabTitleBar.Height;
-            icon.Height = eabTitleBar.Height - icon.Margin.Top - icon.Margin.Bottom;
+            stpTitleBarContent.Height = WindowDecorationMargin.Top;
+            tbrTitleBar.Height = stpTitleBarContent.Height;
+            icon.Height = stpTitleBarContent.Height - icon.Margin.Top - icon.Margin.Bottom;
             icon.Width = icon.Height;
-            _control.Margin += new Thickness(0, eabTitleBar.Height, 0, 0);
+            _control.Margin += new Thickness(0, stpTitleBarContent.Height, 0, 0);
         };
         grdContent.Children.Insert(3, _control);
 

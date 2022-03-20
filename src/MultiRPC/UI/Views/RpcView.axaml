@@ -1,33 +1,32 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:avaloniaGif="clr-namespace:AvaloniaGif;assembly=AvaloniaGif"
-             MinWidth="255" 
-             MaxWidth="355"
-             mc:Ignorable="d"
-             x:Class="MultiRPC.UI.Views.RpcView">
-    <Border x:Name="brdContent" CornerRadius="5">
-        <StackPanel Margin="5,5" Spacing="10" Orientation="Horizontal">
-            <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
-                <Border x:Name="brdLarge" Height="75" Width="75" CornerRadius="5"/>
-                <!--TODO: Add mask to make it rounded-->
-                <avaloniaGif:GifImage x:Name="gifLarge" Height="75" Width="75" Stretch="UniformToFill" StretchDirection="Both" />
+﻿<Border xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avaloniaGif="clr-namespace:AvaloniaGif;assembly=AvaloniaGif"
+        MinWidth="255" 
+        MaxWidth="355"
+        mc:Ignorable="d"
+        CornerRadius="5"
+        x:Class="MultiRPC.UI.Views.RpcView">
+    <StackPanel Margin="5,5" Spacing="10" Orientation="Horizontal">
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Border x:Name="brdLarge" Height="75" Width="75" CornerRadius="5"/>
+            <!--TODO: Add mask to make it rounded-->
+            <avaloniaGif:GifImage x:Name="gifLarge" Height="75" Width="75" Stretch="UniformToFill" StretchDirection="Both" />
                 
-                <Grid Name="gridSmallImage" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,-5,-2.5">
-                    <Ellipse Name="ellSmallBackground" Fill="{Binding #brdContent.Background}" Height="30" Width="30" />
-                    <Ellipse Name="ellSmallImage" Height="26" Width="26" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <!--TODO: Add mask to make it rounded-->
-                    <avaloniaGif:GifImage x:Name="gifSmallImage" Height="26" Width="26" Stretch="UniformToFill" StretchDirection="Both" />
-                </Grid>
+            <Grid Name="gridSmallImage" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,-5,-2.5">
+                <Ellipse Name="ellSmallBackground" Fill="{Binding #brdContent.Background}" Height="30" Width="30" />
+                <Ellipse Name="ellSmallImage" Height="26" Width="26" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <!--TODO: Add mask to make it rounded-->
+                <avaloniaGif:GifImage x:Name="gifSmallImage" Height="26" Width="26" Stretch="UniformToFill" StretchDirection="Both" />
             </Grid>
+        </Grid>
 
-            <StackPanel Height="{Binding #brdLarge.Height}" VerticalAlignment="Center">
-                <TextBlock Name="tblTitle" Text="{Binding TextObservable^}" FontWeight="SemiBold" Margin="0,0,0,3" />
-                <TextBlock Name="tblText1" Foreground="{Binding #tblTitle.Foreground}" Text="{Binding TextObservable^}" />
-                <TextBlock Name="tblText2" Foreground="{Binding #tblTitle.Foreground}" Text="{Binding TextObservable^}" />
-                <TextBlock Name="tblTime" Foreground="{Binding #tblTitle.Foreground}" IsVisible="false" />
-            </StackPanel>
+        <StackPanel Height="{Binding #brdLarge.Height}" VerticalAlignment="Center">
+            <TextBlock Name="tblTitle" Text="{Binding TextObservable^}" FontWeight="SemiBold" Margin="0,0,0,3" />
+            <TextBlock Name="tblText1" Foreground="{Binding #tblTitle.Foreground}" Text="{Binding TextObservable^}" />
+            <TextBlock Name="tblText2" Foreground="{Binding #tblTitle.Foreground}" Text="{Binding TextObservable^}" />
+            <TextBlock Name="tblTime" Foreground="{Binding #tblTitle.Foreground}" IsVisible="false" />
         </StackPanel>
-    </Border>
-</UserControl>
+    </StackPanel>
+</Border>

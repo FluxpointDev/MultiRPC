@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+﻿<Panel xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -7,12 +7,12 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MultiRPC.UI.Overlays.DiscordCheckOverlay"
              Background="{DynamicResource ThemeAccentColor2}">
-    <UserControl.Transitions>
+    <Panel.Transitions>
         <Transitions>
             <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="QuadraticEaseIn" />
         </Transitions>
-    </UserControl.Transitions>
-    <UserControl.Styles>
+    </Panel.Transitions>
+    <Panel.Styles>
         <Style Selector="Button">
             <Setter Property="Transitions">
                 <Setter.Value>
@@ -22,7 +22,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-    </UserControl.Styles>
+    </Panel.Styles>
     <StackPanel HorizontalAlignment="Center" Margin="10">
         <Grid ColumnDefinitions="Auto,Auto">
             <Image x:Name="imgIcon" Height="75" />
@@ -40,4 +40,4 @@
         <Button Margin="0,5,0,0" Name="btnDisableDiscordCheck" Content="{Binding TextObservable^}" 
                 Opacity="0" Click="BtnDisableDiscordCheck_OnClick" HorizontalAlignment="Stretch" />
     </StackPanel>
-</UserControl>
+</Panel>

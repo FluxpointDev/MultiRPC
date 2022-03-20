@@ -1,13 +1,12 @@
-<page:RpcPage xmlns="https://github.com/avaloniaui"
-         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-         xmlns:page="clr-namespace:MultiRPC.Rpc.Page"
-         mc:Ignorable="d"
-         d:DesignWidth="800"
-         d:DesignHeight="450"
-         x:Class="MultiRPC.UI.Pages.Rpc.CustomPage">
-    <UserControl.Styles>
+<Border xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DesignWidth="800"
+        d:DesignHeight="450"
+        x:Class="MultiRPC.UI.Pages.Rpc.CustomPage">
+    <Border.Styles>
         <Style Selector="Image">
             <Setter Property="Width" Value="38" />
             <Setter Property="Height" Value="{TemplateBinding Width}" />
@@ -48,19 +47,17 @@
             <Setter Property="Width" Value="20" />
             <Setter Property="Margin" Value="0,4,0,4" />
         </Style>
-    </UserControl.Styles>
-    <Border x:Name="brdContent">
-        <Grid x:Name="grdContent" RowDefinitions="Auto Auto *">
-            <WrapPanel x:Name="wrpProfileSelector" MaxWidth="750" Margin="10,10,0,0" HorizontalAlignment="Left" />
-            <StackPanel Spacing="5" Grid.Row="1" x:Name="stpProfileEditor" Height="40" Orientation="Horizontal" Margin="10,7,0,7">
-                <TextBlock FontWeight="SemiBold" x:Name="tblProfileName" VerticalAlignment="Center" />
-                <Rectangle Margin="0,2" Fill="White" Width="1" VerticalAlignment="Stretch" />
-                <Button x:Name="btnProfileEdit" Classes="toolbar" Click="ImgProfileEdit_OnClick" CornerRadius="0" />
-                <Button x:Name="btnProfileShare" Classes="toolbar" Click="ImgProfileShare_OnClick" />
-                <Button x:Name="btnProfileAdd" Classes="toolbar" Click="ImgProfileAdd_OnClick" />
-                <Button x:Name="btnProfileClone" Classes="toolbar" Click="ImgProfileClone_OnClick" />
-                <Button x:Name="btnProfileDelete" Classes="toolbar" Click="ImgProfileDelete_OnClick" IsVisible="False" />
-            </StackPanel>
-        </Grid>
-    </Border>
-</page:RpcPage>
+    </Border.Styles>
+    <Grid x:Name="grdContent" RowDefinitions="Auto Auto *">
+        <WrapPanel x:Name="wrpProfileSelector" MaxWidth="750" Margin="10,10,0,0" HorizontalAlignment="Left" />
+        <StackPanel Spacing="5" Grid.Row="1" x:Name="stpProfileEditor" Height="40" Orientation="Horizontal" Margin="10,7,0,7">
+            <TextBlock FontWeight="SemiBold" x:Name="tblProfileName" VerticalAlignment="Center" />
+            <Rectangle Margin="0,2" Fill="White" Width="1" VerticalAlignment="Stretch" />
+            <Button x:Name="btnProfileEdit" Classes="toolbar" Click="ImgProfileEdit_OnClick" CornerRadius="0" />
+            <Button x:Name="btnProfileShare" Classes="toolbar" Click="ImgProfileShare_OnClick" />
+            <Button x:Name="btnProfileAdd" Classes="toolbar" Click="ImgProfileAdd_OnClick" />
+            <Button x:Name="btnProfileClone" Classes="toolbar" Click="ImgProfileClone_OnClick" />
+            <Button x:Name="btnProfileDelete" Classes="toolbar" Click="ImgProfileDelete_OnClick" IsVisible="False" />
+        </StackPanel>
+    </Grid>
+</Border>

@@ -6,7 +6,7 @@ using Avalonia.Media.Immutable;
 
 namespace MultiRPC.UI.Controls;
 
-public partial class ColourButton : UserControl
+public partial class ColourButton : StackPanel
 {
     private readonly StyledProperty<ImmutableSolidColorBrush> _btnColourProperty = AvaloniaProperty.Register<ColourButton, ImmutableSolidColorBrush>(nameof(BtnColor), (ImmutableSolidColorBrush)Brushes.White.ToImmutable());
     public ImmutableSolidColorBrush BtnColor

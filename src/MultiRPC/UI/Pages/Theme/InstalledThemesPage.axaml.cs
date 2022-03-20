@@ -22,8 +22,9 @@ using MultiRPC.UI.Pages.Theme.Editor;
 
 namespace MultiRPC.UI.Pages.Theme;
 
+//TODO: Make it so we can load the preview UI on the fly
 //TODO: Fix Active text not showing up sometimes
-public partial class InstalledThemesPage : UserControl, ITabPage
+public partial class InstalledThemesPage : Grid, ITabPage
 {
     public InstalledThemesPage()
     {
@@ -136,7 +137,7 @@ public partial class InstalledThemesPage : UserControl, ITabPage
         var editButton = new Button
         {
             DataContext = (Language)LanguageText.Edit,
-            [!ContentProperty] = new Binding("TextObservable^"),
+            [!Button.ContentProperty] = new Binding("TextObservable^"),
             IsEnabled = !file?.StartsWith('#') ?? false,
             Tag = theme,
         };
@@ -145,7 +146,7 @@ public partial class InstalledThemesPage : UserControl, ITabPage
         var removeButton = new Button
         {
             DataContext = (Language)LanguageText.Remove,
-            [!ContentProperty] = new Binding("TextObservable^"),
+            [!Button.ContentProperty] = new Binding("TextObservable^"),
             IsEnabled = editButton.IsEnabled,
             Tag = theme,
         };
@@ -154,7 +155,7 @@ public partial class InstalledThemesPage : UserControl, ITabPage
         var cloneButton = new Button
         {
             DataContext = (Language)LanguageText.Clone,
-            [!ContentProperty] = new Binding("TextObservable^"),
+            [!Button.ContentProperty] = new Binding("TextObservable^"),
             Tag = theme,
         };
         cloneButton.Click += CloneButtonOnClick;

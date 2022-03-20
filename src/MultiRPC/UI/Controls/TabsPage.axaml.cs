@@ -13,12 +13,13 @@ using MultiRPC.Setting.Settings;
 
 namespace MultiRPC.UI.Controls;
 
-public sealed partial class TabsPage : UserControl, ITabPage
+public partial class TabsPage : Grid, ITabPage
 {
     private readonly List<ITabPage> _pages = new List<ITabPage>();
     private Rectangle? _activePageRectangle;
+
     private static readonly Language NaLang = LanguageText.NA;
-    private static DisableSettings _disableSettings => SettingManager<DisableSettings>.Setting;
+    private static DisableSettings DisableSettings { get; } = SettingManager<DisableSettings>.Setting;
     private static readonly PointerPressedEventArgs PointerArg = new PointerPressedEventArgs(null!, null!, null!,
         new Point(), 0, PointerPointProperties.None, KeyModifiers.None);
 
@@ -33,11 +34,11 @@ public sealed partial class TabsPage : UserControl, ITabPage
     public void AddTabs(ITabPage[] pages) => _pages.AddRange(pages);
     public void AddTab(ITabPage page) => _pages.Add(page);
     
-    public void Initialize(bool loadXaml)
+    public virtual void Initialize(bool loadXaml)
     {
         InitializeComponent(loadXaml);
 
-        _disableSettings.PropertyChanged += (sender, args) => UpdateBackground();
+        DisableSettings.PropertyChanged += (sender, args) => UpdateBackground();
         App.Current.GetResourceObservable("ThemeAccentColor2").Subscribe(_ => UpdateBackground());
         UpdateBackground();
 
@@ -50,7 +51,7 @@ public sealed partial class TabsPage : UserControl, ITabPage
     }
 
     private void UpdateBackground() => content.Background =
-        new ImmutableSolidColorBrush((Color)App.Current.Resources["ThemeAccentColor2"], _disableSettings.AcrylicEffect ? 1 : 0.7);
+        new ImmutableSolidColorBrush((Color)App.Current.Resources["ThemeAccentColor2"], DisableSettings.AcrylicEffect ? 1 : 0.7);
 
     private Control MakeTab(ITabPage page)
     {

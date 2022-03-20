@@ -15,10 +15,10 @@ using ShimSkiaSharp;
 namespace MultiRPC.UI;
 
 //TODO: Cleanup
-public partial class MainPage : UserControl
+public partial class MainPage : Grid
 {
     private Button? _selectedBtn;
-    private readonly RpcPage? _autoStartPage;
+    private readonly IRpcPage? _autoStartPage;
     private readonly DisableSettings _disableSetting = SettingManager<DisableSettings>.Setting;
     private string? _lastColourName;
     private Color? _lastColor;
@@ -62,7 +62,7 @@ public partial class MainPage : UserControl
         //If auto start has been selected then we want load that up if possible
         if (pageToTrigger?.LocalizableName == autoStartPageName)
         {
-            _autoStartPage = (RpcPage)pageToTrigger;
+            _autoStartPage = (IRpcPage)pageToTrigger;
             if (_autoStartPage.PresenceValid)
             {
                 TriggerStart();
@@ -227,7 +227,8 @@ public partial class MainPage : UserControl
         
         cclContent.Padding = page.ContentPadding;
         cclContent.Content = page;
-        if (page is RpcPage rpcPage)
+        cclContent.Height = page.Height;
+        if (page is IRpcPage rpcPage)
         {
             RpcPageManager.NewActivePage(rpcPage);
         }

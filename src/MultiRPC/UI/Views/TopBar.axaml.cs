@@ -13,10 +13,10 @@ using RichPresence = DiscordRPC.RichPresence;
 
 namespace MultiRPC.UI.Views;
 
-public partial class TopBar : UserControl
+public partial class TopBar : Grid
 {
     private readonly GeneralSettings _generalSettings = SettingManager<GeneralSettings>.Setting;
-    private RpcPage? _page;
+    private IRpcPage? _page;
     private readonly RpcClient _rpcClient;
     private readonly Language _statusKind;
     private readonly Language _statusText;
@@ -36,7 +36,7 @@ public partial class TopBar : UserControl
         }
         
         RpcPageManager.PageChanged += (sender, page) => btnUpdatePresence.IsEnabled = page == RpcPageManager.CurrentPage;
-        RpcPageManager.NewCurrentPage += delegate(object? sender, RpcPage page)
+        RpcPageManager.NewCurrentPage += delegate(object? sender, IRpcPage page)
         {
             this.RunUILogic(() => RpcPageManagerOnPageChanged(sender, page));
 
@@ -140,7 +140,7 @@ public partial class TopBar : UserControl
         this.RunUILogic(() => tblUser.Text = _userText.Text + ": " + _generalSettings.LastUser);
     }
         
-    private void RpcPageManagerOnPageChanged(object? sender, RpcPage e)
+    private void RpcPageManagerOnPageChanged(object? sender, IRpcPage e)
     {
         var hasStartKey = Language.HasKey("Start" + e.LocalizableName);
         _startButton.ChangeJsonNames(hasStartKey ? 

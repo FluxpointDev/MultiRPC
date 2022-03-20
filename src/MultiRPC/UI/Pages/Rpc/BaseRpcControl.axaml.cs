@@ -29,7 +29,7 @@ public enum ImagesType
 }
 
 //TODO: reset id border if setting changed to not check for id
-public partial class BaseRpcControl : UserControl, ITabPage
+public partial class BaseRpcControl : Grid, ITabPage
 {
     private bool _lastIDCheckStatus = true;
     private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
@@ -132,7 +132,7 @@ public partial class BaseRpcControl : UserControl, ITabPage
     
     public void AddExtraControl(Control control)
     {
-        gidContent.Children.Add(control);
+        Children.Add(control);
     }
 
     public void SetLargeControl(Control control)

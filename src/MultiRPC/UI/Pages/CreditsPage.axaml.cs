@@ -5,6 +5,7 @@ using System.Net.NetworkInformation;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
 using MultiRPC.Extensions;
 using MultiRPC.Utils;
@@ -13,12 +14,12 @@ using TinyUpdate.Http.Extensions;
 
 namespace MultiRPC.UI.Pages;
 
-public partial class CreditsPage : SidePage
+public partial class CreditsPage : Grid, ISidePage
 {
-    public override string IconLocation => "Icons/Credits";
-    public override string LocalizableName => "Credits";
-    public override string? BackgroundResourceName => "ThemeAccentColor2";
-    public override void Initialize(bool loadXaml)
+    public string IconLocation => "Icons/Credits";
+    public string LocalizableName => "Credits";
+    public string? BackgroundResourceName => "ThemeAccentColor2";
+    public void Initialize(bool loadXaml)
     {
         InitializeComponent(loadXaml);
 

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Platform;
 using Avalonia.Svg;
+using Avalonia.Utilities;
 using MultiRPC.Theming;
 using ShimSkiaSharp;
 using SM = Svg.Model;
@@ -17,8 +20,48 @@ public static class AssetManager
     private static readonly SM.IAssetLoader AssetLoader = new AvaloniaAssetLoader();
     private static readonly Dictionary<string, List<Action>> AssetReloadActions = new Dictionary<string, List<Action>>();
     private static readonly Dictionary<string, bool> LoadedAssets = new Dictionary<string, bool>();
+    private static string[]? _knownAssets;
+
+    public static readonly ImageFormat GifFormat = new ImageFormat("Gif", ".gif");
+    public static readonly ImageFormat SvgFormat = new ImageFormat("Svg", ".svg");
 
     internal static event EventHandler? ReloadAssets;
+    
+    public static ImageFormat[] SupportedStaticAsset = new[]
+    {
+        SvgFormat,
+        new ImageFormat("Png", ".png"),
+        new ImageFormat("Webp", ".webp"),
+        new ImageFormat("Wbmp", ".wbmp"),
+        new ImageFormat("Jpeg", ".jpg", ".jpeg", ".jpe", ".jif", ".jfif"),
+        new ImageFormat("Bmp", ".bmp", ".dib"),
+        new ImageFormat("Ico", ".ico"),
+        new ImageFormat("DNG", ".dng"),
+        GifFormat,
+    };
+    public static ImageFormat[] SupportedAnimatedAsset = new[]
+    {
+        GifFormat,
+    };
+    
+
+    private static IEnumerable<string> ReadResourcesFile()
+    {
+        var assembly = Assembly.GetEntryAssembly();
+        using var resources = assembly?.GetManifestResourceStream("!AvaloniaResources");
+        if (resources == null) yield break;
+
+        var indexLength = new BinaryReader(resources).ReadInt32();
+        var resourcesList = AvaloniaResourcesIndexReaderWriter.Read(new SlicedStream(resources, 4, indexLength));
+        foreach (var resource in resourcesList)
+        {
+            if (resource.Path?.StartsWith("/Assets") ?? false)
+            {
+                yield return resource.Path;
+            }
+        }
+    }
+    
     internal static void FireReloadAssets(object? sender)
     {
         if (Theme.ActiveTheme == null)
@@ -40,6 +83,16 @@ public static class AssetManager
         ReloadAssets?.Invoke(sender, EventArgs.Empty);
     }
 
+    public static string[]? GetAllAssets()
+    {
+        _knownAssets ??= ReadResourcesFile().ToArray();
+        if (!_knownAssets.Any())
+        {
+            _knownAssets = null;
+        }
+        return _knownAssets;
+    }
+
     public static void RegisterForAssetReload(string key, Action action)
     {
         if (!AssetReloadActions.ContainsKey(key))
@@ -49,9 +102,9 @@ public static class AssetManager
         AssetReloadActions[key].Add(action);
     }
 
-    public static Stream GetSeekableStream(string key)
+    public static Stream GetSeekableStream(string key, Theme? theme = null)
     {
-        var st = GetAsset(key);
+        var st = GetAsset(key, theme);
         if (st.CanSeek)
         {
             return st;
@@ -85,7 +138,18 @@ public static class AssetManager
         if (stream == Stream.Null)
         {
             var loader = AvaloniaLocator.Current.GetService<IAssetLoader>();
-            stream = loader.Open(new Uri("avares://MultiRPC/Assets/" + key, UriKind.RelativeOrAbsolute));
+            if (GetAllAssets() == null)
+            {
+                throw new Exception("Unable to get assets in the application");
+            }
+
+            var asset = GetAssetLocation(key);
+            if (string.IsNullOrWhiteSpace(asset))
+            {
+                throw new Exception("Unable to find asset");
+            }
+            
+            stream = loader.Open(new Uri("avares://MultiRPC" + asset, UriKind.RelativeOrAbsolute));
             if (fromDefaultTheme)
             {
                 LoadedAssets[key] = false;
@@ -93,6 +157,11 @@ public static class AssetManager
         }
         
         return stream;
+    }
+
+    public static string? GetAssetLocation(string key)
+    {
+        return _knownAssets?.FirstOrDefault(asset => asset[8..].StartsWith(key));
     }
 
     public static SvgSource LoadSvgImage(string key, Theme? theme = null) => new SvgSource { Picture = LoadPicture(key, theme) };

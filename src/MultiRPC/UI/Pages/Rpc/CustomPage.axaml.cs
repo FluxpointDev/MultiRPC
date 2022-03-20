@@ -24,11 +24,11 @@ using MultiRPC.UI.Pages.Rpc.Popups;
 namespace MultiRPC.UI.Pages.Rpc;
 
 //TODO: Make a toolbar which can also have a popup when they is too little space to show all profiles
-public partial class CustomPage : RpcPage
+public partial class CustomPage : Border, IRpcPage
 {
-    public override string IconLocation => "Icons/Custom";
-    public override string LocalizableName => "Custom";
-    public override RichPresence RichPresence
+    public string IconLocation => "Icons/Custom";
+    public string LocalizableName => "Custom";
+    public RichPresence RichPresence
     {
         get => _activeProfile;
         protected set
@@ -36,9 +36,10 @@ public partial class CustomPage : RpcPage
             //Don't do anything
         }
     }
-    public override bool PresenceValid => _rpcControl.RpcValid;
-    public override event EventHandler? PresenceChanged;
-    public override event EventHandler<bool>? PresenceValidChanged;
+    public bool PresenceValid => _rpcControl.RpcValid;
+    public Thickness ContentPadding { get; } = new Thickness(0);
+    public event EventHandler? PresenceChanged;
+    public event EventHandler<bool>? PresenceValidChanged;
 
     private readonly ProfilesSettings _profilesSettings = SettingManager<ProfilesSettings>.Setting;
     private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
@@ -66,12 +67,8 @@ public partial class CustomPage : RpcPage
         [!AutoCompleteBox.WatermarkProperty] = new Binding("Lang.TextObservable^")
     };
 
-    public override void Initialize(bool loadXaml)
+    public void Initialize(bool loadXaml)
     {
-        if (loadXaml)
-        {
-            ContentPadding = new Thickness(0);
-        }
         InitializeComponent(loadXaml);
 
         //All of this page logic goes here
@@ -232,7 +229,7 @@ public partial class CustomPage : RpcPage
             Source = presence,
             Path = nameof(presence.Name)
         };
-        btn.Bind(ContentProperty, binding);
+        btn.Bind(Button.ContentProperty, binding);
         return btn;
     }
 

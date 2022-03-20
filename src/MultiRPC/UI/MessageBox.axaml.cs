@@ -34,7 +34,7 @@ public enum MessageBoxImage
     Information = 64,
 }
 
-public partial class MessageBox : UserControl
+public partial class MessageBox : Grid
 {
     public MessageBox()
     {

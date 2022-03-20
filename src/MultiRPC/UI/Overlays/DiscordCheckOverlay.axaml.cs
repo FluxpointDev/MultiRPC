@@ -13,7 +13,7 @@ using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.UI.Overlays;
 
-public partial class DiscordCheckOverlay : UserControl
+public partial class DiscordCheckOverlay : Panel
 {
     private readonly ILogging _logger = LoggingCreator.CreateLogger(nameof(DiscordCheckOverlay));
     private bool _ranFadeOut;

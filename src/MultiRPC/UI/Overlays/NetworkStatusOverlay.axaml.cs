@@ -9,7 +9,7 @@ using MultiRPC.Utils;
 
 namespace MultiRPC.UI.Overlays;
 
-public partial class NetworkStatusOverlay : UserControl
+public partial class NetworkStatusOverlay : Panel
 {
     public NetworkStatusOverlay()
     {

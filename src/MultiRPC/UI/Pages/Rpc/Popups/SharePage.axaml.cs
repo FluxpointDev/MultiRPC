@@ -12,7 +12,7 @@ using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.UI.Pages.Rpc.Popups;
 
-public partial class SharePage : UserControl, ITitlePage
+public partial class SharePage : Grid, ITitlePage
 {
     private readonly ILogging _logging = LoggingCreator.CreateLogger(nameof(SharePage));
     public Language Title { get; } = LanguageText.ProfileShare;

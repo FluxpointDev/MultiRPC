@@ -1,12 +1,13 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:settings="clr-namespace:MultiRPC.UI.Pages.Settings"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             Margin="10"
-             x:Class="MultiRPC.UI.Pages.Settings.AboutSettingsTab">
-    <UserControl.Styles>
+<Grid xmlns="https://github.com/avaloniaui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+      ColumnDefinitions="Auto *" 
+      RowDefinitions="Auto Auto Auto" 
+      Margin="10"
+      x:Class="MultiRPC.UI.Pages.Settings.AboutSettingsTab">
+    <Grid.Styles>
         <Style Selector="TextBlock.title">
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
@@ -36,8 +37,8 @@
         <Style Selector="Border.icon:pointerover">
             <Setter Property="Opacity" Value="1" />
         </Style>
-    </UserControl.Styles>
-    <Grid ColumnDefinitions="Auto *" RowDefinitions="Auto Auto Auto" Margin="0,0,0,10">
+    </Grid.Styles>
+
         <StackPanel Orientation="Horizontal">
             <Image Height="92" Width="92" x:Name="imgIcon" />
             <StackPanel Spacing="6" Margin="7,0,0,0">
@@ -78,5 +79,4 @@
             <Button x:Name="btnCheckUpdate" Content="{Binding TextObservable^}" Grid.Column="1" Grid.RowSpan="2" Classes="purple"
                     VerticalAlignment="Stretch" Height="72" Width="90" Click="BtnCheckUpdate_OnClick" />
         </Grid>
-    </Grid>
-</UserControl>
+</Grid>

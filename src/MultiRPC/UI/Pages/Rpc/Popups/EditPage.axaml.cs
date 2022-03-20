@@ -10,7 +10,7 @@ using MultiRPC.Setting.Settings;
 
 namespace MultiRPC.UI.Pages.Rpc.Popups;
 
-public partial class EditPage : UserControl, ITitlePage
+public partial class EditPage : StackPanel, ITitlePage
 {
     private readonly ProfilesSettings _profiles = SettingManager<ProfilesSettings>.Setting;
     private readonly RichPresence _activeRichPresence = null!;

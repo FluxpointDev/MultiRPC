@@ -70,7 +70,7 @@ public partial class GeneralSettings : BaseSetting
     {
         var l = new List<string> { "No" };
         l.AddRange(PageManager.CurrentPages
-            .Where(x => x is RpcPage)
+            .Where(x => x is IRpcPage)
             .Select(x => x.LocalizableName));
         return l.ToArray();
     }

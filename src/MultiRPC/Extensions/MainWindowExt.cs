@@ -5,9 +5,9 @@ namespace MultiRPC.Extensions;
 
 public static class MainWindowExt
 {
-    public static bool TryClose<T>(this UserControl userControl, T result)
+    public static bool TryClose<T>(this IControl control, T result)
     {
-        if (userControl.Parent?.Parent is MainWindow window)
+        if (control.Parent?.Parent is MainWindow window)
         {
             window.Close(result);
             return true;
@@ -16,9 +16,9 @@ public static class MainWindowExt
         return false;
     }
         
-    public static bool TryClose(this UserControl userControl)
+    public static bool TryClose(this IControl control)
     {
-        if (userControl.Parent?.Parent is MainWindow window)
+        if (control.Parent?.Parent is MainWindow window)
         {
             window.Close();
             return true;

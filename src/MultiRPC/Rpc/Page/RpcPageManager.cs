@@ -6,8 +6,8 @@ namespace MultiRPC.Rpc.Page;
 
 public static class RpcPageManager
 {
-    public static RpcPage? CurrentPage { get; private set; }
-    public static RpcPage? PendingPage { get; private set; }
+    public static IRpcPage? CurrentPage { get; private set; }
+    public static IRpcPage? PendingPage { get; private set; }
 
     private static RpcClient? _rpcClient;
 
@@ -24,7 +24,7 @@ public static class RpcPageManager
         PageChanged?.Invoke(sender, CurrentPage);
     }
         
-    internal static void NewActivePage(RpcPage page)
+    internal static void NewActivePage(IRpcPage page)
     {
         if (_rpcClient == null)
         {
@@ -47,10 +47,10 @@ public static class RpcPageManager
     /// <summary>
     /// This is when we are actively tracking the Rich Presence from a new page
     /// </summary>
-    public static event EventHandler<RpcPage>? NewCurrentPage;
+    public static event EventHandler<IRpcPage>? NewCurrentPage;
 
     /// <summary>
     /// This is when we go to a new page (Will also get called with NewCurrentPage)
     /// </summary>
-    public static event EventHandler<RpcPage>? PageChanged;
+    public static event EventHandler<IRpcPage>? PageChanged;
 }

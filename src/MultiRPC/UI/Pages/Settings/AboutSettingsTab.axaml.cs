@@ -18,7 +18,7 @@ using TinyUpdate.Core.Helper;
 
 namespace MultiRPC.UI.Pages.Settings;
 
-public partial class AboutSettingsTab : UserControl, ITabPage
+public partial class AboutSettingsTab : Grid, ITabPage
 {
     public AboutSettingsTab()
     {

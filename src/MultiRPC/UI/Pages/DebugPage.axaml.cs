@@ -9,7 +9,8 @@ using System;
 
 namespace MultiRPC.UI.Pages;
 
-public partial class DebugPage : SidePage
+//TODO: See why using a StackPanel directly makes the UI broken
+public partial class DebugPage : UserControl, ISidePage
 {
     public DebugPage()
     {
@@ -17,10 +18,10 @@ public partial class DebugPage : SidePage
     }
     private RpcClient _rpcClient;
 
-    public override string IconLocation => "Icons/Debug";
-    public override string LocalizableName => "Debug";
-    public override string? BackgroundResourceName => "ThemeAccentColor2";
-    public override void Initialize(bool loadXaml)
+    public string IconLocation => "Icons/Debug";
+    public string LocalizableName => "Debug";
+    public string? BackgroundResourceName => "ThemeAccentColor2";
+    public void Initialize(bool loadXaml)
     {
         InitializeComponent(loadXaml);
         _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException();

@@ -15,7 +15,7 @@ using TinyUpdate.Core.Extensions;
 
 namespace MultiRPC.UI.Pages.Rpc;
 
-public partial class MultiRpcPage : RpcPage
+public partial class MultiRpcPage : Grid, IRpcPage
 {
     private static string[]? _localizedMultiRPCAssetsNames;
     private static readonly ProfileAssetsManager MultiRPCAssetManager = ProfileAssetsManager.GetOrAddManager(Constants.MultiRPCID);
@@ -23,16 +23,16 @@ public partial class MultiRpcPage : RpcPage
     private ComboBox cboLargeKey = new ComboBox();
     private ComboBox cboSmallKey = new ComboBox();
 
-    public override string IconLocation => "Icons/Discord";
-    public override string LocalizableName => "MultiRPC";
-    public override RichPresence RichPresence { get; protected set; } = SettingManager<MultiRPCSettings>.Setting.Presence;
-    public override bool PresenceValid => rpcControl.RpcValid;
-    public override string? BackgroundResourceName => "ThemeAccentColor2";
+    public string IconLocation => "Icons/Discord";
+    public string LocalizableName => "MultiRPC";
+    public RichPresence RichPresence { get; } = SettingManager<MultiRPCSettings>.Setting.Presence;
+    public bool PresenceValid => rpcControl.RpcValid;
+    public string? BackgroundResourceName => "ThemeAccentColor2";
 
-    public override event EventHandler? PresenceChanged;
-    public override event EventHandler<bool>? PresenceValidChanged;
+    public event EventHandler? PresenceChanged;
+    public event EventHandler<bool>? PresenceValidChanged;
 
-    public override void Initialize(bool loadXaml)
+    public void Initialize(bool loadXaml)
     {
         InitializeComponent(loadXaml);
 
