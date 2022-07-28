@@ -46,7 +46,7 @@ macOS packages can be found at the [Release Page](https://github.com/FluxpointDe
 <hr/>
 
 ## Something's not working!
-Contact Builderb#0001 or join the [Discord server](https://discord.gg/TjF6QDC) and we'll help you out with any issue your currently facing!
+Contact Builderb#0001 or join the [Discord server](https://discord.gg/fluxpoint) and we'll help you out with any issue your currently facing!
 <hr/>
 
 ## How do I use the Custom page?
