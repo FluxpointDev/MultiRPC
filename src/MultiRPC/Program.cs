@@ -37,21 +37,31 @@ internal static class Program
         LoggingCreator.AddLogBuilder(new FileLoggerBuilder(Constants.LogFolder));
 #endif
         LoggingCreator.AddLogBuilder(new LoggingPageBuilder());
-        _ipc = IPC.GetOrMakeConnection();
-
-        /*Now check if we are already currently open, if so
-         tell that instance to show and exit (with code based on if the message was sent)*/
-        if (!DebugUtil.IsDebugBuild && Process.GetProcessesByName("MultiRPC").Length > 1)
+        try
         {
-            var sent = _ipc.SendMessage("SHOW");
-            _ipc.DisconnectFromServer();
-            Environment.Exit(sent ? 0 : -1);
+            _ipc = IPC.GetOrMakeConnection();
+
+            /*Now check if we are already currently open, if so
+             tell that instance to show and exit (with code based on if the message was sent)*/
+            if (!DebugUtil.IsDebugBuild && Process.GetProcessesByName("MultiRPC").Length > 1)
+            {
+                var sent = _ipc.SendMessage("SHOW");
+                _ipc.DisconnectFromServer();
+                Environment.Exit(sent ? 0 : -1);
+            }
+            _ipc.NewMessage += IpcOnNewMessage;
         }
-        _ipc.NewMessage += IpcOnNewMessage;
+        catch { }
+        
 
         var builder = BuildAvaloniaApp();
-        builder.StartWithClassicDesktopLifetime(args);
-        _ipc.StopServer();
+        try
+        {
+            builder.StartWithClassicDesktopLifetime(args);
+            _ipc.StopServer();
+        }
+        catch { }
+        
     }
 
     //For now this just handles showing the Window again but can be used for other things later on

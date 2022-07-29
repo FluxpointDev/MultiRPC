@@ -33,7 +33,6 @@ public class ThemeGenerator : ISourceGenerator
         var themeListing = new List<string>();
         string? defaultName = null;
         var themesBuilder = new IndentedStringBuilder();
-        
         //usings and namespaces
         themesBuilder.AppendLineInvariant("using System.Collections.Generic;");
         themesBuilder.AppendLineInvariant("using System.Collections.ObjectModel;");
@@ -121,9 +120,18 @@ public class ThemeGenerator : ISourceGenerator
                 }
             }
         });
-        
-        //We have to add it here or this will be null
-        themesBuilder.AppendLineInvariant(string.Format("public static readonly Theme Default = {0};", defaultName));
+
+        // This fixes debugging on visual studio :(
+        if (string.IsNullOrEmpty(defaultName))
+        {
+            //We have to add it here or this will be null
+            themesBuilder.AppendLineInvariant(string.Format("public static readonly Theme Default = null;"));
+        }
+        else
+        {
+            //We have to add it here or this will be null
+            themesBuilder.AppendLineInvariant(string.Format("public static readonly Theme Default = {0};", defaultName));
+        }
 
         //Add to context
         classDisposable.Dispose();

@@ -97,7 +97,7 @@ public partial class BaseRpcControl : Grid, ITabPage
             txtClientID.IsVisible = true;
             txtClientID.AddValidation(LanguageText.ClientID, null, s =>
             {
-                if (s.Length != 18)
+                if (s.Length > 19 || s.Length < 18)
                 {
                     _lastIDCheckStatus = false;
                     ProfileChanged?.Invoke(this, EventArgs.Empty);
