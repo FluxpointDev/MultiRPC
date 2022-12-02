@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MultiRPC.UI.Pages;
+﻿namespace MultiRPC.UI.Pages;
 
 public static class PageManager
 {

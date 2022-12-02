@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MultiRPC.Setting.Settings.Attributes;
+﻿namespace MultiRPC.Setting.Settings.Attributes;
 
 /// <summary>
 /// This tells us where to get all the values that we can switch too

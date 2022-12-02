@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\MultiRPC\MultiRPC.Base.csproj" />
   <PropertyGroup>
 	  <RootNamespace>MultiRPC</RootNamespace>
 	  <AssemblyName>MultiRPC</AssemblyName>

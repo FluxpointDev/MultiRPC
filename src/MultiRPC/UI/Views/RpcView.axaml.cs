@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Timers;
 using Avalonia;
 using Avalonia.Controls;
@@ -87,8 +80,8 @@ public partial class RpcView : Border
                 gifLarge.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
             }
         });
-        gifSmallImage.SourceStream = Stream.Null;
-        gifLarge.SourceStream = Stream.Null;
+        gifSmallImage.StopAndDispose();
+        gifLarge.StopAndDispose();
 
         brdLarge.Background = _logoVisualBrush;
 
@@ -248,7 +241,7 @@ public partial class RpcView : Border
             gridSmallImage.IsVisible = false;
             gifLarge.IsVisible = false;
             gifLarge.Tag = null;
-            gifLarge.SourceStream = Stream.Null;
+            gifLarge.StopAndDispose();
             return;
         }
 
@@ -261,7 +254,7 @@ public partial class RpcView : Border
                 brdLarge.IsVisible = true;
                 gifLarge.IsVisible = false;
                 gifLarge.Tag = null;
-                gifLarge.SourceStream = Stream.Null;
+                gifLarge.StopAndDispose();
                 return;
             }
             
@@ -292,7 +285,7 @@ public partial class RpcView : Border
         {
             ellSmallImage.Fill = null;
             gifSmallImage.IsVisible = false;
-            gifSmallImage.SourceStream = Stream.Null;
+            gifSmallImage.StopAndDispose();
             gifSmallImage.Tag = null;
             gridSmallImage.IsVisible = false;
             return;
@@ -306,7 +299,7 @@ public partial class RpcView : Border
                 ellSmallImage.Fill = CachedImages[uri];
                 ellSmallImage.IsVisible = true;
                 gifSmallImage.IsVisible = false;
-                gifSmallImage.SourceStream = Stream.Null;
+                gifSmallImage.StopAndDispose();
                 gifSmallImage.Tag = null;
                 return;
             }
@@ -408,7 +401,7 @@ public partial class RpcView : Border
 
         if (!gifLarge.IsVisible)
         {
-            gifLarge.SourceStream = Stream.Null;
+            gifLarge.StopAndDispose();
             gifLarge.Tag = null;
         }
 

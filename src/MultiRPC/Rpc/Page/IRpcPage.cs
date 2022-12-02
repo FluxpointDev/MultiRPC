@@ -1,5 +1,4 @@
-﻿using System;
-using MultiRPC.UI.Pages;
+﻿using MultiRPC.UI.Pages;
 
 namespace MultiRPC.Rpc.Page;
 

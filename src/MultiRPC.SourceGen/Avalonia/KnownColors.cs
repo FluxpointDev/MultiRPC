@@ -1,10 +1,8 @@
-﻿#define BUILDTASK
+#define BUILDTASK
 //Added this into the project as we would need to manually pull in a lot of Avalonia projects, it's more simple to just contain these files in the source gen
 //From https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.Visuals/Media/KnownColors.cs
 
-using System;
 using System.Reflection;
-using System.Collections.Generic;
 
 namespace Avalonia.Media
 {

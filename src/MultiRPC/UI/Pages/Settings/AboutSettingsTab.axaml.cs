@@ -1,9 +1,6 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -13,8 +10,6 @@ using MultiRPC.Discord;
 using MultiRPC.Extensions;
 using MultiRPC.UI.Controls;
 using MultiRPC.Utils;
-using TinyUpdate.Core.Extensions;
-using TinyUpdate.Core.Helper;
 
 namespace MultiRPC.UI.Pages.Settings;
 

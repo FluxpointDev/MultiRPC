@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Net;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -12,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using MultiRPC.Exceptions;
 using MultiRPC.Extensions;
 using MultiRPC.Setting;
@@ -193,8 +190,8 @@ public partial class InstalledThemesPage : Grid, ITabPage
         {
             Margin = new Thickness(0, 0, 15, 15)
         };
-        themeUI.PointerEnter += ThemeUIOnPointerEnter;
-        themeUI.PointerLeave += ThemeUIOnPointerLeave;
+        themeUI.PointerEntered += ThemeUIOnPointerEnter;
+        themeUI.PointerExited += ThemeUIOnPointerLeave;
         themeUI.DoubleTapped += ThemeUIOnDoubleTapped;
         themeUI.AttachedToLogicalTree += (sender, args) => _ = Task.Run(theme.ReloadAssets);
         themeUI.DetachedFromLogicalTree += (sender, args) => _ = Task.Run(theme.UnloadAssets);
@@ -346,30 +343,31 @@ public partial class InstalledThemesPage : Grid, ITabPage
 
     private async Task GetTheme(bool apply)
     {
-        var openDia = new OpenFileDialog
+        var files = await App.MainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
-            Filters = new List<FileDialogFilter>
+            Title = Language.GetText(LanguageText.MultiRPCThemes),
+            AllowMultiple = true,
+            FileTypeFilter = new[]
             {
-                new()
-                {
-                    Name = Language.GetText(LanguageText.MultiRPCThemes),
-                    Extensions = new List<string>(new []
-                    {
-                        Constants.ThemeFileExtension[1..],
-                        Constants.LegacyThemeFileExtension[1..]
-                    }),
-                }
+                new FilePickerFileType(Constants.ThemeFileExtension[1..]),
+                new FilePickerFileType(Constants.LegacyThemeFileExtension[1..])
             }
-        };
-        var files = await openDia.ShowAsync();
-        if (files is null || !files.Any())
+        });
+        if (!files.Any())
         {
             return;
         }
 
         foreach (var file in files)
         {
-            var ext = Path.GetExtension(file);
+            if (!file.TryGetUri(out var fileUrl))
+            {
+                //TODO: Log
+                continue;
+            }
+            var filePath = WebUtility.UrlDecode(fileUrl.AbsolutePath);
+            
+            var ext = Path.GetExtension(filePath);
             if (ext != Constants.ThemeFileExtension
                 && ext != Constants.LegacyThemeFileExtension)
             {
@@ -378,19 +376,18 @@ public partial class InstalledThemesPage : Grid, ITabPage
             }
 
             Directory.CreateDirectory(Constants.ThemeFolder);
-            var newThemeLoc = Path.Combine(Constants.ThemeFolder, Path.GetFileName(file));
-            File.Copy(file, newThemeLoc);
+            var newThemeLoc = Path.Combine(Constants.ThemeFolder, Path.GetFileName(filePath));
+            File.Copy(filePath, newThemeLoc);
         }
-        if (!apply)
+
+        if (apply && files[^1].TryGetUri(out var lastFileUrl))
         {
-            return;
-        }
-            
-        var th = MultiRPC.Theming.Theme.Load(files[^1]);
-        if (th != null)
-        {
-            th.Apply();
-            _activeTheme = th;
+            var th = MultiRPC.Theming.Theme.Load(WebUtility.UrlDecode(lastFileUrl.AbsolutePath));
+            if (th != null)
+            {
+                th.Apply();
+                _activeTheme = th;
+            }
         }
     }
 }

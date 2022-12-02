@@ -1,7 +1,6 @@
-﻿using System;
-using System.Text.Json.Serialization;
-using Fonderie;
+﻿using System.Text.Json.Serialization;
 using MultiRPC.Setting.Settings.Attributes;
+using PropertyChanged.SourceGenerator;
 
 namespace MultiRPC.Setting.Settings;
 
@@ -10,34 +9,43 @@ public partial class DisableSettings : BaseSetting
     [JsonIgnore]
     public override string Name => "Disable";
 
-    [GeneratedProperty, SettingName("DiscordCheck")]
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"DiscordCheck\")]")]
+    [Notify]
     private bool _discordCheck;
         
-    [GeneratedProperty, SettingName("TokenCheck")]
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"TokenCheck\")]")]
+    [Notify]
     private bool _tokenCheck;
-        
-    [GeneratedProperty, SettingName("HelpIcons")]
+    
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"HelpIcons\")]")]
+    [Notify]
     private bool _helpIcons;
         
-    [GeneratedProperty, SettingName("AutomaticUpdates")]
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"AutomaticUpdates\")]")]
+    [Notify]
     private bool _autoUpdate = true;
         
-    [GeneratedProperty, SettingName("HideTaskbarIcon")]
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"HideTaskbarIcon\")]")]
+    [Notify]
     private bool _hideTaskbarIcon;
         
-    [GeneratedProperty, SettingName("ShowPageTooltips")]
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"ShowPageTooltips\")]")]
+    [Notify]
     private bool _showPageTooltips;
 
-    [GeneratedProperty, SettingName("ShowAllTooltips")]
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"ShowAllTooltips\")]")]
+    [Notify]
     private bool _allTooltips;
 
-    [GeneratedProperty, SettingName("AcrylicEffect"), IsEditable(nameof(CanEditAcrylicEffect))]
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"AcrylicEffect\")]")]
+    [PropertyAttribute($"[MultiRPC.Setting.Settings.Attributes.IsEditable(\"{nameof(CanEditAcrylicEffect)}\")]")]
+    [Notify]
     private bool _acrylicEffect = !CanEditAcrylicEffect();
     
-    [GeneratedProperty]
+    [Notify]
     private bool _inviteWarn;
 
-    [GeneratedProperty]
+    [Notify]
     private bool _buttonWarn;
 
     private static bool CanEditAcrylicEffect() => !OperatingSystem.IsLinux();

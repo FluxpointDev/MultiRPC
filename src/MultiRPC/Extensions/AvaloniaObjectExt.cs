@@ -1,5 +1,4 @@
-﻿using System;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Threading;
 
 namespace MultiRPC.Extensions;

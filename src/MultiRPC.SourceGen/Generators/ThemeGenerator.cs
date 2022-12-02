@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using Avalonia.Media;
+﻿using Avalonia.Media;
 using Microsoft.CodeAnalysis;
 using Uno.RoslynHelpers;
 using MultiRPC.Converters;
 using System.Text.Json;
 using MultiRPC.Theming;
 using System.IO.Compression;
-using System.Linq;
 using SemVersion;
 using Metadata = MultiRPC.Theming.Metadata;
 
@@ -18,8 +13,7 @@ namespace MultiRPC.SourceGen.Generators;
 [Generator]
 public class ThemeGenerator : ISourceGenerator
 {
-    public void Initialize(GeneratorInitializationContext context)
-    { }
+    public void Initialize(GeneratorInitializationContext context) { }
 
     public void Execute(GeneratorExecutionContext context)
     {
@@ -55,7 +49,7 @@ public class ThemeGenerator : ISourceGenerator
             defaultName = "Dark";
             
             //Make theme props
-            using (themeBuilder.BlockInvariant(string.Format("public static readonly Theme {0} = new Theme", themeName)))
+            using (themeBuilder.BlockInvariant($"public static readonly Theme {themeName} = new Theme"))
             {
                 //Colour
                 using (themeBuilder.BlockInvariant("Colours = new Colours"))
@@ -121,22 +115,12 @@ public class ThemeGenerator : ISourceGenerator
             }
         });
 
-        // This fixes debugging on visual studio :(
-        if (string.IsNullOrEmpty(defaultName))
-        {
-            //We have to add it here or this will be null
-            themesBuilder.AppendLineInvariant(string.Format("public static readonly Theme Default = null;"));
-        }
-        else
-        {
-            //We have to add it here or this will be null
-            themesBuilder.AppendLineInvariant(string.Format("public static readonly Theme Default = {0};", defaultName));
-        }
+        //We have to add it here or this will be null
+        themesBuilder.AppendLineInvariant($"public static readonly Theme Default = {defaultName};");
 
         //Add to context
         classDisposable.Dispose();
         context.AddSource("Themes.gen.cs", themesBuilder.ToString());
-        File.WriteAllText(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "themes.gen.cs"), themesBuilder.ToString());
     }
 
     private static readonly SemanticVersion ModernVersion = new SemanticVersion(7, 0, null);
@@ -163,7 +147,7 @@ public class ThemeGenerator : ISourceGenerator
         {
             archive = new ZipArchive(fileStream, ZipArchiveMode.Read);
         }
-        catch (Exception)
+        catch
         {
             return null;
         }
@@ -185,7 +169,7 @@ public class ThemeGenerator : ISourceGenerator
                 new JsonSerializerOptions(JsonSerializerDefaults.General)
                 { Converters = { new ColourJsonConverter() } })!;
         }
-        catch (Exception)
+        catch
         {
             archive.Dispose();
             return null;
@@ -212,7 +196,7 @@ public class ThemeGenerator : ISourceGenerator
         return theme;
     }
     
-    private string MakeColourLine(Color color, string name)
+    private static string MakeColourLine(Color color, string name)
     {
         return string.Format("{3} = Color.FromRgb({0}, {1}, {2}),", color.R, color.G, color.B, name);
     }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Input;
-using Avalonia;
+﻿using System.Windows.Input;
 using Avalonia.Controls;
 using MultiRPC.UI;
 

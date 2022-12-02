@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -21,7 +20,7 @@ public partial class ThemePreview : Grid
     private static readonly Language WewButtonDisabled = LanguageText.WewDisabledButton;
     private readonly DisableSettings _disableSetting = SettingManager<DisableSettings>.Setting;
 
-    public Theming.Theme Theme
+    public new Theming.Theme Theme
     {
         get => _theme;
         set

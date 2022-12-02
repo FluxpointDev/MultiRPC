@@ -1,23 +1,21 @@
-using System;
-using System.Collections.Generic;
 using DiscordRPC;
-using Fonderie;
+using PropertyChanged.SourceGenerator;
 
 namespace MultiRPC.Rpc;
 
 public partial class RpcProfile : IEquatable<RpcProfile>
 {
-    [GeneratedProperty] private string _state = string.Empty;
-    [GeneratedProperty] private string _details = string.Empty;
-    [GeneratedProperty] private string _largeKey = string.Empty;
-    [GeneratedProperty] private string _largeText = string.Empty;
-    [GeneratedProperty] private string _smallKey = string.Empty;
-    [GeneratedProperty] private string _smallText = string.Empty;
-    [GeneratedProperty] private bool _showTime;
-    [GeneratedProperty] private string _button1Text = string.Empty;
-    [GeneratedProperty] private string _button1Url = string.Empty;
-    [GeneratedProperty] private string _button2Text = string.Empty;
-    [GeneratedProperty] private string _button2Url = string.Empty;
+    [Notify] private string _state = string.Empty;
+    [Notify] private string _details = string.Empty;
+    [Notify] private string _largeKey = string.Empty;
+    [Notify] private string _largeText = string.Empty;
+    [Notify] private string _smallKey = string.Empty;
+    [Notify] private string _smallText = string.Empty;
+    [Notify] private bool _showTime;
+    [Notify] private string _button1Text = string.Empty;
+    [Notify] private string _button1Url = string.Empty;
+    [Notify] private string _button2Text = string.Empty;
+    [Notify] private string _button2Url = string.Empty;
 
     public DiscordRPC.RichPresence ToRichPresence()
     {

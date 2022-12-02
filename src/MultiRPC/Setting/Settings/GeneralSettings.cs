@@ -1,12 +1,9 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text.Json.Serialization;
-using Fonderie;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting.Settings.Attributes;
 using MultiRPC.UI.Pages;
+using PropertyChanged.SourceGenerator;
 using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.Setting.Settings;
@@ -16,29 +13,37 @@ public partial class GeneralSettings : BaseSetting
     [JsonIgnore]
     public override string Name => "General";
 
-    [GeneratedProperty]
+    [Notify]
     private string? _lastUser = "NA#0000";
 
-    [GeneratedProperty, SettingName("Client")]
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"Client\")]")]
+    [Notify]
     private DiscordClients _client;
 
-    [GeneratedProperty, SettingName("AutoStart"), SettingSource(nameof(GetAutoStarts))]
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"AutoStart\")]")]
+    [PropertyAttribute($"[MultiRPC.Setting.Settings.Attributes.SettingSource(\"{nameof(GetAutoStarts)}\")]")]
+    [Notify]
     private string _autoStart = "";
 
-    [GeneratedProperty, SettingName("Language"), SettingSource(nameof(GetLanguages)), NoneLocalizable]
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"Language\")]")]
+    [PropertyAttribute($"[MultiRPC.Setting.Settings.Attributes.SettingSource(\"{nameof(GetLanguages)}\")]")]
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.NoneLocalizable]")]
+    [Notify]
     private string _language = "";
         
-    [GeneratedProperty, SettingName("LogLevel")]
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"LogLevel\")]")]
+    [Notify]
     private LogLevel _logLevel = LogLevel.Trace;
 
-    [GeneratedProperty, SettingName("AfkTime")]
+    [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"AfkTime\")]")]
+    [Notify]
     private bool _showAfkTime;
 
-    [GeneratedProperty]
+    [Notify]
     private string? _themeFile;
     
-    partial void OnLogLevelChanged(LogLevel previous, LogLevel value) => LoggingCreator.GlobalLevel = value;
-    partial void OnLanguageChanged(string previous, string value)
+    private void OnLogLevelChanged(LogLevel previous, LogLevel value) => LoggingCreator.GlobalLevel = value;
+    private void OnLanguageChanged(string previous, string value)
     {
         if (Languages.ContainsKey(value))
         {

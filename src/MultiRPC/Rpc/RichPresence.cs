@@ -1,7 +1,6 @@
-﻿using System;
-using System.Text.Json.Serialization;
-using Fonderie;
+﻿using System.Text.Json.Serialization;
 using MultiRPC.Discord;
+using PropertyChanged.SourceGenerator;
 
 namespace MultiRPC.Rpc;
 
@@ -14,10 +13,11 @@ public partial class RichPresence : IEquatable<RichPresence>
         _lazyManager = new Lazy<ProfileAssetsManager>(() => ProfileAssetsManager.GetOrAddManager(_id));
     }
 
-    [GeneratedProperty]
+    [Notify]
     private string _name;
 
-    [GeneratedProperty, JsonPropertyName("ID")]
+    [PropertyAttribute("[System.Text.Json.Serialization.JsonPropertyName(\"ID\")]")]
+    [Notify]
     private long _id;
     
     [JsonIgnore]
@@ -29,7 +29,7 @@ public partial class RichPresence : IEquatable<RichPresence>
     [JsonIgnore] 
     public ProfileAssetsManager AssetsManager => _lazyManager.Value;
 
-    partial void OnIdChanged(long _, long value)
+    private void OnIdChanged(long _, long value)
     {
         _lazyManager = new Lazy<ProfileAssetsManager>(() => ProfileAssetsManager.GetOrAddManager(value));
     }

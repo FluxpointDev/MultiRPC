@@ -1,8 +1,3 @@
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Chrome;
@@ -14,7 +9,6 @@ using Avalonia.VisualTree;
 using MultiRPC.Commands;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
-using MultiRPC.Theming;
 using MultiRPC.Utils;
 
 namespace MultiRPC.UI;
@@ -79,7 +73,7 @@ public partial class MainWindow : FluentWindow
         var ext = Path.GetExtension(file);
         if (ext is Constants.ThemeFileExtension or Constants.LegacyThemeFileExtension)
         {
-            Theme.Load(file)?.Apply();
+            Theming.Theme.Load(file)?.Apply();
         }
     }
 
@@ -139,9 +133,6 @@ public partial class MainWindow : FluentWindow
         _control = control;
         InitializeComponent();
         InitializeExtra();
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
         
     private void ChangeTrayIconText(TrayIcon trayIcon)

@@ -1,7 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
-
-namespace MultiRPC;
+﻿namespace MultiRPC;
 
 public class ActionDisposable : IDisposable
 {

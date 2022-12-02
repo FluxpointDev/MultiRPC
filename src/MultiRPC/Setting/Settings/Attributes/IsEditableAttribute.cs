@@ -1,5 +1,3 @@
-using System;
-
 namespace MultiRPC.Setting.Settings.Attributes;
 
 public class IsEditableAttribute : Attribute

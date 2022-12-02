@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MultiRPC.Commands;
 using MultiRPC.Exceptions;

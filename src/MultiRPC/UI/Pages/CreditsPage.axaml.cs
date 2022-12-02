@@ -1,16 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
-using System.Net.NetworkInformation;
+﻿using System.Net.NetworkInformation;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Media;
 using MultiRPC.Extensions;
 using MultiRPC.Utils;
 using TinyUpdate.Core.Logging;
-using TinyUpdate.Http.Extensions;
 
 namespace MultiRPC.UI.Pages;
 

@@ -1,6 +1,4 @@
 ﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Media;
 using MultiRPC.UI.Controls;
 using MultiRPC.UI.Pages.Theme.Editor;
 

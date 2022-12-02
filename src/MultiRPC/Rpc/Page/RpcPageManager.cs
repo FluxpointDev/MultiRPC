@@ -1,5 +1,4 @@
-﻿using System;
-using MultiRPC.Exceptions;
+﻿using MultiRPC.Exceptions;
 using Splat;
 
 namespace MultiRPC.Rpc.Page;

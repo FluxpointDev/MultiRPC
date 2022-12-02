@@ -1,11 +1,8 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Media;
 using MultiRPC.Exceptions;
 using MultiRPC.Rpc;
 using Splat;
-using System;
 
 namespace MultiRPC.UI.Pages;
 

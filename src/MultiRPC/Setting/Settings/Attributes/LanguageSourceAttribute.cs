@@ -1,5 +1,4 @@
-﻿using System;
-using MultiRPC.UI.Controls.Settings;
+﻿using MultiRPC.UI.Controls.Settings;
 
 namespace MultiRPC.Setting.Settings.Attributes;
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using MultiRPC.Discord;

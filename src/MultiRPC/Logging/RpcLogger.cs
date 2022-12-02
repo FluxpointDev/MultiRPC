@@ -1,5 +1,4 @@
-﻿using System;
-using DiscordRPC.Logging;
+﻿using DiscordRPC.Logging;
 using TinyUpdate.Core.Logging;
 using LogLevel = DiscordRPC.Logging.LogLevel;
 

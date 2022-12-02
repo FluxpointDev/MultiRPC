@@ -1,11 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<LangVersion>preview</LangVersion>
+		<TargetFramework>net6.0</TargetFramework>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
         <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
     </PropertyGroup>
 
@@ -19,18 +16,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.1" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.8.0" PrivateAssets="all" />
         <PackageReference Include="SemanticVersion" Version="2.1.0" PrivateAssets="all" GeneratePathProperty="true" />
-        <PackageReference Include="System.Text.Json" Version="6.0.2" PrivateAssets="all" GeneratePathProperty="true" />
-        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" PrivateAssets="all" GeneratePathProperty="true" />
+        <PackageReference Include="System.Text.Json" Version="6.0.0" PrivateAssets="all" GeneratePathProperty="true" />
         <PackageReference Include="Uno.Roslyn" Version="1.3.0-dev.12" PrivateAssets="all" GeneratePathProperty="true" />
     </ItemGroup>
 
-    <Target Name="GetDependencyTargetPaths">
+    <Target Name="GetDependencyTargetPaths" AfterTargets="ResolvePackageDependenciesForBuild">
         <ItemGroup>
+            <TargetPathWithTargetPlatformMoniker Include="@(ResolvedCompileFileDefinitions)" IncludeRuntimeDependency="false" />
             <TargetPathWithTargetPlatformMoniker Include="$(PKGSemanticVersion)\lib\netstandard2.0\SemanticVersion.dll" IncludeRuntimeDependency="false" />
-            <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" IncludeRuntimeDependency="false" />
-            <TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_Bcl_AsyncInterfaces)\lib\netstandard2.0\Microsoft.Bcl.AsyncInterfaces.dll" IncludeRuntimeDependency="false" />
         </ItemGroup>
     </Target>
     

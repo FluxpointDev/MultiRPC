@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace MultiRPC;
+﻿namespace MultiRPC;
 
 //From https://github.com/AvaloniaUI/Avalonia/blob/master/src/Avalonia.PlatformSupport/AssetLoader.cs
 class SlicedStream : Stream

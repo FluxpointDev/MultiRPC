@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MultiRPC.Exceptions;
+﻿namespace MultiRPC.Exceptions;
 
 public class NotServerIPCException : Exception
 {

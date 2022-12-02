@@ -1,6 +1,4 @@
-using System;
 using System.Diagnostics;
-using System.IO;
 using Avalonia;
 using Avalonia.Controls;
 using MultiRPC.Extensions;
@@ -49,19 +47,24 @@ internal static class Program
                 _ipc.DisconnectFromServer();
                 Environment.Exit(sent ? 0 : -1);
             }
+
             _ipc.NewMessage += IpcOnNewMessage;
         }
-        catch { }
+        catch (Exception e)
+        {
+            LoggingCreator.CreateLogger(nameof(Program)).Error(e);
+        }
         
 
         var builder = BuildAvaloniaApp();
         try
         {
             builder.StartWithClassicDesktopLifetime(args);
+        }
+        finally
+        {
             _ipc.StopServer();
         }
-        catch { }
-        
     }
 
     //For now this just handles showing the Window again but can be used for other things later on

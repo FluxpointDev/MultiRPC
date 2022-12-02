@@ -1,11 +1,6 @@
-﻿using System.IO;
-using System.Linq;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using MultiRPC.Helpers;
 using MultiRPC.Theming;
 using Avalonia.Svg;
 using AvaloniaGif;

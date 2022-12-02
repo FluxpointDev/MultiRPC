@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using MultiRPC.Setting;
 using TinyUpdate.Core.Extensions;
 using Avalonia.Controls;

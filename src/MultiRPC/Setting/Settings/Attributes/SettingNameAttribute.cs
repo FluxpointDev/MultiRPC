@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MultiRPC.Setting.Settings.Attributes;
+﻿namespace MultiRPC.Setting.Settings.Attributes;
 
 /// <summary>
 /// This tells us that the Property is a setting and what it's called

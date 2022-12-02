@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
 using MultiRPC.Rpc;
 
 namespace MultiRPC.Extensions;

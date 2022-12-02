@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using TinyUpdate.Core.Logging;
+﻿using TinyUpdate.Core.Logging;
 using TinyUpdate.Http.Extensions;
 
 namespace MultiRPC.Extensions;

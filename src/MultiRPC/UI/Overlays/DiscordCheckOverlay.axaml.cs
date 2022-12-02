@@ -1,14 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MultiRPC.Extensions;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
-using TinyUpdate.Core.Helper;
 using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.UI.Overlays;
@@ -130,7 +125,7 @@ public partial class DiscordCheckOverlay : Panel
         Opacity = 0;
         await Task.Delay(500);
         IsVisible = false;
-        gifLoading.SourceStream = Stream.Null;
+        gifLoading.StopAndDispose();
     }
 
     private void BtnDisableDiscordCheck_OnClick(object? sender, RoutedEventArgs e) => _ = FadeOut();

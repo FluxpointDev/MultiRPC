@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using SemVersion;
 
@@ -19,8 +17,8 @@ public class VersionJsonConverter : JsonConverter<SemanticVersion>
             }
 
             //This allows us to use Version strings in a way that work for us
-            var lastDot = versionS.LastIndexOf('.');
-            if (versionS.Count(x => x == '.') == 3)
+            var lastDot = versionS!.LastIndexOf('.');
+            if (lastDot != -1 && versionS.Count(x => x == '.') == 3)
             {
                 versionS = versionS[..lastDot] + '-' + versionS[(lastDot + 1)..];
             }

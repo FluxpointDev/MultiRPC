@@ -1,17 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
-using Fonderie;
 using MultiRPC.Converters;
 using MultiRPC.Extensions;
+using MultiRPC.UI;
+using PropertyChanged.SourceGenerator;
 using SemVersion;
 using TinyUpdate.Core.Logging;
 using TinyUpdate.Core.Utils;
@@ -38,7 +35,7 @@ public partial class Theme
         { Converters = { new VersionJsonConverter() }}).Metadata;
     }
     
-    [GeneratedProperty]
+    [Notify]
     private bool isBeingEdited;
 
     /// <summary>

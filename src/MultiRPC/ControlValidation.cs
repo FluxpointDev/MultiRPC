@@ -1,4 +1,3 @@
-using System;
 using Avalonia.Data;
 using TinyUpdate.Core.Logging;
 

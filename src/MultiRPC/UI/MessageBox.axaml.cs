@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MultiRPC.Exceptions;
 using MultiRPC.Extensions;

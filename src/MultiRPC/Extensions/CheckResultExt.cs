@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MultiRPC.Extensions;
+﻿namespace MultiRPC.Extensions;
 
 public static class CheckResultExt
 {

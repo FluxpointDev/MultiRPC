@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
-using Fonderie;
 using MultiRPC.Rpc;
+using PropertyChanged.SourceGenerator;
 
 namespace MultiRPC.Setting.Settings;
 
@@ -21,7 +21,7 @@ public partial class MultiRPCSettings : BaseSetting
         PropertyChanged?.Invoke(sender, args);
     }
         
-    [GeneratedProperty]
+    [Notify]
     private RichPresence _presence = new RichPresence("MultiRPC", Constants.MultiRPCID)
     {
         Profile = new RpcProfile
@@ -32,7 +32,7 @@ public partial class MultiRPCSettings : BaseSetting
         }
     };
 
-    partial void OnPresenceChanged(RichPresence previous, RichPresence value)
+    private void OnPresenceChanged(RichPresence previous, RichPresence value)
     {
         previous.Profile.PropertyChanged -= OnPropertyChanged;
         previous.PropertyChanged -= OnPropertyChanged;

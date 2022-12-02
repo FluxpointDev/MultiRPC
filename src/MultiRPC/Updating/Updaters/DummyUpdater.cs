@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using SemVersion;
+﻿using SemVersion;
 using TinyUpdate.Core;
 using TinyUpdate.Core.Update;
 

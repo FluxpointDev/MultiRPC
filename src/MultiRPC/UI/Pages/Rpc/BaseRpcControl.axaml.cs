@@ -1,18 +1,11 @@
-using System;
-using System.Collections.Immutable;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.LogicalTree;
 using MultiRPC.Discord;
 using MultiRPC.Extensions;
 using MultiRPC.Rpc;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using MultiRPC.UI.Controls;
-using TinyUpdate.Core.Extensions;
 
 namespace MultiRPC.UI.Pages.Rpc;
 

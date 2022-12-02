@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
-using Fonderie;
 using MultiRPC.Rpc;
+using PropertyChanged.SourceGenerator;
 
 namespace MultiRPC.Setting.Settings;
 
@@ -48,7 +47,7 @@ public partial class ProfilesSettings : BaseSetting
         Save();
     }
 
-    [GeneratedProperty] private int _lastSelectedProfileIndex;
+    [Notify] private int _lastSelectedProfileIndex;
 
     public ObservableCollection<RichPresence> Profiles { get; }
 }
