@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -17,8 +17,8 @@ public partial class MultiRpcPage : Grid, IRpcPage
     private static string[]? _localizedMultiRPCAssetsNames;
     private static readonly ProfileAssetsManager MultiRPCAssetManager = ProfileAssetsManager.GetOrAddManager(Constants.MultiRPCID);
     private readonly IBrush _white = Brushes.White.ToImmutable();
-    private ComboBox cboLargeKey = new ComboBox();
-    private ComboBox cboSmallKey = new ComboBox();
+    private readonly ComboBox _cboLargeKey = new ComboBox();
+    private readonly ComboBox _cboSmallKey = new ComboBox();
 
     public string IconLocation => "Icons/Discord";
     public string LocalizableName => "MultiRPC";
@@ -34,26 +34,19 @@ public partial class MultiRpcPage : Grid, IRpcPage
         InitializeComponent(loadXaml);
 
         tblLookLike.DataContext = (Language)LanguageText.WhatItWillLookLike;
-        AssetManager.ReloadAssets += (sender, args) =>
-        {
-            rpcView.UpdateBackground((IBrush)Application.Current.Resources["PurpleBrush"]!);
-            rpcView.UpdateForeground(_white);
-        };
 
         RichPresence.Id = Constants.MultiRPCID;
-        rpcView.UpdateBackground((IBrush)Application.Current.Resources["PurpleBrush"]!);
-        rpcView.UpdateForeground(_white);
 
         rpcControl.PresenceValidChanged += (sender, b) => PresenceValidChanged?.Invoke(sender, b);
         rpcControl.ProfileChanged += (sender, args) => PresenceChanged?.Invoke(sender, args);
-        rpcControl.RichPresence = RichPresence;
+        rpcControl.RichPresence = rpcView.RpcProfile = RichPresence;
 
-        cboLargeKey.SelectionChanged += CboLargeKey_OnSelectionChanged;
-        cboSmallKey.SelectionChanged += CboSmallKey_OnSelectionChanged;
+        _cboLargeKey.SelectionChanged += CboLargeKey_OnSelectionChanged;
+        _cboSmallKey.SelectionChanged += CboSmallKey_OnSelectionChanged;
 
         rpcControl.Initialize(loadXaml);
-        rpcControl.SetSmallControl(cboSmallKey);
-        rpcControl.SetLargeControl(cboLargeKey);
+        rpcControl.SetSmallControl(_cboSmallKey);
+        rpcControl.SetLargeControl(_cboLargeKey);
         _ = Task.Run(SetupAssets);
     }
 
@@ -72,26 +65,26 @@ public partial class MultiRpcPage : Grid, IRpcPage
         
             LanguageGrab.LanguageChanged += (sender, args) =>
             {
-                var largeKey = cboLargeKey.SelectedIndex;
-                var smallKey = cboSmallKey.SelectedIndex;
+                var largeKey = _cboLargeKey.SelectedIndex;
+                var smallKey = _cboSmallKey.SelectedIndex;
 
-                cboLargeKey.Items = _localizedMultiRPCAssetsNames = MultiRPCAssetManager.Assets
+                _cboLargeKey.Items = _localizedMultiRPCAssetsNames = MultiRPCAssetManager.Assets
                     .Select(x => GetLocalizedOrTitleCase(x.Name))
                     .Prepend(Language.GetText(LanguageText.NoImage)).ToArray();
-                cboSmallKey.Items = cboLargeKey.Items;
-                cboLargeKey.SelectedIndex = largeKey;
-                cboSmallKey.SelectedIndex = smallKey;
+                _cboSmallKey.Items = _cboLargeKey.Items;
+                _cboLargeKey.SelectedIndex = largeKey;
+                _cboSmallKey.SelectedIndex = smallKey;
             };
 
-            cboLargeKey.Items = _localizedMultiRPCAssetsNames = MultiRPCAssetManager.Assets
+            _cboLargeKey.Items = _localizedMultiRPCAssetsNames = MultiRPCAssetManager.Assets
                 .Select(x => GetLocalizedOrTitleCase(x.Name))
                 .Prepend(Language.GetText(LanguageText.NoImage)).ToArray();
-            cboSmallKey.Items = cboLargeKey.Items;
+            _cboSmallKey.Items = _cboLargeKey.Items;
             var largeKey = MultiRPCAssetManager.Assets.IndexOf(x => x?.Name == RichPresence.Profile.LargeKey) + 1;
-            cboLargeKey.SelectedIndex = largeKey;
+            _cboLargeKey.SelectedIndex = largeKey;
 
             var smallKey = MultiRPCAssetManager.Assets.IndexOf(x => x?.Name == RichPresence.Profile.SmallKey) + 1;
-            cboSmallKey.SelectedIndex = smallKey;
+            _cboSmallKey.SelectedIndex = smallKey;
         });
     }
     
@@ -135,7 +128,7 @@ public partial class MultiRpcPage : Grid, IRpcPage
             return;
         }
         
-        RichPresence.Profile.LargeKey = cboLargeKey.SelectedIndex != 0 ? 
+        RichPresence.Profile.LargeKey = _cboLargeKey.SelectedIndex != 0 ? 
             MultiRPCAssetManager.Assets[ind - 1].Name : string.Empty;
     }
 
@@ -156,7 +149,7 @@ public partial class MultiRpcPage : Grid, IRpcPage
             return;
         }
         
-        RichPresence.Profile.SmallKey = cboSmallKey.SelectedIndex != 0 ? 
+        RichPresence.Profile.SmallKey = _cboSmallKey.SelectedIndex != 0 ? 
             MultiRPCAssetManager.Assets[ind - 1].Name : string.Empty;
     }
 }

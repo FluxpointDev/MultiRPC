@@ -5,17 +5,17 @@ namespace MultiRPC.Rpc;
 
 public partial class RpcProfile : IEquatable<RpcProfile>
 {
-    [Notify] private string _state = string.Empty;
-    [Notify] private string _details = string.Empty;
-    [Notify] private string _largeKey = string.Empty;
-    [Notify] private string _largeText = string.Empty;
-    [Notify] private string _smallKey = string.Empty;
-    [Notify] private string _smallText = string.Empty;
+    [Notify] private string? _state;
+    [Notify] private string? _details;
+    [Notify] private string? _largeKey;
+    [Notify] private string? _largeText;
+    [Notify] private string? _smallKey;
+    [Notify] private string? _smallText;
     [Notify] private bool _showTime;
-    [Notify] private string _button1Text = string.Empty;
-    [Notify] private string _button1Url = string.Empty;
-    [Notify] private string _button2Text = string.Empty;
-    [Notify] private string _button2Url = string.Empty;
+    [Notify] private string? _button1Text;
+    [Notify] private string? _button1Url;
+    [Notify] private string? _button2Text;
+    [Notify] private string? _button2Url;
 
     public DiscordRPC.RichPresence ToRichPresence()
     {

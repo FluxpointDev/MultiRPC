@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.ComponentModel;
+using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.Setting;
 
@@ -14,10 +15,17 @@ public static class SettingManager<T>
         if (File.Exists(settingFileLocation))
         {
             using var fileSteam = File.OpenRead(settingFileLocation);
-            var fileSetting = JsonSerializer.Deserialize<T>(fileSteam);
-            if (fileSetting != null)
+            try
             {
-                setting = fileSetting;
+                var fileSetting = JsonSerializer.Deserialize<T>(fileSteam);
+                if (fileSetting != null)
+                {
+                    setting = fileSetting;
+                }
+            }
+            catch (Exception e)
+            {
+                LoggingCreator.CreateLogger(nameof(SettingManager<T>)).Error(e);
             }
         }
 

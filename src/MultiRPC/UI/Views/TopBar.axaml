@@ -36,6 +36,6 @@
             <Button x:Name="btnAuto" Classes="smaller" Content="{Binding TextObservable^}" IsEnabled="False" />
             <Button x:Name="btnAfk" Classes="smaller purple" Content="{Binding TextObservable^}" Click="BtnAfk_OnClick" />
         </StackPanel>
-        <views:RpcView x:Name="rpcView" />
+        <views:RpcView x:Name="rpcView" ViewType="Default" />
     </StackPanel>
 </Grid>

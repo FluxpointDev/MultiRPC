@@ -64,10 +64,9 @@ public partial class TopBar : Grid
 
         _rpcClient.Loading += (sender, args) =>
         {
-            rpcView.ViewType = ViewType.Loading;
-
             this.RunUILogic(() =>
             {
+                rpcView.ViewType = ViewType.Loading;
                 _startButton.ChangeJsonNames(LanguageText.Shutdown);
                 _statusKind.ChangeJsonNames(LanguageText.Loading);
                 btnUpdatePresence.IsEnabled = false;
@@ -82,15 +81,14 @@ public partial class TopBar : Grid
         };
         _rpcClient.Ready += (sender, message) =>
         {
-            rpcView.ViewType = ViewType.RpcRichPresence;
-
             this.RunUILogic(() =>
             {
+                rpcView.ViewType = ViewType.RpcRichPresence;
                 _startButton.ChangeJsonNames(LanguageText.Shutdown);
                 _statusKind.ChangeJsonNames(LanguageText.Connected);
                 if (_rpcClient.ID != Constants.AfkID)
                 {
-                    btnUpdatePresence.IsEnabled = _page == RpcPageManager.PendingPage ? (_page?.PresenceValid ?? true) : false;
+                    btnUpdatePresence.IsEnabled = _page == RpcPageManager.PendingPage && (_page?.PresenceValid ?? true);
                 }
 
                 var user = message.User.Username + "#" + message.User.Discriminator.ToString("0000");
@@ -103,10 +101,9 @@ public partial class TopBar : Grid
         };
         _rpcClient.Disconnected += (sender, args) =>
         {
-            rpcView.ViewType = ViewType.Default;
-
             this.RunUILogic(() =>
             {
+                rpcView.ViewType = ViewType.Default;
                 RpcPageManagerOnPageChanged(sender, RpcPageManager.CurrentPage!);
                 _statusKind.ChangeJsonNames(LanguageText.Disconnected);
                 btnUpdatePresence.IsEnabled = false;

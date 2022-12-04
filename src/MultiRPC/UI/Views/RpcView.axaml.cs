@@ -1,24 +1,25 @@
 using System.ComponentModel;
-using System.Timers;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
+using Avalonia.Controls.Shapes;
 using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
-using AvaloniaGif.Decoding;
-using DiscordRPC.Message;
-using MultiRPC.Discord;
+using Avalonia.Svg;
+using Avalonia.Threading;
 using MultiRPC.Exceptions;
 using MultiRPC.Extensions;
 using MultiRPC.Helpers;
 using MultiRPC.Rpc;
+using PropertyChanged.SourceGenerator;
 using Splat;
-using Timer = System.Timers.Timer;
 
 namespace MultiRPC.UI.Views;
 
 public enum ViewType
 {
+    NotSet,
     Default,
     Default2,
     Loading,
@@ -27,321 +28,314 @@ public enum ViewType
     RpcRichPresence
 }
 
+[Flags]
+enum UpdateType
+{
+    All = 1,
+    Text = 2,
+    Tooltips = 4,
+    SmallImage = 8,
+    LargeImage = 16,
+}
+
+public partial class RpcViewText
+{
+    [Notify] private string? _title;
+    [Notify] private string? _text1;
+    [Notify] private string? _text2;
+}
+
+//TODO: Readd Error
+//TODO: Update view for small image if it's the only image selected
 public partial class RpcView : Border
 {
-    private static readonly Dictionary<Uri, IBrush> CachedImages = new Dictionary<Uri, IBrush>();
-    private static readonly Dictionary<Uri, Stream> CachedStreams = new Dictionary<Uri, Stream>();
-    private readonly Language _titleText = new Language();
-    private readonly Language _tblText1 = new Language();
-    private readonly Language _tblText2 = new Language();
-    private static VisualBrush _logoVisualBrush;
-    private static VisualBrush _errorVisualBrush;
-    private readonly RpcClient _rpcClient;
-    private readonly object _streamLock = new object();
+    [Notify] private ViewType _viewType = ViewType.NotSet;
+    [Notify] private RichPresence? _rpcProfile;
+    
+    private readonly RpcViewText _viewText = new();
+    private readonly Run _runTitle = new()
+    {
+        [!Run.TextProperty] = new Binding("Title"), 
+        FontWeight = FontWeight.SemiBold
+    };
+    private readonly Run _runText1 = new(){ [!Run.TextProperty] = new Binding("Text1") };
+    private readonly Run _runText2 = new() { [!Run.TextProperty] = new Binding("Text2") };
+
+    private SvgImage _logoImage;
+    private SvgImage _errorImage;
+    private Stream _loadingGifStream; //TODO: Update on new asset
+
+    //TODO: Make it so we show this (Readding error)
+    private string? _rpcError;
+    private static readonly RpcClient RPCClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException();
+    
     private DateTime? _timerTime;
-    private readonly Timer _timer;
-    private readonly List<IDisposable> _textBoxDisposables = new List<IDisposable>();
+    private readonly DispatcherTimer _timer;
 
-    static RpcView()
-    {
-        AssetManager.RegisterForAssetReload("Logo.svg", () => _logoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") }));
-        AssetManager.RegisterForAssetReload("Icons/Delete.svg", () => _errorVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Icons/Delete.svg") }));
-        _logoVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Logo.svg") });
-        _errorVisualBrush = new VisualBrush(new Image { Source = SvgImageHelper.LoadImage("Icons/Delete.svg") });
-    }
-
-    private ViewType _viewType;
-    public ViewType ViewType
-    {
-        get => _viewType;
-        set
-        {
-            _viewType = value;
-            this.RunUILogic(() => UpdateFromType());
-        }
-    }
-
-    private RichPresence? _rpcProfile;
-    public RichPresence? RpcProfile
-    {
-        get => _rpcProfile;
-        set => UpdateFromRichPresence(value);
-    }
-
+    private static readonly SemaphoreSlim ImageLock = new SemaphoreSlim(1, 1);
+    private static readonly Dictionary<Uri, Stream> CachedStreams = new Dictionary<Uri, Stream>();
+    
     public RpcView()
     {
         InitializeComponent();
-        AssetManager.ReloadAssets += (sender, args) => this.RunUILogic(() => UpdateFromType());
-        _rpcClient = Locator.Current.GetService<RpcClient>() ?? throw new NoRpcClientException();
-        AssetManager.RegisterForAssetReload("Loading.gif", () =>
+
+        //We want to do this so we update the text when the language changes
+        LanguageGrab.LanguageChanged += (sender, args) => OnViewTypeChanged();
+
+        //Get needed assets
+        _logoImage = SvgImageHelper.LoadImage("Logo.svg");
+        _errorImage = SvgImageHelper.LoadImage("Icons/Delete.svg");
+        _loadingGifStream = AssetManager.GetSeekableStream("Loading.gif");
+        AssetManager.RegisterForAssetReload("Logo.svg", () => UpdateAssetImage(ref _logoImage, "Logo.svg"));
+        AssetManager.RegisterForAssetReload("Icons/Delete.svg", () => UpdateAssetImage(ref _errorImage, "Icons/Delete.svg"));
+
+        //Do bindings
+        this.GetPropertyChangedObservable(BackgroundProperty).Subscribe(x =>
         {
-            if (ViewType == ViewType.Loading)
+            if (!x.IsEffectiveValueChange)
             {
-                gifLarge.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
+                return;
+            }
+            
+            //TODO: Check some other brushes
+            //If we have the purple brush then we want the text to be white, else use whatever ThemeForegroundBrush is
+            if (x.GetNewValue<IBrush?>()?.Equals(Application.Current?.Resources["PurpleBrush"]) ?? false)
+            {
+                tblContent.Foreground = Brushes.White;
+            }
+            else
+            {
+                tblContent[!TextBlock.ForegroundProperty] = new Binding("ThemeForegroundBrush");
             }
         });
-        gifSmallImage.StopAndDispose();
-        gifLarge.StopAndDispose();
-
-        brdLarge.Background = _logoVisualBrush;
-
-        tblTitle.DataContext = _titleText;
-        tblText1.DataContext = _tblText1;
-        tblText2.DataContext = _tblText2;
-        ViewType = ViewType.Default;
-        _timer = new Timer(1000);
-        _timer.Elapsed += TimerOnElapsed;
-        _rpcClient.Disconnected += (sender, args) =>
+        
+        _runTitle.DataContext = _runText1.DataContext = _runText2.DataContext = _viewText;
+        //BUG: I should be able to do this in XAML but it seems to not work correctly when I do...
+        sliLargeImage[!IsVisibleProperty] = MakeImageSourceBinding(sliLargeImage);
+        gridSmallImage[!IsVisibleProperty] = new MultiBinding
         {
-            _timer.Stop();
-            _timerTime = null;
-            tblTime.Text = string.Empty;
+            Converter = BoolConverters.And,
+            Bindings =
+            {
+                sliLargeImage[!IsVisibleProperty],
+                MakeImageSourceBinding(sliSmallImage),
+            }
+        };
+
+        /*BUG: I should be able to use a VisualBrush but it seem to not work, this does the job as the size doesn't change*/
+        sliSmallImage.OpacityMask = new ImageBrush(new Ellipse
+        {
+            Width = sliSmallImage.Width,
+            Height = sliSmallImage.Height,
+            Fill = Brushes.White
+        }.RenderToBitmap());
+        sliLargeImage.OpacityMask = new ImageBrush(new Border
+        {
+            Width = sliLargeImage.Width,
+            Height = sliLargeImage.Height,
+            Background = Brushes.White,
+            CornerRadius = new CornerRadius(5)
+        }.RenderToBitmap());
+
+        //Set content inlines
+        tblContent.Inlines = new InlineCollection
+        {
+            _runTitle,
+            _runText1,
+            _runText2,
+        };
+        
+        _timer = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Background, TimerTicked);
+        RPCClient.Disconnected += (sender, args) => StopTimer();
+        RPCClient.PresenceUpdated += (sender, message) =>
+        {
+            if (ViewType == ViewType.RpcRichPresence)
+            {
+                Dispatcher.UIThread.Post(() => UpdateProfile(message.Presence, message.Name, long.Parse(message.ApplicationID)));
+            }
         };
     }
 
-    public void UpdateBackground(IBrush brush)
+    //TODO: Move this somewhere else
+    private void UpdateProfile(DiscordRPC.BaseRichPresence presence, string name, long id)
     {
-        Background = brush;
-    }
-
-    public void UpdateForeground(IBrush brush)
-    {
-        tblTitle.Foreground = brush;
-    }
-
-    private async void ProfileOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(RpcProfile.Profile.LargeText))
-        {
-            var text = RpcProfile!.Profile.LargeText;
-            text = string.IsNullOrWhiteSpace(text) ? null : text;
-            CustomToolTip.SetTip(brdLarge, text);
-            CustomToolTip.SetTip(gifLarge, text);
-            return;
-        }
-
-        if (e.PropertyName == nameof(RpcProfile.Profile.SmallText))
-        {
-            var text = RpcProfile!.Profile.SmallText;
-            text = string.IsNullOrWhiteSpace(text) ? null : text;
-            CustomToolTip.SetTip(gridSmallImage, text);
-            CustomToolTip.SetTip(gifSmallImage, text);
-        }
-
-        if (_rpcProfile == null)
-        {
-            return;
-        }
-
-        switch (e.PropertyName)
-        {
-            case nameof(RichPresence.Profile.SmallKey):
-                await UpdateSmallImage(_rpcProfile.AssetsManager.GetUri(_rpcProfile.Profile.SmallKey));
-                return;
-            case nameof(RichPresence.Profile.LargeKey):
-                await UpdateLargeImage(_rpcProfile.AssetsManager.GetUri(_rpcProfile.Profile.LargeKey));
-                break;
-        }
-    }
-
-    private void RpcClientOnPresenceUpdated(object? sender, PresenceMessage e) => this.RunUILogic(() =>
-    {
-        _timerTime = e.Presence.Timestamps?.Start;
+        _timerTime = presence.Timestamps?.Start;
         if (_timerTime != null)
         {
             _timer.Start();
         }
         else
         {
-            _timer.Stop();
-            tblTime.Text = string.Empty;
+            StopTimer();
         }
-
-        tblTitle.Text = e.Name;
-        tblText1.Text = e.Presence.Details;
-        tblText2.Text = e.Presence.State;
         
-        UpdateImages(
-            e.Presence.Assets?.SmallImageText, 
-            e.Presence.Assets?.LargeImageText,
-            e.Presence.Assets?.SmallImageKey,
-            e.Presence.Assets?.LargeImageKey,
-            e.Presence.Assets?.SmallImageID,
-            e.Presence.Assets?.LargeImageID,
-            e.ApplicationID);
-    });
-
-    private void UpdateImages(
-        string? smallImageText, string? largeImageText, 
-        string? smallImageKey, string? largeImageKey,
-        ulong? smallImageID, ulong? largeImageID,
-        string appID)
-    {
-        if (string.IsNullOrWhiteSpace(smallImageKey)
-            && string.IsNullOrWhiteSpace(largeImageKey))
+        //TODO: See if we can change this, really don't like that we need to do this....
+        if (RpcProfile == null || RpcProfile.Id != id)
         {
-            brdLarge.IsVisible = false;
-            gridSmallImage.IsVisible = false;
-            CustomToolTip.SetTip(brdLarge, null);
-            CustomToolTip.SetTip(gifLarge, null);
-            CustomToolTip.SetTip(gridSmallImage, null);
-            CustomToolTip.SetTip(gifSmallImage, null);
-            return;
-        }
-
-        //Update key and asset
-        CustomToolTip.SetTip(brdLarge, largeImageText);
-        CustomToolTip.SetTip(gifLarge, largeImageText);
-        CustomToolTip.SetTip(gridSmallImage, smallImageText);
-        CustomToolTip.SetTip(gifSmallImage, smallImageText);
-        _ = UpdateSmallImage(DiscordAsset.GetUri(appID, smallImageKey, smallImageID));
-        _ = UpdateLargeImage(DiscordAsset.GetUri(appID, largeImageKey, largeImageID));
-    }
-
-    private void UpdateFromRichPresence(RichPresence? presence)
-    {
-        if (presence != null)
-        {
-            if (_rpcProfile != null)
+            RpcProfile = new RichPresence(name, id)
             {
-                _rpcProfile.Profile.PropertyChanged -= ProfileOnPropertyChanged;
-            }
-            _rpcProfile = presence;
-        }
-        if (_rpcProfile == null)
-        {
-            return;
-        }
-
-        _textBoxDisposables.ForEach(x => x.Dispose());
-        _textBoxDisposables.Clear();
-        _textBoxDisposables.Add(
-            DoBinding(_rpcProfile.Profile, nameof(presence.Profile.Details), tblText1));
-        _textBoxDisposables.Add(
-            DoBinding(_rpcProfile.Profile, nameof(presence.Profile.State), tblText2));
-
-        _rpcProfile.Profile.PropertyChanged += ProfileOnPropertyChanged;
-        _rpcProfile.AssetsManager.GetAssets();
-        UpdateImages(
-            _rpcProfile.Profile.SmallText, 
-            _rpcProfile.Profile.LargeText,
-            _rpcProfile.Profile.SmallKey, 
-            _rpcProfile.Profile.LargeKey,
-            _rpcProfile.AssetsManager.Assets?.FirstOrDefault(x => x.Name == _rpcProfile.Profile.SmallKey)?.ID, 
-            _rpcProfile.AssetsManager.Assets?.FirstOrDefault(x => x.Name == _rpcProfile.Profile.LargeKey)?.ID, 
-            _rpcProfile.Id.ToString());
-    }
-
-    private async Task UpdateLargeImage(Uri? uri)
-    {
-        if (uri is null)
-        {
-            brdLarge.Background = null;
-            brdLarge.IsVisible = false;
-            gridSmallImage.IsVisible = false;
-            gifLarge.IsVisible = false;
-            gifLarge.Tag = null;
-            gifLarge.StopAndDispose();
-            return;
-        }
-
-        if (await ProcessUri(uri))
-        {
-            gridSmallImage.IsVisible = ellSmallImage.Fill != null || gifSmallImage.Tag != null;
-            if (CachedImages.ContainsKey(uri))
-            {
-                brdLarge.Background = CachedImages[uri];
-                brdLarge.IsVisible = true;
-                gifLarge.IsVisible = false;
-                gifLarge.Tag = null;
-                gifLarge.StopAndDispose();
-                return;
-            }
-            
-            gifLarge.IsVisible = true;
-
-            if (!gifLarge.Tag?.Equals(uri) ?? true)
-            {
-                gifLarge.Tag = uri;
-                var memStream = new MemoryStream();
-                lock (_streamLock)
+                Profile = new RpcProfile
                 {
-                    var stream = CachedStreams[uri];
-                    stream.Seek(0, SeekOrigin.Begin);
-                    stream.CopyTo(memStream);
-                    memStream.Seek(0, SeekOrigin.Begin);
+                    State = presence.State,
+                    Details = presence.Details,
+                    LargeKey = presence.Assets?.LargeImageKey,
+                    LargeText = presence.Assets?.LargeImageText,
+                    SmallKey = presence.Assets?.SmallImageKey,
+                    SmallText = presence.Assets?.SmallImageText,
+                    ShowTime = presence.Timestamps?.Start != null,
                 }
-
-                gifLarge.SourceStream = memStream;
-            }
-
-            brdLarge.IsVisible = false;
+            };
+            return;
         }
+        
+        var profile = RpcProfile.Profile;
+        profile.State = presence.State;
+        profile.Details = presence.Details;
+        profile.LargeKey = presence.Assets?.LargeImageKey;
+        profile.LargeText = presence.Assets?.LargeImageText;
+        profile.SmallKey = presence.Assets?.SmallImageKey;
+        profile.SmallText = presence.Assets?.SmallImageText;
+        profile.ShowTime = presence.Timestamps?.Start != null;
     }
 
-    private async Task UpdateSmallImage(Uri? uri)
+    //Rehook into the presence so we can correctly grab changes
+    private async void OnRpcProfileChanged(RichPresence? oldValue, RichPresence? newValue)
     {
-        if (uri is null)
+        if (oldValue != null)
         {
-            ellSmallImage.Fill = null;
-            gifSmallImage.IsVisible = false;
-            gifSmallImage.StopAndDispose();
-            gifSmallImage.Tag = null;
-            gridSmallImage.IsVisible = false;
+            oldValue.Profile.PropertyChanged -= OnProfilePropertyChanged;
+        }
+
+        if (newValue == null)
+        {
+            _viewText.Title = _viewText.Text1 = _viewText.Text2 = null;
             return;
         }
 
-        if (await ProcessUri(uri))
-        {
-            gridSmallImage.IsVisible = brdLarge.Background != null;
-            if (CachedImages.ContainsKey(uri))
-            {
-                ellSmallImage.Fill = CachedImages[uri];
-                ellSmallImage.IsVisible = true;
-                gifSmallImage.IsVisible = false;
-                gifSmallImage.StopAndDispose();
-                gifSmallImage.Tag = null;
-                return;
-            }
-            
-            gifSmallImage.IsVisible = true;
-            if (!gifSmallImage.Tag?.Equals(uri) ?? true)
-            {
-                gifSmallImage.Tag = uri;
-                var memStream = new MemoryStream();
-                lock (_streamLock)
-                {
-                    var stream = CachedStreams[uri];
-                    stream.Seek(0, SeekOrigin.Begin);
-                    stream.CopyTo(memStream);
-                    memStream.Seek(0, SeekOrigin.Begin);
-                }
+        await Dispatcher.UIThread.InvokeAsync(async () => await UpdateFromPresence(newValue));
+        newValue.Profile.PropertyChanged += OnProfilePropertyChanged;
+    }
 
-                gifSmallImage.SourceStream = memStream;
-            }
-            ellSmallImage.IsVisible = false;
+    private async void OnViewTypeChanged()
+    {
+        this[!BackgroundProperty] = GetBackgroundBinding();
+        switch (ViewType)
+        {
+            case ViewType.NotSet:
+            {
+                UpdateText();
+                UpdateImage(sliLargeImage);
+                UpdateImage(sliSmallImage);
+            } break;
+            case ViewType.Default:
+            {
+                UpdateText(LanguageText.MultiRPC, LanguageText.ThankYouForUsing, LanguageText.ThisProgram);
+                UpdateImage(sliLargeImage, _logoImage);
+                UpdateImage(sliSmallImage);
+            } break;
+            case ViewType.Default2:
+            {
+                UpdateText(LanguageText.MultiRPC, LanguageText.Hello, LanguageText.World);
+                UpdateImage(sliLargeImage, _logoImage);
+                UpdateImage(sliSmallImage);
+            } break;
+            case ViewType.Loading:
+            {
+                UpdateText(LanguageText.Loading);
+                UpdateImage(sliLargeImage, stream: _loadingGifStream);
+                UpdateImage(sliSmallImage);
+            } break;
+            case ViewType.Error:
+            {
+                UpdateText(Language.GetText(LanguageText.Error), _rpcError);
+                UpdateImage(sliLargeImage, _errorImage);
+                UpdateImage(sliSmallImage);
+            } break;
+            case ViewType.LocalRichPresence or ViewType.RpcRichPresence:
+            {
+                await UpdateFromPresence(RpcProfile);
+            } break;
         }
     }
 
-    private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
+    private async Task UpdateFromPresence(RichPresence? presence, UpdateType updateType = UpdateType.All)
     {
-        if (!_timerTime.HasValue)
+        if (presence == null || ViewType is not (ViewType.LocalRichPresence or ViewType.RpcRichPresence))
         {
             return;
         }
-        var ts = DateTime.UtcNow.Subtract(_timerTime.Value);
 
-        var text = ts.Hours > 0 ? ts.Hours.ToString("00") + ":" : string.Empty;
-        text += $"{ts.Minutes:00}:{ts.Seconds:00}";
-        this.RunUILogic(() => tblTime.Text = text);
+        var profile = presence.Profile;
+        if (updateType.HasAnyFlag(UpdateType.Text | UpdateType.All))
+        {
+            UpdateText(RpcProfile?.Name ?? Language.GetText(LanguageText.UnknownProfile), profile.Details, profile.State);
+        }
+
+        if (updateType.HasAnyFlag(UpdateType.Tooltips | UpdateType.All))
+        {
+            sliLargeImage.UpdateTooltip(profile.LargeText);
+            sliSmallImage.UpdateTooltip(profile.SmallText);
+        }
+        
+        if (updateType.HasAnyFlag(UpdateType.LargeImage | UpdateType.All))
+        {
+            await UpdateLargeImage(presence.AssetsManager.GetUri(profile.LargeKey));
+        }
+
+        if (updateType.HasAnyFlag(UpdateType.SmallImage | UpdateType.All))
+        {
+            await UpdateSmallImage(presence.AssetsManager.GetUri(profile.SmallKey));
+        }
+    }
+    
+    private void StopTimer()
+    {
+        _timer.Stop();
+        tblTime.Text = string.Empty;
     }
 
-    private async Task<bool> ProcessUri(Uri uri)
+    private Task UpdateSmallImage(Uri? uri) => UpdateImageFromUri(uri, sliSmallImage);
+    private Task UpdateLargeImage(Uri? uri) => UpdateImageFromUri(uri, sliLargeImage);
+
+    private async Task UpdateImageFromUri(Uri? uri, SwitchableImage switchableImage)
     {
-        lock (_streamLock)
+        if (uri == null)
         {
-            if (CachedImages.ContainsKey(uri) 
-                || CachedStreams.ContainsKey(uri))
+            switchableImage.ClearView();
+            return;
+        }
+
+        //We need to reset the stream here or only one frame will be shown
+        using (await ImageLock.UseWaitAsync())
+        {
+            _loadingGifStream.Seek(0, SeekOrigin.Begin);
+            switchableImage.SourceStream = _loadingGifStream;
+        }
+
+        if (await CacheImageFromUri(uri))
+        {
+            var memStream = new MemoryStream();
+
+            using (await ImageLock.UseWaitAsync())
+            {
+                var stream = CachedStreams[uri];
+                stream.Seek(0, SeekOrigin.Begin);
+                await stream.CopyToAsync(memStream);
+                memStream.Seek(0, SeekOrigin.Begin);
+            }
+
+            switchableImage.SourceStream = memStream;
+            return;
+        }
+        
+        switchableImage.ClearView();
+    }
+
+    private static async Task<bool> CacheImageFromUri(Uri uri)
+    {
+        using (await ImageLock.UseWaitAsync())
+        {
+            if (CachedStreams.ContainsKey(uri))
             {
                 return true;
             }
@@ -354,136 +348,138 @@ public partial class RpcView : Border
         }
 
         var imageStream = await imageResponse.Content.ReadAsStreamAsync();
-        var isGif = GifDecoder.IsGif(imageStream);
-        imageStream.Seek(0, SeekOrigin.Begin);
-        if (isGif)
+        using (await ImageLock.UseWaitAsync())
         {
-            lock (_streamLock)
-            {
-                CachedStreams[uri] = imageStream;
-            }
-            return true;
+            CachedStreams[uri] = imageStream;
         }
-
-        var image = Bitmap.DecodeToHeight(imageStream, (int)brdLarge.Height * 3);
-        await imageStream.DisposeAsync();
-        var brush = new ImageBrush(image);
-        CachedImages[uri] = brush;
         return true;
     }
+    
+    private void UpdateText(LanguageText title, LanguageText? text1 = null, LanguageText? text2 = null) => 
+        UpdateText(Language.GetText(title), 
+        text1 == null ? null : Language.GetText(text1), 
+        text2 == null ? null : Language.GetText(text2));
 
-    private static IDisposable DoBinding(RpcProfile presence, string path, TextBlock control)
+    private void UpdateText(string? title = null, string? text1 = null, string? text2 = null)
     {
-        var binding = new Binding
+        _viewText.Title = !string.IsNullOrWhiteSpace(title) ? title + Environment.NewLine + Environment.NewLine : null;
+        _viewText.Text1 = !string.IsNullOrWhiteSpace(text1) ? text1 + Environment.NewLine : null;
+        _viewText.Text2 = text2;
+    }
+
+    //TODO: Maybe do binding so we don't need this?
+    /// <summary>
+    /// Updates the <see cref="SvgImage"/> and reapplies it to the images
+    /// </summary>
+    /// <param name="svgImage"><see cref="SvgImage"/> to update</param>
+    /// <param name="path">Path of the <see cref="SvgImage"/></param>
+    private void UpdateAssetImage(ref SvgImage? svgImage, string path)
+    {
+        var updateLargeImage = sliLargeImage.SourceImage?.Equals(svgImage) ?? false;
+        var updateSmallImage = sliSmallImage.SourceImage?.Equals(svgImage) ?? false;
+        svgImage = SvgImageHelper.LoadImage(path);
+
+        if (updateLargeImage)
         {
-            Source = presence,
-            Mode = BindingMode.OneWay,
-            Path = path
+            sliLargeImage.SourceImage = svgImage;
+        }
+        if (updateSmallImage)
+        {
+            sliSmallImage.SourceImage = svgImage;
+        }
+    }
+    
+    /// <summary>
+    /// Updates the image to the new source (or nothing if no source is provided)
+    /// </summary>
+    /// <param name="control">Control to update</param>
+    /// <param name="image"><see cref="IImage"/> to show in the control</param>
+    /// <param name="stream">Image <see cref="Stream"/> content to show in the control</param>
+    private static async void UpdateImage(SwitchableImage control, IImage? image = null, Stream? stream = null)
+    {
+        if (image != null && stream != null)
+        {
+            throw new Exception("Only image or stream can be set, not both!");
+        }
+        
+        control.ClearView();
+        if (image is not null)
+        {
+            control.SourceImage = image;
+        }
+        if (stream is not null)
+        {
+            using (await ImageLock.UseWaitAsync())
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                control.SourceStream = stream;
+            }
+        }
+        control.UpdateTooltip(null);
+    }
+
+    private async void OnProfilePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(Rpc.RpcProfile.Details) or nameof(Rpc.RpcProfile.State):
+                await UpdateFromPresence(RpcProfile, UpdateType.Text);
+                return;
+            case nameof(Rpc.RpcProfile.LargeText) or nameof(Rpc.RpcProfile.SmallText):
+                await UpdateFromPresence(RpcProfile, UpdateType.Tooltips);
+                return;
+            case nameof(Rpc.RpcProfile.LargeKey):
+                await UpdateFromPresence(RpcProfile, UpdateType.LargeImage);
+                return;
+            case nameof(Rpc.RpcProfile.SmallKey):
+                await UpdateFromPresence(RpcProfile, UpdateType.SmallImage);
+                return;
+        }
+    }
+
+    private void TimerTicked(object? sender, EventArgs e)
+    {
+        if (!_timerTime.HasValue)
+        {
+            tblTime.Text = null;
+            return;
+        }
+        var ts = DateTime.UtcNow.Subtract(_timerTime.Value);
+
+        var text = ts.Hours > 0 ? ts.Hours.ToString("00") + ":" : null;
+        text += $"{ts.Minutes:00}:{ts.Seconds:00}";
+        tblTime.Text = text;
+    }
+
+    private static MultiBinding MakeImageSourceBinding(SwitchableImage image) =>
+        new()
+        {
+            Converter = BoolConverters.Or,
+            Bindings =
+            {
+                new Binding
+                {
+                    Path = "SourceImage",
+                    Source = image,
+                    Converter = ObjectConverters.IsNotNull
+                },
+                new Binding
+                {
+                    Path = "SourceStream",
+                    Source = image,
+                    Converter = ObjectConverters.IsNotNull
+                }
+            }
         };
-        return control.Bind(TextBlock.TextProperty, binding);
-    }
 
-    private void UpdateDefaultForeground()
+    private IBinding GetBackgroundBinding()
     {
-        tblTitle.Foreground = _viewType is 
-            ViewType.Error or ViewType.LocalRichPresence or ViewType.RpcRichPresence
-                ? Brushes.White.ToImmutable()
-                : (IBrush)Application.Current.Resources["ThemeForegroundBrush"];
-    }
-
-    private void UpdateFromType(string? error = null, RichPresence? richPresence = null)
-    {
-        tblText1.IsVisible = _viewType is not ViewType.Loading or ViewType.LocalRichPresence;
-        tblText2.IsVisible = tblText1.IsVisible && _viewType is not ViewType.Error;
-        tblTime.IsVisible = _viewType == ViewType.RpcRichPresence;
-        gifLarge.IsVisible = _viewType == ViewType.Loading;
-        UpdateDefaultForeground();
-
-        if (!gifLarge.IsVisible)
+        var resources = Application.Current!.Resources;
+        return ViewType switch
         {
-            gifLarge.StopAndDispose();
-            gifLarge.Tag = null;
-        }
-
-        if (_viewType != ViewType.LocalRichPresence)
-        {
-            _textBoxDisposables.ForEach(x => x.Dispose());
-            _textBoxDisposables.Clear();
-        }
-
-        var brush = _viewType switch
-        {
-            ViewType.Default => Application.Current.Resources["ThemeAccentBrush2"],
-            ViewType.Default2 => Application.Current.Resources["ThemeAccentBrush2"],
-            ViewType.Loading => Application.Current.Resources["ThemeAccentBrush2"],
-            ViewType.Error => Application.Current.Resources["RedBrush"],
-            ViewType.LocalRichPresence => Application.Current.Resources["PurpleBrush"],
-            ViewType.RpcRichPresence => Application.Current.Resources["PurpleBrush"],
-            _ => Application.Current.Resources["ThemeAccentBrush2"]
-        } as IBrush;
-        Background = brush;
-
-        _rpcClient.PresenceUpdated -= RpcClientOnPresenceUpdated;
-        switch (_viewType)
-        {
-            case ViewType.Default:
-            {
-                _titleText.ChangeJsonNames(LanguageText.MultiRPC);
-                _tblText1.ChangeJsonNames(LanguageText.ThankYouForUsing);
-                _tblText2.ChangeJsonNames(LanguageText.ThisProgram);
-                brdLarge.Background = _logoVisualBrush;
-
-                brdLarge.IsVisible = true;
-                gridSmallImage.IsVisible = false;
-                CustomToolTip.SetTip(brdLarge, null);
-                CustomToolTip.SetTip(gifLarge, null);
-            }
-            break;
-            case ViewType.Default2:
-            {
-                _titleText.ChangeJsonNames(LanguageText.MultiRPC);
-                _tblText1.ChangeJsonNames(LanguageText.Hello);
-                _tblText2.ChangeJsonNames(LanguageText.World);
-                brdLarge.Background = _logoVisualBrush;
-
-                brdLarge.IsVisible = true;
-                gridSmallImage.IsVisible = false;
-                CustomToolTip.SetTip(brdLarge, null);
-                CustomToolTip.SetTip(gifLarge, null);
-            }
-            break;
-            case ViewType.Loading:
-            {
-                gifLarge.SourceStream = AssetManager.GetSeekableStream("Loading.gif");
-                gifLarge.Tag = null;
-
-                _titleText.ChangeJsonNames(LanguageText.Loading);
-                gridSmallImage.IsVisible = false;
-                brdLarge.IsVisible = false;
-            }
-            break;
-            case ViewType.Error:
-            {
-                _titleText.ChangeJsonNames(LanguageText.Error);
-                tblText1.Text = error;
-                    
-                brdLarge.Background = _errorVisualBrush;
-                brdLarge.IsVisible = true;
-                gridSmallImage.IsVisible = false;
-                CustomToolTip.SetTip(brdLarge, null);
-                CustomToolTip.SetTip(gifLarge, null);
-            }
-            break;
-            case ViewType.LocalRichPresence:
-            {
-                UpdateFromRichPresence(richPresence);
-            }
-            break;
-            case ViewType.RpcRichPresence:
-            {
-                _rpcClient.PresenceUpdated += RpcClientOnPresenceUpdated;
-            }
-            break;
-        }
+            ViewType.Error => resources.GetResourceObservable("RedBrush").ToBinding(),
+            ViewType.LocalRichPresence or ViewType.RpcRichPresence => resources.GetResourceObservable("PurpleBrush").ToBinding(),
+            _ => resources.GetResourceObservable("ThemeAccentBrush2").ToBinding(),
+        };
     }
 }

@@ -262,5 +262,6 @@
   "Profile": "Profile",
   "MultiRPCThemes": "MultiRPC Themes",
   "Editor": "Editor",
-  "Assets": "Assets"
+  "Assets": "Assets",
+  "UnknownProfile": "Unknown Profile"
 }
