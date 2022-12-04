@@ -130,6 +130,6 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="MultiRPC.UWP.csproj" />
+    <ProjectReference Include="..\MultiRPC\MultiRPC.UWP.csproj" />
   </ItemGroup>
 </Project>
