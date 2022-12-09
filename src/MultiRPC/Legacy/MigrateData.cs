@@ -38,7 +38,7 @@ public static class MigrateData
         try
         {
             oldProfiles = oldProfilesExist
-                ? JsonSerializer.Deserialize<Dictionary<string, CustomProfile>>(oldProfilesStream)
+                ? JsonSerializer.Deserialize(oldProfilesStream, OldProfilesContext.Default.OldProfiles)
                 : null;
             oldProfilesStream.Dispose();
         }

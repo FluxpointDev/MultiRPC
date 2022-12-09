@@ -101,7 +101,7 @@ public partial class AboutSettingsTab : Grid, ITabPage
             
         try
         {
-            var processInfo = new ProcessStartInfo(Assembly.GetExecutingAssembly().Location.Replace(".dll", ".exe")) //Net Core tell's us the location of the dll, not the exe so we point it back to the exe
+            var processInfo = new ProcessStartInfo(AppContext.BaseDirectory.Replace(".dll", ".exe")) //Net Core tell's us the location of the dll, not the exe so we point it back to the exe
             {
                 UseShellExecute = true,
                 Verb = "runas"

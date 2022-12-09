@@ -15,6 +15,6 @@ public class SettingItem : UserControl
         }
     }
 
-    public SettingItem(Language header, BaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
+    public SettingItem(Language header, IBaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
     { }
 }

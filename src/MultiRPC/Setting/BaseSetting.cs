@@ -1,30 +1,35 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace MultiRPC.Setting;
+
+public interface IBaseSetting
+{
+    static abstract string Name { get; }
+}
 
 /// <summary>
 /// Base class which contains settings which are to be stored for later use
 /// </summary>
 /// <remarks>
-/// Name will need [JsonIgnore] or it will be stored with your settings.
-/// Where you put your settings in your actual setting class matters on where it shows up in the UI! 
+/// Where you put your settings in your actual setting class matters on where it shows up in the UI!
 /// </remarks>
-public abstract class BaseSetting
+public interface IBaseSetting<TSelf> : IBaseSetting
+    where TSelf : IBaseSetting<TSelf>
 {
-    [JsonIgnore]
-    public virtual string Name { get; }
+    static abstract JsonTypeInfo<TSelf> TypeInfo { get; }
 
-    public void Save()
+    void Save()
     {
-        var settingFileLocation = Path.Combine(Constants.SettingsFolder, Name + ".json");
+        var settingFileLocation = Path.Combine(Constants.SettingsFolder, TSelf.Name + ".json");
         if (File.Exists(settingFileLocation))
         {
             File.Delete(settingFileLocation);
         }
         var stream = File.OpenWrite(settingFileLocation);
 
-        JsonSerializer.Serialize(stream, this, GetType(), Constants.JsonSerializer);
+        JsonSerializer.Serialize(stream, (TSelf)this, TSelf.TypeInfo);
         stream.Dispose();
     }
 }

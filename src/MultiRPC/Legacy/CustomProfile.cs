@@ -18,14 +18,14 @@ public class CustomProfile
     public string? Button2Name { get; set; }
     public string? Button2Url { get; set; }
 
-    public RichPresence? ToRichPresence()
+    public Presence? ToRichPresence()
     {
         if (!long.TryParse(ClientID, out var id))
         {
             return null;
         }
         
-        return new RichPresence(Name, id)
+        return new Presence(Name, id)
         {
             Profile = new RpcProfile()
             {

@@ -19,13 +19,13 @@ public class EnumDropdown : SettingItem
         //InitializeComponent(Language.GetLanguage("Test"), TestSetting.STestSetting, );
     }
     
-    public EnumDropdown(Type enumType, Language header, BaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
+    public EnumDropdown(Type enumType, Language header, IBaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
         : base(header, setting, getMethod, setMethod)
     {
         InitializeComponent(enumType, header, setting, getMethod, setMethod);
     }
     
-    private void InitializeComponent(Type enumType, Language header, BaseSetting setting, MethodBase getMethod, MethodBase setMethod)
+    private void InitializeComponent(Type enumType, Language header, IBaseSetting setting, MethodBase getMethod, MethodBase setMethod)
     {
         var tblHeader = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
         var cboSelection = new ComboBox { VerticalAlignment = VerticalAlignment.Center };

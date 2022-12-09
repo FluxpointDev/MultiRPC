@@ -53,7 +53,7 @@ public partial class DebugPage : UserControl, ISidePage
     {
         var debug = Language.GetText(LanguageText.Debug);
         _rpcClient.Start(ID, debug);
-        await _rpcClient.UpdatePresence(new RichPresence(debug, ID)
+        await _rpcClient.UpdatePresence(new Presence(debug, ID)
         {
             Profile = 
             {

@@ -68,7 +68,7 @@ public class ProfileAssetsManager
     }
 
     public Uri? GetUri(ulong? assetId) => DiscordAsset.GetUri(_id.ToString(), string.Empty, assetId);
-    public Uri? GetUri(string assetName)
+    public Uri? GetUri(string? assetName)
     {
         var assetId = Assets?.FirstOrDefault(x => x.Name == assetName)?.ID;
         return assetId == null ? null : DiscordAsset.GetUri(_id.ToString(), string.Empty, assetId);
@@ -104,6 +104,3 @@ public class DiscordAsset
         return null;
     }
 }
-
-[JsonSerializable(typeof(DiscordAsset[]))]
-public partial class DiscordAssetContext : JsonSerializerContext { }

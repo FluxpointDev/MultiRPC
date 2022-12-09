@@ -3,9 +3,9 @@ using MultiRPC.Rpc;
 
 namespace MultiRPC.Extensions;
 
-public static class RichPresenceExt
+public static class PresenceExt
 {
-    public static void CheckName(this ObservableCollection<RichPresence> profiles, RichPresence profile)
+    public static void CheckName(this ObservableCollection<Presence> profiles, Presence profile)
     {
         if (profiles.Any(x => profile.Name == x.Name))
         {

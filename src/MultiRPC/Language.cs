@@ -2,6 +2,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Disposables;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
+using MultiRPC.Converters;
 using MultiRPC.Setting;
 using MultiRPC.Setting.Settings;
 using TinyUpdate.Core.Logging;
@@ -13,12 +15,16 @@ public static class LanguageGrab
     internal static Dictionary<LanguageText, string> EnglishLanguage;
     internal static Dictionary<LanguageText, string>? CurrentLanguage;
     private static readonly ILogging Logger = LoggingCreator.CreateLogger(nameof(LanguageGrab));
-    private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.General)
+    private static readonly LanguageFileContext SerializerOptions = new LanguageFileContext(new JsonSerializerOptions(JsonSerializerDefaults.General)
     {
         //We know that the file in question is safe as we provide the files 
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        ReadCommentHandling = JsonCommentHandling.Skip
-    };
+        ReadCommentHandling = JsonCommentHandling.Skip,
+        Converters =
+        {
+            new DictionaryTKeyEnumTValueConverter<LanguageText, string>(),
+        }
+    });
 
     static LanguageGrab()
     {
@@ -72,7 +78,8 @@ public static class LanguageGrab
            
         try
         {
-            return JsonSerializer.Deserialize<Dictionary<LanguageText, string>>(File.ReadAllText(fileLocation), SerializerOptions);
+            return JsonSerializer.Deserialize(File.ReadAllText(fileLocation), 
+                (JsonTypeInfo<Dictionary<LanguageText, string>>)SerializerOptions.GetTypeInfo(typeof(Dictionary<LanguageText, string>)));
         }
         catch (Exception e)
         {

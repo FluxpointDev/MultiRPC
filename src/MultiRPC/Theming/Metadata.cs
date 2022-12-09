@@ -20,6 +20,3 @@ public class Metadata
 
     public ThemeMode Mode { get; set; } = ThemeMode.Dark;
 }
-
-[JsonSerializable(typeof(Metadata))]
-public partial class MetadataContext : JsonSerializerContext { }

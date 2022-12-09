@@ -3,5 +3,7 @@
     <!--<DefineConstants>$(DefineConstants);THEME_EDIT</DefineConstants>-->
     <OutputType>WinExe</OutputType>
     <ApplicationIcon>Assets/Logo.ico</ApplicationIcon>
+	<PublishAot>true</PublishAot>
+    <WarningsAsErrors>$(TreatWarningsAsErrors);IL3050;IL2026;IL3000</WarningsAsErrors>
   </PropertyGroup>
 </Project>

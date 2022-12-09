@@ -22,7 +22,7 @@ public partial class MultiRpcPage : Grid, IRpcPage
 
     public string IconLocation => "Icons/Discord";
     public string LocalizableName => "MultiRPC";
-    public RichPresence RichPresence { get; } = SettingManager<MultiRPCSettings>.Setting.Presence;
+    public Presence RichPresence { get; } = SettingManager<MultiRPCSettings>.Setting.Presence;
     public bool PresenceValid => rpcControl.RpcValid;
     public string? BackgroundResourceName => "ThemeAccentColor2";
 

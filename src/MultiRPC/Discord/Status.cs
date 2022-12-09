@@ -76,6 +76,3 @@ public class Status
     [JsonPropertyName("components")]
     public Component[] Components { get; set; }
 }
-    
-[JsonSerializable(typeof(Status))]
-public partial class StatusContext : JsonSerializerContext { }

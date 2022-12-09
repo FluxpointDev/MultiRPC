@@ -165,14 +165,14 @@ public class RpcClient
         }
     }
 
-    public async Task UpdatePresence(RichPresence? richPresence)
+    public async Task UpdatePresence(Presence? richPresence)
     {
         if (richPresence == null)
         {
             return;
         }
             
-        var pre = richPresence.Presence;
+        var pre = richPresence.RichPresence;
         pre.Buttons = pre.Buttons?
             .Where(x => !string.IsNullOrWhiteSpace(x.Url) && !string.IsNullOrWhiteSpace(x.Label))
             .ToArray();

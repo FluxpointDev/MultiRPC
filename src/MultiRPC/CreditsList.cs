@@ -15,6 +15,3 @@ public class CreditsList
     public string[] Patreon { get; }
     public string[] Paypal { get; }
 }
-    
-[JsonSerializable(typeof(CreditsList))]
-public partial class CreditsListContext : JsonSerializerContext { }

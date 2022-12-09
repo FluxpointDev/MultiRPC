@@ -28,7 +28,7 @@ public partial class BaseRpcControl : Grid, ITabPage
     private readonly DisableSettings _disableSettings = SettingManager<DisableSettings>.Setting;
     private bool _lastValid;
 
-    public RichPresence RichPresence { get; set; } = null!;
+    public Presence RichPresence { get; set; } = null!;
     public ImagesType ImageType { get; set; }
     public bool GrabID { get; init; }
     public Language? TabName { get; init; }
@@ -44,7 +44,7 @@ public partial class BaseRpcControl : Grid, ITabPage
     public event EventHandler<bool>? PresenceValidChanged;
     public event EventHandler? ProfileChanged;
 
-    public void ChangeRichPresence(RichPresence richPresence)
+    public void ChangeRichPresence(Presence richPresence)
     {
         RichPresence = richPresence;
         if (!IsInitialized)

@@ -4,9 +4,11 @@ using PropertyChanged.SourceGenerator;
 
 namespace MultiRPC.Rpc;
 
-public partial class RichPresence : IEquatable<RichPresence>
+public partial class Presence : IEquatable<Presence>
 {
-    public RichPresence(string name, long id)
+    private Lazy<ProfileAssetsManager> _lazyManager;
+
+    public Presence(string name, long id)
     {
         _name = name;
         _id = id;
@@ -21,11 +23,10 @@ public partial class RichPresence : IEquatable<RichPresence>
     private long _id;
     
     [JsonIgnore]
-    public DiscordRPC.RichPresence Presence => Profile.ToRichPresence();
+    public DiscordRPC.RichPresence RichPresence => Profile.ToRichPresence();
         
     public RpcProfile Profile { get; set; } = new RpcProfile();
 
-    private Lazy<ProfileAssetsManager> _lazyManager;
     [JsonIgnore] 
     public ProfileAssetsManager AssetsManager => _lazyManager.Value;
 
@@ -34,7 +35,7 @@ public partial class RichPresence : IEquatable<RichPresence>
         _lazyManager = new Lazy<ProfileAssetsManager>(() => ProfileAssetsManager.GetOrAddManager(value));
     }
 
-    public bool Equals(RichPresence? other)
+    public bool Equals(Presence? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
@@ -46,11 +47,8 @@ public partial class RichPresence : IEquatable<RichPresence>
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Equals((RichPresence)obj);
+        return Equals((Presence)obj);
     }
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(_name, _id, Profile);
-    }
+    public override int GetHashCode() => HashCode.Combine(_name, _id, Profile);
 }

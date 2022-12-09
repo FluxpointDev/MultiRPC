@@ -66,7 +66,7 @@ public class Config
             try
             {
                 using var file = File.OpenRead(FileLocations.ConfigFileLocalLocation);
-                return JsonSerializer.Deserialize<Config>(file, new JsonSerializerOptions());
+                return JsonSerializer.Deserialize(file, ConfigContext.Default.Config);
             }
             catch (Exception ex)
             {

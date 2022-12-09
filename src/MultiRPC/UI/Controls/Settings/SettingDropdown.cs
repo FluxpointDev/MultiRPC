@@ -27,7 +27,7 @@ public class SettingDropdown<T> : SettingItem
         InitializeComponent();
     }
 
-    public SettingDropdown(Language header, BaseSetting setting, MethodInfo getMethod, 
+    public SettingDropdown(Language header, IBaseSetting setting, MethodInfo getMethod, 
         MethodInfo setMethod, SettingSourceAttribute? sourceAttribute, LanguageSourceAttribute? languageSourceAttribute, bool isLocalizable)
         : base(header, setting, getMethod, setMethod)
     {

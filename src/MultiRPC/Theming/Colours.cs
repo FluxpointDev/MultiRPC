@@ -38,6 +38,3 @@ public class Colours
     [JsonPropertyName("TextColour")]
     public Color TextColour { get; set; }
 }
-
-[JsonSerializable(typeof(Colours))]
-public partial class ColoursContext : JsonSerializerContext { }

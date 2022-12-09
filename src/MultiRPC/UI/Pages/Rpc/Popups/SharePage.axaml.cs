@@ -24,8 +24,8 @@ public partial class SharePage : Grid, ITitlePage
         }
     }
 
-    private readonly RichPresence _activeRichPresence = null!;
-    public SharePage(RichPresence activeRichPresence)
+    private readonly Presence _activeRichPresence = null!;
+    public SharePage(Presence activeRichPresence)
     {
         _activeRichPresence = activeRichPresence;
         InitializeComponent();
@@ -40,7 +40,7 @@ public partial class SharePage : Grid, ITitlePage
     {
         try
         {
-            var profile = JsonSerializer.Deserialize<RichPresence>(txtData.Text.Base64Decode());
+            var profile = JsonSerializer.Deserialize(txtData.Text.Base64Decode(), RichPresenceContext.Default.Presence);
             if (profile == null)
             {
                 await MessageBox.Show(Language.GetText(LanguageText.SharingError));
@@ -66,7 +66,7 @@ public partial class SharePage : Grid, ITitlePage
 
     private async void BtnExport_OnClick(object? sender, RoutedEventArgs e)
     {
-        var profileBase64 = JsonSerializer.Serialize(_activeRichPresence);
+        var profileBase64 = JsonSerializer.Serialize(_activeRichPresence, RichPresenceContext.Default.Presence);
         await Application.Current.Clipboard.SetTextAsync(profileBase64 = profileBase64.Base64Encode());
         txtData.Text = profileBase64;
         await MessageBox.Show(Language.GetText(LanguageText.ProfileCopyMessage));

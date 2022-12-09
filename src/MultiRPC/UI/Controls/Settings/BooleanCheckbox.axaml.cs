@@ -19,13 +19,13 @@ public class BooleanCheckbox : SettingItem
         //InitializeComponent(Language.GetLanguage("Test"), TestSetting.STestSetting, );
     }
     
-    public BooleanCheckbox(Language header, BaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
+    public BooleanCheckbox(Language header, IBaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
         : base(header, setting, getMethod, setMethod)
     {
         InitializeComponent(header, setting, getMethod, setMethod);
     }
 
-    private void InitializeComponent(Language header, BaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
+    private void InitializeComponent(Language header, IBaseSetting setting, MethodInfo getMethod, MethodInfo setMethod)
     {
         var cboUI = new CheckBox();
         var binding = new Binding
@@ -33,7 +33,7 @@ public class BooleanCheckbox : SettingItem
             Source = header,
             Path = "TextObservable^"
         };
-        cboUI.Bind(ContentControl.ContentProperty, binding);
+        cboUI.Bind(ContentProperty, binding);
         Content = cboUI;
 
         var isChecked = getMethod.Invoke(setting, null);

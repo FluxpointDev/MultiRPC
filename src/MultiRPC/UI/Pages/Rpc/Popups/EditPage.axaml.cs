@@ -12,7 +12,7 @@ namespace MultiRPC.UI.Pages.Rpc.Popups;
 public partial class EditPage : StackPanel, ITitlePage
 {
     private readonly ProfilesSettings _profiles = SettingManager<ProfilesSettings>.Setting;
-    private readonly RichPresence _activeRichPresence = null!;
+    private readonly Presence _activeRichPresence = null!;
     private string _newName = null!;
     public EditPage()
     {
@@ -24,7 +24,7 @@ public partial class EditPage : StackPanel, ITitlePage
 
     public Language Title { get; } = LanguageText.ProfileEdit;
 
-    public EditPage(RichPresence activeRichPresence)
+    public EditPage(Presence activeRichPresence)
     {
         _activeRichPresence = activeRichPresence;
         _newName = activeRichPresence.Name;

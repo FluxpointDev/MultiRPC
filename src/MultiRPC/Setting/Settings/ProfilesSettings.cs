@@ -1,21 +1,23 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using MultiRPC.Rpc;
 using PropertyChanged.SourceGenerator;
 
 namespace MultiRPC.Setting.Settings;
 
-public partial class ProfilesSettings : BaseSetting
+public partial class ProfilesSettings : IBaseSetting<ProfilesSettings>
 {
-    [JsonIgnore]
-    public override string Name => "Profiles";
+    public static string Name => "Profiles";
+
+    public static JsonTypeInfo<ProfilesSettings> TypeInfo { get; } = ProfilesSettingsContext.Default.ProfilesSettings;
 
     public ProfilesSettings()
-        : this(new ObservableCollection<RichPresence> { new RichPresence(Language.GetText(LanguageText.Profile), 0) }) { }
+        : this(new ObservableCollection<Presence> { new Presence(Language.GetText(LanguageText.Profile), 0) }) { }
 
     [JsonConstructor]
-    public ProfilesSettings(ObservableCollection<RichPresence> profiles)
+    public ProfilesSettings(ObservableCollection<Presence> profiles)
     {
         Profiles = profiles;
         foreach (var profile in Profiles)
@@ -26,28 +28,25 @@ public partial class ProfilesSettings : BaseSetting
 
         Profiles.CollectionChanged += (sender, args) =>
         {
-            foreach (RichPresence profile in args.OldItems ?? Array.Empty<object>())
+            foreach (Presence profile in args.OldItems ?? Array.Empty<object>())
             {
                 profile.PropertyChanged -= OnUpdate;
                 profile.Profile.PropertyChanged -= OnUpdate;
             }
 
-            foreach (RichPresence profile in args.NewItems ?? Array.Empty<object>())
+            foreach (Presence profile in args.NewItems ?? Array.Empty<object>())
             {
                 profile.PropertyChanged += OnUpdate;
                 profile.Profile.PropertyChanged += OnUpdate;
             }
 
-            Save();
+            ((IBaseSetting<ProfilesSettings>)this).Save();
         };
     }
 
-    private void OnUpdate(object? sender, PropertyChangedEventArgs args)
-    {
-        Save();
-    }
+    private void OnUpdate(object? sender, PropertyChangedEventArgs args) => ((IBaseSetting<ProfilesSettings>)this).Save();
 
     [Notify] private int _lastSelectedProfileIndex;
 
-    public ObservableCollection<RichPresence> Profiles { get; }
+    public ObservableCollection<Presence> Profiles { get; }
 }

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using MultiRPC.Rpc;
 using MultiRPC.Rpc.Page;
 using MultiRPC.Setting.Settings.Attributes;
@@ -8,10 +9,11 @@ using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.Setting.Settings;
 
-public partial class GeneralSettings : BaseSetting
+public partial class GeneralSettings : IBaseSetting<GeneralSettings>
 {
-    [JsonIgnore]
-    public override string Name => "General";
+    public static string Name => "General";
+
+    public static JsonTypeInfo<GeneralSettings> TypeInfo { get; } = GeneralSettingsContext.Default.GeneralSettings;
 
     [Notify]
     private string? _lastUser = "NA#0000";

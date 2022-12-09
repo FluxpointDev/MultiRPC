@@ -21,7 +21,7 @@ public class SettingsPage : TabsPage, ISidePage
     public override void Initialize(bool loadXaml)
     {
         AddTab(new AboutSettingsTab());
-        foreach (var setting in Locator.Current.GetServices<BaseSetting>())
+        foreach (IBaseSetting setting in Locator.Current.GetServices(typeof(IBaseSetting)))
         {
             SettingsTab? settingPage = null;
             SettingSourceAttribute? sourceAttribute = null;
@@ -73,7 +73,7 @@ public class SettingsPage : TabsPage, ISidePage
 
                 settingPage ??= new SettingsTab
                 {
-                    TabName = setting.Name,
+                    TabName = setting.GetType().GetProperty("Name", BindingFlags.Static)?.Name!,
                     Margin = new Thickness(10)
                 };
                 
@@ -99,7 +99,8 @@ public class SettingsPage : TabsPage, ISidePage
                 }
                 else
                 {
-                    var settingDropdownType = typeof(SettingDropdown<>).MakeGenericType(settingProperty.PropertyType);
+                    //TODO: Readd
+                    /*var settingDropdownType = typeof(SettingDropdown<>).MakeGenericType(settingProperty.PropertyType);
                     var settingDropdown = (SettingItem?)Activator.CreateInstance(settingDropdownType, name, setting, getMethod, 
                         setMethod, sourceAttribute, languageSourceAttribute, settingProperty.GetCustomAttribute<NoneLocalizableAttribute>() == null);
 
@@ -108,7 +109,7 @@ public class SettingsPage : TabsPage, ISidePage
                         settingDropdown.IsEnabled = isEditable;
                         settingPage.Add(settingDropdown);
                         continue;
-                    }
+                    }*/
                     //TODO: Log
                 }
             }

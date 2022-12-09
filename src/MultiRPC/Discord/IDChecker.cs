@@ -52,6 +52,3 @@ public class ClientCheckResult
     [JsonPropertyName("name")]
     public string Name { get; }
 }
-    
-[JsonSerializable(typeof(ClientCheckResult))]
-public partial class ClientCheckResultContext : JsonSerializerContext { }

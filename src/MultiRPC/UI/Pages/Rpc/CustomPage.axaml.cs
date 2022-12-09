@@ -23,7 +23,7 @@ public partial class CustomPage : Border, IRpcPage
 {
     public string IconLocation => "Icons/Custom";
     public string LocalizableName => "Custom";
-    public RichPresence RichPresence
+    public Presence RichPresence
     {
         get => _activeProfile;
         protected set
@@ -41,7 +41,7 @@ public partial class CustomPage : Border, IRpcPage
     private readonly Dictionary<string, IBitmap> _helpImages = new Dictionary<string, IBitmap>();
     private Image _helpImage = null!;
     private Image? _selectedHelpImage;
-    private RichPresence _activeProfile = null!;
+    private Presence _activeProfile = null!;
     private IDisposable? _textBindingDis;
     private Button? _activeButton;
     private BaseRpcControl _rpcControl = null!;
@@ -129,11 +129,11 @@ public partial class CustomPage : Border, IRpcPage
         wrpProfileSelector.Children.AddRange(_profilesSettings.Profiles.Select(MakeProfileSelector));
         _profilesSettings.Profiles.CollectionChanged += (sender, args) =>
         {
-            foreach (RichPresence profile in args.OldItems ?? Array.Empty<object>())
+            foreach (Presence profile in args.OldItems ?? Array.Empty<object>())
             {
                 wrpProfileSelector.Children.Remove(wrpProfileSelector.Children.First<IControl>(x => x.DataContext == profile));
             }
-            foreach (RichPresence profile in args.NewItems ?? Array.Empty<object>())
+            foreach (Presence profile in args.NewItems ?? Array.Empty<object>())
             {
                 wrpProfileSelector.Children.Add(MakeProfileSelector(profile));
             }
@@ -211,7 +211,7 @@ public partial class CustomPage : Border, IRpcPage
         _textBindingDis = tblProfileName.Bind(TextBlock.TextProperty, textBinding);
     }
 
-    private Control MakeProfileSelector(RichPresence presence)
+    private Control MakeProfileSelector(Presence presence)
     {
         var btn = new Button
         {
@@ -235,7 +235,7 @@ public partial class CustomPage : Border, IRpcPage
         _activeButton.Classes.Add("activeProfile");
         _profilesSettings.LastSelectedProfileIndex = wrpProfileSelector.Children.IndexOf(_activeButton);
             
-        _activeProfile = (RichPresence)_activeButton.DataContext!;
+        _activeProfile = (Presence)_activeButton.DataContext!;
         _textBindingDis?.Dispose();
         AddTextBinding();
         btnProfileDelete.IsVisible = !_profilesSettings.Profiles.First().Equals(_activeProfile);
@@ -262,7 +262,7 @@ public partial class CustomPage : Border, IRpcPage
 
     private void ImgProfileAdd_OnClick(object? sender, RoutedEventArgs e)
     {
-        var newProfile = new RichPresence("Profile" + _profilesSettings.Profiles.Count, 0);
+        var newProfile = new Presence("Profile" + _profilesSettings.Profiles.Count, 0);
         _profilesSettings.Profiles.Add(newProfile);
         BtnChangePresence(wrpProfileSelector.Children[^1], e);
     }
@@ -281,7 +281,8 @@ public partial class CustomPage : Border, IRpcPage
 
     private void ImgProfileClone_OnClick(object? sender, RoutedEventArgs e)
     {
-        var profile = JsonSerializer.Deserialize<RichPresence>(JsonSerializer.Serialize(_activeProfile));
+        var presenceContext = RichPresenceContext.Default.Presence;
+        var profile = JsonSerializer.Deserialize(JsonSerializer.Serialize(_activeProfile, presenceContext), presenceContext);
         
         var profiles = SettingManager<ProfilesSettings>.Setting.Profiles;
         profiles.CheckName(profile);

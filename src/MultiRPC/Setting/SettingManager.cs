@@ -4,20 +4,20 @@ using TinyUpdate.Core.Logging;
 
 namespace MultiRPC.Setting;
 
-public static class SettingManager<T> 
-    where T : BaseSetting, new()
+public static class SettingManager<TSetting> 
+    where TSetting : IBaseSetting<TSetting>, new()
 {
-    private static readonly Lazy<T> LazySetting = new Lazy<T>(() =>
+    private static readonly Lazy<TSetting> LazySetting = new(() =>
     {
-        T setting = new T();
+        TSetting? setting = default;
 
-        var settingFileLocation = Path.Combine(Constants.SettingsFolder, setting.Name + ".json");
+        var settingFileLocation = Path.Combine(Constants.SettingsFolder, TSetting.Name + ".json");
         if (File.Exists(settingFileLocation))
         {
             using var fileSteam = File.OpenRead(settingFileLocation);
             try
             {
-                var fileSetting = JsonSerializer.Deserialize<T>(fileSteam);
+                var fileSetting = JsonSerializer.Deserialize(fileSteam, TSetting.TypeInfo);
                 if (fileSetting != null)
                 {
                     setting = fileSetting;
@@ -25,10 +25,11 @@ public static class SettingManager<T>
             }
             catch (Exception e)
             {
-                LoggingCreator.CreateLogger(nameof(SettingManager<T>)).Error(e);
+                LoggingCreator.CreateLogger(nameof(SettingManager<TSetting>)).Error(e);
             }
         }
-
+        
+        setting ??= new TSetting();
         if (setting is INotifyPropertyChanged settingNotify)
         {
             settingNotify.PropertyChanged += (sender, args) =>
@@ -43,5 +44,5 @@ public static class SettingManager<T>
         return setting;
     });
 
-    public static T Setting => LazySetting.Value;
+    public static TSetting Setting => LazySetting.Value;
 }

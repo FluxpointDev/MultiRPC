@@ -50,7 +50,7 @@ public partial class RpcViewText
 public partial class RpcView : Border
 {
     [Notify] private ViewType _viewType = ViewType.NotSet;
-    [Notify] private RichPresence? _rpcProfile;
+    [Notify] private Presence? _rpcProfile;
     
     private readonly RpcViewText _viewText = new();
     private readonly Run _runTitle = new()
@@ -172,7 +172,7 @@ public partial class RpcView : Border
         //TODO: See if we can change this, really don't like that we need to do this....
         if (RpcProfile == null || RpcProfile.Id != id)
         {
-            RpcProfile = new RichPresence(name, id)
+            RpcProfile = new Presence(name, id)
             {
                 Profile = new RpcProfile
                 {
@@ -199,7 +199,7 @@ public partial class RpcView : Border
     }
 
     //Rehook into the presence so we can correctly grab changes
-    private async void OnRpcProfileChanged(RichPresence? oldValue, RichPresence? newValue)
+    private async void OnRpcProfileChanged(Presence? oldValue, Presence? newValue)
     {
         if (oldValue != null)
         {
@@ -258,7 +258,7 @@ public partial class RpcView : Border
         }
     }
 
-    private async Task UpdateFromPresence(RichPresence? presence, UpdateType updateType = UpdateType.All)
+    private async Task UpdateFromPresence(Presence? presence, UpdateType updateType = UpdateType.All)
     {
         if (presence == null || ViewType is not (ViewType.LocalRichPresence or ViewType.RpcRichPresence))
         {

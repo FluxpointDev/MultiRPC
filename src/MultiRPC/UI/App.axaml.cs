@@ -55,8 +55,8 @@ public class App : Application
         theme.Apply();
 
         //Add settings here
-        Locator.CurrentMutable.RegisterLazySingleton<BaseSetting>(() => genSettings);
-        Locator.CurrentMutable.RegisterLazySingleton<BaseSetting>(() => SettingManager<DisableSettings>.Setting);
+        Locator.CurrentMutable.RegisterLazySingleton(() => genSettings, typeof(IBaseSetting));
+        Locator.CurrentMutable.RegisterLazySingleton(() => SettingManager<DisableSettings>.Setting, typeof(IBaseSetting));
 
         //Any new pages get added here
         PageManager.AddPage(new MultiRpcPage());

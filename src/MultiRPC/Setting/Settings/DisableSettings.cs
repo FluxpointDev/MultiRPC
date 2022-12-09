@@ -1,13 +1,14 @@
 ﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using MultiRPC.Setting.Settings.Attributes;
 using PropertyChanged.SourceGenerator;
 
 namespace MultiRPC.Setting.Settings;
 
-public partial class DisableSettings : BaseSetting
+public partial class DisableSettings : IBaseSetting<DisableSettings>
 {
-    [JsonIgnore]
-    public override string Name => "Disable";
+    public static string Name => "Disable";
+    public static JsonTypeInfo<DisableSettings> TypeInfo { get; } = DisableSettingsContext.Default.DisableSettings;
 
     [PropertyAttribute("[MultiRPC.Setting.Settings.Attributes.SettingName(\"DiscordCheck\")]")]
     [Notify]
