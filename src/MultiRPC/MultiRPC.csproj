@@ -6,4 +6,10 @@
 	<PublishAot>true</PublishAot>
     <WarningsAsErrors>$(TreatWarningsAsErrors);IL3050;IL2026;IL3000</WarningsAsErrors>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Remove="DiscordRichPresence" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ext\discord-rpc-csharp\DiscordRPC\DiscordRPC.csproj" />
+  </ItemGroup>
 </Project>

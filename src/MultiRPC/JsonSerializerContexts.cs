@@ -10,13 +10,13 @@ namespace MultiRPC;
 #pragma warning disable SYSLIB0020
 
 //TODO: Find a way which will let us be able to use Metadata as well on these which have Serialization (Trying to access state and details)
-[JsonSerializable(typeof(Presence), GenerationMode = JsonSourceGenerationMode.Serialization)]
+[JsonSerializable(typeof(Presence))]
 public partial class RichPresenceContext : JsonSerializerContext { }
 
-[JsonSerializable(typeof(ProfilesSettings), GenerationMode = JsonSourceGenerationMode.Serialization)]
+[JsonSerializable(typeof(ProfilesSettings))]
 public partial class ProfilesSettingsContext : JsonSerializerContext { }
 
-[JsonSerializable(typeof(MultiRPCSettings), GenerationMode = JsonSourceGenerationMode.Serialization)]
+[JsonSerializable(typeof(MultiRPCSettings))]
 public partial class MultiRPCSettingsContext : JsonSerializerContext { }
 
 [JsonSerializable(typeof(DisableSettings))]

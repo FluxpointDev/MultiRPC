@@ -71,9 +71,10 @@ public class SettingsPage : TabsPage, ISidePage
                     continue;
                 }
 
+                var tabName = setting.GetType().GetProperty("Name", BindingFlags.Static | BindingFlags.Public)?.GetValue(null);
                 settingPage ??= new SettingsTab
                 {
-                    TabName = setting.GetType().GetProperty("Name", BindingFlags.Static)?.Name!,
+                    TabName = tabName?.ToString(),
                     Margin = new Thickness(10)
                 };
                 
@@ -99,8 +100,9 @@ public class SettingsPage : TabsPage, ISidePage
                 }
                 else
                 {
-                    //TODO: Readd
-                    /*var settingDropdownType = typeof(SettingDropdown<>).MakeGenericType(settingProperty.PropertyType);
+#pragma warning disable IL3050
+                    var settingDropdownType = typeof(SettingDropdown<>).MakeGenericType(settingProperty.PropertyType);
+#pragma warning restore IL3050
                     var settingDropdown = (SettingItem?)Activator.CreateInstance(settingDropdownType, name, setting, getMethod, 
                         setMethod, sourceAttribute, languageSourceAttribute, settingProperty.GetCustomAttribute<NoneLocalizableAttribute>() == null);
 
@@ -109,7 +111,7 @@ public class SettingsPage : TabsPage, ISidePage
                         settingDropdown.IsEnabled = isEditable;
                         settingPage.Add(settingDropdown);
                         continue;
-                    }*/
+                    }
                     //TODO: Log
                 }
             }
