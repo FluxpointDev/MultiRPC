@@ -1,0 +1,23 @@
+<ui:FluentWindow xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="clr-namespace:MultiRPC.UI"
+        mc:Ignorable="d"
+        MinHeight="72" 
+        MinWidth="151"
+        SizeToContent="WidthAndHeight"
+        Background="Transparent"
+        CanResize="False"
+        x:Class="MultiRPC.UI.MainWindow">
+    <Grid x:Name="grdContent">
+        <Image MaxHeight="72" MaxWidth="151" />
+        <Rectangle x:Name="regBackground" Fill="{DynamicResource ThemeAccentBrush}"/>
+        <StackPanel x:Name="stpTitleBarContent" Orientation="Horizontal" VerticalAlignment="Top" Background="Transparent">
+            <Image x:Name="icon" Height="0" Width="0" Margin="7,4,5,4" />
+            <TextBlock x:Name="txtTitle" FontSize="11" Text="{Binding TextObservable^}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+        </StackPanel>
+        
+        <TitleBar x:Name="tbrTitleBar" VerticalAlignment="Top" />
+    </Grid>
+</ui:FluentWindow>

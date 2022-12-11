@@ -1,5 +1,5 @@
 <h1 align="center">
-    <a href="#"><img align="center" width="20%" src="MultiRPC/Assets/Svg%20files/MultiRPCLogo.svg" alt="MultiRPC logo"></a>
+    <a href="#"><img align="center" width="20%" src="src/MultiRPC/Assets/Logo.svg" alt="MultiRPC logo"></a>
     <p align="center" style="line-height: 0">MultiRPC</h1>
     <h3 align="center">A Discord rich presence manager with a cool GUI and support for custom status and multiple profiles!</h3>
 </h1>

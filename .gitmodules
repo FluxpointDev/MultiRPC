@@ -1,0 +1,6 @@
+[submodule "ext/avalonia.gif"]
+	path = ext/avalonia.gif
+	url = https://github.com/Azyyyyyy/Avalonia.GIF
+[submodule "ext/discord-rpc-csharp"]
+	path = ext/discord-rpc-csharp
+	url = https://github.com/Azyyyyyy/discord-rpc-csharp

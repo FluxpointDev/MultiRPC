@@ -1,0 +1,43 @@
+﻿<Grid xmlns="https://github.com/avaloniaui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      Width="305"
+      MinHeight="210"
+      Background="{DynamicResource ThemeAccentColor}"
+      HorizontalAlignment="Stretch" 
+      ColumnDefinitions="45 *"
+      x:Class="MultiRPC.UI.Pages.Theme.ThemePreview">
+    <Grid.Styles>
+        <Style Selector="Button.nav /template/ ContentPresenter">
+            <Setter Property="Width" Value="41" />
+            <Setter Property="Height" Value="41" />
+            <Setter Property="Padding" Value="3" />
+        </Style>
+    </Grid.Styles>
+    <Grid.Resources>
+        <SolidColorBrush x:Key="ThemeForegroundBrush" Color="White" />
+        <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="{DynamicResource ThemeAccentColor2}" />
+        <SolidColorBrush x:Key="ThemeAccentBrush" Color="{DynamicResource ThemeAccentColor}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush2" Color="{DynamicResource ThemeAccentColor2}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush2Hover" Color="{DynamicResource ThemeAccentColor2Hover}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush3" Color="{DynamicResource ThemeAccentColor3}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush4" Color="{DynamicResource ThemeAccentColor4}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush5" Color="{DynamicResource ThemeAccentColor5}"/>
+        <SolidColorBrush x:Key="ThemeAccentDisabledBrush" Color="{DynamicResource ThemeAccentDisabledColor}"/>
+        <SolidColorBrush x:Key="ThemeAccentDisabledTextBrush" Color="{DynamicResource ThemeAccentDisabledTextColor}"/>
+    </Grid.Resources>
+
+    <StackPanel Margin="0,7,0,0" Spacing="20" x:Name="splPages" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+    <Border Grid.Column="1" x:Name="contentBorder" CornerRadius="15,15,0,0" Margin="0,45,0,0" Background="{DynamicResource ThemeAccentColor2}">
+        <StackPanel Margin="15,10" Spacing="5">
+            <TextBox x:Name="txtExample" Text="{Binding TextObservable^}" />
+            <ComboBox x:Name="cboExample" />
+            <TextBlock x:Name="tblExample" Text="{Binding TextObservable^}" />
+            <CheckBox x:Name="cbExample" Content="{Binding TextObservable^}" />
+            <Button x:Name="btnExample" Content="{Binding TextObservable^}" />
+            <Button x:Name="btnExampleDisabled" IsEnabled="False" Content="{Binding TextObservable^}" />
+        </StackPanel>
+    </Border>
+</Grid>

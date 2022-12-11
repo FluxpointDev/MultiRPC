@@ -1,0 +1,20 @@
+﻿<Grid xmlns="https://github.com/avaloniaui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:rpcUI="clr-namespace:MultiRPC.UI.Pages.Rpc"
+      xmlns:views="clr-namespace:MultiRPC.UI.Views"
+      Background="Transparent"
+      mc:Ignorable="d" 
+      d:DesignWidth="800" 
+      d:DesignHeight="450"
+      ColumnDefinitions="Auto 10 *" 
+      VerticalAlignment="Top"
+      x:Class="MultiRPC.UI.Pages.Rpc.MultiRpcPage">
+
+    <rpcUI:BaseRpcControl x:Name="rpcControl" ImageType="BuiltIn" />
+    <StackPanel Grid.Column="2" Spacing="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+        <TextBlock x:Name="tblLookLike" Text="{Binding TextObservable^}" FontWeight="SemiBold" />
+        <views:RpcView x:Name="rpcView" ViewType="LocalRichPresence" Background="{DynamicResource PurpleBrush}" />
+    </StackPanel>
+</Grid>

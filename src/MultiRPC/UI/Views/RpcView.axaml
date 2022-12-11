@@ -1,0 +1,29 @@
+﻿<Border xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="clr-namespace:MultiRPC.UI"
+        MinWidth="255" 
+        MaxWidth="355"
+        mc:Ignorable="d"
+        x:Name="brdContent"
+        x:CompileBindings="True"
+        CornerRadius="5"
+        Padding="5, 5"
+        x:Class="MultiRPC.UI.Views.RpcView">
+    <StackPanel Spacing="10" Orientation="Horizontal">
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Center" IsVisible="{CompiledBinding #sliLargeImage.IsVisible}">
+            <ui:SwitchableImage x:Name="sliLargeImage" Height="75" Width="75" Stretch="UniformToFill" StretchDirection="Both" />
+            
+            <Grid Name="gridSmallImage" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,-6,-3">
+                <Ellipse Name="ellSmallBackground" Fill="{CompiledBinding #brdContent.Background}" Height="30" Width="30" />
+                <ui:SwitchableImage Name="sliSmallImage" Height="26" Width="26" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill" StretchDirection="Both" />
+            </Grid>
+        </Grid>
+
+        <StackPanel Height="{Binding #sliLargeImage.Height}" VerticalAlignment="Center">
+            <TextBlock x:Name="tblContent"/>
+            <TextBlock Name="tblTime" Foreground="{CompiledBinding #tblContent.Foreground}" />
+        </StackPanel>
+    </StackPanel>
+</Border>

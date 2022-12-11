@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	  <RootNamespace>MultiRPC</RootNamespace>
+	  <AssemblyName>MultiRPC</AssemblyName>
+	  <TargetFramework>net7.0-windows10.0.17763.0</TargetFramework>
+	  <DefineConstants>$(DefineConstants);_UWP</DefineConstants>
+  </PropertyGroup>
+
+	<ItemGroup Condition="'$(Platform)' == 'x64'">
+		<Content Include="$(userprofile)\.nuget\packages\avalonia.angle.windows.natives\2.1.0.2020091801\runtimes\win7-x64\native\*.*" CopyToPublishDirectory="Always" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Platform)' == 'x86'">
+		<Content Include="$(userprofile)\.nuget\packages\avalonia.angle.windows.natives\2.1.0.2020091801\runtimes\win7-x86\native\*.*" CopyToPublishDirectory="Always" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Platform)' == 'arm64'">
+		<Content Include="$(userprofile)\.nuget\packages\avalonia.angle.windows.natives\2.1.0.2020091801\runtimes\win-arm64\native\*.*" CopyToPublishDirectory="Always" />
+	</ItemGroup>
+</Project>

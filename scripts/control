@@ -1,0 +1,5 @@
+Package: multirpc
+Version: version-replace
+Maintainer: Fluxpoint Developers
+Architecture: arch-replace
+Description: A Discord rich presence manager with a cool GUI and support for custom status and multiple profiles!

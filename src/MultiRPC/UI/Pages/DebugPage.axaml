@@ -1,0 +1,20 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DesignWidth="800"
+             d:DesignHeight="450"
+             x:Class="MultiRPC.UI.Pages.DebugPage">
+    <StackPanel Orientation="Horizontal" Spacing="10">
+        <StackPanel Spacing="10">
+            <TextBlock Text="{Binding TextObservable^}" x:Name="tblRPC" HorizontalAlignment="Center" />
+            <Button x:Name="btnDebugStartRPC" Classes="purple" Content="{Binding TextObservable^}" Click="BtnDebugStartRPC_OnClick" />
+            <Button x:Name="btnDebugStopRPC" Classes="purple" Content="{Binding TextObservable^}" Click="BtnDebugStopRPC_OnClick" />
+        </StackPanel>
+        <StackPanel Spacing="10">
+            <TextBlock Text="{Binding TextObservable^}" x:Name="tblGUI" HorizontalAlignment="Center" />
+            <Button x:Name="btnTestUpdate" Classes="purple" Content="{Binding TextObservable^}" Click="BtnTestUpdate_OnClick" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,41 @@
+﻿<Grid xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:MultiRPC.UI.Views"
+             mc:Ignorable="d"
+             d:DesignWidth="800" 
+             d:DesignHeight="450"
+             Height="105"
+             ColumnDefinitions="Auto * Auto" 
+             x:Class="MultiRPC.UI.Views.TopBar">
+    <Grid.Styles>
+        <Style Selector="Button">
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Width" Value="120" />
+        </Style>
+        <Style Selector="Button.smaller">
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Width" Value="50" />
+        </Style>
+    </Grid.Styles>
+    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+        <StackPanel Spacing="5" Margin="5,0,0,0">
+            <Button x:Name="btnStart" Content="{Binding TextObservable^}" Click="BtnStart_OnClick" Classes="green" />
+            <Button x:Name="btnUpdatePresence" Content="{Binding TextObservable^}" Click="BtnUpdatePresence_OnClick" IsEnabled="False" Classes="purple" />
+        </StackPanel>
+        <StackPanel Spacing="10">
+            <TextBlock x:Name="tblStatus" />
+            <TextBlock x:Name="tblUser" />
+            <TextBox x:Name="txtAfk" Watermark="{Binding TextObservable^}" MaxLength="26" IsEnabled="{Binding #btnAfk.IsEnabled}" />
+        </StackPanel>
+    </StackPanel>
+    <StackPanel Spacing="10" Orientation="Horizontal" Grid.Column="2" Margin="0,0,15,0" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+        <StackPanel Spacing="5" Margin="5,0,0,0">
+            <Button x:Name="btnAuto" Classes="smaller" Content="{Binding TextObservable^}" IsEnabled="False" />
+            <Button x:Name="btnAfk" Classes="smaller purple" Content="{Binding TextObservable^}" Click="BtnAfk_OnClick" />
+        </StackPanel>
+        <views:RpcView x:Name="rpcView" ViewType="Default" />
+    </StackPanel>
+</Grid>

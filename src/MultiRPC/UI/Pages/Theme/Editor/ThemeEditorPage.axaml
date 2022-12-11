@@ -1,0 +1,65 @@
+﻿<StackPanel xmlns="https://github.com/avaloniaui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:colorpicker="clr-namespace:AvaloniaColorPicker;assembly=AvaloniaColorPicker"
+            xmlns:controls="clr-namespace:MultiRPC.UI.Controls"
+            mc:Ignorable="d" 
+            d:DesignWidth="800" 
+            d:DesignHeight="450"
+            Margin="10"
+            x:Class="MultiRPC.UI.Pages.Theme.Editor.ThemeEditorPage">
+    <StackPanel.Styles>
+        <Style Selector="StackPanel.colours">
+            <Setter Property="Spacing" Value="5" />
+            <Setter Property="Orientation" Value="Horizontal" />
+        </Style>
+    </StackPanel.Styles>
+ <TextBlock x:Name="tblTitle" Text="{Binding TextObservable^}" Classes="title" />
+            <StackPanel x:Name="stpC" Spacing="13">
+                <Grid ColumnDefinitions="Auto *">
+                    <colorpicker:ColorPicker x:Name="clpPicker" Margin="0" VerticalAlignment="Top" />
+                    <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                        <Expander x:Name="edrPrimary" Header="{Binding TextObservable^}">
+                            <StackPanel Classes="colours">
+                                <controls:ColourButton x:Name="clbColour1" PointerPressed="ClbColour_OnPointerPressed" />
+                                <controls:ColourButton x:Name="clbColour2" PointerPressed="ClbColour_OnPointerPressed" />
+                                <controls:ColourButton x:Name="clbColour2Hover" PointerPressed="ClbColour_OnPointerPressed" />
+                            </StackPanel>
+                        </Expander>
+                        <Expander x:Name="edrSecondary" Header="{Binding TextObservable^}">
+                            <StackPanel Classes="colours">
+                                <controls:ColourButton x:Name="clbColour3" PointerPressed="ClbColour_OnPointerPressed" />
+                                <controls:ColourButton x:Name="clbColour4" PointerPressed="ClbColour_OnPointerPressed" />
+                                <controls:ColourButton x:Name="clbColour5" PointerPressed="ClbColour_OnPointerPressed" />
+                            </StackPanel>
+                        </Expander>
+                        <Expander x:Name="edrButtons" Header="{Binding TextObservable^}">
+                            <StackPanel Classes="colours">
+                                <controls:ColourButton x:Name="clbDisabledBtnColour" PointerPressed="ClbColour_OnPointerPressed" />
+                                <controls:ColourButton x:Name="clbDisabledBtnTextColour" PointerPressed="ClbColour_OnPointerPressed" />
+                            </StackPanel>
+                        </Expander>
+                        <Expander x:Name="edrPages" Header="{Binding TextObservable^}">
+                            <StackPanel Classes="colours">
+                                <controls:ColourButton x:Name="clbSelectedPageColour" PointerPressed="ClbColour_OnPointerPressed" />
+                                <controls:ColourButton x:Name="clbSelectedPageIconColour" PointerPressed="ClbColour_OnPointerPressed" />
+                            </StackPanel>
+                        </Expander>
+                        <Expander x:Name="edrOther" Header="{Binding TextObservable^}">
+                            <StackPanel Classes="colours">
+                                <controls:ColourButton x:Name="clbTextColour" PointerPressed="ClbColour_OnPointerPressed" />
+                            </StackPanel>
+                        </Expander>
+                    </StackPanel>
+                </Grid>
+                <Grid x:Name="grdMetadata" ColumnDefinitions="Auto *">
+                    <TextBox Grid.Column="1" x:Name="txtName" Margin="5,0,0,0" Watermark="{Binding TextObservable^}" VerticalAlignment="Top" />
+                    <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Spacing="7">
+                        <Button x:Name="btnSave" IsEnabled="{Binding #txtName.Text.Length}" Content="{Binding TextObservable^}" Click="BtnSave_OnClick" />
+                        <Button x:Name="btnSaveAndApply" IsEnabled="{Binding #txtName.Text.Length}" Content="{Binding TextObservable^}" Click="BtnSaveAndApply_OnClick" />
+                        <Button x:Name="btnReset" Content="{Binding TextObservable^}" Click="BtnReset_OnClick" />
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+</StackPanel>

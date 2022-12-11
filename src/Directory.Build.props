@@ -1,0 +1,47 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+
+    <LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <Version>7.0.0</Version>
+    <AvaloniaVersion>11.0.0-preview4</AvaloniaVersion>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <PublishTrimmed>true</PublishTrimmed>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <DebuggerSupport>false</DebuggerSupport>
+    <_AggressiveAttributeTrimming>true</_AggressiveAttributeTrimming>
+    <AutoreleasePoolSupport>true</AutoreleasePoolSupport>
+    <VerifyDependencyInjectionOpenGenericServiceTrimmability>true</VerifyDependencyInjectionOpenGenericServiceTrimmability>
+  </PropertyGroup>
+  
+  <ItemGroup Label="Packages">
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)'=='Debug'" Label="Debug Packages">
+    <PackageReference Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+  </ItemGroup>
+  
+  <ItemGroup Label="Resources">
+    <AvaloniaResource Include="Assets\**" />
+
+    <AvaloniaResource Remove="Assets\Themes\**\*.*" />
+    <AdditionalFiles Include="Assets\Themes\Without_Assets\**" CopyToOutputDirectory="Never" />
+
+    <Parent Include="Assets\Themes\With_Assets\**" />
+    <AdditionalFiles Include="@(Parent)" CopyToOutputDirectory="Always" LinkBase="Assets\Themes">
+      <Link>Assets\Themes\%(Filename)%(Extension)</Link>
+    </AdditionalFiles>
+
+    <AvaloniaResource Remove="Assets\Language\**" />
+    <Content Include="Assets\Language\**" CopyToOutputDirectory="Always" />
+    <AdditionalFiles Include="Assets\Language\en-gb.json" />
+  </ItemGroup>
+</Project>

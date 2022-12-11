@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+        <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Include="..\MultiRPC\Converters\ColourJsonConverter.cs" Link="Converters\ColourJsonConverter.cs" />
+      <Compile Include="..\MultiRPC\Converters\VersionJsonConverter.cs" Link="Converters\VersionJsonConverter.cs" />
+      <Compile Include="..\MultiRPC\Theming\Colours.cs" Link="Theme\Colours.cs" />
+      <Compile Include="..\MultiRPC\Theming\Metadata.cs" Link="Theme\Metadata.cs" />
+      <Compile Include="..\MultiRPC\Theming\ThemeMode.cs" Link="Theme\ThemeMode.cs" />
+      <Compile Include="..\MultiRPC\Theming\ThemeType.cs" Link="Theme\ThemeType.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.8.0" PrivateAssets="all" />
+        <PackageReference Include="SemanticVersion" Version="2.1.0" PrivateAssets="all" GeneratePathProperty="true" />
+        <PackageReference Include="System.Text.Json" Version="6.0.0" PrivateAssets="all" GeneratePathProperty="true" />
+        <PackageReference Include="Uno.Roslyn" Version="1.3.0-dev.12" PrivateAssets="all" GeneratePathProperty="true" />
+    </ItemGroup>
+
+    <Target Name="GetDependencyTargetPaths" AfterTargets="ResolvePackageDependenciesForBuild">
+        <ItemGroup>
+            <TargetPathWithTargetPlatformMoniker Include="@(ResolvedCompileFileDefinitions)" IncludeRuntimeDependency="false" />
+            <TargetPathWithTargetPlatformMoniker Include="$(PKGSemanticVersion)\lib\netstandard2.0\SemanticVersion.dll" IncludeRuntimeDependency="false" />
+        </ItemGroup>
+    </Target>
+    
+    <ItemGroup>
+        <!-- Package the generator in the analyzer directory of the nuget package -->
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+</Project>

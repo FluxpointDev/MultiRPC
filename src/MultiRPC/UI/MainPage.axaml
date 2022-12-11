@@ -1,0 +1,25 @@
+<Grid xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:MultiRPC.UI.Views"
+             xmlns:overlays="clr-namespace:MultiRPC.UI.Overlays"
+             mc:Ignorable="d" 
+             d:DesignWidth="800"
+             d:DesignHeight="527"
+             ColumnDefinitions="72 *"
+             x:Class="MultiRPC.UI.MainPage">
+    <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Stretch">
+        <StackPanel Margin="8,10,8,25" Spacing="25" x:Name="splPages" />
+    </ScrollViewer>
+    <Grid Grid.Column="1">
+        <Border x:Name="contentBorder" CornerRadius="15,15,0,0" Margin="0,105,0,0">
+            <ScrollViewer x:Name="cclContent" VerticalScrollBarVisibility="Auto"/>
+        </Border>
+            
+        <views:TopBar x:Name="topbar" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+    </Grid>
+        
+    <overlays:DiscordCheckOverlay Grid.ColumnSpan="2" Grid.Column="0" />
+    <overlays:NetworkStatusOverlay VerticalAlignment="Bottom" Grid.ColumnSpan="2" Grid.Column="0" />
+</Grid>

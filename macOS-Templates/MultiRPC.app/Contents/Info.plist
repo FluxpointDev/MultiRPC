@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+		<key>CFBundleDisplayName</key><string>MultiRPC</string>
+		<key>CFBundleExecutable</key><string>MultiRPC</string>
+		<key>CFBundleIconFile</key><string>MultiRPC.icns</string>
+		<key>CFBundleName</key><string>MultiRPC</string>
+		<key>CFBundleIdentifier</key><string>com.fluxpointdev.multirpc</string>
+		<key>CFBundlePackageType</key><string>APPL</string>
+		<key>NSHighResolutionCapable</key><true/>
+		<key>NSHumanReadableCopyright</key><string>Copyright © 2022 Fluxpoint Development</string>
+		<key>NSQuitAlwaysKeepsWindows</key><false/>
+		<key>NSRequiresAquaSystemAppearance</key><false/>
+		<key>NSSupportsAutomaticGraphicsSwitching</key><true/>
+		<key>CFBundleShortVersionString</key><string>7.0.0</string>
+		<key>CFBundleVersion</key><string>7.0.0</string>
+	</dict>
+</plist>

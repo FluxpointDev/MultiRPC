@@ -1,0 +1,17 @@
+﻿<Grid xmlns="https://github.com/avaloniaui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d" 
+      Width="400" 
+      Height="200"
+      RowDefinitions="Auto * Auto" 
+      Margin="10"
+      x:Class="MultiRPC.UI.Pages.Rpc.Popups.SharePage">
+    <TextBlock x:Name="tblGuild" Text="{Binding TextObservable^}" TextWrapping="Wrap" />
+    <TextBox Grid.Row="1" x:Name="txtData" Margin="0, 10" TextWrapping="Wrap" />
+    <Grid Grid.Row="2">
+        <Button x:Name="btnImport" IsEnabled="{Binding #txtData.Text.Length}" HorizontalAlignment="Left" Click="BtnImport_OnClick" Content="{Binding TextObservable^}" Classes="green" />
+        <Button x:Name="btnExport" HorizontalAlignment="Right" Click="BtnExport_OnClick" Content="{Binding TextObservable^}" Classes="green" />
+    </Grid>
+</Grid>

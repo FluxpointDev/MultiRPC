@@ -1,0 +1,43 @@
+﻿<Panel xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:MultiRPC.UI.Controls"
+             xmlns:avaloniaGif="clr-namespace:AvaloniaGif;assembly=AvaloniaGif"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MultiRPC.UI.Overlays.DiscordCheckOverlay"
+             Background="{DynamicResource ThemeAccentColor2}">
+    <Panel.Transitions>
+        <Transitions>
+            <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="QuadraticEaseIn" />
+        </Transitions>
+    </Panel.Transitions>
+    <Panel.Styles>
+        <Style Selector="Button">
+            <Setter Property="Transitions">
+                <Setter.Value>
+                    <Transitions>
+                        <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="QuadraticEaseIn" />
+                    </Transitions>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Panel.Styles>
+    <StackPanel HorizontalAlignment="Center" Margin="10">
+        <Grid ColumnDefinitions="Auto,Auto">
+            <Image x:Name="imgIcon" Height="75" />
+            <StackPanel Margin="10,0,0,0" Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock FontSize="18" FontWeight="SemiBold" Name="tblMultiRPC" Text="MultiRPC" />
+                <TextBlock Name="tblMadeBy" Margin="0,5" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="rDiscordServer" />
+                    <controls:Hyperlink Name="hylServerLinkUri" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <TextBlock HorizontalAlignment="Center" Name="tblDiscordClientMessage" Margin="0,6" />
+        <avaloniaGif:GifImage Width="50" Height="50" x:Name="gifLoading" Stretch="Uniform" StretchDirection="Both" />
+        <Button Margin="0,5,0,0" Name="btnDisableDiscordCheck" Content="{Binding TextObservable^}" 
+                Opacity="0" Click="BtnDisableDiscordCheck_OnClick" HorizontalAlignment="Stretch" />
+    </StackPanel>
+</Panel>

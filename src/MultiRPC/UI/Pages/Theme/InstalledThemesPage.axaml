@@ -1,0 +1,18 @@
+﻿<Grid xmlns="https://github.com/avaloniaui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      AttachedToLogicalTree="OnAttachedToLogicalTree"
+      DetachedFromLogicalTree="OnDetachedFromLogicalTree"
+      mc:Ignorable="d"
+      RowDefinitions="Auto *"
+      x:Class="MultiRPC.UI.Pages.Theme.InstalledThemesPage">
+      
+      <StackPanel Margin="10" Orientation="Horizontal" Spacing="4">
+            <Button Content="{Binding TextObservable^}" x:Name="btnAdd" Click="BtnAdd_OnClick" />
+            <Button Content="{Binding TextObservable^}" x:Name="btnAddAndApply" Click="BtnAddAndApply_OnClick" />
+      </StackPanel>
+      <ScrollViewer Margin="15,0,0,0" HorizontalContentAlignment="Center" Grid.Row="1">
+            <WrapPanel Margin="10" x:Name="wppThemes" />
+      </ScrollViewer>
+</Grid>

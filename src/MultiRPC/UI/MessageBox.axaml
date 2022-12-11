@@ -1,0 +1,22 @@
+﻿<Grid xmlns="https://github.com/avaloniaui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d" 
+      d:DesignWidth="800" 
+      d:DesignHeight="450"
+      MaxWidth="410"
+      RowDefinitions="* Auto" 
+      ColumnDefinitions="Auto *"
+      x:Class="MultiRPC.UI.MessageBox">
+    <Image IsVisible="False" x:Name="imgStatus" Margin="21,18,0,0" Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+    <TextBlock Grid.Column="1" Margin="11, 26, 31, 23" TextWrapping="Wrap" x:Name="tblText"/>
+        
+    <Rectangle Grid.ColumnSpan="2" Grid.Row="1" Fill="{DynamicResource ThemeAccentBrush2}"/>
+    <StackPanel Grid.ColumnSpan="2" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="15,9" Spacing="7">
+        <Button x:Name="btnOk" IsVisible="False" Click="ButOk_OnClick" />
+        <Button x:Name="btnYes" IsVisible="False" Click="ButYes_OnClick" />
+        <Button x:Name="btnNo" IsVisible="False" Click="ButNo_OnClick" />
+        <Button x:Name="btnCancel" IsVisible="False" Click="ButCancel_OnClick" />
+    </StackPanel>
+</Grid>

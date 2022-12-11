@@ -1,0 +1,63 @@
+<Border xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DesignWidth="800"
+        d:DesignHeight="450"
+        x:Class="MultiRPC.UI.Pages.Rpc.CustomPage">
+    <Border.Styles>
+        <Style Selector="Image">
+            <Setter Property="Width" Value="38" />
+            <Setter Property="Height" Value="{TemplateBinding Width}" />
+            <Setter Property="Opacity" Value="0.6" />
+            <Setter Property="Transitions">
+                <Setter.Value>
+                    <Transitions>
+                        <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="QuadraticEaseIn" />
+                    </Transitions>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style Selector="Button.toolbar">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="38"/>
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="Button.toolbar:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="Button.toolbar:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        
+        <Style Selector="Image:pointerover">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button.activeProfile">
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2Hover}" />
+        </Style>
+        <Style Selector="Image.selected">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Image.help">
+            <Setter Property="Width" Value="20" />
+            <Setter Property="Margin" Value="0,4,0,4" />
+        </Style>
+    </Border.Styles>
+    <Grid x:Name="grdContent" RowDefinitions="Auto Auto *">
+        <WrapPanel x:Name="wrpProfileSelector" MaxWidth="750" Margin="10,10,0,0" HorizontalAlignment="Left" />
+        <StackPanel Spacing="5" Grid.Row="1" x:Name="stpProfileEditor" Height="40" Orientation="Horizontal" Margin="10,7,0,7">
+            <TextBlock FontWeight="SemiBold" x:Name="tblProfileName" VerticalAlignment="Center" />
+            <Rectangle Margin="0,2" Fill="White" Width="1" VerticalAlignment="Stretch" />
+            <Button x:Name="btnProfileEdit" Classes="toolbar" Click="ImgProfileEdit_OnClick" CornerRadius="0" />
+            <Button x:Name="btnProfileShare" Classes="toolbar" Click="ImgProfileShare_OnClick" />
+            <Button x:Name="btnProfileAdd" Classes="toolbar" Click="ImgProfileAdd_OnClick" />
+            <Button x:Name="btnProfileClone" Classes="toolbar" Click="ImgProfileClone_OnClick" />
+            <Button x:Name="btnProfileDelete" Classes="toolbar" Click="ImgProfileDelete_OnClick" IsVisible="False" />
+        </StackPanel>
+    </Grid>
+</Border>

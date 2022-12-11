@@ -1,0 +1,12 @@
+﻿<StackPanel xmlns="https://github.com/avaloniaui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            mc:Ignorable="d"
+            Width="320"
+            Spacing="10" 
+            Margin="10"
+            x:Class="MultiRPC.UI.Pages.Rpc.Popups.EditPage">
+    <TextBox x:Name="txtNewName" Text="{Binding Result, Mode=TwoWay}" />
+    <Button IsDefault="True" Classes="green" x:Name="btnDone" Click="BtnDone_OnClick" Content="{Binding TextObservable^}" />
+</StackPanel>

@@ -1,0 +1,45 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             Name="MultiRPC"
+             x:Class="MultiRPC.UI.App">
+    <Application.Resources>
+        <system:Double x:Key="TextControlThemeMinHeight">28</system:Double>
+        <Color x:Key="ThemeAccentColor">#36393e</Color>
+        <Color x:Key="ThemeAccentColor2">#2c2e30</Color>
+        <Color x:Key="ThemeAccentColor2Hover">#2c2a2a</Color>
+        <Color x:Key="ThemeAccentColor3">White</Color>
+        <Color x:Key="ThemeAccentColor4">#b4b4b4</Color>
+        <Color x:Key="ThemeAccentColor5">#707070</Color>
+
+        <Color x:Key="ThemeAccentDisabledColor">#505050</Color>
+        <Color x:Key="ThemeAccentDisabledTextColor">White</Color>
+        <Color x:Key="NavButtonSelectedColor">#00ABEB</Color>
+        <Color x:Key="NavButtonSelectedIconColor">#FFFFFF</Color>
+
+        <Color x:Key="Purple">#6A7EC4</Color>
+        <Color x:Key="Red">#FFF13333</Color>
+        <Color x:Key="Orange">#FFEEAD37</Color>
+        <Color x:Key="Green">#FF43B581</Color>
+        
+        <SolidColorBrush x:Key="GreenBrush" Color="{DynamicResource Green}" />
+        <SolidColorBrush x:Key="RedBrush" Color="{DynamicResource Red}" />
+        <SolidColorBrush x:Key="PurpleBrush" Color="{DynamicResource Purple}" />
+
+        <SolidColorBrush x:Key="ThemeForegroundBrush" Color="White" />
+        <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="{DynamicResource ThemeAccentColor2}" />
+        <SolidColorBrush x:Key="ThemeAccentBrush" Color="{DynamicResource ThemeAccentColor}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush2" Color="{DynamicResource ThemeAccentColor2}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush2Hover" Color="{DynamicResource ThemeAccentColor2Hover}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush3" Color="{DynamicResource ThemeAccentColor3}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush4" Color="{DynamicResource ThemeAccentColor4}"/>
+        <SolidColorBrush x:Key="ThemeAccentBrush5" Color="{DynamicResource ThemeAccentColor5}"/>
+        <SolidColorBrush x:Key="ThemeAccentDisabledBrush" Color="{DynamicResource ThemeAccentDisabledColor}"/>
+        <SolidColorBrush x:Key="ThemeAccentDisabledTextBrush" Color="{DynamicResource ThemeAccentDisabledTextColor}"/>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme Mode="Dark"/>
+        <StyleInclude Source="/UI/Styling.axaml" />
+    </Application.Styles>
+</Application>
