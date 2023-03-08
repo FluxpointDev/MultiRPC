@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #$1: source_dir, $2: arch, $3: package_name
 
 arch=$2
