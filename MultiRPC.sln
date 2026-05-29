@@ -1,17 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31727.386
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11822.327 insiders
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiRPC", "src\MultiRPC\MultiRPC.csproj", "{FE7EF71E-A0F3-4A23-8125-738FE77797E2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaGif", "ext\avalonia.gif\AvaloniaGif\AvaloniaGif.csproj", "{D4EBB986-EDAC-4C0B-AB58-70E4A5C7D2A4}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ext", "ext", "{B7AAF9E7-1C1E-4376-BAF6-D2FCA8B39CDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiRPC.SourceGen", "src\MultiRPC.SourceGen\MultiRPC.SourceGen.csproj", "{3369169D-31C0-4A74-A5A9-F2BB1EA80705}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordRPC", "ext\discord-rpc-csharp\DiscordRPC\DiscordRPC.csproj", "{46073C54-E149-457D-9E6B-993A780E6AE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiRPC_Old", "src\MultiRPC_Old\MultiRPC_Old.csproj", "{DC066585-4FA5-3863-DC50-51F305000496}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiRPC", "src\MultiRPC\MultiRPC.csproj", "{C5EEAB03-DECC-4662-A742-59C5036ACE64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,31 +17,26 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FE7EF71E-A0F3-4A23-8125-738FE77797E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FE7EF71E-A0F3-4A23-8125-738FE77797E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FE7EF71E-A0F3-4A23-8125-738FE77797E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FE7EF71E-A0F3-4A23-8125-738FE77797E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4EBB986-EDAC-4C0B-AB58-70E4A5C7D2A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4EBB986-EDAC-4C0B-AB58-70E4A5C7D2A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4EBB986-EDAC-4C0B-AB58-70E4A5C7D2A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4EBB986-EDAC-4C0B-AB58-70E4A5C7D2A4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3369169D-31C0-4A74-A5A9-F2BB1EA80705}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3369169D-31C0-4A74-A5A9-F2BB1EA80705}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3369169D-31C0-4A74-A5A9-F2BB1EA80705}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3369169D-31C0-4A74-A5A9-F2BB1EA80705}.Release|Any CPU.Build.0 = Release|Any CPU
 		{46073C54-E149-457D-9E6B-993A780E6AE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{46073C54-E149-457D-9E6B-993A780E6AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46073C54-E149-457D-9E6B-993A780E6AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46073C54-E149-457D-9E6B-993A780E6AE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC066585-4FA5-3863-DC50-51F305000496}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC066585-4FA5-3863-DC50-51F305000496}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC066585-4FA5-3863-DC50-51F305000496}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC066585-4FA5-3863-DC50-51F305000496}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5EEAB03-DECC-4662-A742-59C5036ACE64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5EEAB03-DECC-4662-A742-59C5036ACE64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5EEAB03-DECC-4662-A742-59C5036ACE64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5EEAB03-DECC-4662-A742-59C5036ACE64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{46073C54-E149-457D-9E6B-993A780E6AE8} = {B7AAF9E7-1C1E-4376-BAF6-D2FCA8B39CDF}
+	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CD6F52B4-E174-4EB3-BAF8-90EFDDB47450}
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{D4EBB986-EDAC-4C0B-AB58-70E4A5C7D2A4} = {B7AAF9E7-1C1E-4376-BAF6-D2FCA8B39CDF}
-		{46073C54-E149-457D-9E6B-993A780E6AE8} = {B7AAF9E7-1C1E-4376-BAF6-D2FCA8B39CDF}
 	EndGlobalSection
 EndGlobal
